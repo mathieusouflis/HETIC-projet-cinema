@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  apps:
+    container_name: apps
+    image: hetic-projet-cinema/prod
+    build:
+      context: .
+      dockerfile: ./dockerfile.prod
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      DB_URL: postgresql://${DB_USER:-root}:${DB_PASSWORD:-root}@db:5432/${DB_NAME:-database}
+    ports:
+      - "${FRONTEND_PORT:-5173}:${FRONTEND_PORT:-5173}"
+      - "${BACKEND_PORT:-7070}:${BACKEND_PORT:-7070}"
+    # depends_on:
+    #   db:
+    #     condition: service_healthy
+    # networks:
+    #   - app-network
+    restart: unless-stopped
+
+  # db:
+  #   container_name: prod-db
+  #   image: postgres:16-alpine
+  #   restart: always
+  #   environment:
+  #     DB_USER: ${DB_USER:-root}
+  #     DB_PASSWORD: ${DB_PASSWORD:-root}
+  #     DB_NAME: ${DB_NAME:-database}
+  #   volumes:
+  #     - db_data_prod:/var/lib/postgresql/data
+  #   ports:
+  #     - "${DB_PORT:-5432}:5432"
+  #   healthcheck:
+  #     test:
+  #       ["CMD-SHELL", "pg_isready -U ${DB_USER:-root} -d ${DB_NAME:-database}"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 3
+  #   networks:
+  #     - app-network
+# volumes:
+#   db_data_prod:
+#     driver: local
+
+# networks:
+#   app-network:
+#     driver: bridge
