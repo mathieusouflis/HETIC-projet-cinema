@@ -10,7 +10,11 @@ in
   env.GREET = "devenv";
 
   # https://devenv.sh/packages/
-  packages = [ pkgs.git pkgs.pnpm pkgs.nodejs_24];
+  packages = [
+    pkgs.git
+    pkgs.pnpm
+    pkgs.nodejs_24
+  ];
 
   # https://devenv.sh/languages/
   languages.typescript.enable = true;
