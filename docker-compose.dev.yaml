@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  db:
+    container_name: cinema-db-dev
+    image: postgres:16-alpine
+    restart: always
+    volumes:
+      - db_data_dev:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER:-root}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-root}
+      POSTGRES_DB: ${DB_NAME:-database}
+    healthcheck:
+      test:
+        ["CMD-SHELL", "pg_isready -U ${DB_USER:-root} -d ${DB_NAME:-database}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db_data_dev:
+    driver: local
