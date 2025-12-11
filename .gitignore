@@ -10,3 +10,14 @@ dist-ssr
 .cache
 server/dist
 public/dist
+
+# Devenv
+.devenv*
+devenv.local.nix
+devenv.local.yaml
+
+# direnv
+.direnv
+
+# pre-commit
+.pre-commit-config.yaml
