@@ -41,7 +41,7 @@
     "preset": "@packages/jest-presets/browser"
   },
   "devDependencies": {
-    "@jest/globals": "^29.7.0",
+    "@jest/globals": "^30.2.0",
     "@packages/eslint-config": "workspace:*",
     "@packages/jest-presets": "workspace:*",
     "@packages/typescript-config": "workspace:*",
