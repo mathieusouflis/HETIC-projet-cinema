@@ -1,0 +1,37 @@
+name: "pre-merge"
+run-name: ${{ github.actor }} is running pre-merge checks
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+jobs:
+  check-types:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+      - name: Run type checks
+        run: pnpm check-types
+      - name: Run linting
+        run: pnpm lint
+      - name: Build
+        run: pnpm build
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+      - name: Run linting
+        run: pnpm lint
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+      - name: Build
+        run: pnpm build
