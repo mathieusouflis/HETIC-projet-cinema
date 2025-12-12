@@ -1,22 +1,22 @@
 {
-  "name": "api",
+  "name": "@apps/api",
   "version": "0.0.0",
   "type": "module",
   "private": true,
   "scripts": {
     "start": "node dist/index.cjs",
-    "dev": "tsup --watch --onSuccess \"node dist/index.cjs\"",
+    "dev": "sleep 3 && tsup --watch --onSuccess \"node dist/index.cjs\"",
     "build": "tsup",
     "check-types": "tsc --noEmit",
     "lint": "eslint src/ --max-warnings 0",
     "test": "jest --detectOpenHandles"
   },
   "jest": {
-    "preset": "@repo/jest-presets/node"
+    "preset": "@packages/jest-presets/node"
   },
   "dependencies": {
-    "@repo/config": "workspace:*",
-    "@repo/logger": "workspace:*",
+    "@packages/config": "workspace:*",
+    "@packages/logger": "workspace:*",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "express": "4.21.2",
@@ -24,9 +24,9 @@
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
-    "@repo/eslint-config": "workspace:*",
-    "@repo/jest-presets": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
+    "@packages/eslint-config": "workspace:*",
+    "@packages/jest-presets": "workspace:*",
+    "@packages/typescript-config": "workspace:*",
     "@types/body-parser": "^1.19.5",
     "@types/cors": "^2.8.17",
     "@types/express": "4.17.21",

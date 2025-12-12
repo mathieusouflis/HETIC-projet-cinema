@@ -1,5 +1,5 @@
 {
-  "name": "@repo/config",
+  "name": "@packages/config",
   "version": "0.0.0",
   "type": "module",
   "private": true,
@@ -23,19 +23,19 @@
   },
   "scripts": {
     "build": "bunchee",
-    "dev": "bunchee --watch",
+    "build:watch": "bunchee --watch",
     "lint": "eslint src/",
     "check-types": "tsc --noEmit",
     "test": "jest"
   },
   "jest": {
-    "preset": "@repo/jest-presets/node"
+    "preset": "@packages/jest-presets/node"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
-    "@repo/eslint-config": "workspace:*",
-    "@repo/jest-presets": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
+    "@packages/eslint-config": "workspace:*",
+    "@packages/jest-presets": "workspace:*",
+    "@packages/typescript-config": "workspace:*",
     "@types/node": "^22.15.3",
     "bunchee": "^6.4.0",
     "eslint": "^9.39.0",

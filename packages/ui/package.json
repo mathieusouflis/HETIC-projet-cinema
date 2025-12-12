@@ -1,5 +1,5 @@
 {
-  "name": "@repo/ui",
+  "name": "@packages/ui",
   "version": "0.0.0",
   "private": true,
   "license": "MIT",
@@ -32,19 +32,19 @@
   },
   "scripts": {
     "build": "bunchee",
-    "dev": "bunchee --watch",
+    "build:watch": "bunchee --watch",
     "check-types": "tsc --noEmit",
     "lint": "eslint src/",
     "test": "jest"
   },
   "jest": {
-    "preset": "@repo/jest-presets/browser"
+    "preset": "@packages/jest-presets/browser"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
-    "@repo/eslint-config": "workspace:*",
-    "@repo/jest-presets": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
+    "@packages/eslint-config": "workspace:*",
+    "@packages/jest-presets": "workspace:*",
+    "@packages/typescript-config": "workspace:*",
     "@types/node": "^22.15.3",
     "bunchee": "^6.4.0",
     "eslint": "^9.39.0",

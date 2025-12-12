@@ -1,5 +1,5 @@
 {
-  "name": "@repo/front",
+  "name": "@apps/front",
   "version": "0.0.0",
   "type": "module",
   "private": true,
@@ -10,14 +10,14 @@
     "lint": "eslint src/ --max-warnings 0"
   },
   "dependencies": {
-    "@repo/ui": "workspace:*",
-    "@repo/config": "workspace:*",
+    "@packages/ui": "workspace:*",
+    "@packages/config": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
+    "@packages/eslint-config": "workspace:*",
+    "@packages/typescript-config": "workspace:*",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.7.0",
