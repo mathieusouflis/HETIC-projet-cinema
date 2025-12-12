@@ -16,6 +16,7 @@
     "check-types": "turbo run check-types"
   },
   "devDependencies": {
+    "husky": "^9.1.7",
     "prettier": "^3.6.0",
     "turbo": "^2.6.3"
   },
