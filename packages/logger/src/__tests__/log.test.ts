@@ -1,12 +1,11 @@
-import { describe, it, expect, jest } from "@jest/globals";
+import { describe, it, expect, vi } from "vitest";
 import { log } from "..";
 
-jest.spyOn(global.console, "log");
+vi.spyOn(global.console, "log");
 
 describe("@packages/logger", () => {
   it("prints a message", () => {
     log("hello");
-    // eslint-disable-next-line no-console -- testing console
     expect(console.log).toBeCalledWith("LOGGER: ", "hello");
   });
 });

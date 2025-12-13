@@ -1,0 +1,19 @@
+{
+  "name": "@packages/vitest-presets",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "files": [
+    "browser/vitest-preset.ts",
+    "node/vitest-preset.ts"
+  ],
+  "dependencies": {
+    "@vitest/coverage-v8": "^4.0.15",
+    "@vitest/ui": "^4.0.15",
+    "vitest": "4.0.15"
+  },
+  "devDependencies": {
+    "jsdom": "^25.0.1"
+  }
+}

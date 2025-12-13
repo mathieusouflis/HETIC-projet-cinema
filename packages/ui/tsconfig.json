@@ -3,7 +3,7 @@
   "compilerOptions": {
     "lib": ["dom", "ES2015"],
     "sourceMap": true,
-    "types": ["jest", "node"]
+    "types": ["vitest/globals", "node"]
   },
   "include": ["."],
   "exclude": ["dist", "build", "node_modules"]
