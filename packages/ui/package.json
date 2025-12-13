@@ -10,24 +10,12 @@
   ],
   "exports": {
     "./counter-button": {
-      "import": {
-        "types": "./dist/es/counter-button.d.mts",
-        "default": "./dist/es/counter-button.mjs"
-      },
-      "require": {
-        "types": "./dist/cjs/counter-button.d.ts",
-        "default": "./dist/cjs/counter-button.js"
-      }
+      "types": "./dist/counter-button/index.d.ts",
+      "default": "./dist/counter-button/index.js"
     },
     "./link": {
-      "import": {
-        "types": "./dist/es/link.d.mts",
-        "default": "./dist/es/link.mjs"
-      },
-      "require": {
-        "types": "./dist/cjs/link.d.ts",
-        "default": "./dist/cjs/link.js"
-      }
+      "types": "./dist/link/index.d.ts",
+      "default": "./dist/link/index.js"
     }
   },
   "scripts": {
@@ -46,7 +34,6 @@
     "@testing-library/user-event": "^14.5.2",
     "@types/node": "^22.15.3",
     "@vitest/coverage-v8": "^4.0.15",
-    "bunchee": "^6.4.0",
     "eslint": "^9.39.0",
     "jsdom": "^25.0.1",
     "typescript": "5.9.3",
