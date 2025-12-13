@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import { describe, it, expect } from "@jest/globals";
+import { describe, it, expect } from "vitest";
 import { createServer } from "../server";
 
 describe("Server", () => {

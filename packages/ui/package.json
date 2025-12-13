@@ -35,21 +35,26 @@
     "build:watch": "bunchee --watch",
     "check-types": "tsc --noEmit",
     "lint": "eslint src/",
-    "test": "jest"
-  },
-  "jest": {
-    "preset": "@packages/jest-presets/browser"
+    "test": "vitest run"
   },
   "devDependencies": {
-    "@jest/globals": "^29.7.0",
     "@packages/eslint-config": "workspace:*",
-    "@packages/jest-presets": "workspace:*",
     "@packages/typescript-config": "workspace:*",
+    "@packages/vitest-presets": "workspace:*",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^14.5.2",
     "@types/node": "^22.15.3",
+    "@vitest/coverage-v8": "^4.0.15",
     "bunchee": "^6.4.0",
     "eslint": "^9.39.0",
-    "jest": "^29.7.0",
-    "typescript": "5.9.3"
+    "jsdom": "^25.0.1",
+    "typescript": "5.9.3",
+    "vite": "^7.2.0",
+    "vitest": "4.0.15"
+  },
+  "dependencies": {
+    "@swc/helpers": "^0.5.15"
   },
   "peerDependencies": {
     "@types/react": ">=18",
