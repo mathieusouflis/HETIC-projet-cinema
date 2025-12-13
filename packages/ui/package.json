@@ -31,8 +31,8 @@
     }
   },
   "scripts": {
-    "build": "bunchee",
-    "build:watch": "bunchee --watch",
+    "build": "tsc",
+    "build:watch": "tsc -w",
     "check-types": "tsc --noEmit",
     "lint": "eslint src/",
     "test": "vitest run"

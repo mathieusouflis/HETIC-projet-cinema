@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node dist/index.cjs",
     "dev": "sleep 3 && tsup --watch --onSuccess \"node dist/index.cjs\"",
-    "build": "tsup",
+    "build": "tsc",
+    "build:watch": "tsc -w",
     "check-types": "tsc --noEmit",
     "lint": "eslint src/ --max-warnings 0",
     "test": "vitest run"
