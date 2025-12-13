@@ -1,9 +1,10 @@
 {
-  "extends": "@packages/typescript-config/base.json",
+  "extends": "@packages/typescript-config/node-app.json",
   "compilerOptions": {
-    "lib": ["ES2015"],
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "types": ["vitest/globals", "node"]
   },
-  "exclude": ["node_modules"],
-  "include": ["."]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "coverage"]
 }
