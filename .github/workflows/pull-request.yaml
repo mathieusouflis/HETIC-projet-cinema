@@ -1,46 +1,56 @@
 name: "pre-merge"
 run-name: ${{ github.actor }} is running pre-merge checks
+
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
+
 jobs:
-  check-types:
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+
+      - name: Build all packages
+        run: pnpm build
+
+  check-types:
+    name: Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Install dependencies
         uses: ./.github/actions/install-dependencies
       - name: Run type checks
         run: pnpm check-types
-      - name: Run linting
-        run: pnpm lint
-      - name: Build
-        run: pnpm build
+
   lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
       - name: Install dependencies
         uses: ./.github/actions/install-dependencies
       - name: Run linting
         run: pnpm lint
+
   test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
       - name: Install dependencies
         uses: ./.github/actions/install-dependencies
       - name: Run tests
         run: pnpm test
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Install dependencies
-        uses: ./.github/actions/install-dependencies
-      - name: Build
-        run: pnpm build

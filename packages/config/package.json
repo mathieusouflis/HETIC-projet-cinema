@@ -18,8 +18,9 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc -w",
-    "lint": "eslint src/",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "lint": "eslint src/"
   },
   "devDependencies": {
     "@packages/eslint-config": "workspace:*",

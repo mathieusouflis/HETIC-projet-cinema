@@ -18,8 +18,9 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc -w",
-    "lint": "eslint src/",
     "check-types": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "lint": "eslint src/",
     "test": "vitest run"
   },
   "devDependencies": {
@@ -29,7 +30,7 @@
     "@types/node": "^22.15.3",
     "@vitest/coverage-v8": "^4.0.15",
     "eslint": "^9.39.0",
-    "vitest": "4.0.15",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vitest": "4.0.15"
   }
 }

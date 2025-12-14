@@ -2,25 +2,26 @@
   "name": "kitchen-sink",
   "private": true,
   "scripts": {
-    "db:start": "docker-compose -f docker-compose.dev.yaml up -d",
-    "db:stop": "docker compose -f docker-compose.dev.yaml down",
+    "build": "turbo run build",
+    "build:watch": "turbo run build:watch",
+    "check-types": "turbo run check-types",
+    "clean": "turbo run clean && rm -rf .turbo node_modules/.cache packages/*/.turbo apps/*/.turbo",
     "db:logs": "docker compose -f docker-compose.dev.yaml logs -f",
     "db:shell": "docker compose -f docker-compose.dev.yaml exec db psql -U ${DB_USER:-root} -d ${DB_NAME:-database}",
-    "build": "turbo run build",
-    "build:watch": "turbo build:watch",
+    "db:start": "docker-compose -f docker-compose.dev.yaml up -d",
+    "db:stop": "docker compose -f docker-compose.dev.yaml down",
     "dev": "pnpm db:start && turbo run dev",
-    "start": "turbo run start",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
-    "test": "turbo run test -- --coverage",
-    "check-types": "turbo run check-types"
+    "start": "turbo run start",
+    "test": "turbo run test -- --coverage"
   },
   "devDependencies": {
     "husky": "^9.1.7",
-    "prettier": "^3.6.0",
+    "prettier": "^3.7.4",
     "turbo": "^2.6.3"
   },
-  "packageManager": "pnpm@8.15.6",
+  "packageManager": "pnpm@10.25.0",
   "engines": {
     "node": ">=18"
   }
