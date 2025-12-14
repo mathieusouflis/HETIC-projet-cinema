@@ -1,5 +1,5 @@
 import { log } from "@packages/logger";
-import { createServer } from "./server";
+import { createServer } from "./server.js";
 import { config } from "@packages/config";
 
 const port = config.env.BACKEND_PORT || 5001;

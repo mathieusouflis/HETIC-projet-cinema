@@ -5,35 +5,35 @@
     "build": {
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "dependsOn": ["^build"],
-      "outputs": [
-        "build/**",
-        "dist/**"
-      ]
+      "outputs": ["build/**", "dist/**"]
     },
-    "test": {
-      "outputs": ["coverage/**"],
-      "dependsOn": []
+    "build:watch": {
+      "dependsOn": ["^build"],
+      "persistent": true,
+      "cache": false
+    },
+    "check-types": {
+      "dependsOn": ["^build"]
+    },
+    "clean": {
+      "cache": false
+    },
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
     },
     "lint": {
-      "dependsOn": ["^build", "^lint"]
+      "dependsOn": ["^build"]
     },
     "start": {
       "dependsOn": ["build"],
       "cache": false,
       "persistent": true
     },
-    "check-types": {
-      "dependsOn": ["^build", "^check-types"]
-    },
-
-    "build:watch": {
-    },
-
-    "dev": {
-      "with": ["build:watch"],
-      "dependsOn": ["^build"],
-      "cache": false,
-      "persistent": true
+    "test": {
+      "outputs": ["coverage/**"],
+      "dependsOn": []
     }
   }
 }
