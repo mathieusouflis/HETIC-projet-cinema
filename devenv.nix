@@ -14,6 +14,8 @@ in
     pkgs.git
     pkgs.pnpm
     pkgs.nodejs_24
+    pkgs.postgresql
+    pkgs.docker
   ];
 
   # https://devenv.sh/languages/
@@ -21,6 +23,8 @@ in
 
   # https://devenv.sh/processes/
   # processes.dev.exec = "${lib.getExe pkgs.watchexec} -n -- ls -la";
+
+  processes.dockerd.exec = "dockerd";
 
   # https://devenv.sh/services/
   # services.postgres.enable = true;
