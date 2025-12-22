@@ -2,15 +2,10 @@
 
 * [Welcome](README.md)
 
-## Getting Started
+## developer
 
-* [Quickstart](getting-started/quickstart.md)
-* [Publish your docs](getting-started/publish-your-docs.md)
-
-## Basics
-
-* [Editor](basics/editor.md)
-* [Markdown](basics/markdown.md)
-* [Images & media](basics/images-and-media.md)
-* [Interactive blocks](basics/interactive-blocks.md)
-* [Integrations](basics/integrations.md)
+* [Tools & Setup](developer/tools-and-setup/README.md)
+  * [Computer Setup](developer/tools-and-setup/computer-setup/README.md)
+    * [Windows setup](developer/tools-and-setup/computer-setup/windows-setup.md)
+  * [Tools Documentation](developer/tools-and-setup/tools-documentation/README.md)
+    * [WSL for vscode](developer/tools-and-setup/tools-documentation/wsl-for-vscode.md)
