@@ -1,6 +1,7 @@
 {
   "name": "kitchen-sink",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "turbo run build",
     "build:watch": "turbo run build:watch",
@@ -24,5 +25,8 @@
   "packageManager": "pnpm@10.25.0",
   "engines": {
     "node": ">=18"
+  },
+  "dependencies": {
+    "lint-staged": "^16.2.7"
   }
 }
