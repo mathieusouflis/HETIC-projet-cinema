@@ -23,7 +23,7 @@
     "@packages/typescript-config": "workspace:*",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^4.7.0",
+    "@vitejs/plugin-react": "^5.1.2",
     "eslint": "^9.39.0",
     "typescript": "5.9.3",
     "vite": "^7.3.0"
