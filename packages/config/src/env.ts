@@ -7,23 +7,30 @@ export const env = {
   NODE_ENV: process.env.NODE_ENV || "development",
 
   // Backend Configuration
-  BACKEND_PORT: process.env.BACKEND_PORT || 3000,
-  BACKEND_HOST: process.env.BACKEND_HOST || "localhost",
-  BACKEND_API_URL: process.env.BACKEND_API_URL || "http://localhost:3000",
+  backend: {
+    port: process.env.BACKEND_PORT || 3000,
+    host: process.env.BACKEND_HOST || "localhost",
+    apiUrl:process.env.BACKEND_API_URL || "http://localhost:3000",
+    version: 1
+  },
 
   // Frontend Configuration
-  FRONTEND_PORT: process.env.FRONTEND_PORT || 3001,
-  FRONTEND_HOST: process.env.FRONTEND_HOST || "localhost",
-  FRONTEND_URL: process.env.FRONTEND_URL || "http://localhost:3001",
+  frontend: {
+    port: process.env.FRONTEND_PORT || 3001,
+    host: process.env.FRONTEND_HOST || "localhost",
+    url: process.env.FRONTEND_URL || "http://localhost:3001",
+  },
 
   // Database Configuration
-  DB_HOST: process.env.DB_HOST || "localhost",
-  DB_PORT: process.env.DB_PORT || 5432,
-  DB_NAME: process.env.DB_NAME || "myapp",
-  DB_USER: process.env.DB_USER || "postgres",
-  DB_PASSWORD: process.env.DB_PASSWORD || "your_password_here",
-  DB_DATABASE: process.env.DB_DATABASE || "the_database",
-  DB_SSL: process.env.DB_SSL === "true",
+  database: {
+    host: process.env.DB_HOST || "localhost",
+    port: process.env.DB_PORT || 5432,
+    name: process.env.DB_NAME || "myapp",
+    user: process.env.DB_USER || "postgres",
+    password: process.env.DB_PASSWORD || "your_password_here",
+    database: process.env.DB_DATABASE || "the_database",
+    ssl: process.env.DB_SSL === "true",
+  },
 
   // API Keys and Secrets
   API_SECRET_KEY: process.env.API_SECRET_KEY || "your_secret_key_here",
