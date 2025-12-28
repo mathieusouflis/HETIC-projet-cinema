@@ -10,10 +10,13 @@ services:
     environment:
       POSTGRES_USER: ${DB_USER:-root}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-root}
-      POSTGRES_DB: ${DB_NAME:-database}
+      POSTGRES_DB: ${DB_DATABASE:-database}
     healthcheck:
       test:
-        ["CMD-SHELL", "pg_isready -U ${DB_USER:-root} -d ${DB_NAME:-database}"]
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${DB_USER:-root} -d ${DB_DATABASE:-database}",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
