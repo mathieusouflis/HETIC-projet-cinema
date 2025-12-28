@@ -14,6 +14,6 @@
     "vitest": "4.0.16"
   },
   "devDependencies": {
-    "jsdom": "^27.3.0"
+    "jsdom": "^27.4.0"
   }
 }
