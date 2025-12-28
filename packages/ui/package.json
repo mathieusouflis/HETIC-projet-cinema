@@ -36,13 +36,13 @@
     "@types/node": "^25.0.3",
     "@vitest/coverage-v8": "^4.0.15",
     "eslint": "^9.39.0",
-    "jsdom": "^27.3.0",
+    "jsdom": "^27.4.0",
     "typescript": "5.9.3",
     "vite": "^7.2.0",
     "vitest": "4.0.16"
   },
   "dependencies": {
-    "@swc/helpers": "^0.5.15"
+    "@swc/helpers": "^0.5.18"
   },
   "peerDependencies": {
     "@types/react": ">=18",
