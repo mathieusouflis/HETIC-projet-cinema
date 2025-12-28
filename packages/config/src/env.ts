@@ -25,7 +25,7 @@ export const env = {
   database: {
     host: process.env.DB_HOST || "localhost",
     port: process.env.DB_PORT || 5432,
-    name: process.env.DB_NAME || "myapp",
+    name: process.env.DB_DATABASE || "myapp",
     user: process.env.DB_USER || "postgres",
     password: process.env.DB_PASSWORD || "your_password_here",
     database: process.env.DB_DATABASE || "the_database",
