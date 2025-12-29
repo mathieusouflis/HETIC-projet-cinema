@@ -10,7 +10,10 @@ export const drizzleConfig = defineConfig({
     user: databaseConfig.user,
     password: databaseConfig.password,
     host: databaseConfig.host,
-    port: typeof databaseConfig.port === "string" ? parseInt(databaseConfig.port, 10) : databaseConfig.port,
+    port:
+      typeof databaseConfig.port === "string"
+        ? parseInt(databaseConfig.port, 10)
+        : databaseConfig.port,
     ssl: databaseConfig.ssl,
-  }
+  },
 });

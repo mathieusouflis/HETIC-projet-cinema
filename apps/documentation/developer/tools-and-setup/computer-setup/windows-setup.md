@@ -2,6 +2,7 @@
 
 {% stepper %}
 {% step %}
+
 ## Install and setup WSL2
 
 #### Install WSL
@@ -26,6 +27,7 @@ At the first launch of wsl on your computer you'll be asked to create a user.
 {% endstep %}
 
 {% step %}
+
 ## Install NixOs
 
 ```bash
@@ -38,14 +40,17 @@ Close and re open your terminal after installation
 {% endstep %}
 
 {% step %}
+
 ## Install Devenv
 
 ```bash
 nix-env -iA nixpkgs.devenv
 ```
+
 {% endstep %}
 
 {% step %}
+
 ## Install and enable Direnv
 
 #### Installation
@@ -72,9 +77,11 @@ Add the following line at the <mark style="color:red;">**end**</mark> of the `~/
 ```zsh
 eval "$(direnv hook bash)"
 ```
+
 {% endstep %}
 
 {% step %}
+
 ## Install WSL VSCode extension
 
 {% hint style="info" %}
