@@ -19,7 +19,7 @@ import {
   bigint,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
-import { users as usersSchema } from "../modules/users/infrastructure/database/schemas/users.schema.js";
+import { users as usersSchema } from "../modules/users/infrastructure/database/schemas/users.schema";
 
 export const users = usersSchema
 
