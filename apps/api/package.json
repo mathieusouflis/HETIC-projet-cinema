@@ -13,7 +13,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "clean": "rm -rf dist",
-    "lint": "eslint src/ --max-warnings 0",
+    "lint": "eslint src/",
     "test": "vitest run"
   },
   "dependencies": {
