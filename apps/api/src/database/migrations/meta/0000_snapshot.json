@@ -1,5 +1,5 @@
 {
-  "id": "bede4c9f-eb38-4ead-86c9-3f34aeaad913",
+  "id": "1511183a-6b04-4fce-be05-bc820577ba48",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1910,7 +1910,7 @@
           "name": "token_hash",
           "type": "varchar(255)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "expires_at": {
           "name": "expires_at",

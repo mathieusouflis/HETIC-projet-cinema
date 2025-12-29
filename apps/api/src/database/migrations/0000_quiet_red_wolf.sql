@@ -183,7 +183,7 @@ CREATE TABLE "ratings" (
 CREATE TABLE "refresh_tokens" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
-	"token_hash" varchar(255) NOT NULL,
+	"token_hash" varchar(255),
 	"expires_at" timestamp with time zone NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now(),
 	"revoked_at" timestamp with time zone,
