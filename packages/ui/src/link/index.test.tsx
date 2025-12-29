@@ -22,7 +22,7 @@ describe("Link", () => {
     render(
       <Link href="https://example.com" newTab={false}>
         Link
-      </Link>
+      </Link>,
     );
     const link = screen.getByRole("link");
     expect(link).not.toHaveAttribute("target");
@@ -33,7 +33,7 @@ describe("Link", () => {
     render(
       <Link href="https://example.com" newTab={true}>
         Link
-      </Link>
+      </Link>,
     );
     const link = screen.getByRole("link");
     expect(link).toHaveAttribute("target", "_blank");
@@ -49,9 +49,13 @@ describe("Link", () => {
 
   it("spreads additional props to anchor element", () => {
     render(
-      <Link href="https://example.com" className="custom-class" data-testid="custom-link">
+      <Link
+        href="https://example.com"
+        className="custom-class"
+        data-testid="custom-link"
+      >
         Link
-      </Link>
+      </Link>,
     );
     const link = screen.getByRole("link");
     expect(link).toHaveClass("custom-class");
@@ -62,7 +66,7 @@ describe("Link", () => {
     render(
       <Link href="https://example.com">
         <span>Visit</span> <strong>our site</strong>
-      </Link>
+      </Link>,
     );
     expect(screen.getByText("Visit")).toBeInTheDocument();
     expect(screen.getByText("our site")).toBeInTheDocument();

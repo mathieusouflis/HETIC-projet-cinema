@@ -10,8 +10,8 @@ export const env = {
   backend: {
     port: process.env.BACKEND_PORT || 3000,
     host: process.env.BACKEND_HOST || "localhost",
-    apiUrl:process.env.BACKEND_API_URL || "http://localhost:3000",
-    version: 1
+    apiUrl: process.env.BACKEND_API_URL || "http://localhost:3000",
+    version: 1,
   },
 
   // Frontend Configuration

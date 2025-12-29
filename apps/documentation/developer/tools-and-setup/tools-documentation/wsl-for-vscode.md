@@ -20,18 +20,21 @@ With the WSL extension installed, you will see a new Status bar item at the far 
 
 {% stepper %}
 {% step %}
+
 ### Click on the icon extension
 
 <figure><img src="../../../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
 {% endstep %}
 
 {% step %}
+
 ### Use distro to open WSL
 
 <figure><img src="../../../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
 {% endstep %}
 
 {% step %}
+
 ### Connect the right environment
 
 {% hint style="info" %}
@@ -46,6 +49,7 @@ The most common is <mark style="color:blue;">**"Debian"**</mark>
 
 {% stepper %}
 {% step %}
+
 ### Choose your folder
 
 #### Click on the button "Open folder"
@@ -62,8 +66,8 @@ The most common is <mark style="color:blue;">**"Debian"**</mark>
 {% endstep %}
 
 {% step %}
-### HAPPY HACKING
 
+### HAPPY HACKING
 
 {% endstep %}
 {% endstepper %}
