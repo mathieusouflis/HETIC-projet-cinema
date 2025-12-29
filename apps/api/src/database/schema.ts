@@ -28,7 +28,7 @@ export const refreshTokens = pgTable(
   {
     id: uuid().defaultRandom().primaryKey().notNull(),
     userId: uuid("user_id").notNull(),
-    tokenHash: varchar("token_hash", { length: 255 }).notNull(),
+    tokenHash: varchar("token_hash", { length: 255 }),
     expiresAt: timestamp("expires_at", {
       withTimezone: true,
       mode: "string",
