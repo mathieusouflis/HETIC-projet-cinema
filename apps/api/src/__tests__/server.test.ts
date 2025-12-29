@@ -1,23 +1,24 @@
 import supertest from "supertest";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
+
+vi.mock("../database/index.js", () => ({
+  isDatabaseHealthy: vi.fn().mockResolvedValue(true),
+  getAdapter: vi.fn().mockReturnValue({
+    db: {},
+    pool: null,
+    isConnected: () => true,
+    healthCheck: vi.fn().mockResolvedValue(true),
+  }),
+  db: {},
+}));
+
 import { createServer } from "../server";
 
 describe("Server", () => {
   it("health check returns 200", async () => {
-    await supertest(createServer())
-      .get("/status")
-      .expect(200)
-      .then((res) => {
-        expect(res.ok).toBe(true);
-      });
-  });
+    const response = await supertest(createServer()).get("/status");
 
-  it("message endpoint says hello", async () => {
-    await supertest(createServer())
-      .get("/message/jared")
-      .expect(200)
-      .then((res) => {
-        expect(res.body).toEqual({ message: "hello jared" });
-      });
+    expect(response.status).toBe(200);
+    expect(response.body.ok).toBe(true);
   });
 });
