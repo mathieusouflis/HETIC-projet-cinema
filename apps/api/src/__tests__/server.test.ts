@@ -12,6 +12,13 @@ vi.mock("../database/index.js", () => ({
   db: {},
 }));
 
+vi.mock("bcrypt", () => ({
+  default: {
+    hash: vi.fn().mockResolvedValue("hashed_password"),
+    compare: vi.fn().mockResolvedValue(true),
+  },
+}));
+
 import { createServer } from "../server";
 
 describe("Server", () => {
