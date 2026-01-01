@@ -1,4 +1,4 @@
-# Computer Setup
+# 💻 Computer Setup
 
 ## Choose your system
 

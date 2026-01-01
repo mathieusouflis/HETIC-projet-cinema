@@ -10,51 +10,41 @@
     * [🪟 Windows Setup](developer/tools-and-setup/computer-setup/windows-setup.md)
   * [📚 Tools Documentation](developer/tools-and-setup/tools-documentation/README.md)
     * [🐧 WSL for VS Code](developer/tools-and-setup/tools-documentation/wsl-for-vscode.md)
+* [Architecture](developer-guide/architecture/README.md)
+  * [Api Architecture](developer-guide/architecture/api-architecture/README.md)
+    * [📋 Architecture Overview](developer-guide/architecture/api-architecture/architecture.md)
+    * [🧹 Clean Architecture Principles](developer-guide/architecture/api-architecture/clean-architecture.md)
+    * [📁 Project Structure](developer-guide/architecture/api-architecture/project-structure.md)
+    * [💉 Dependency Injection](developer-guide/architecture/api-architecture/dependency-injection.md)
+    * [🧩 Module Pattern](developer-guide/architecture/api-architecture/module-pattern.md)
+    * [🗄️ Database Layer](developer-guide/architecture/api-architecture/database-layer.md)
+* [API](developer-guide/api/README.md)
+  * [Page 1](developer-guide/api/page-1.md)
 
 ## 📡 API Documentation
 
 * [🎯 API Overview](api-documentation/README.md)
 
-### 🏗️ Architecture
-
-* [📋 Architecture Overview](api-documentation/architecture/README.md)
-* [🧹 Clean Architecture Principles](api-documentation/architecture/clean-architecture.md)
-* [📁 Project Structure](api-documentation/architecture/project-structure.md)
-* [🧩 Module Pattern](api-documentation/architecture/module-pattern.md)
-* [💉 Dependency Injection](api-documentation/architecture/dependency-injection.md)
-* [🗄️ Database Layer](api-documentation/architecture/database-layer.md)
-
-### 🚀 Getting Started
+## 🚀 Getting Started
 
 * [📖 Getting Started Overview](api-documentation/guides/README.md)
 * [⚡ Quick Start](api-documentation/guides/quick-start.md)
-* [🔧 Environment Setup](api-documentation/guides/environment-setup.md)
-* [🗃️ Database Setup](api-documentation/guides/database-setup.md)
-* [▶️ Running the API](api-documentation/guides/running-the-api.md)
+* [🔧 Environment Setup](getting-started/environment-setup.md)
+* [🗃️ Database Setup](getting-started/database-setup.md)
+* [▶️ Running the API](getting-started/running-the-api.md)
 
-### 👨‍💻 Development Guide
+## 👨‍💻 Development Guide
 
 * [🛠️ Development Overview](api-documentation/development-guide/README.md)
-* [🆕 Creating a New Module](api-documentation/development-guide/creating-a-new-module.md)
-* [🔗 Adding Endpoints](api-documentation/development-guide/adding-endpoints.md)
-* [🧪 Writing Tests](api-documentation/development-guide/writing-tests.md)
-* [🚨 Error Handling](api-documentation/development-guide/error-handling.md)
+* [🆕 Creating a New Module](development-guide/creating-a-new-module.md)
+* [🔗 Adding Endpoints](development-guide/adding-endpoints.md)
+* [🧪 Writing Tests](development-guide/writing-tests.md)
+* [🚨 Error Handling](development-guide/error-handling.md)
 
-### 📚 API Reference
+## 📚 API Reference
 
 * [📖 API Reference Overview](api-documentation/reference/README.md)
-* [🔐 Authentication](api-documentation/reference/authentication.md)
-* [👤 Users](api-documentation/reference/users.md)
-* [❌ Error Codes](api-documentation/reference/error-codes.md)
-
-### 💡 Examples
-
-* [📝 Examples Overview](api-documentation/examples/README.md)
-* [🔑 Authentication Flow](api-documentation/examples/authentication-flow.md)
-* [👥 User Management](api-documentation/examples/user-management.md)
-* [🎨 Common Patterns](api-documentation/examples/common-patterns.md)
-
----
+* [❌ Error Codes](api-reference/error-codes.md)
 
 ## 📖 Additional Resources
 

@@ -1,8 +1,10 @@
 ---
-description: Complete tools and setup guide for Cinema Project development - IDE configuration, extensions, and productivity tools
+description: >-
+  Complete tools and setup guide for Cinema Project development - IDE
+  configuration, extensions, and productivity tools
 ---
 
-# Tools & Setup
+# 🛠️ Tools & Setup
 
 This section provides comprehensive guidance for setting up your development environment for the Cinema Project. Whether you're on Windows, macOS, or Linux, we'll help you get everything configured for optimal productivity.
 
@@ -10,24 +12,26 @@ This section provides comprehensive guidance for setting up your development env
 
 A well-configured development environment is crucial for productive work on the Cinema Project. This guide covers:
 
-- **IDE Setup** - Visual Studio Code configuration and extensions
-- **Development Tools** - Essential tools for daily development
-- **Platform-Specific Setup** - Windows, macOS, and Linux configurations
-- **Productivity Enhancements** - Tips and tricks for efficient development
+* **IDE Setup** - Visual Studio Code configuration and extensions
+* **Development Tools** - Essential tools for daily development
+* **Platform-Specific Setup** - Windows, macOS, and Linux configurations
+* **Productivity Enhancements** - Tips and tricks for efficient development
 
 ## 🚀 Quick Setup Checklist
 
 Before diving into the detailed guides, ensure you have these essentials:
 
 ### Prerequisites
-- [ ] **Node.js 20+** installed
-- [ ] **pnpm** package manager
-- [ ] **Git** version control
-- [ ] **PostgreSQL 14+** database
-- [ ] **Visual Studio Code** (recommended IDE)
-- [ ] **Docker** (optional, for containerized development)
+
+* [ ] **Node.js 20+** installed
+* [ ] **pnpm** package manager
+* [ ] **Git** version control
+* [ ] **PostgreSQL 14+** database
+* [ ] **Visual Studio Code** (recommended IDE)
+* [ ] **Docker** (optional, for containerized development)
 
 ### Verification
+
 ```bash
 # Verify installations
 node --version    # Should show v20.x.x or higher
@@ -41,77 +45,95 @@ docker --version  # Docker version (if using)
 ## 🛠️ Development Environment Options
 
 ### Option 1: Local Development (Recommended)
-- **Best for**: Day-to-day development, debugging, testing
-- **Pros**: Full control, best performance, offline work
-- **Cons**: Requires local setup, potential environment differences
+
+* **Best for**: Day-to-day development, debugging, testing
+* **Pros**: Full control, best performance, offline work
+* **Cons**: Requires local setup, potential environment differences
 
 ### Option 2: Containerized Development
-- **Best for**: Consistent environments, team development
-- **Pros**: Identical environments, easy cleanup, isolation
-- **Cons**: Slightly slower, requires Docker knowledge
+
+* **Best for**: Consistent environments, team development
+* **Pros**: Identical environments, easy cleanup, isolation
+* **Cons**: Slightly slower, requires Docker knowledge
 
 ### Option 3: Cloud Development (Advanced)
-- **Best for**: Remote work, powerful cloud instances
-- **Pros**: Consistent environments, powerful hardware
-- **Cons**: Internet dependency, potential latency
+
+* **Best for**: Remote work, powerful cloud instances
+* **Pros**: Consistent environments, powerful hardware
+* **Cons**: Internet dependency, potential latency
 
 ## 📋 Setup Guides
 
 ### [Computer Setup](computer-setup/)
+
 Platform-specific installation and configuration guides:
 
 #### [Windows Setup](computer-setup/windows-setup.md)
+
 Complete Windows development environment setup including:
-- **WSL2 Configuration** - Windows Subsystem for Linux setup
-- **Node.js Installation** - Using nvm for Windows or direct installation  
-- **PostgreSQL Setup** - Database installation and configuration
-- **Git Configuration** - SSH keys and global settings
-- **Performance Optimization** - Windows-specific tweaks
+
+* **WSL2 Configuration** - Windows Subsystem for Linux setup
+* **Node.js Installation** - Using nvm for Windows or direct installation
+* **PostgreSQL Setup** - Database installation and configuration
+* **Git Configuration** - SSH keys and global settings
+* **Performance Optimization** - Windows-specific tweaks
 
 #### macOS Setup
+
 macOS development environment configuration:
-- **Homebrew Installation** - Package manager setup
-- **Node.js via nvm** - Version management
-- **PostgreSQL via Homebrew** - Database setup
-- **Xcode Command Line Tools** - Essential development tools
-- **Terminal Enhancement** - iTerm2 and shell improvements
+
+* **Homebrew Installation** - Package manager setup
+* **Node.js via nvm** - Version management
+* **PostgreSQL via Homebrew** - Database setup
+* **Xcode Command Line Tools** - Essential development tools
+* **Terminal Enhancement** - iTerm2 and shell improvements
 
 #### Linux Setup
+
 Linux development environment setup:
-- **Package Manager Setup** - apt, yum, or pacman configuration
-- **Node.js Installation** - Using nvm or package manager
-- **PostgreSQL Configuration** - Service setup and user management
-- **Development Tools** - Essential Linux development packages
+
+* **Package Manager Setup** - apt, yum, or pacman configuration
+* **Node.js Installation** - Using nvm or package manager
+* **PostgreSQL Configuration** - Service setup and user management
+* **Development Tools** - Essential Linux development packages
 
 ### [Tools Documentation](tools-documentation/)
+
 Detailed documentation for development tools and integrations:
 
 #### [WSL for VS Code](tools-documentation/wsl-for-vscode.md)
+
 Windows Subsystem for Linux integration with Visual Studio Code:
-- **WSL Extension Setup** - Remote development configuration
-- **File System Integration** - Working with WSL file systems
-- **Terminal Integration** - Using WSL terminals in VS Code
-- **Performance Tips** - Optimizing WSL development workflow
+
+* **WSL Extension Setup** - Remote development configuration
+* **File System Integration** - Working with WSL file systems
+* **Terminal Integration** - Using WSL terminals in VS Code
+* **Performance Tips** - Optimizing WSL development workflow
 
 #### IDE Extensions and Configuration
+
 Essential VS Code extensions and settings for the project:
-- **Language Support** - TypeScript, JavaScript, JSON
-- **Framework Extensions** - React, Next.js, Express
-- **Database Tools** - PostgreSQL, SQL formatting
-- **Git Integration** - GitLens, Git Graph
-- **Productivity Tools** - Auto-formatting, linting, snippets
+
+* **Language Support** - TypeScript, JavaScript, JSON
+* **Framework Extensions** - React, Next.js, Express
+* **Database Tools** - PostgreSQL, SQL formatting
+* **Git Integration** - GitLens, Git Graph
+* **Productivity Tools** - Auto-formatting, linting, snippets
 
 ## 🔧 Essential Tools
 
 ### Code Editor: Visual Studio Code
+
 **Why VS Code?**
-- Excellent TypeScript support
-- Rich extension ecosystem
-- Integrated terminal and debugger
-- Git integration
-- Remote development capabilities
+
+* Excellent TypeScript support
+* Rich extension ecosystem
+* Integrated terminal and debugger
+* Git integration
+* Remote development capabilities
 
 **Essential Extensions:**
+
 ```json
 {
   "recommendations": [
@@ -129,14 +151,17 @@ Essential VS Code extensions and settings for the project:
 ```
 
 ### Package Manager: pnpm
+
 **Why pnpm?**
-- Faster installation and execution
-- Efficient disk space usage
-- Strict dependency management
-- Monorepo support
-- Compatible with npm ecosystem
+
+* Faster installation and execution
+* Efficient disk space usage
+* Strict dependency management
+* Monorepo support
+* Compatible with npm ecosystem
 
 **Installation:**
+
 ```bash
 # Install pnpm globally
 npm install -g pnpm
@@ -149,35 +174,42 @@ pnpm --version
 ```
 
 ### Database: PostgreSQL
+
 **Why PostgreSQL?**
-- Robust SQL database with advanced features
-- Excellent JSON support
-- Strong consistency and ACID compliance
-- Great tooling ecosystem
-- Free and open source
+
+* Robust SQL database with advanced features
+* Excellent JSON support
+* Strong consistency and ACID compliance
+* Great tooling ecosystem
+* Free and open source
 
 **Management Tools:**
-- **pgAdmin** - Web-based administration
-- **TablePlus** - Native GUI client (paid)
-- **DBeaver** - Free, cross-platform client
-- **Drizzle Studio** - Built-in ORM studio (`pnpm db:studio`)
+
+* **pgAdmin** - Web-based administration
+* **TablePlus** - Native GUI client (paid)
+* **DBeaver** - Free, cross-platform client
+* **Drizzle Studio** - Built-in ORM studio (`pnpm db:studio`)
 
 ### API Testing: Thunder Client (VS Code) / Postman
+
 **Thunder Client (Recommended for VS Code users):**
-- Built into VS Code
-- Lightweight and fast
-- Environment support
-- Collection sharing
+
+* Built into VS Code
+* Lightweight and fast
+* Environment support
+* Collection sharing
 
 **Postman (Alternative):**
-- Comprehensive API testing
-- Team collaboration features
-- Advanced scripting capabilities
-- Mock servers
+
+* Comprehensive API testing
+* Team collaboration features
+* Advanced scripting capabilities
+* Mock servers
 
 ## 🎨 IDE Configuration
 
 ### VS Code Settings
+
 Create or update `.vscode/settings.json` in the project root:
 
 ```json
@@ -207,6 +239,7 @@ Create or update `.vscode/settings.json` in the project root:
 ```
 
 ### VS Code Launch Configuration
+
 Create `.vscode/launch.json` for debugging:
 
 ```json
@@ -242,6 +275,7 @@ Create `.vscode/launch.json` for debugging:
 ```
 
 ### VS Code Tasks
+
 Create `.vscode/tasks.json` for common tasks:
 
 ```json
@@ -295,6 +329,7 @@ Create `.vscode/tasks.json` for common tasks:
 ## 🔍 Development Workflow Tools
 
 ### Git Configuration
+
 ```bash
 # Set global configuration
 git config --global user.name "Your Name"
@@ -312,7 +347,9 @@ git config --global alias.lg "log --oneline --decorate --all --graph"
 ```
 
 ### Terminal Enhancement
+
 **For macOS/Linux (using Oh My Zsh):**
+
 ```bash
 # Install Oh My Zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -328,6 +365,7 @@ alias ...="cd ../.."
 ```
 
 **For Windows (PowerShell):**
+
 ```powershell
 # Install PowerShell modules
 Install-Module -Name PSReadLine -Force
@@ -341,35 +379,43 @@ Set-PSReadLineOption -PredictionSource History
 ## 📊 Performance Monitoring Tools
 
 ### Development Performance
-- **Node.js Inspector** - Built-in debugging and profiling
-- **Clinic.js** - Performance monitoring toolkit
-- **0x** - Flamegraph profiler
+
+* **Node.js Inspector** - Built-in debugging and profiling
+* **Clinic.js** - Performance monitoring toolkit
+* **0x** - Flamegraph profiler
 
 ### Database Performance
-- **Drizzle Studio** - Query inspection and data browsing
-- **PostgreSQL Query Planner** - Built-in query analysis
-- **pgAnalyze** - Advanced PostgreSQL monitoring (optional)
+
+* **Drizzle Studio** - Query inspection and data browsing
+* **PostgreSQL Query Planner** - Built-in query analysis
+* **pgAnalyze** - Advanced PostgreSQL monitoring (optional)
 
 ### API Testing and Monitoring
-- **Thunder Client Collections** - API endpoint testing
-- **Artillery** - Load testing (for performance testing)
-- **Lighthouse CI** - Frontend performance monitoring
+
+* **Thunder Client Collections** - API endpoint testing
+* **Artillery** - Load testing (for performance testing)
+* **Lighthouse CI** - Frontend performance monitoring
 
 ## 🔧 Troubleshooting Common Issues
 
 ### VS Code Issues
+
 **TypeScript not working:**
+
 1. Restart TypeScript server: `Cmd/Ctrl + Shift + P` → "TypeScript: Restart TS Server"
 2. Check workspace TypeScript version: `Cmd/Ctrl + Shift + P` → "TypeScript: Select TypeScript Version"
 3. Ensure project dependencies are installed: `pnpm install`
 
 **Extensions not loading:**
+
 1. Reload window: `Cmd/Ctrl + Shift + P` → "Developer: Reload Window"
 2. Check extension compatibility
 3. Clear extension cache: `Cmd/Ctrl + Shift + P` → "Developer: Clear Extension Host Cache"
 
 ### Node.js Issues
+
 **Permission errors:**
+
 ```bash
 # Fix npm/pnpm permissions (Linux/macOS)
 sudo chown -R $USER:$USER ~/.npm
@@ -382,7 +428,9 @@ nvm use 20
 ```
 
 ### Database Connection Issues
+
 **PostgreSQL not starting:**
+
 ```bash
 # macOS (Homebrew)
 brew services start postgresql
@@ -397,15 +445,17 @@ sudo systemctl start postgresql
 ## 📚 Additional Resources
 
 ### Documentation Links
-- [Visual Studio Code Documentation](https://code.visualstudio.com/docs)
-- [pnpm Documentation](https://pnpm.io/motivation)
-- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
-- [Git Documentation](https://git-scm.com/doc)
+
+* [Visual Studio Code Documentation](https://code.visualstudio.com/docs)
+* [pnpm Documentation](https://pnpm.io/motivation)
+* [PostgreSQL Documentation](https://www.postgresql.org/docs/)
+* [Git Documentation](https://git-scm.com/doc)
 
 ### Useful Tutorials
-- [VS Code Tips and Tricks](https://code.visualstudio.com/docs/getstarted/tips-and-tricks)
-- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
-- [Node.js Best Practices](https://github.com/goldbergyoni/nodebestpractices)
+
+* [VS Code Tips and Tricks](https://code.visualstudio.com/docs/getstarted/tips-and-tricks)
+* [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+* [Node.js Best Practices](https://github.com/goldbergyoni/nodebestpractices)
 
 ## 🎯 Next Steps
 
@@ -420,11 +470,11 @@ Once you have your tools configured:
 
 If you encounter issues during setup:
 
-- **Check the [FAQ](../../faq.md)** for common solutions
-- **Search [GitHub Issues](https://github.com/your-org/cinema/issues)** for similar problems
-- **Ask in [GitHub Discussions](https://github.com/your-org/cinema/discussions)**
-- **Review platform-specific setup guides** in the Computer Setup section
+* **Check the** [**FAQ**](../../faq.md) for common solutions
+* **Search** [**GitHub Issues**](https://github.com/mathieusouflis/HETIC-projet-cinema/issues) for similar problems
+* **Ask in** [**GitHub Discussions**](https://github.com/mathieusouflis/HETIC-projet-cinema/discussions)
+* **Review platform-specific setup guides** in the Computer Setup section
 
----
+***
 
 **Ready to set up your environment?** Choose your platform in the [Computer Setup](computer-setup/) section or dive into specific tools in [Tools Documentation](tools-documentation/).

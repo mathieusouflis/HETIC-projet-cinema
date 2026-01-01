@@ -4,7 +4,7 @@ description: >-
   the Cinema API
 ---
 
-# Clean Architecture Principles
+# 🧹 Clean Architecture Principles
 
 Clean Architecture is a software design philosophy that creates systems which are independent of frameworks, databases, and external interfaces. This document explains how these principles are applied in the Cinema API.
 
@@ -616,6 +616,6 @@ The investment in this architectural approach pays dividends in:
 ## 🔗 Related Documentation
 
 * [**Project Structure**](project-structure.md) - How files are organized
-* [**Module Pattern**](module-pattern.md) - Module-specific architecture
-* [**Dependency Injection**](dependency-injection.md) - DI implementation details
-* [**Creating a Module**](../guides/creating-module.md) - Practical application
+* [**Module Pattern**](../../../api/architecture/module-pattern.md) - Module-specific architecture
+* [**Dependency Injection**](../../../api/architecture/dependency-injection.md) - DI implementation details
+* [**Creating a Module**](../../../api/guides/creating-module.md) - Practical application

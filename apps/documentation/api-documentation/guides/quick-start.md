@@ -2,16 +2,17 @@
 description: Get the Cinema API up and running in 5 minutes - from clone to first API call
 ---
 
-# Quick Start
+# ⚡ Quick Start
 
 Get the Cinema API running locally in just a few minutes. This guide will have you making API calls and exploring the codebase quickly.
 
 ## ⚡ 5-Minute Setup
 
 ### 1. Clone and Install
+
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/mathieusouflis/HETIC-projet-cinema.git
 cd HETIC-projet-cinema
 
 # Install dependencies
@@ -19,15 +20,17 @@ pnpm install
 ```
 
 ### 2. Environment Setup
+
 ```bash
 # Copy environment template
-cp .env.example .env
+cp apps/api/.env.example apps/api/.env
 
 # Edit basic settings (use your preferred editor)
-nano .env
+nano apps/api/.env
 ```
 
 **Minimal `.env` configuration:**
+
 ```env
 # Database
 DB_HOST=localhost
@@ -45,6 +48,7 @@ BACKEND_PORT=3000
 ```
 
 ### 3. Database Setup
+
 ```bash
 # Start PostgreSQL (if using Docker)
 pnpm db:start
@@ -57,12 +61,14 @@ cd apps/api && pnpm db:migrate
 ```
 
 ### 4. Start the API
+
 ```bash
 # Development mode with hot reload
 cd apps/api && pnpm dev
 ```
 
 You should see:
+
 ```
 ✅ PostgreSQL client connected
 🚀 Server running on http://localhost:3000
@@ -71,11 +77,13 @@ You should see:
 ## 🧪 Test Your Setup
 
 ### Health Check
+
 ```bash
 curl http://localhost:3000/api/v1
 ```
 
 **Expected Response:**
+
 ```json
 {
   "message": "API v1 is up and running!",
@@ -88,6 +96,7 @@ curl http://localhost:3000/api/v1
 ```
 
 ### Register a User
+
 ```bash
 curl -X POST http://localhost:3000/api/v1/auth/register \
   -H "Content-Type: application/json" \
@@ -99,6 +108,7 @@ curl -X POST http://localhost:3000/api/v1/auth/register \
 ```
 
 **Expected Response:**
+
 ```json
 {
   "success": true,
@@ -120,6 +130,7 @@ curl -X POST http://localhost:3000/api/v1/auth/register \
 ```
 
 ### Login
+
 ```bash
 curl -X POST http://localhost:3000/api/v1/auth/login \
   -H "Content-Type: application/json" \
@@ -130,6 +141,7 @@ curl -X POST http://localhost:3000/api/v1/auth/login \
 ```
 
 ### Access Protected Route
+
 ```bash
 # Use the accessToken from previous response
 curl -X GET http://localhost:3000/api/v1/users/me \
@@ -139,6 +151,7 @@ curl -X GET http://localhost:3000/api/v1/users/me \
 ## 📁 Project Overview
 
 ### Key Directories
+
 ```
 apps/api/
 ├── src/
@@ -152,6 +165,7 @@ apps/api/
 ```
 
 ### Available Scripts
+
 ```bash
 # Development
 pnpm dev              # Start with hot reload
@@ -173,6 +187,7 @@ pnpm type-check      # Validate TypeScript
 ## 🔧 Development Tools
 
 ### Recommended VS Code Extensions
+
 ```json
 {
   "recommendations": [
@@ -186,6 +201,7 @@ pnpm type-check      # Validate TypeScript
 ```
 
 ### API Testing with Postman
+
 Import this collection to test all endpoints:
 
 ```json
@@ -245,6 +261,7 @@ Import this collection to test all endpoints:
 ## 🚨 Common Issues
 
 ### Port 3000 Already in Use
+
 ```bash
 # Find what's using the port
 lsof -ti:3000
@@ -257,6 +274,7 @@ BACKEND_PORT=3001 pnpm dev
 ```
 
 ### Database Connection Error
+
 ```bash
 # Check PostgreSQL is running
 pg_isready
@@ -270,6 +288,7 @@ pnpm db:migrate
 ```
 
 ### TypeScript Errors
+
 ```bash
 # Clear cache and rebuild
 rm -rf dist node_modules/.cache
@@ -277,6 +296,7 @@ pnpm clean && pnpm build
 ```
 
 ### Permission Denied (macOS/Linux)
+
 ```bash
 # Fix permissions
 sudo chown -R $USER:$USER .
@@ -285,6 +305,7 @@ sudo chown -R $USER:$USER .
 ## 📚 Understanding the Code
 
 ### Request Flow Example
+
 When you call `POST /api/v1/auth/register`:
 
 ```mermaid
@@ -328,23 +349,28 @@ src/modules/users/infrastructure/database/schemas/users.schema.ts
 Now that you have the API running:
 
 ### Explore the Architecture
-- **[Architecture Overview](../architecture/README.md)** - Understand the system design
-- **[Clean Architecture](../architecture/clean-architecture.md)** - Learn the principles
-- **[Project Structure](../architecture/project-structure.md)** - Navigate the codebase
+
+* [**Architecture Overview**](../../developer-guide/architecture/api-architecture/architecture.md) - Understand the system design
+* [**Clean Architecture**](../../developer-guide/architecture/api-architecture/clean-architecture.md) - Learn the principles
+* [**Project Structure**](../../developer-guide/architecture/api-architecture/project-structure.md) - Navigate the codebase
 
 ### Start Developing
-- **[Development Guide](development-guide.md)** - Daily development workflow
-- **[Creating a Module](creating-module.md)** - Add new features
-- **[Writing Tests](writing-tests.md)** - Test your code
+
+* [**Development Guide**](../../api/guides/development-guide.md) - Daily development workflow
+* [**Creating a Module**](../../api/guides/creating-module.md) - Add new features
+* [**Writing Tests**](../../api/guides/writing-tests.md) - Test your code
 
 ### Dive Deeper
-- **[API Reference](../reference/README.md)** - Complete endpoint documentation
-- **[Examples](../examples/README.md)** - Practical code examples
+
+* [**API Reference**](../reference/) - Complete endpoint documentation
+* [**Examples**](/broken/pages/SKW7YUUEqmIti47kic96) - Practical code examples
 
 ## 💡 Pro Tips
 
 ### Hot Reload Development
+
 The API automatically restarts when you make changes. Watch the console for:
+
 ```
 🔄 Restarting due to changes...
 ✅ PostgreSQL client connected
@@ -352,14 +378,18 @@ The API automatically restarts when you make changes. Watch the console for:
 ```
 
 ### Database GUI
+
 Open Drizzle Studio to visually explore your database:
+
 ```bash
 pnpm db:studio
 # Opens http://localhost:4983
 ```
 
 ### Environment Switching
+
 Use different `.env` files for different environments:
+
 ```bash
 # Development (default)
 pnpm dev
@@ -372,7 +402,9 @@ NODE_ENV=test pnpm test
 ```
 
 ### Quick Database Reset
+
 Reset everything and start fresh:
+
 ```bash
 # Stop server, reset DB, restart
 pnpm db:reset && pnpm dev
@@ -380,14 +412,14 @@ pnpm db:reset && pnpm dev
 
 ## ✅ Success Checklist
 
-- [ ] API server starts without errors
-- [ ] Health check endpoint responds
-- [ ] User registration works
-- [ ] User login returns tokens
-- [ ] Protected routes accept JWT tokens
-- [ ] Database contains user data
-- [ ] Hot reload works when editing files
+* [ ] API server starts without errors
+* [ ] Health check endpoint responds
+* [ ] User registration works
+* [ ] User login returns tokens
+* [ ] Protected routes accept JWT tokens
+* [ ] Database contains user data
+* [ ] Hot reload works when editing files
 
 Congratulations! 🎉 You now have a fully functional Cinema API running locally. Ready to start building amazing features!
 
-**Next recommended read**: [Development Guide](development-guide.md)
+**Next recommended read**: [Development Guide](../../api/guides/development-guide.md)

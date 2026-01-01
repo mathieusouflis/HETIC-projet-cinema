@@ -4,7 +4,7 @@ description: >-
   system organization
 ---
 
-# Architecture
+# 📋 Architecture Overview
 
 The Cinema API is built using **Clean Architecture** principles, creating a robust, maintainable, and testable system. This document provides a comprehensive overview of the architectural decisions, patterns, and principles that guide the development of this API.
 
@@ -523,12 +523,12 @@ export class OAuthUseCase {
 Ready to dive deeper? Explore these sections:
 
 1. [**Project Structure**](project-structure.md) - Detailed file organization
-2. [**Module Pattern**](module-pattern.md) - Deep dive into modules
-3. [**Dependency Injection**](dependency-injection.md) - DI implementation details
-4. [**Database Layer**](database-layer.md) - Database architecture specifics
+2. [**Module Pattern**](../../../api/architecture/module-pattern.md) - Deep dive into modules
+3. [**Dependency Injection**](../../../api/architecture/dependency-injection.md) - DI implementation details
+4. [**Database Layer**](../../../api/architecture/database-layer.md) - Database architecture specifics
 
 Or jump to practical guides:
 
-* [**Creating a Module**](../guides/creating-module.md) - Build your first module
-* [**Adding Endpoints**](../guides/adding-endpoints.md) - Extend existing functionality
-* [**Writing Tests**](../guides/writing-tests.md) - Test your code effectively
+* [**Creating a Module**](../../../api/guides/creating-module.md) - Build your first module
+* [**Adding Endpoints**](../../../api/guides/adding-endpoints.md) - Extend existing functionality
+* [**Writing Tests**](../../../api/guides/writing-tests.md) - Test your code effectively

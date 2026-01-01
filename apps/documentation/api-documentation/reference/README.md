@@ -1,26 +1,32 @@
 ---
-description: Complete API reference documentation for all Cinema API endpoints, authentication, and error codes
+description: >-
+  Complete API reference documentation for all Cinema API endpoints,
+  authentication, and error codes
 ---
 
-# API Reference
+# 📖 API Reference Overview
 
 This section provides comprehensive documentation for all Cinema API endpoints, including authentication methods, request/response formats, and error handling.
 
 ## 🌐 Base Information
 
 ### Base URL
+
 ```
 Production:  https://api.cinema.com/v1
 Development: http://localhost:3000/api/v1
 ```
 
 ### Content Type
+
 All requests and responses use JSON format:
+
 ```
 Content-Type: application/json
 ```
 
 ### API Version
+
 Current version: **v1**
 
 All endpoints are prefixed with `/api/v1`
@@ -30,16 +36,20 @@ All endpoints are prefixed with `/api/v1`
 The Cinema API uses **JWT (JSON Web Tokens)** for authentication with a dual-token system:
 
 ### Token Types
-- **Access Token** - Short-lived (15 minutes), used for API requests
-- **Refresh Token** - Long-lived (7 days), used to obtain new access tokens
+
+* **Access Token** - Short-lived (15 minutes), used for API requests
+* **Refresh Token** - Long-lived (7 days), used to obtain new access tokens
 
 ### Authentication Header
+
 Include the access token in the Authorization header:
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 ### Authentication Flow
+
 ```mermaid
 sequenceDiagram
     participant Client
@@ -60,34 +70,38 @@ sequenceDiagram
 ## 📋 Endpoint Overview
 
 ### Authentication Endpoints
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| POST | `/auth/register` | Create new account | No |
-| POST | `/auth/login` | Authenticate user | No |
-| POST | `/auth/refresh` | Refresh tokens | No* |
-| POST | `/auth/logout` | Logout user | Yes |
-| GET | `/auth/me` | Current user info | Yes |
 
-*Requires valid refresh token in body
+| Method | Endpoint         | Description        | Auth Required |
+| ------ | ---------------- | ------------------ | ------------- |
+| POST   | `/auth/register` | Create new account | No            |
+| POST   | `/auth/login`    | Authenticate user  | No            |
+| POST   | `/auth/refresh`  | Refresh tokens     | No\*          |
+| POST   | `/auth/logout`   | Logout user        | Yes           |
+| GET    | `/auth/me`       | Current user info  | Yes           |
+
+\*Requires valid refresh token in body
 
 ### User Management Endpoints
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| GET | `/users` | List users (paginated) | Yes |
-| GET | `/users/me` | Current user profile | Yes |
-| PATCH | `/users/me` | Update own profile | Yes |
-| GET | `/users/:id` | Get user by ID | No |
-| PATCH | `/users/:id` | Update user | Owner only |
-| DELETE | `/users/:id` | Delete user | Owner only |
+
+| Method | Endpoint     | Description            | Auth Required |
+| ------ | ------------ | ---------------------- | ------------- |
+| GET    | `/users`     | List users (paginated) | Yes           |
+| GET    | `/users/me`  | Current user profile   | Yes           |
+| PATCH  | `/users/me`  | Update own profile     | Yes           |
+| GET    | `/users/:id` | Get user by ID         | No            |
+| PATCH  | `/users/:id` | Update user            | Owner only    |
+| DELETE | `/users/:id` | Delete user            | Owner only    |
 
 ## 🔑 Authentication Endpoints
 
 ### Register User
+
 Create a new user account.
 
 **`POST /auth/register`**
 
 #### Request Body
+
 ```json
 {
   "email": "user@example.com",
@@ -97,11 +111,13 @@ Create a new user account.
 ```
 
 #### Validation Rules
-- **email**: Valid email format, max 255 characters, unique
-- **username**: 3-30 characters, alphanumeric + underscore/hyphen, unique
-- **password**: Min 8 characters, must contain uppercase, lowercase, and number
+
+* **email**: Valid email format, max 255 characters, unique
+* **username**: 3-30 characters, alphanumeric + underscore/hyphen, unique
+* **password**: Min 8 characters, must contain uppercase, lowercase, and number
 
 #### Response (201 Created)
+
 ```json
 {
   "success": true,
@@ -124,6 +140,7 @@ Create a new user account.
 ```
 
 #### Error Responses
+
 ```json
 // 400 - Validation Error
 {
@@ -146,11 +163,13 @@ Create a new user account.
 ```
 
 ### Login User
+
 Authenticate an existing user.
 
 **`POST /auth/login`**
 
 #### Request Body
+
 ```json
 {
   "email": "user@example.com",
@@ -159,6 +178,7 @@ Authenticate an existing user.
 ```
 
 #### Response (200 OK)
+
 ```json
 {
   "success": true,
@@ -181,6 +201,7 @@ Authenticate an existing user.
 ```
 
 #### Error Responses
+
 ```json
 // 401 - Invalid Credentials
 {
@@ -190,11 +211,13 @@ Authenticate an existing user.
 ```
 
 ### Refresh Tokens
+
 Get new access and refresh tokens.
 
 **`POST /auth/refresh`**
 
 #### Request Body
+
 ```json
 {
   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -202,6 +225,7 @@ Get new access and refresh tokens.
 ```
 
 #### Response (200 OK)
+
 ```json
 {
   "success": true,
@@ -214,6 +238,7 @@ Get new access and refresh tokens.
 ```
 
 #### Error Responses
+
 ```json
 // 401 - Invalid Refresh Token
 {
@@ -223,16 +248,19 @@ Get new access and refresh tokens.
 ```
 
 ### Logout User
+
 Logout the current user (client-side token removal).
 
 **`POST /auth/logout`**
 
 #### Headers
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 #### Response (200 OK)
+
 ```json
 {
   "success": true,
@@ -241,16 +269,19 @@ Authorization: Bearer <access_token>
 ```
 
 ### Get Current User Info
+
 Get basic info from JWT token.
 
 **`GET /auth/me`**
 
 #### Headers
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 #### Response (200 OK)
+
 ```json
 {
   "success": true,
@@ -264,27 +295,32 @@ Authorization: Bearer <access_token>
 ## 👥 User Management Endpoints
 
 ### List Users
+
 Get paginated list of users.
 
 **`GET /users`**
 
 #### Headers
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 #### Query Parameters
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `page` | integer | 1 | Page number (min: 1) |
-| `limit` | integer | 10 | Items per page (min: 1, max: 100) |
+
+| Parameter | Type    | Default | Description                       |
+| --------- | ------- | ------- | --------------------------------- |
+| `page`    | integer | 1       | Page number (min: 1)              |
+| `limit`   | integer | 10      | Items per page (min: 1, max: 100) |
 
 #### Example Request
+
 ```
 GET /users?page=1&limit=20
 ```
 
 #### Response (200 OK)
+
 ```json
 {
   "success": true,
@@ -318,16 +354,19 @@ GET /users?page=1&limit=20
 ```
 
 ### Get Current User Profile
+
 Get full profile of the authenticated user.
 
 **`GET /users/me`**
 
 #### Headers
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 #### Response (200 OK)
+
 ```json
 {
   "success": true,
@@ -343,17 +382,20 @@ Authorization: Bearer <access_token>
 ```
 
 ### Update Current User Profile
+
 Update the authenticated user's profile.
 
 **`PATCH /users/me`**
 
 #### Headers
+
 ```
 Authorization: Bearer <access_token>
 Content-Type: application/json
 ```
 
 #### Request Body
+
 ```json
 {
   "username": "newusername",
@@ -362,10 +404,12 @@ Content-Type: application/json
 ```
 
 #### Validation Rules
-- **username** (optional): 3-30 characters, alphanumeric + underscore/hyphen, unique
-- **avatar** (optional): Valid URL or null to remove
+
+* **username** (optional): 3-30 characters, alphanumeric + underscore/hyphen, unique
+* **avatar** (optional): Valid URL or null to remove
 
 #### Response (200 OK)
+
 ```json
 {
   "success": true,
@@ -381,16 +425,19 @@ Content-Type: application/json
 ```
 
 ### Get User by ID
+
 Get public profile of any user.
 
 **`GET /users/:id`**
 
 #### Path Parameters
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `id` | string | User ID |
+
+| Parameter | Type   | Description |
+| --------- | ------ | ----------- |
+| `id`      | string | User ID     |
 
 #### Response (200 OK)
+
 ```json
 {
   "success": true,
@@ -406,6 +453,7 @@ Get public profile of any user.
 ```
 
 #### Error Responses
+
 ```json
 // 404 - User Not Found
 {
@@ -415,22 +463,26 @@ Get public profile of any user.
 ```
 
 ### Update User by ID
+
 Update a user's profile (owner only).
 
 **`PATCH /users/:id`**
 
 #### Headers
+
 ```
 Authorization: Bearer <access_token>
 Content-Type: application/json
 ```
 
 #### Path Parameters
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `id` | string | User ID (must match authenticated user) |
+
+| Parameter | Type   | Description                             |
+| --------- | ------ | --------------------------------------- |
+| `id`      | string | User ID (must match authenticated user) |
 
 #### Request Body
+
 ```json
 {
   "username": "newusername",
@@ -439,9 +491,11 @@ Content-Type: application/json
 ```
 
 #### Response (200 OK)
+
 Same as `PATCH /users/me`
 
 #### Error Responses
+
 ```json
 // 401 - Not Owner
 {
@@ -451,26 +505,31 @@ Same as `PATCH /users/me`
 ```
 
 ### Delete User
+
 Delete a user account (owner only).
 
 **`DELETE /users/:id`**
 
 #### Headers
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 #### Path Parameters
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `id` | string | User ID (must match authenticated user) |
+
+| Parameter | Type   | Description                             |
+| --------- | ------ | --------------------------------------- |
+| `id`      | string | User ID (must match authenticated user) |
 
 #### Response (204 No Content)
+
 Empty response body.
 
 ## 📊 Response Format
 
 ### Success Response Structure
+
 ```json
 {
   "success": true,
@@ -482,6 +541,7 @@ Empty response body.
 ```
 
 ### Error Response Structure
+
 ```json
 {
   "success": false,
@@ -502,21 +562,22 @@ Empty response body.
 
 ### HTTP Status Codes
 
-| Status | Code | Description | Example |
-|--------|------|-------------|---------|
-| 200 | OK | Request successful | User data retrieved |
-| 201 | Created | Resource created | User registered |
-| 204 | No Content | Success, no response body | User deleted |
-| 400 | Bad Request | Invalid input data | Validation failed |
-| 401 | Unauthorized | Authentication required/failed | Invalid token |
-| 403 | Forbidden | Access denied | Not resource owner |
-| 404 | Not Found | Resource not found | User doesn't exist |
-| 409 | Conflict | Resource conflict | Email already exists |
-| 500 | Internal Server Error | Server error | Database connection failed |
+| Status | Code                  | Description                    | Example                    |
+| ------ | --------------------- | ------------------------------ | -------------------------- |
+| 200    | OK                    | Request successful             | User data retrieved        |
+| 201    | Created               | Resource created               | User registered            |
+| 204    | No Content            | Success, no response body      | User deleted               |
+| 400    | Bad Request           | Invalid input data             | Validation failed          |
+| 401    | Unauthorized          | Authentication required/failed | Invalid token              |
+| 403    | Forbidden             | Access denied                  | Not resource owner         |
+| 404    | Not Found             | Resource not found             | User doesn't exist         |
+| 409    | Conflict              | Resource conflict              | Email already exists       |
+| 500    | Internal Server Error | Server error                   | Database connection failed |
 
 ### Common Error Types
 
 #### Validation Errors (400)
+
 ```json
 {
   "success": false,
@@ -537,6 +598,7 @@ Empty response body.
 ```
 
 #### Authentication Errors (401)
+
 ```json
 {
   "success": false,
@@ -545,6 +607,7 @@ Empty response body.
 ```
 
 #### Authorization Errors (403)
+
 ```json
 {
   "success": false,
@@ -553,6 +616,7 @@ Empty response body.
 ```
 
 #### Not Found Errors (404)
+
 ```json
 {
   "success": false,
@@ -561,6 +625,7 @@ Empty response body.
 ```
 
 #### Conflict Errors (409)
+
 ```json
 {
   "success": false,
@@ -571,24 +636,28 @@ Empty response body.
 ## 🔒 Security Considerations
 
 ### Rate Limiting
-- **Authentication endpoints**: 5 requests per minute per IP
-- **General endpoints**: 100 requests per minute per authenticated user
-- **Public endpoints**: 50 requests per minute per IP
+
+* **Authentication endpoints**: 5 requests per minute per IP
+* **General endpoints**: 100 requests per minute per authenticated user
+* **Public endpoints**: 50 requests per minute per IP
 
 ### Token Security
-- **Access tokens** expire after 15 minutes
-- **Refresh tokens** expire after 7 days
-- Tokens are invalidated after password change
-- Use HTTPS in production
+
+* **Access tokens** expire after 15 minutes
+* **Refresh tokens** expire after 7 days
+* Tokens are invalidated after password change
+* Use HTTPS in production
 
 ### Input Validation
-- All inputs are validated using Zod schemas
-- SQL injection protection via parameterized queries
-- XSS protection through input sanitization
+
+* All inputs are validated using Zod schemas
+* SQL injection protection via parameterized queries
+* XSS protection through input sanitization
 
 ## 📝 Examples
 
 ### Complete Authentication Flow
+
 ```bash
 # 1. Register a new user
 curl -X POST http://localhost:3000/api/v1/auth/register \
@@ -614,6 +683,7 @@ curl -X POST http://localhost:3000/api/v1/auth/refresh \
 ```
 
 ### User Management Flow
+
 ```bash
 # Get current user profile
 curl -X GET http://localhost:3000/api/v1/users/me \
@@ -635,15 +705,16 @@ curl -X GET "http://localhost:3000/api/v1/users?page=1&limit=10" \
 
 ## 🔗 Related Documentation
 
-- **[Authentication Guide](authentication.md)** - Detailed authentication implementation
-- **[Error Handling Guide](../guides/error-handling.md)** - Error handling patterns
-- **[Quick Start](../guides/quick-start.md)** - Get started quickly
-- **[Examples](../examples/README.md)** - More code examples
+* [**Authentication Guide**](../../api/reference/authentication.md) - Detailed authentication implementation
+* [**Error Handling Guide**](../../api/guides/error-handling.md) - Error handling patterns
+* [**Quick Start**](../guides/quick-start.md) - Get started quickly
+* [**Examples**](/broken/pages/SKW7YUUEqmIti47kic96) - More code examples
 
 ## 📞 Support
 
 For API support:
-- Check this documentation first
-- Review the [examples](../examples/README.md)
-- Report issues in the project repository
-- Ask questions in project discussions
+
+* Check this documentation first
+* Review the [examples](/broken/pages/SKW7YUUEqmIti47kic96)
+* Report issues in the project repository
+* Ask questions in project discussions

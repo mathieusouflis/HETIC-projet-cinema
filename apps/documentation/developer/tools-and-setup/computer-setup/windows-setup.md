@@ -1,17 +1,16 @@
-# Windows setup
+# 🪟 Windows Setup
 
 {% stepper %}
 {% step %}
+### Install and setup WSL2
 
-## Install and setup WSL2
-
-#### Install WSL
+**Install WSL**
 
 ```bash
 wsl --install
 ```
 
-#### Launch WSL in your terminal
+**Launch WSL in your terminal**
 
 ```zsh
 wsl
@@ -27,8 +26,7 @@ At the first launch of wsl on your computer you'll be asked to create a user.
 {% endstep %}
 
 {% step %}
-
-## Install NixOs
+### Install NixOs
 
 ```bash
 sh <(curl -L https://nixos.org/nix/install) --daemon
@@ -40,26 +38,23 @@ Close and re open your terminal after installation
 {% endstep %}
 
 {% step %}
-
-## Install Devenv
+### Install Devenv
 
 ```bash
 nix-env -iA nixpkgs.devenv
 ```
-
 {% endstep %}
 
 {% step %}
+### Install and enable Direnv
 
-## Install and enable Direnv
-
-#### Installation
+**Installation**
 
 ```bash
 curl -sfL https://direnv.net/install.sh | bash
 ```
 
-#### Enable Direnv
+**Enable Direnv**
 
 Enter in the bash config
 
@@ -77,12 +72,10 @@ Add the following line at the <mark style="color:red;">**end**</mark> of the `~/
 ```zsh
 eval "$(direnv hook bash)"
 ```
-
 {% endstep %}
 
 {% step %}
-
-## Install WSL VSCode extension
+### Install WSL VSCode extension
 
 {% hint style="info" %}
 [https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl)
