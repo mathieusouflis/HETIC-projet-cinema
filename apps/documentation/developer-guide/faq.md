@@ -6,7 +6,7 @@ description: >-
 
 # ❓ FAQ
 
-This page addresses common questions about the Cinema Project, from development setup to architecture decisions. If you don't find your answer here, check our [Contributing Guidelines](contributing.md) or ask in [GitHub Discussions](https://github.com/mathieusouflis/HETIC-projet-cinema/discussions).
+This page addresses common questions about the Cinema Project, from development setup to architecture decisions. If you don't find your answer here, check our [Contributing Guidelines](/broken/pages/bPFVNS4fuZsP7dD8WnvG) or ask in [GitHub Discussions](https://github.com/mathieusouflis/HETIC-projet-cinema/discussions).
 
 ## 🚀 Getting Started
 
@@ -108,14 +108,14 @@ pnpm dev
 **A:** Follow this process:
 
 1. **Plan the feature** - Define requirements and API design
-2. **Create a module** - Follow the [Creating a New Module](api-documentation/development-guide/creating-a-new-module.md) guide
+2. **Create a module** - Follow the [Creating a New Module](../api-documentation/development-guide/creating-a-new-module.md) guide
 3. **Implement layers** - Start with domain, then application, infrastructure, presentation
 4. **Write tests** - Ensure comprehensive test coverage
 5. **Update documentation** - Document new endpoints and functionality
 
 ### Q: How do I add a new endpoint to an existing module?
 
-**A:** See the [Adding Endpoints](api-documentation/development-guide/adding-endpoints.md) guide:
+**A:** See the [Adding Endpoints](../api-documentation/development-guide/adding-endpoints.md) guide:
 
 1. **Define the route** in `presentation/routes/`
 2. **Create controller method** in `presentation/controllers/`
@@ -484,10 +484,10 @@ beforeEach(async () => {
 
 **A:** Recommended learning path:
 
-1. **Read the basics** - [Clean Architecture overview](developer-guide/architecture/api-architecture/clean-architecture.md)
+1. **Read the basics** - [Clean Architecture overview](api/architecture/clean-architecture.md)
 2. **Study existing code** - Look at the `users` and `auth` modules
 3. **Start small** - Add a simple endpoint to existing module
-4. **Build a module** - Follow the [Creating a New Module](api-documentation/development-guide/creating-a-new-module.md) guide
+4. **Build a module** - Follow the [Creating a New Module](../api-documentation/development-guide/creating-a-new-module.md) guide
 5. **Get feedback** - Submit pull requests for review
 
 ### Q: What are the most common mistakes new contributors make?
@@ -505,7 +505,7 @@ beforeEach(async () => {
 **A:**
 
 1. **Watch the repository** on GitHub
-2. **Read the** [**CHANGELOG**](changelog.md) for notable changes
+2. **Read the** [**CHANGELOG**](/broken/pages/Nt0tuO6lsLCGC3T7K3go) for notable changes
 3. **Participate in discussions** on GitHub
 4. **Review pull requests** to see new patterns
 5. **Check documentation updates** regularly
@@ -546,17 +546,17 @@ beforeEach(async () => {
 
 If you don't find your answer here:
 
-1. **Check the documentation** - [Developer Guide](developer/), [API Docs](api-documentation/)
+1. **Check the documentation** - [Developer Guide](../developer/), [API Docs](api/api-documentation.md)
 2. **Search GitHub issues** - Someone might have asked before
 3. **Ask in discussions** - [GitHub Discussions](https://github.com/mathieusouflis/HETIC-projet-cinema/discussions)
 4. **Join the community** - Participate in code reviews and help others
 
 ### Quick Links
 
-* [Contributing Guidelines](contributing.md)
-* [Developer Setup](developer/)
-* [API Documentation](api-documentation/)
-* [Architecture Overview](developer-guide/architecture/api-architecture/architecture.md)
+* [Contributing Guidelines](/broken/pages/bPFVNS4fuZsP7dD8WnvG)
+* [Developer Setup](../developer/)
+* [API Documentation](api/api-documentation.md)
+* [Architecture Overview](/broken/pages/nQOSVe3FoMTuVtJZnSRT)
 * [GitHub Repository](https://github.com/mathieusouflis/HETIC-projet-cinema)
 
 ***

@@ -27,5 +27,5 @@ They should call a repository interface.
 
 ### Related
 
-* [Database Setup](../../../getting-started/database-setup.md)
+* [Database Setup](../../tools-and-setup/database-setup.md)
 * [Project Structure](project-structure.md)

@@ -53,7 +53,7 @@ HETIC-projet-cinema/
 
 ## 🚀 Quick Navigation
 
-<table data-card-size="large" data-view="cards"><thead><tr><th></th><th></th><th></th><th data-hidden data-card-target data-type="content-ref"></th></tr></thead><tbody><tr><td><strong>🔧 Developer Guide</strong></td><td>Development setup, tools, and workflows</td><td>Get started with development environment setup and best practices</td><td><a href="developer/">developer</a></td></tr><tr><td><strong>📡 API Documentation</strong></td><td>Complete API reference and guides</td><td>Comprehensive backend API documentation and integration guides</td><td><a href="api-documentation/">api-documentation</a></td></tr></tbody></table>
+<table data-card-size="large" data-view="cards"><thead><tr><th></th><th></th><th></th><th data-hidden data-card-target data-type="content-ref"></th></tr></thead><tbody><tr><td><strong>🔧 Developer Guide</strong></td><td>Development setup, tools, and workflows</td><td>Get started with development environment setup and best practices</td><td><a href="/broken/pages/sZBRXeDqXGFvPP0A1dVL">Broken link</a></td></tr></tbody></table>
 
 ## 🛠️ Technology Stack
 
@@ -91,10 +91,10 @@ HETIC-projet-cinema/
 
 ### For API Integration
 
-* [**API Overview**](api-documentation/) - Complete API documentation
-* [**Architecture Guide**](developer-guide/architecture/api-architecture/architecture.md) - System design and patterns
-* [**Getting Started**](api-documentation/guides/) - Quick start and setup guides
-* [**API Reference**](api-documentation/reference/) - Endpoint documentation
+* [**API Overview**](developer-guide/api/api-documentation.md) - Complete API documentation
+* [**Architecture Guide**](/broken/pages/nQOSVe3FoMTuVtJZnSRT) - System design and patterns
+* [**Getting Started**](/broken/pages/fSwmLZy5kejanh52JtIH) - Quick start and setup guides
+* [**API Reference**](/broken/pages/t2Lhz6M6HzL4FdUt2w8h) - Endpoint documentation
 * [**Examples**](/broken/pages/SKW7YUUEqmIti47kic96) - Practical implementation examples
 
 ## 🚦 Getting Started
@@ -167,4 +167,4 @@ We welcome contributions! Please follow these guidelines:
 
 ***
 
-**Ready to start?** Jump to the [Developer Guide](developer/) to set up your development environment, or explore the [API Documentation](api-documentation/) to understand the backend architecture.
+**Ready to start?** Jump to the [Developer Guide](developer/) to set up your development environment, or explore the [API Documentation](developer-guide/api/api-documentation.md) to understand the backend architecture.

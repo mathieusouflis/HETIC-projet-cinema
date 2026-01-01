@@ -2,19 +2,19 @@
 
 Dependencies are passed in. They are not imported and constructed deep inside your logic.
 
-### Why DI matters here
+#### Why DI matters here
 
 * Use cases stay testable.
 * Implementations can change (DB, services) without rewriting business logic.
 * The dependency graph stays explicit.
 
-### The rule
+#### The rule
 
 * Use cases depend on **interfaces**.
 * Infrastructure provides **implementations**.
 * Modules wire everything together.
 
-### Where wiring happens
+#### Where wiring happens
 
 Look for `<module>.module.ts`.
 
@@ -25,7 +25,7 @@ That file typically:
 * creates controllers
 * exposes a router
 
-### Testing tip
+#### Testing tip
 
 In unit tests, inject fakes/mocks for repository interfaces.
 

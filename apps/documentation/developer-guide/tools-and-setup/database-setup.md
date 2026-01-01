@@ -64,4 +64,4 @@ pg_isready
 
 If migrations succeed, move on:
 
-* [Running the API](running-the-api.md)
+* [Running the API](../api/running-the-api.md)

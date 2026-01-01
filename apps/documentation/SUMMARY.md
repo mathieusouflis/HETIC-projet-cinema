@@ -8,46 +8,26 @@
 * [🛠️ Tools & Setup](developer/tools-and-setup/README.md)
   * [💻 Computer Setup](developer/tools-and-setup/computer-setup/README.md)
     * [🪟 Windows Setup](developer/tools-and-setup/computer-setup/windows-setup.md)
+  * [🗃️ Database Setup](developer-guide/tools-and-setup/database-setup.md)
   * [📚 Tools Documentation](developer/tools-and-setup/tools-documentation/README.md)
     * [🐧 WSL for VS Code](developer/tools-and-setup/tools-documentation/wsl-for-vscode.md)
-* [Architecture](developer-guide/architecture/README.md)
-  * [Api Architecture](developer-guide/architecture/api-architecture/README.md)
-    * [📋 Architecture Overview](developer-guide/architecture/api-architecture/architecture.md)
-    * [🧹 Clean Architecture Principles](developer-guide/architecture/api-architecture/clean-architecture.md)
-    * [📁 Project Structure](developer-guide/architecture/api-architecture/project-structure.md)
-    * [💉 Dependency Injection](developer-guide/architecture/api-architecture/dependency-injection.md)
-    * [🧩 Module Pattern](developer-guide/architecture/api-architecture/module-pattern.md)
-    * [🗄️ Database Layer](developer-guide/architecture/api-architecture/database-layer.md)
+* [Strategy](developer-guide/strategy/README.md)
+  * [API](developer-guide/strategy/api/README.md)
+    * [🆕 Creating a New Module](developer-guide/strategy/api/creating-a-new-module.md)
+    * [🔗 Adding Endpoints](developer-guide/strategy/api/adding-endpoints.md)
+    * [🧪 Writing Tests](developer-guide/strategy/api/writing-tests.md)
+    * [🚨 Error Handling](developer-guide/strategy/api/error-handling.md)
 * [API](developer-guide/api/README.md)
-  * [Page 1](developer-guide/api/page-1.md)
-
-## 📡 API Documentation
-
-* [🎯 API Overview](api-documentation/README.md)
-
-## 🚀 Getting Started
-
-* [📖 Getting Started Overview](api-documentation/guides/README.md)
-* [⚡ Quick Start](api-documentation/guides/quick-start.md)
-* [🔧 Environment Setup](getting-started/environment-setup.md)
-* [🗃️ Database Setup](getting-started/database-setup.md)
-* [▶️ Running the API](getting-started/running-the-api.md)
-
-## 👨‍💻 Development Guide
-
-* [🛠️ Development Overview](api-documentation/development-guide/README.md)
-* [🆕 Creating a New Module](development-guide/creating-a-new-module.md)
-* [🔗 Adding Endpoints](development-guide/adding-endpoints.md)
-* [🧪 Writing Tests](development-guide/writing-tests.md)
-* [🚨 Error Handling](development-guide/error-handling.md)
-
-## 📚 API Reference
-
-* [📖 API Reference Overview](api-documentation/reference/README.md)
-* [❌ Error Codes](api-reference/error-codes.md)
-
-## 📖 Additional Resources
-
-* [🤝 Contributing Guidelines](contributing.md)
-* [📋 Changelog](changelog.md)
-* [❓ FAQ](faq.md)
+  * [🎯 API Overview](developer-guide/api/api-documentation.md)
+  * [Architecture](developer-guide/api/architecture/README.md)
+    * [🧹 Clean Architecture Principles](developer-guide/api/architecture/clean-architecture.md)
+    * [💉 Dependency Injection](developer-guide/api/architecture/dependency-injection.md)
+    * [📁 Project Structure](developer-guide/api/architecture/project-structure.md)
+    * [🧩 Module Pattern](developer-guide/api/architecture/module-pattern.md)
+    * [🗄️ Database Layer](developer-guide/api/architecture/database-layer.md)
+  * [▶️ Running the API](developer-guide/api/running-the-api.md)
+* [Guidelines](developer-guide/guidelines/README.md)
+  * [Testing Guidelines](developer-guide/guidelines/testing-guidelines.md)
+  * [Commit Message Guidelines](developer-guide/guidelines/commit-message-guidelines.md)
+  * [Bug reports](developer-guide/guidelines/bug-reports.md)
+* [❓ FAQ](developer-guide/faq.md)

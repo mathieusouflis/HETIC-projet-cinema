@@ -269,8 +269,8 @@ pnpm install
 Now that you have an overview, dive deeper into specific topics:
 
 1. [**Tools & Setup**](tools-and-setup/) - Detailed environment configuration
-2. [**API Documentation**](../api-documentation/) - Backend development guide
-3. [**Contributing Guidelines**](../contributing.md) - How to contribute code
+2. [**API Documentation**](../developer-guide/api/api-documentation.md) - Backend development guide
+3. [**Contributing Guidelines**](../developer-guide/guidelines/) - How to contribute code
 
 ## 🤝 Getting Help
 
@@ -281,4 +281,4 @@ Now that you have an overview, dive deeper into specific topics:
 
 ***
 
-**Ready to start coding?** Head to [Tools & Setup](tools-and-setup/) for detailed environment configuration, or jump straight into the [API Documentation](../api-documentation/) to understand the backend architecture.
+**Ready to start coding?** Head to [Tools & Setup](tools-and-setup/) for detailed environment configuration, or jump straight into the [API Documentation](../developer-guide/api/api-documentation.md) to understand the backend architecture.

@@ -44,4 +44,4 @@ If you need a refresher, read:
 
 Build your first feature module:
 
-* [Creating a New Module](../../../development-guide/creating-a-new-module.md)
+* [Creating a New Module](../../strategy/api/creating-a-new-module.md)
