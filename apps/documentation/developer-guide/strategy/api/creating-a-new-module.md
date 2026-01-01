@@ -6,8 +6,8 @@ Add new features by creating a module. Keep it consistent with existing ones (`a
 
 Read these once:
 
-* [Architecture Overview](../developer-guide/architecture/api-architecture/architecture.md)
-* [Project Structure](../developer-guide/architecture/api-architecture/project-structure.md)
+* [Architecture Overview](../../api/architecture/)
+* [Project Structure](../../api/architecture/project-structure.md)
 
 ### Module checklist
 

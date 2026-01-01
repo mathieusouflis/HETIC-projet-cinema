@@ -56,8 +56,3 @@ Get-Process -Id (Get-NetTCPConnection -LocalPort 3000).OwningProcess | Stop-Proc
 pg_isready
 pnpm db:reset
 ```
-
-### Next steps
-
-* [API Reference Overview](../api-documentation/reference/)
-* [Development Overview](../api-documentation/development-guide/)

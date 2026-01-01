@@ -616,6 +616,6 @@ The investment in this architectural approach pays dividends in:
 ## 🔗 Related Documentation
 
 * [**Project Structure**](project-structure.md) - How files are organized
-* [**Module Pattern**](../../../api/architecture/module-pattern.md) - Module-specific architecture
-* [**Dependency Injection**](../../../api/architecture/dependency-injection.md) - DI implementation details
-* [**Creating a Module**](../../../api/guides/creating-module.md) - Practical application
+* [**Module Pattern**](module-pattern.md) - Module-specific architecture
+* [**Dependency Injection**](dependency-injection.md) - DI implementation details
+* [**Creating a Module**](../../strategy/api/creating-a-new-module.md) - Practical application

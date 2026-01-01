@@ -105,41 +105,6 @@ The API will be available at `http://localhost:3000`
 * **Rate Limiting** - Built-in rate limiting middleware
 * **Security Headers** - Helmet.js security headers
 
-## 🔧 Tech Stack
-
-| Category           | Technology  | Purpose                       |
-| ------------------ | ----------- | ----------------------------- |
-| **Runtime**        | Node.js 20+ | JavaScript runtime            |
-| **Framework**      | Express.js  | Web framework                 |
-| **Language**       | TypeScript  | Type safety                   |
-| **Database**       | PostgreSQL  | Primary database              |
-| **ORM**            | Drizzle     | Type-safe database operations |
-| **Validation**     | Zod         | Runtime type validation       |
-| **Authentication** | JWT         | Token-based auth              |
-| **Password**       | bcrypt      | Password hashing              |
-| **Testing**        | Vitest      | Unit and integration testing  |
-| **Linting**        | ESLint      | Code quality                  |
-| **Build**          | tsc         | TypeScript compilation        |
-
-## 📊 API Endpoints Overview
-
-### Authentication (`/api/v1/auth`)
-
-* `POST /register` - Create new account
-* `POST /login` - User authentication
-* `POST /refresh` - Refresh access token
-* `POST /logout` - User logout
-* `GET /me` - Current user info
-
-### Users (`/api/v1/users`)
-
-* `GET /` - List users (paginated)
-* `GET /me` - Current user profile
-* `PATCH /me` - Update own profile
-* `GET /:id` - Get user by ID
-* `PATCH /:id` - Update user (owner only)
-* `DELETE /:id` - Delete user (owner only)
-
 ## 🎨 Design Principles
 
 ### SOLID Principles
@@ -158,64 +123,3 @@ The API will be available at `http://localhost:3000`
 * **Type Safety** - TypeScript throughout
 * **Testing** - Comprehensive test coverage
 * **Documentation** - Self-documenting code
-
-## 🔮 Future Roadmap
-
-### Phase 1: Core Features ✅
-
-* [x] User management
-* [x] Authentication system
-* [x] Database integration
-* [x] Basic API structure
-
-### Phase 2: Content Management 🚧
-
-* [ ] Films module
-* [ ] Ratings and reviews
-* [ ] Watchlist functionality
-* [ ] Search and filters
-
-### Phase 3: Social Features 🔮
-
-* [ ] Watch parties
-* [ ] Real-time synchronization
-* [ ] Chat system
-* [ ] Friends system
-
-### Phase 4: Advanced Features 🔮
-
-* [ ] Recommendations engine
-* [ ] Notifications system
-* [ ] Admin panel
-* [ ] Analytics dashboard
-
-## 📚 Documentation Structure
-
-This documentation is organized into several sections:
-
-* **Architecture** - Deep dive into the system design
-* **Getting Started** - Setup and installation guides
-* **Development Guide** - How to extend and modify the API
-* **API Reference** - Detailed endpoint documentation
-* **Examples** - Practical usage examples
-
-## 🤝 Contributing
-
-Ready to contribute? Check out our development guides:
-
-1. [Quick Start Guide](guides/quick-start.md) - Get up and running
-2. [Creating a Module](../api/guides/creating-module.md) - Add new features
-3. [Adding Endpoints](../api/guides/adding-endpoints.md) - Extend existing modules
-4. [Writing Tests](../api/guides/writing-tests.md) - Ensure code quality
-
-## 📞 Support
-
-Need help? Here are the best ways to get support:
-
-* **Documentation** - Check this documentation first
-* **Issues** - Report bugs or request features
-* **Discussions** - Ask questions and share ideas
-
-***
-
-**Next Steps:** Start with the [Architecture Overview](../developer-guide/architecture/api-architecture/architecture.md) to understand the system design, or jump straight to [Quick Start](guides/quick-start.md) to begin development.

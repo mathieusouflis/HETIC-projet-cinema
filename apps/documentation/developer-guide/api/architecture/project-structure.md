@@ -580,6 +580,5 @@ This structure supports the project's goals of maintainability, testability, and
 ## Related Documentation
 
 * [**Clean Architecture Principles**](clean-architecture.md) - Architectural philosophy
-* [**Module Pattern**](../../../api/architecture/module-pattern.md) - Deep dive into modules
-* [**Creating a Module**](../../../api/guides/creating-module.md) - Practical implementation guide
-* [**Development Guide**](../../../api/guides/development-guide.md) - Development workflow
+* [**Module Pattern**](module-pattern.md) - Deep dive into modules
+* [**Creating a Module**](../../strategy/api/creating-a-new-module.md) - Practical implementation guide
