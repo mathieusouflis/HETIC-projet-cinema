@@ -1,21 +1,23 @@
 ---
-description: Deep dive into Clean Architecture principles and how they're implemented in the Cinema API
+description: >-
+  Deep dive into Clean Architecture principles and how they're implemented in
+  the Cinema API
 ---
 
 # Clean Architecture Principles
 
 Clean Architecture is a software design philosophy that creates systems which are independent of frameworks, databases, and external interfaces. This document explains how these principles are applied in the Cinema API.
 
-## 🎯 What is Clean Architecture?
+## What is Clean Architecture?
 
 Clean Architecture, introduced by Robert C. Martin (Uncle Bob), is an architectural pattern that emphasizes:
 
-- **Independence** from frameworks, databases, and external agencies
-- **Testability** through dependency inversion
-- **Maintainability** via clear separation of concerns
-- **Flexibility** to adapt to changing requirements
+* **Independence** from frameworks, databases, and external agencies
+* **Testability** through dependency inversion
+* **Maintainability** via clear separation of concerns
+* **Flexibility** to adapt to changing requirements
 
-## 🏛️ The Dependency Rule
+## The Dependency Rule
 
 The overriding rule that makes Clean Architecture work is the **Dependency Rule**:
 
@@ -44,19 +46,25 @@ graph TB
     C --> D
     
     style D fill:#e1f5fe
+    style D color:black
     style C fill:#f3e5f5
+    style C color:black
     style B fill:#fff3e0
+    style B color:black
     style A fill:#ffebee
+    style A color:black
 ```
 
-## 🧅 Layer Breakdown in Cinema API
+## Layer Breakdown in Cinema API
 
 ### 1. Enterprise Business Rules (Domain Layer)
+
 **Location**: `src/modules/*/domain/`
 
 The heart of the application containing:
 
 #### Entities
+
 Pure business objects with no external dependencies:
 
 ```typescript
@@ -89,6 +97,7 @@ export class User {
 ```
 
 #### Domain Interfaces
+
 Contracts that define how external dependencies should behave:
 
 ```typescript
@@ -102,6 +111,7 @@ export interface IUserRepository {
 ```
 
 #### Domain Errors
+
 Business-specific exceptions:
 
 ```typescript
@@ -113,17 +123,20 @@ export class EmailAlreadyExistsError extends ConflictError {
 ```
 
 **Key Principles:**
-- ✅ No imports from outer layers
-- ✅ Framework-agnostic code
-- ✅ Pure business logic only
-- ✅ Highly testable
+
+* ✅ No imports from outer layers
+* ✅ Framework-agnostic code
+* ✅ Pure business logic only
+* ✅ Highly testable
 
 ### 2. Application Business Rules (Use Cases Layer)
+
 **Location**: `src/modules/*/application/`
 
 Orchestrates the flow of data between entities and external interfaces:
 
 #### Use Cases
+
 Application-specific business rules:
 
 ```typescript
@@ -172,6 +185,7 @@ export class RegisterUserUseCase {
 ```
 
 #### DTOs (Data Transfer Objects)
+
 Define the shape of data crossing layer boundaries:
 
 ```typescript
@@ -191,17 +205,20 @@ export interface AuthResponseDTO {
 ```
 
 **Key Principles:**
-- ✅ Depends only on Domain layer
-- ✅ Contains application-specific logic
-- ✅ Orchestrates between entities and external services
-- ✅ No knowledge of UI or database details
+
+* ✅ Depends only on Domain layer
+* ✅ Contains application-specific logic
+* ✅ Orchestrates between entities and external services
+* ✅ No knowledge of UI or database details
 
 ### 3. Interface Adapters (Controllers & Gateways)
+
 **Location**: `src/modules/*/presentation/` and `src/modules/*/infrastructure/`
 
 Converts data between use cases and external interfaces:
 
 #### Controllers (Presentation)
+
 Convert HTTP requests to use case calls:
 
 ```typescript
@@ -232,6 +249,7 @@ export class AuthController {
 ```
 
 #### Repositories (Infrastructure)
+
 Implement domain interfaces using external frameworks:
 
 ```typescript
@@ -263,26 +281,30 @@ export class UserRepository implements IUserRepository {
 ```
 
 **Key Principles:**
-- ✅ Implements interfaces defined in inner layers
-- ✅ Converts between different data formats
-- ✅ Contains framework-specific code
-- ✅ Can be easily replaced or modified
+
+* ✅ Implements interfaces defined in inner layers
+* ✅ Converts between different data formats
+* ✅ Contains framework-specific code
+* ✅ Can be easily replaced or modified
 
 ### 4. Frameworks & Drivers (External Layer)
+
 **Location**: Framework configurations and external services
 
 The outermost layer containing:
-- Web frameworks (Express.js)
-- Databases (PostgreSQL)
-- External APIs
-- Device drivers
-- Configuration
 
-## 🔄 Dependency Inversion in Action
+* Web frameworks (Express.js)
+* Databases (PostgreSQL)
+* External APIs
+* Device drivers
+* Configuration
+
+## Dependency Inversion in Action
 
 Here's how dependency inversion works in practice:
 
 ### Traditional Approach (❌ Bad)
+
 ```typescript
 class LoginUseCase {
   private userRepository = new PostgreSQLUserRepository(); // Direct dependency
@@ -296,6 +318,7 @@ class LoginUseCase {
 ```
 
 ### Clean Architecture Approach (✅ Good)
+
 ```typescript
 // 1. Define interface in domain layer
 interface IUserRepository {
@@ -328,11 +351,12 @@ class AuthModule {
 }
 ```
 
-## 🧪 Testing Benefits
+## Testing Benefits
 
 Clean Architecture makes testing dramatically easier:
 
 ### Unit Testing Use Cases
+
 ```typescript
 describe('RegisterUserUseCase', () => {
   let useCase: RegisterUserUseCase;
@@ -377,6 +401,7 @@ describe('RegisterUserUseCase', () => {
 ```
 
 ### Integration Testing Controllers
+
 ```typescript
 describe('AuthController', () => {
   let app: Express;
@@ -401,9 +426,10 @@ describe('AuthController', () => {
 });
 ```
 
-## 🔧 Implementation Patterns
+## Implementation Patterns
 
 ### 1. Repository Pattern
+
 Abstracts data access logic:
 
 ```typescript
@@ -428,6 +454,7 @@ class MongoUserRepository implements IUserRepository {
 ```
 
 ### 2. Service Pattern
+
 Encapsulates complex operations:
 
 ```typescript
@@ -450,6 +477,7 @@ class BcryptPasswordService implements IPasswordService {
 ```
 
 ### 3. Factory Pattern
+
 Creates and configures objects:
 
 ```typescript
@@ -475,32 +503,38 @@ export class AuthModuleFactory {
 }
 ```
 
-## 📊 Benefits Realized
+## Benefits Realized
 
 ### 1. Framework Independence
-- Can swap Express for Fastify without changing business logic
-- Database changes don't affect use cases
-- External API changes are isolated
+
+* Can swap Express for Fastify without changing business logic
+* Database changes don't affect use cases
+* External API changes are isolated
 
 ### 2. Testability
-- Unit test business logic in isolation
-- Mock external dependencies easily
-- Test different scenarios comprehensively
+
+* Unit test business logic in isolation
+* Mock external dependencies easily
+* Test different scenarios comprehensively
 
 ### 3. Maintainability
-- Clear separation of concerns
-- Easy to locate and modify specific functionality
-- Reduced coupling between components
+
+* Clear separation of concerns
+* Easy to locate and modify specific functionality
+* Reduced coupling between components
 
 ### 4. Team Development
-- Different teams can work on different layers
-- Clear interfaces define contracts between teams
-- Parallel development possible
 
-## 🚨 Common Pitfalls
+* Different teams can work on different layers
+* Clear interfaces define contracts between teams
+* Parallel development possible
+
+## Common Pitfalls
 
 ### 1. Leaky Abstractions
+
 **❌ Bad:**
+
 ```typescript
 interface IUserRepository {
   findByEmail(email: string): Promise<DrizzleUser>; // Exposing framework type
@@ -508,6 +542,7 @@ interface IUserRepository {
 ```
 
 **✅ Good:**
+
 ```typescript
 interface IUserRepository {
   findByEmail(email: string): Promise<User>; // Domain type
@@ -515,7 +550,9 @@ interface IUserRepository {
 ```
 
 ### 2. Anemic Domain Models
+
 **❌ Bad:**
+
 ```typescript
 export interface User {
   id: string;
@@ -525,6 +562,7 @@ export interface User {
 ```
 
 **✅ Good:**
+
 ```typescript
 export class User {
   constructor(public readonly id: string, public readonly email: string) {}
@@ -537,7 +575,9 @@ export class User {
 ```
 
 ### 3. Breaking the Dependency Rule
+
 **❌ Bad:**
+
 ```typescript
 // In domain layer
 import { Request } from 'express'; // Violates dependency rule
@@ -548,6 +588,7 @@ export class User {
 ```
 
 **✅ Good:**
+
 ```typescript
 // Domain layer stays pure
 export class User {
@@ -555,7 +596,7 @@ export class User {
 }
 ```
 
-## 🎯 Summary
+## Summary
 
 Clean Architecture in the Cinema API provides:
 
@@ -566,14 +607,15 @@ Clean Architecture in the Cinema API provides:
 5. **Maintainability** - Changes in one layer don't affect others
 
 The investment in this architectural approach pays dividends in:
-- Reduced bugs through better testing
-- Faster development through clear patterns
-- Easier onboarding for new team members
-- Greater flexibility to adapt to changing requirements
+
+* Reduced bugs through better testing
+* Faster development through clear patterns
+* Easier onboarding for new team members
+* Greater flexibility to adapt to changing requirements
 
 ## 🔗 Related Documentation
 
-- **[Project Structure](project-structure.md)** - How files are organized
-- **[Module Pattern](module-pattern.md)** - Module-specific architecture
-- **[Dependency Injection](dependency-injection.md)** - DI implementation details
-- **[Creating a Module](../guides/creating-module.md)** - Practical application
+* [**Project Structure**](project-structure.md) - How files are organized
+* [**Module Pattern**](module-pattern.md) - Module-specific architecture
+* [**Dependency Injection**](dependency-injection.md) - DI implementation details
+* [**Creating a Module**](../guides/creating-module.md) - Practical application
