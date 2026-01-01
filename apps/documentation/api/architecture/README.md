@@ -1,34 +1,40 @@
 ---
-description: Complete overview of the Cinema API architecture, design principles, and system organization
+description: >-
+  Complete overview of the Cinema API architecture, design principles, and
+  system organization
 ---
 
-# Architecture Overview
+# Architecture
 
 The Cinema API is built using **Clean Architecture** principles, creating a robust, maintainable, and testable system. This document provides a comprehensive overview of the architectural decisions, patterns, and principles that guide the development of this API.
 
-## 🎯 Architectural Goals
+## Architectural Goals
 
 Our architecture is designed to achieve the following objectives:
 
 ### 1. **Maintainability**
-- Clear separation of concerns
-- Modular code organization
-- Easy to understand and modify
+
+* Clear separation of concerns
+* Modular code organization
+* Easy to understand and modify
 
 ### 2. **Testability**
-- Dependency injection for easy mocking
-- Isolated business logic
-- Comprehensive test coverage
+
+* Dependency injection for easy mocking
+* Isolated business logic
+* Comprehensive test coverage
 
 ### 3. **Scalability**
-- Modular design for feature additions
-- Performance-optimized database queries
-- Horizontal scaling capabilities
+
+* Modular design for feature additions
+* Performance-optimized database queries
+* Horizontal scaling capabilities
 
 ### 4. **Developer Experience**
-- Type safety throughout the codebase
-- Consistent patterns and conventions
-- Self-documenting code structure
+
+* Type safety throughout the codebase
+* Consistent patterns and conventions
+* Self-documenting code structure
 
 ## 🏗️ Clean Architecture Layers
 
@@ -45,19 +51,22 @@ graph TD
 ```
 
 ### Domain Layer (Core)
+
 **Location**: `src/modules/*/domain/`
 
 The innermost layer containing:
-- **Entities** - Core business objects
-- **Interfaces** - Contracts for external dependencies
-- **Business Rules** - Pure business logic
-- **Domain Errors** - Business-specific exceptions
+
+* **Entities** - Core business objects
+* **Interfaces** - Contracts for external dependencies
+* **Business Rules** - Pure business logic
+* **Domain Errors** - Business-specific exceptions
 
 **Key Characteristics**:
-- No dependencies on external frameworks
-- Contains pure business logic
-- Framework-agnostic
-- Highly testable
+
+* No dependencies on external frameworks
+* Contains pure business logic
+* Framework-agnostic
+* Highly testable
 
 ```typescript
 // Example: User Entity
@@ -77,19 +86,22 @@ export class User {
 ```
 
 ### Application Layer (Use Cases)
+
 **Location**: `src/modules/*/application/`
 
 Orchestrates the flow of data and coordinates between layers:
-- **Use Cases** - Application-specific business rules
-- **DTOs** - Data transfer objects
-- **Validators** - Input validation schemas
-- **Controllers** - HTTP request handlers
+
+* **Use Cases** - Application-specific business rules
+* **DTOs** - Data transfer objects
+* **Validators** - Input validation schemas
+* **Controllers** - HTTP request handlers
 
 **Key Characteristics**:
-- Implements use cases
-- Depends only on the Domain layer
-- Contains application-specific logic
-- Coordinates between layers
+
+* Implements use cases
+* Depends only on the Domain layer
+* Contains application-specific logic
+* Coordinates between layers
 
 ```typescript
 // Example: Use Case
@@ -113,19 +125,22 @@ export class RegisterUserUseCase {
 ```
 
 ### Infrastructure Layer
+
 **Location**: `src/modules/*/infrastructure/`
 
 Provides concrete implementations for external concerns:
-- **Repositories** - Database access implementations
-- **Services** - External API integrations
-- **Database Schemas** - Data persistence models
-- **Configuration** - External service setup
+
+* **Repositories** - Database access implementations
+* **Services** - External API integrations
+* **Database Schemas** - Data persistence models
+* **Configuration** - External service setup
 
 **Key Characteristics**:
-- Implements interfaces defined in Domain layer
-- Handles external dependencies
-- Framework-specific code
-- Easily replaceable implementations
+
+* Implements interfaces defined in Domain layer
+* Handles external dependencies
+* Framework-specific code
+* Easily replaceable implementations
 
 ```typescript
 // Example: Repository Implementation
@@ -143,19 +158,22 @@ export class UserRepository implements IUserRepository {
 ```
 
 ### Presentation Layer
+
 **Location**: `src/modules/*/presentation/`
 
 Handles external communication protocols:
-- **Routes** - HTTP endpoint definitions
-- **Middleware** - Request/response processing
-- **WebSocket Handlers** - Real-time communication
-- **Input Validation** - Request data validation
+
+* **Routes** - HTTP endpoint definitions
+* **Middleware** - Request/response processing
+* **WebSocket Handlers** - Real-time communication
+* **Input Validation** - Request data validation
 
 **Key Characteristics**:
-- Protocol-specific (HTTP, WebSocket)
-- Handles request/response formatting
-- Applies middleware and validation
-- Routes requests to appropriate use cases
+
+* Protocol-specific (HTTP, WebSocket)
+* Handles request/response formatting
+* Applies middleware and validation
+* Routes requests to appropriate use cases
 
 ```typescript
 // Example: Route Definition
@@ -172,7 +190,7 @@ export function createAuthRouter(controller: AuthController): Router {
 }
 ```
 
-## 🧩 Module Pattern
+## Module Pattern
 
 Each feature is organized as a **self-contained module** following the same structure:
 
@@ -224,15 +242,16 @@ export class UsersModule {
 }
 ```
 
-## 🔗 Dependency Injection
+## Dependency Injection
 
 We use **Constructor Injection** for dependency management:
 
 ### Benefits
-- **Testability** - Easy to mock dependencies
-- **Flexibility** - Swap implementations easily
-- **Explicitness** - Dependencies are clearly declared
-- **Type Safety** - TypeScript ensures correct types
+
+* **Testability** - Easy to mock dependencies
+* **Flexibility** - Swap implementations easily
+* **Explicitness** - Dependencies are clearly declared
+* **Type Safety** - TypeScript ensures correct types
 
 ### Implementation Pattern
 
@@ -263,7 +282,7 @@ class AuthModule {
 }
 ```
 
-## 🗄️ Database Architecture
+## Database Architecture
 
 ### Database Layer Design
 
@@ -300,7 +319,7 @@ export * from '../modules/users/infrastructure/database/schemas/users.schema';
 export * from '../modules/auth/infrastructure/database/schemas/sessions.schema';
 ```
 
-## 🛡️ Security Architecture
+## Security Architecture
 
 ### Authentication Flow
 
@@ -329,7 +348,7 @@ sequenceDiagram
 4. **Password Security** - bcrypt with salt rounds
 5. **Token Security** - Signed JWTs with expiration
 
-## 🔄 Request Flow
+## Request Flow
 
 Here's how a typical request flows through the system:
 
@@ -358,7 +377,7 @@ graph TD
 6. **Repository Access** - Data persistence operations
 7. **Response Generation** - Format and return response
 
-## 📊 Error Handling Strategy
+## Error Handling Strategy
 
 ### Error Flow Architecture
 
@@ -398,7 +417,7 @@ interface ErrorResponse {
 }
 ```
 
-## 🧪 Testing Strategy
+## Testing Strategy
 
 ### Testing Pyramid
 
@@ -420,17 +439,19 @@ graph TD
 
 ### Testing Benefits from Architecture
 
-- **Domain Layer** - Pure functions, easy to test
-- **Dependency Injection** - Easy mocking
-- **Interface Segregation** - Focused test scenarios
-- **Error Handling** - Predictable error scenarios
+* **Domain Layer** - Pure functions, easy to test
+* **Dependency Injection** - Easy mocking
+* **Interface Segregation** - Focused test scenarios
+* **Error Handling** - Predictable error scenarios
 
-## 🔮 Extensibility Points
+## Extensibility Points
 
 The architecture provides several extension points:
 
 ### 1. New Modules
+
 Add new features by creating new modules:
+
 ```
 modules/
 ├── films/        # New module
@@ -439,7 +460,9 @@ modules/
 ```
 
 ### 2. New Services
+
 Implement new external integrations:
+
 ```typescript
 interface IEmailService {
   sendWelcomeEmail(user: User): Promise<void>;
@@ -451,7 +474,9 @@ class SendGridEmailService implements IEmailService {
 ```
 
 ### 3. New Middleware
+
 Add cross-cutting concerns:
+
 ```typescript
 export const rateLimitMiddleware = (limit: number) => {
   // Rate limiting logic
@@ -459,7 +484,9 @@ export const rateLimitMiddleware = (limit: number) => {
 ```
 
 ### 4. New Authentication Methods
+
 Extend authentication options:
+
 ```typescript
 export class OAuthUseCase {
   constructor(
@@ -469,35 +496,39 @@ export class OAuthUseCase {
 }
 ```
 
-## 📈 Performance Considerations
+## Performance Considerations
 
 ### Database Optimization
-- **Connection Pooling** - Reuse database connections
-- **Query Optimization** - Efficient SQL generation
-- **Indexing Strategy** - Optimize common queries
-- **Pagination** - Handle large datasets
+
+* **Connection Pooling** - Reuse database connections
+* **Query Optimization** - Efficient SQL generation
+* **Indexing Strategy** - Optimize common queries
+* **Pagination** - Handle large datasets
 
 ### Caching Strategy
-- **Application Cache** - In-memory caching for frequent data
-- **Database Cache** - Query result caching
-- **CDN Integration** - Static asset caching
+
+* **Application Cache** - In-memory caching for frequent data
+* **Database Cache** - Query result caching
+* **CDN Integration** - Static asset caching
 
 ### Monitoring Points
-- **Request Latency** - API response times
-- **Database Performance** - Query execution times
-- **Error Rates** - System health monitoring
-- **Resource Usage** - CPU, memory, database connections
 
-## 🎯 Next Steps
+* **Request Latency** - API response times
+* **Database Performance** - Query execution times
+* **Error Rates** - System health monitoring
+* **Resource Usage** - CPU, memory, database connections
+
+## Next Steps
 
 Ready to dive deeper? Explore these sections:
 
-1. **[Project Structure](project-structure.md)** - Detailed file organization
-2. **[Module Pattern](module-pattern.md)** - Deep dive into modules
-3. **[Dependency Injection](dependency-injection.md)** - DI implementation details
-4. **[Database Layer](database-layer.md)** - Database architecture specifics
+1. [**Project Structure**](project-structure.md) - Detailed file organization
+2. [**Module Pattern**](module-pattern.md) - Deep dive into modules
+3. [**Dependency Injection**](dependency-injection.md) - DI implementation details
+4. [**Database Layer**](database-layer.md) - Database architecture specifics
 
 Or jump to practical guides:
-- **[Creating a Module](../guides/creating-module.md)** - Build your first module
-- **[Adding Endpoints](../guides/adding-endpoints.md)** - Extend existing functionality
-- **[Writing Tests](../guides/writing-tests.md)** - Test your code effectively
+
+* [**Creating a Module**](../guides/creating-module.md) - Build your first module
+* [**Adding Endpoints**](../guides/adding-endpoints.md) - Extend existing functionality
+* [**Writing Tests**](../guides/writing-tests.md) - Test your code effectively

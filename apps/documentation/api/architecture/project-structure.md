@@ -1,12 +1,14 @@
 ---
-description: Complete breakdown of the Cinema API project structure, file organization, and naming conventions
+description: >-
+  Complete breakdown of the Cinema API project structure, file organization, and
+  naming conventions
 ---
 
 # Project Structure
 
 This document provides a comprehensive overview of how the Cinema API codebase is organized, explaining the purpose of each directory, file naming conventions, and the rationale behind the structure.
 
-## 🏗️ High-Level Structure
+## High-Level Structure
 
 ```
 apps/api/
@@ -23,7 +25,7 @@ apps/api/
 └── vitest.config.ts       # Test configuration
 ```
 
-## 📁 Detailed Directory Structure
+## Detailed Directory Structure
 
 ### Root Level (`apps/api/`)
 
@@ -71,7 +73,7 @@ src/
 └── server.ts              # Express server configuration
 ```
 
-## 🧩 Module Structure
+## Module Structure
 
 Each module follows a consistent **Clean Architecture** pattern:
 
@@ -146,7 +148,7 @@ modules/users/
 └── users.module.ts                  # Dependency injection setup
 ```
 
-## 🔧 Shared Components Structure
+## Shared Components Structure
 
 ### Error Handling (`shared/errors/`)
 
@@ -196,7 +198,7 @@ shared/utils/
 └── index.ts               # Utility exports
 ```
 
-## 📝 File Naming Conventions
+## File Naming Conventions
 
 ### General Rules
 
@@ -207,6 +209,7 @@ shared/utils/
 ### Specific Patterns
 
 #### Entities
+
 ```
 user.entity.ts             # ✅ Clear entity designation
 film.entity.ts
@@ -214,6 +217,7 @@ watchparty.entity.ts
 ```
 
 #### Use Cases
+
 ```
 GetUserById.usecase.ts      # ✅ Action + UseCase suffix
 CreateUser.usecase.ts       # ✅ PascalCase for class names
@@ -222,6 +226,7 @@ DeleteUser.usecase.ts
 ```
 
 #### Controllers
+
 ```
 users.controller.ts         # ✅ Plural resource + controller
 auth.controller.ts
@@ -229,6 +234,7 @@ films.controller.ts
 ```
 
 #### Routes
+
 ```
 users.routes.ts             # ✅ Resource + routes suffix
 auth.routes.ts
@@ -236,24 +242,28 @@ films.routes.ts
 ```
 
 #### DTOs
+
 ```
 user.dto.ts                 # ✅ Resource + dto suffix
 auth.dto.ts
 ```
 
 #### Validators
+
 ```
 user.validator.ts           # ✅ Resource + validator suffix
 auth.validator.ts
 ```
 
 #### Repositories
+
 ```
 UserRepository.ts           # ✅ PascalCase class name
 FilmRepository.ts
 ```
 
 #### Schemas (Database)
+
 ```
 users.schema.ts             # ✅ Table name + schema suffix
 films.schema.ts
@@ -261,6 +271,7 @@ ratings.schema.ts
 ```
 
 #### Interfaces
+
 ```
 IUserRepository.ts          # ✅ I prefix for interfaces
 IPasswordService.ts
@@ -268,18 +279,21 @@ ITokenService.ts
 ```
 
 #### Errors
+
 ```
 UserNotFoundError.ts        # ✅ Descriptive error name
 EmailAlreadyExistsError.ts
 ```
 
 #### Module Files
+
 ```
 users.module.ts             # ✅ Module name + module suffix
 auth.module.ts
 ```
 
 #### Index Files
+
 ```
 index.ts                    # ✅ Barrel exports in each directory
 ```
@@ -327,7 +341,7 @@ import { databaseConfig } from '@/config/database';
 
 1. **External libraries** (Node modules)
 2. **Internal absolute imports** (@/ paths)
-3. **Relative imports** (./  ../)
+3. **Relative imports** (./ ../)
 
 ```typescript
 // 1. External libraries
@@ -343,7 +357,7 @@ import type { AuthController } from '../controllers/auth.controller';
 import { createUserSchema } from './validators/user.validator';
 ```
 
-## 📦 Module Dependencies
+## Module Dependencies
 
 ### Dependency Flow Rules
 
@@ -362,34 +376,38 @@ graph TD
 ### Allowed Dependencies
 
 #### Domain Layer Can Import:
-- ✅ Other domain entities
-- ✅ Shared errors (domain-specific)
-- ❌ Application layer
-- ❌ Infrastructure layer  
-- ❌ Presentation layer
+
+* ✅ Other domain entities
+* ✅ Shared errors (domain-specific)
+* ❌ Application layer
+* ❌ Infrastructure layer
+* ❌ Presentation layer
 
 #### Application Layer Can Import:
-- ✅ Domain layer (entities, interfaces, errors)
-- ✅ Shared services (via interfaces)
-- ✅ Shared errors
-- ❌ Infrastructure layer
-- ❌ Presentation layer
+
+* ✅ Domain layer (entities, interfaces, errors)
+* ✅ Shared services (via interfaces)
+* ✅ Shared errors
+* ❌ Infrastructure layer
+* ❌ Presentation layer
 
 #### Infrastructure Layer Can Import:
-- ✅ Domain layer (interfaces, entities)
-- ✅ External libraries (Drizzle, bcrypt, etc.)
-- ✅ Shared services
-- ❌ Application layer
-- ❌ Presentation layer
+
+* ✅ Domain layer (interfaces, entities)
+* ✅ External libraries (Drizzle, bcrypt, etc.)
+* ✅ Shared services
+* ❌ Application layer
+* ❌ Presentation layer
 
 #### Presentation Layer Can Import:
-- ✅ Application layer (controllers, DTOs)
-- ✅ Shared middleware
-- ✅ Shared errors
-- ❌ Domain layer directly
-- ❌ Infrastructure layer directly
 
-## 🧪 Test File Organization
+* ✅ Application layer (controllers, DTOs)
+* ✅ Shared middleware
+* ✅ Shared errors
+* ❌ Domain layer directly
+* ❌ Infrastructure layer directly
+
+## Test File Organization
 
 ### Test Structure
 
@@ -420,7 +438,7 @@ src/
 [FileName].e2e.test.ts      # ✅ End-to-end tests
 ```
 
-## 📋 Configuration Files
+## Configuration Files
 
 ### TypeScript Configuration
 
@@ -466,31 +484,36 @@ src/
 }
 ```
 
-## 🎯 Benefits of This Structure
+## Benefits of This Structure
 
 ### 1. **Predictability**
-- Developers know exactly where to find specific functionality
-- Consistent patterns across all modules
-- Easy navigation and file discovery
+
+* Developers know exactly where to find specific functionality
+* Consistent patterns across all modules
+* Easy navigation and file discovery
 
 ### 2. **Scalability**
-- Easy to add new modules without affecting existing code
-- Clear boundaries prevent tight coupling
-- Parallel development across teams
+
+* Easy to add new modules without affecting existing code
+* Clear boundaries prevent tight coupling
+* Parallel development across teams
 
 ### 3. **Maintainability**
-- Changes are isolated to specific layers and modules
-- Clear dependency rules prevent architectural drift
-- Easy to refactor or replace components
+
+* Changes are isolated to specific layers and modules
+* Clear dependency rules prevent architectural drift
+* Easy to refactor or replace components
 
 ### 4. **Testability**
-- Test files are co-located with source code
-- Clear separation allows focused testing strategies
-- Dependency injection enables easy mocking
 
-## 🚨 Common Structure Mistakes
+* Test files are co-located with source code
+* Clear separation allows focused testing strategies
+* Dependency injection enables easy mocking
+
+## Common Structure Mistakes
 
 ### ❌ Mixing Concerns
+
 ```
 // Bad: Business logic in controller
 src/controllers/users.controller.ts
@@ -500,6 +523,7 @@ src/controllers/users.controller.ts
 ```
 
 ### ❌ Circular Dependencies
+
 ```
 // Bad: Circular dependency
 modules/users/domain/User.ts
@@ -510,6 +534,7 @@ modules/auth/domain/Session.ts
 ```
 
 ### ❌ Deep Nesting
+
 ```
 // Bad: Too many nested directories
 src/modules/users/application/services/validators/helpers/utils/
@@ -517,6 +542,7 @@ src/modules/users/application/services/validators/helpers/utils/
 ```
 
 ### ❌ Inconsistent Naming
+
 ```
 // Bad: Mixed naming conventions
 UserController.ts      ✅ PascalCase for classes
@@ -525,18 +551,21 @@ userRepo.ts           ❌ Abbreviated names
 user_entity.ts        ❌ snake_case
 ```
 
-## 🔧 Tools and Automation
+## Tools and Automation
 
 ### Path Mapping Setup
+
 Configured in `tsconfig.json` for clean imports throughout the application.
 
 ### ESLint Rules
+
 Custom rules enforce consistent file organization and naming.
 
 ### IDE Configuration
+
 Recommended VS Code settings for consistent development experience.
 
-## 🎯 Summary
+## Summary
 
 The Cinema API project structure is designed around:
 
@@ -548,9 +577,9 @@ The Cinema API project structure is designed around:
 
 This structure supports the project's goals of maintainability, testability, and team collaboration while providing a solid foundation for future growth.
 
-## 🔗 Related Documentation
+## Related Documentation
 
-- **[Clean Architecture Principles](clean-architecture.md)** - Architectural philosophy
-- **[Module Pattern](module-pattern.md)** - Deep dive into modules
-- **[Creating a Module](../guides/creating-module.md)** - Practical implementation guide
-- **[Development Guide](../guides/development-guide.md)** - Development workflow
+* [**Clean Architecture Principles**](clean-architecture.md) - Architectural philosophy
+* [**Module Pattern**](module-pattern.md) - Deep dive into modules
+* [**Creating a Module**](../guides/creating-module.md) - Practical implementation guide
+* [**Development Guide**](../guides/development-guide.md) - Development workflow
