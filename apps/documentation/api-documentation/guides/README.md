@@ -1,205 +1,133 @@
 ---
-description: Getting started guides for developing with the Cinema API - from setup to deployment
+description: >-
+  Getting started guides for developing with the Cinema API - from setup to
+  deployment
 ---
 
-# Getting Started Guides
+# 📖 Getting Started Overview
 
-Welcome to the Cinema API development guides! This section provides comprehensive, step-by-step instructions for getting up and running with the API, whether you're setting up for the first time or adding new features.
+Use this section to get the Cinema API running locally. Then start contributing safely.
 
-## 🚀 Quick Navigation
+## Quick navigation
 
-### For New Developers
-Start here if you're new to the project:
+### First-time setup
 
-1. **[Quick Start](quick-start.md)** - Get the API running in 5 minutes
-2. **[Environment Setup](environment-setup.md)** - Complete development environment configuration
-3. **[Database Setup](database-setup.md)** - PostgreSQL and migration setup
-4. **[Running the API](running-the-api.md)** - Development and production deployment
+1. [Quick Start](quick-start.md)
+2. [Environment Setup](../../getting-started/environment-setup.md)
+3. [Database Setup](../../getting-started/database-setup.md)
+4. [Running the API](../../getting-started/running-the-api.md)
 
-### For Active Development
-Continue here once you have the basics working:
+### Daily development
 
-1. **[Development Guide](development-guide.md)** - Daily development workflow
-2. **[Creating a New Module](creating-module.md)** - Add new features following Clean Architecture
-3. **[Adding Endpoints](adding-endpoints.md)** - Extend existing modules with new API endpoints
-4. **[Writing Tests](writing-tests.md)** - Comprehensive testing strategies
-5. **[Error Handling](error-handling.md)** - Implement robust error handling
+1. [Development Overview](../development-guide/)
+2. [Creating a New Module](../../development-guide/creating-a-new-module.md)
+3. [Adding Endpoints](../../development-guide/adding-endpoints.md)
+4. [Writing Tests](../../development-guide/writing-tests.md)
+5. [Error Handling](../../development-guide/error-handling.md)
 
-## 📋 Prerequisites
+## Prerequisites
 
-Before you begin, ensure you have:
+You’ll be productive faster if these are done first.
 
-### Required Software
-- **Node.js 20+** - JavaScript runtime
-- **pnpm** - Package manager (preferred over npm/yarn)
-- **PostgreSQL 14+** - Database server
-- **Git** - Version control
+### Required
 
-### Recommended Tools
-- **VS Code** - Code editor with TypeScript support
-- **Postman** or **Insomnia** - API testing
-- **TablePlus** or **pgAdmin** - Database management
-- **Docker** (optional) - For containerized PostgreSQL
+* **Node.js 20+** - JavaScript runtime
+* **pnpm** - Package manager (preferred over npm/yarn)
+* **PostgreSQL 14+** - Database server
+* **Git** - Version control
 
-### Knowledge Prerequisites
-- **TypeScript** - Primary language
-- **Express.js** - Web framework
-- **PostgreSQL** - Database fundamentals
-- **REST APIs** - HTTP methods, status codes
-- **JWT** - Authentication concepts
+### Recommended
 
-## 🎯 Learning Path
+* **VS Code** - Code editor with TypeScript support
+* **Postman** or **Insomnia** - API testing
+* **TablePlus** or **pgAdmin** - Database management
+* **Docker** (optional) - For containerized PostgreSQL
 
-### Beginner Track (New to the Project)
+### Helpful background
+
+* **TypeScript** - Primary language
+* **Express.js** - Web framework
+* **PostgreSQL** - Database fundamentals
+* **REST APIs** - HTTP methods, status codes
+* **JWT** - Authentication concepts
+
+## Learning paths
+
+### New to the project
+
 ```mermaid
 graph LR
-    A[Quick Start] --> B[Environment Setup]
-    B --> C[Database Setup]
-    C --> D[Running the API]
-    D --> E[Development Guide]
+    A[Quick Start] --> B[Environment Setup] --> C[Database Setup] --> D[Running the API] --> E[Development Overview]
 ```
 
 **Estimated time**: 2-3 hours
 
-### Intermediate Track (Ready to Contribute)
+### Ready to contribute
+
 ```mermaid
 graph LR
-    A[Development Guide] --> B[Creating Module]
-    B --> C[Adding Endpoints]
-    C --> D[Writing Tests]
-    D --> E[Error Handling]
+    A[Development Overview] --> B[Creating a New Module] --> C[Adding Endpoints] --> D[Writing Tests] --> E[Error Handling]
 ```
 
 **Estimated time**: 4-6 hours
 
-### Advanced Track (Architecture Deep Dive)
+### Architecture deep dive
+
 ```mermaid
 graph LR
-    A[Clean Architecture] --> B[Module Pattern]
-    B --> C[Dependency Injection]
-    C --> D[Database Layer]
-    D --> E[Performance Optimization]
+    A[Architecture Overview] --> B[Clean Architecture] --> C[Project Structure]
 ```
 
 **Estimated time**: 6-8 hours
 
-## 🛠️ Development Workflow
+## Development workflow
 
-Once you're set up, here's the typical development workflow:
+Use this when you’re iterating on features.
 
-### 1. Feature Development
+### Feature development
+
 ```bash
-# Create feature branch
-git checkout -b feature/new-feature
+# 1) Create a branch
+git checkout -b feature/my-change
 
-# Start development server
-pnpm dev
+# 2) Start API (pick one)
+pnpm dev:api
+# or: cd apps/api && pnpm dev
 
-# Make changes and test
-# ...
-
-# Run tests
+# 3) Validate quickly
 pnpm test
-
-# Lint and type check
-pnpm lint && pnpm type-check
+pnpm lint
+pnpm type-check
 ```
 
-### 2. Database Changes
+### Database changes
+
 ```bash
-# Create migration
+# Generate migration
 pnpm db:generate
 
 # Apply migration
 pnpm db:migrate
 
-# (Optional) Seed data
+# Optional: seed data
 pnpm db:seed
 ```
 
-### 3. Testing
+### Testing
+
 ```bash
-# Unit tests
 pnpm test
 
-# Integration tests
+# If available in the repo:
 pnpm test:integration
-
-# E2E tests
 pnpm test:e2e
-
-# Coverage report
 pnpm test:coverage
 ```
 
-## 📚 Guide Contents Overview
-
-### [Quick Start](quick-start.md)
-Get the API running with minimal setup:
-- Clone and install dependencies
-- Basic configuration
-- Start development server
-- Test with sample requests
-
-### [Environment Setup](environment-setup.md)
-Complete development environment:
-- Node.js and pnpm installation
-- IDE configuration and extensions
-- Development tools setup
-- Environment variables configuration
-
-### [Database Setup](database-setup.md)
-PostgreSQL and ORM configuration:
-- PostgreSQL installation and setup
-- Database creation and user configuration
-- Migration system overview
-- Seed data management
-
-### [Running the API](running-the-api.md)
-Deployment and runtime configuration:
-- Development mode
-- Production deployment
-- Docker containerization
-- Environment-specific configurations
-
-### [Development Guide](development-guide.md)
-Daily development practices:
-- Code organization principles
-- Git workflow and branching
-- Debugging techniques
-- Performance monitoring
-
-### [Creating a Module](creating-module.md)
-Step-by-step module creation:
-- Clean Architecture implementation
-- Domain, application, and infrastructure layers
-- Dependency injection setup
-- Testing strategy
-
-### [Adding Endpoints](adding-endpoints.md)
-Extend existing modules:
-- Route definition and middleware
-- Controller implementation
-- Validation and error handling
-- Documentation and testing
-
-### [Writing Tests](writing-tests.md)
-Comprehensive testing approaches:
-- Unit testing with Vitest
-- Integration testing strategies
-- Mocking dependencies
-- Test data management
-
-### [Error Handling](error-handling.md)
-Robust error management:
-- Custom error classes
-- Global error middleware
-- Client-friendly error responses
-- Logging and monitoring
-
-## 🎯 Common Development Tasks
+## Common tasks
 
 ### Adding a New Endpoint
+
 1. Define route in `presentation/routes/`
 2. Create controller method
 3. Implement use case (if needed)
@@ -208,6 +136,7 @@ Robust error management:
 6. Update documentation
 
 ### Creating a New Module
+
 1. Set up directory structure
 2. Define domain entities and interfaces
 3. Implement use cases
@@ -216,32 +145,43 @@ Robust error management:
 6. Configure dependency injection
 
 ### Database Schema Changes
+
 1. Modify schema files
 2. Generate migration
 3. Apply migration
 4. Update seed data (if needed)
 5. Update tests
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
 **Port Already in Use**
+
+macOS/Linux:
+
 ```bash
-# Find and kill process using port 3000
 lsof -ti:3000 | xargs kill -9
 ```
 
-**Database Connection Failed**
-```bash
-# Check PostgreSQL is running
-pg_ctl status
+Windows (PowerShell):
 
-# Reset database
+```powershell
+Get-Process -Id (Get-NetTCPConnection -LocalPort 3000).OwningProcess | Stop-Process -Force
+```
+
+**Database Connection Failed**
+
+```bash
+# Basic health check
+pg_isready
+
+# Nuclear option
 pnpm db:reset
 ```
 
 **TypeScript Errors**
+
 ```bash
 # Clean build
 pnpm clean && pnpm build
@@ -251,37 +191,29 @@ pnpm type-check
 ```
 
 **Dependency Issues**
+
 ```bash
 # Clean install
 rm -rf node_modules pnpm-lock.yaml
 pnpm install
 ```
 
-## 📞 Getting Help
+## Getting help
 
-### Documentation Resources
-- **[Architecture Overview](../architecture/README.md)** - System design
-- **[API Reference](../reference/README.md)** - Endpoint documentation
-- **[Examples](../examples/README.md)** - Code samples
+### Docs
 
-### Development Support
-- **Issues** - Report bugs or request features
-- **Discussions** - Ask questions and share ideas
-- **Code Reviews** - Get feedback on pull requests
+* [Architecture Overview](../../developer-guide/architecture/api-architecture/architecture.md)
+* [API Reference Overview](../reference/)
+* [Examples Overview](/broken/spaces/WVeeb6Vu2ZyJx2jJFLo6/pages/SKW7YUUEqmIti47kic96)
+* [FAQ](../../faq.md)
 
-### Quick Links
-- [Project Repository](https://github.com/your-org/cinema-api)
-- [API Documentation](../reference/README.md)
-- [Architecture Docs](../architecture/README.md)
-- [Testing Guide](writing-tests.md)
+### Project links
 
-## 🎉 Ready to Start?
+* Repo: [https://github.com/mathieusouflis/HETIC-projet-cinema](https://github.com/mathieusouflis/HETIC-projet-cinema)
+* Issues: [https://github.com/mathieusouflis/HETIC-projet-cinema/issues](https://github.com/mathieusouflis/HETIC-projet-cinema/issues)
 
-Choose your starting point:
+### Ready to start?
 
-- **New to the project?** → Start with [Quick Start](quick-start.md)
-- **Ready to develop?** → Jump to [Development Guide](development-guide.md)
-- **Want to understand the architecture?** → Read [Architecture Overview](../architecture/README.md)
-- **Need API reference?** → Check [API Documentation](../reference/README.md)
-
-Happy coding! 🚀
+1. [Quick Start](quick-start.md)
+2. [Database Setup](../../getting-started/database-setup.md)
+3. [Running the API](../../getting-started/running-the-api.md)

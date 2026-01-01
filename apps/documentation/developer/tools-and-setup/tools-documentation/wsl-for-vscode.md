@@ -1,4 +1,4 @@
-# WSL for vscode
+# 🐧 WSL for VS Code
 
 ## Prerequisites <a href="#prerequisites" id="prerequisites"></a>
 
@@ -20,22 +20,19 @@ With the WSL extension installed, you will see a new Status bar item at the far 
 
 {% stepper %}
 {% step %}
-
-### Click on the icon extension
+#### Click on the icon extension
 
 <figure><img src="../../../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
 {% endstep %}
 
 {% step %}
-
-### Use distro to open WSL
+#### Use distro to open WSL
 
 <figure><img src="../../../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
 {% endstep %}
 
 {% step %}
-
-### Connect the right environment
+#### Connect the right environment
 
 {% hint style="info" %}
 You may have multiple environment.
@@ -49,25 +46,22 @@ The most common is <mark style="color:blue;">**"Debian"**</mark>
 
 {% stepper %}
 {% step %}
+#### Choose your folder
 
-### Choose your folder
-
-#### Click on the button "Open folder"
+**Click on the button "Open folder"**
 
 <figure><img src="../../../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
 
-#### Choose your folder
+**Choose your folder**
 
 <figure><img src="../../../.gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
 
-#### Click "OK"
+**Click "OK"**
 
 <figure><img src="../../../.gitbook/assets/image (5).png" alt=""><figcaption></figcaption></figure>
 {% endstep %}
 
 {% step %}
-
-### HAPPY HACKING
-
+#### HAPPY HACKING
 {% endstep %}
 {% endstepper %}

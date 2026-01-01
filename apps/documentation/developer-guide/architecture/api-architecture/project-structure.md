@@ -4,7 +4,7 @@ description: >-
   naming conventions
 ---
 
-# Project Structure
+# 📁 Project Structure
 
 This document provides a comprehensive overview of how the Cinema API codebase is organized, explaining the purpose of each directory, file naming conventions, and the rationale behind the structure.
 
@@ -580,6 +580,6 @@ This structure supports the project's goals of maintainability, testability, and
 ## Related Documentation
 
 * [**Clean Architecture Principles**](clean-architecture.md) - Architectural philosophy
-* [**Module Pattern**](module-pattern.md) - Deep dive into modules
-* [**Creating a Module**](../guides/creating-module.md) - Practical implementation guide
-* [**Development Guide**](../guides/development-guide.md) - Development workflow
+* [**Module Pattern**](../../../api/architecture/module-pattern.md) - Deep dive into modules
+* [**Creating a Module**](../../../api/guides/creating-module.md) - Practical implementation guide
+* [**Development Guide**](../../../api/guides/development-guide.md) - Development workflow

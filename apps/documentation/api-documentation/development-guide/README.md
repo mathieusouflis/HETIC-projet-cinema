@@ -2,7 +2,7 @@
 description: Complete development guide for extending and maintaining the Cinema API
 ---
 
-# Development Guide
+# 🛠️ Development Overview
 
 This section provides comprehensive guidance for developing and extending the Cinema API. Whether you're adding new features, fixing bugs, or improving existing functionality, these guides will help you work effectively with our Clean Architecture implementation.
 
@@ -10,32 +10,36 @@ This section provides comprehensive guidance for developing and extending the Ci
 
 The development guide covers:
 
-- **Module Creation** - Building new features following Clean Architecture
-- **Endpoint Development** - Adding new API endpoints to existing modules
-- **Testing Strategies** - Writing comprehensive tests for your code
-- **Error Handling** - Implementing robust error management
-- **Best Practices** - Code quality, patterns, and conventions
+* **Module Creation** - Building new features following Clean Architecture
+* **Endpoint Development** - Adding new API endpoints to existing modules
+* **Testing Strategies** - Writing comprehensive tests for your code
+* **Error Handling** - Implementing robust error management
+* **Best Practices** - Code quality, patterns, and conventions
 
 ## 📋 Prerequisites
 
 Before diving into development, ensure you have:
 
 ### Technical Requirements
-- Completed [Getting Started](../guides/) setup
-- Understanding of [Clean Architecture](../architecture/clean-architecture.md)
-- Familiarity with [Project Structure](../architecture/project-structure.md)
-- Basic knowledge of [Module Pattern](../architecture/module-pattern.md)
+
+* Completed [Getting Started](../guides/) setup
+* Understanding of [Clean Architecture](../../developer-guide/architecture/api-architecture/clean-architecture.md)
+* Familiarity with [Project Structure](../../developer-guide/architecture/api-architecture/project-structure.md)
+* Basic knowledge of [Module Pattern](../../developer-guide/architecture/api-architecture/module-pattern.md)
 
 ### Development Environment
-- API running locally (`pnpm dev`)
-- Database connected and migrated
-- Tests passing (`pnpm test`)
-- Code editor configured (VS Code recommended)
+
+* API running locally (`pnpm dev`)
+* Database connected and migrated
+* Tests passing (`pnpm test`)
+* Code editor configured (VS Code recommended)
 
 ## 🏗️ Development Workflow
 
 ### 1. Planning Phase
+
 Before writing code:
+
 ```bash
 # Create feature branch
 git checkout -b feature/your-feature-name
@@ -47,7 +51,9 @@ git checkout -b feature/your-feature-name
 ```
 
 ### 2. Development Phase
+
 Follow Test-Driven Development (TDD):
+
 ```bash
 # Write failing tests first
 pnpm test --watch
@@ -63,7 +69,9 @@ pnpm test
 ```
 
 ### 3. Quality Assurance
+
 Ensure code quality:
+
 ```bash
 # Run full test suite
 pnpm test
@@ -79,85 +87,88 @@ pnpm format
 ```
 
 ### 4. Documentation
+
 Update documentation:
-- Add API documentation for new endpoints
-- Update architecture docs for new modules
-- Include usage examples
-- Update this development guide if needed
+
+* Add API documentation for new endpoints
+* Update architecture docs for new modules
+* Include usage examples
+* Update this development guide if needed
 
 ## 📚 Development Guides
 
-### [Creating a New Module](creating-a-new-module.md)
+### [Creating a New Module](../../development-guide/creating-a-new-module.md)
+
 Learn how to build complete new features:
 
-**What you'll build**: A complete module following Clean Architecture
-**Time required**: 2-3 hours
-**Complexity**: Intermediate
+**What you'll build**: A complete module following Clean Architecture **Time required**: 2-3 hours **Complexity**: Intermediate
 
 **Topics covered**:
-- Domain layer design (entities, interfaces, business rules)
-- Application layer implementation (use cases, DTOs)
-- Infrastructure layer setup (repositories, database schemas)
-- Presentation layer creation (routes, controllers, middleware)
-- Dependency injection configuration
-- Complete testing strategy
+
+* Domain layer design (entities, interfaces, business rules)
+* Application layer implementation (use cases, DTOs)
+* Infrastructure layer setup (repositories, database schemas)
+* Presentation layer creation (routes, controllers, middleware)
+* Dependency injection configuration
+* Complete testing strategy
 
 **When to use**: Adding major new features like films, ratings, watchparties
 
-### [Adding Endpoints](adding-endpoints.md)
+### [Adding Endpoints](../../development-guide/adding-endpoints.md)
+
 Extend existing modules with new API endpoints:
 
-**What you'll build**: New API endpoints in existing modules
-**Time required**: 30-60 minutes
-**Complexity**: Beginner to Intermediate
+**What you'll build**: New API endpoints in existing modules **Time required**: 30-60 minutes **Complexity**: Beginner to Intermediate
 
 **Topics covered**:
-- Route definition and HTTP method selection
-- Controller implementation patterns
-- Request validation with Zod schemas
-- Response formatting and error handling
-- Middleware integration
-- Endpoint testing strategies
+
+* Route definition and HTTP method selection
+* Controller implementation patterns
+* Request validation with Zod schemas
+* Response formatting and error handling
+* Middleware integration
+* Endpoint testing strategies
 
 **When to use**: Adding functionality to existing features (e.g., new user endpoints)
 
-### [Writing Tests](writing-tests.md)
+### [Writing Tests](../../development-guide/writing-tests.md)
+
 Comprehensive testing strategies for all layers:
 
-**What you'll learn**: Complete testing approaches
-**Time required**: 1-2 hours
-**Complexity**: Intermediate
+**What you'll learn**: Complete testing approaches **Time required**: 1-2 hours **Complexity**: Intermediate
 
 **Topics covered**:
-- Unit testing domain logic
-- Integration testing use cases
-- API endpoint testing with Supertest
-- Database testing with test containers
-- Mocking strategies and dependency injection
-- Test data management and factories
+
+* Unit testing domain logic
+* Integration testing use cases
+* API endpoint testing with Supertest
+* Database testing with test containers
+* Mocking strategies and dependency injection
+* Test data management and factories
 
 **When to use**: Essential for all development work
 
-### [Error Handling](error-handling.md)
+### [Error Handling](../../development-guide/error-handling.md)
+
 Implement robust error management:
 
-**What you'll learn**: Comprehensive error handling patterns
-**Time required**: 1-2 hours
-**Complexity**: Intermediate
+**What you'll learn**: Comprehensive error handling patterns **Time required**: 1-2 hours **Complexity**: Intermediate
 
 **Topics covered**:
-- Custom error class hierarchy
-- Domain-specific error types
-- Global error middleware
-- Client-friendly error responses
-- Error logging and monitoring
-- Validation error handling
+
+* Custom error class hierarchy
+* Domain-specific error types
+* Global error middleware
+* Client-friendly error responses
+* Error logging and monitoring
+* Validation error handling
 
 **When to use**: Building production-ready features
 
 ## 🎨 Code Quality Standards
 
 ### TypeScript Best Practices
+
 ```typescript
 // ✅ Good: Clear interfaces and types
 interface CreateUserRequest {
@@ -184,6 +195,7 @@ const createUser = (data: any) => {
 ```
 
 ### Clean Architecture Compliance
+
 ```typescript
 // ✅ Good: Proper layer separation
 // Domain layer - no external dependencies
@@ -229,6 +241,7 @@ export class DeleteUserController {
 ```
 
 ### Testing Standards
+
 ```typescript
 // ✅ Good: Comprehensive test coverage
 describe('CreateUserUseCase', () => {
@@ -268,6 +281,7 @@ describe('CreateUserUseCase', () => {
 ## 🔧 Development Tools
 
 ### Essential Commands
+
 ```bash
 # Development workflow
 pnpm dev                 # Start development server
@@ -289,6 +303,7 @@ pnpm start              # Start production server
 ```
 
 ### Debugging
+
 ```bash
 # Debug mode with breakpoints
 pnpm dev:debug
@@ -301,6 +316,7 @@ pnpm db:studio
 ```
 
 ### Performance Monitoring
+
 ```bash
 # API performance
 pnpm dev:profile
@@ -315,28 +331,32 @@ node --inspect-brk ./dist/server.js
 ## 📊 Development Metrics
 
 ### Code Quality Targets
-- **Test Coverage**: >90%
-- **Type Coverage**: 100%
-- **ESLint Errors**: 0
-- **Build Time**: <30s
-- **Test Runtime**: <5s
+
+* **Test Coverage**: >90%
+* **Type Coverage**: 100%
+* **ESLint Errors**: 0
+* **Build Time**: <30s
+* **Test Runtime**: <5s
 
 ### Performance Targets
-- **API Response Time**: <200ms (95th percentile)
-- **Database Query Time**: <50ms average
-- **Memory Usage**: <512MB
-- **CPU Usage**: <70% average
+
+* **API Response Time**: <200ms (95th percentile)
+* **Database Query Time**: <50ms average
+* **Memory Usage**: <512MB
+* **CPU Usage**: <70% average
 
 ### Architecture Compliance
-- ✅ No domain layer dependencies on external frameworks
-- ✅ All use cases have corresponding tests
-- ✅ Database access only through repository interfaces
-- ✅ Controllers only handle HTTP concerns
-- ✅ Proper error handling at all layers
+
+* ✅ No domain layer dependencies on external frameworks
+* ✅ All use cases have corresponding tests
+* ✅ Database access only through repository interfaces
+* ✅ Controllers only handle HTTP concerns
+* ✅ Proper error handling at all layers
 
 ## 🚨 Common Pitfalls
 
 ### Architecture Violations
+
 ```typescript
 // ❌ DON'T: Domain logic in controllers
 export class UserController {
@@ -361,6 +381,7 @@ export class UserController {
 ```
 
 ### Testing Mistakes
+
 ```typescript
 // ❌ DON'T: Test implementation details
 it('should call userRepository.create', async () => {
@@ -380,6 +401,7 @@ it('should return created user data', async () => {
 ```
 
 ### Performance Issues
+
 ```typescript
 // ❌ DON'T: N+1 queries
 const users = await userRepository.findAll();
@@ -395,29 +417,32 @@ const users = await userRepository.findAllWithPosts(); // Single optimized query
 
 Ready to start developing? Choose your path:
 
-1. **New Feature** → [Creating a New Module](creating-a-new-module.md)
-2. **Extend Existing** → [Adding Endpoints](adding-endpoints.md)  
-3. **Improve Quality** → [Writing Tests](writing-tests.md)
-4. **Error Handling** → [Error Handling](error-handling.md)
+1. **New Feature** → [Creating a New Module](../../development-guide/creating-a-new-module.md)
+2. **Extend Existing** → [Adding Endpoints](../../development-guide/adding-endpoints.md)
+3. **Improve Quality** → [Writing Tests](../../development-guide/writing-tests.md)
+4. **Error Handling** → [Error Handling](../../development-guide/error-handling.md)
 
 ## 📞 Getting Help
 
 ### Documentation Resources
-- [Architecture Overview](../architecture/) - Understanding system design
-- [API Reference](../reference/) - Endpoint specifications
-- [Examples](../examples/) - Working code samples
+
+* [Architecture Overview](../../developer-guide/architecture/api-architecture/architecture.md) - Understanding system design
+* [API Reference](../reference/) - Endpoint specifications
+* [Examples](/broken/pages/SKW7YUUEqmIti47kic96) - Working code samples
 
 ### Development Support
-- **Code Reviews** - Get feedback on pull requests
-- **Pair Programming** - Work with experienced developers
-- **Team Discussion** - Ask questions in development channels
+
+* **Code Reviews** - Get feedback on pull requests
+* **Pair Programming** - Work with experienced developers
+* **Team Discussion** - Ask questions in development channels
 
 ### Quick Reference
-- [Clean Architecture Principles](../architecture/clean-architecture.md)
-- [Module Pattern Guide](../architecture/module-pattern.md)
-- [Database Layer Architecture](../architecture/database-layer.md)
-- [Testing Examples](../examples/testing-patterns.md)
 
----
+* [Clean Architecture Principles](../../developer-guide/architecture/api-architecture/clean-architecture.md)
+* [Module Pattern Guide](../architecture/module-pattern.md)
+* [Database Layer Architecture](../architecture/database-layer.md)
+* [Testing Examples](../examples/testing-patterns.md)
+
+***
 
 **Ready to build?** Start with [Creating a New Module](creating-a-new-module.md) for new features, or [Adding Endpoints](adding-endpoints.md) to extend existing functionality.
