@@ -14,12 +14,6 @@ const isDevelopment = (): boolean => {
   return process.env.NODE_ENV === "development";
 };
 
-/**
- * Global error handling middleware
- *
- * This middleware MUST be the last middleware added to the Express app
- * It catches all errors passed via next(error) and sends appropriate responses
- */
 export const errorMiddleware = (
   err: Error,
   _req: Request,
@@ -62,16 +56,6 @@ export const errorMiddleware = (
     return;
   }
 
-  if (err.name === "ZodError") {
-    response.error = "Validation failed";
-    response.details = (err as any).errors?.map((e: any) => ({
-      field: e.path?.join(".") || "unknown",
-      message: e.message,
-    }));
-    res.status(400).json(response);
-    return;
-  }
-
   if (err instanceof SyntaxError && "body" in err) {
     response.error = "Invalid request body";
     res.status(400).json(response);
@@ -86,12 +70,6 @@ export const errorMiddleware = (
   res.status(500).json(response);
 };
 
-/**
- * 404 Not Found middleware
- *
- * This middleware should be added after all routes but before the error middleware
- * It catches requests that don't match any route
- */
 export const notFoundMiddleware = (
   req: Request,
   res: Response,
