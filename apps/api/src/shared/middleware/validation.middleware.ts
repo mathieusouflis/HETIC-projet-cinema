@@ -1,34 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
-import { ZodError, type ZodSchema } from "zod";
+import { ZodError, ZodIssue, type ZodSchema } from "zod";
 import { ValidationError } from "../errors/index.js";
 
 type ValidationTarget = "body" | "query" | "params";
 
-/**
- * Validation middleware factory using Zod schemas
- *
- * Creates an Express middleware that validates request data against a Zod schema
- * and replaces the raw data with the validated/transformed result
- *
- * @param schema - Zod schema to validate against
- * @param target - Where to find the data to validate ('body' | 'query' | 'params')
- * @returns Express middleware function
- *
- * @example
- * ```ts
- * import { z } from 'zod';
- *
- * const createUserSchema = z.object({
- *   email: z.string().email(),
- *   password: z.string().min(8),
- * });
- *
- * router.post('/users',
- *   validateRequest(createUserSchema, 'body'),
- *   userController.create
- * );
- * ```
- */
+
 export const validateRequest = (
   schema: ZodSchema,
   target: ValidationTarget = "body",
@@ -37,15 +13,24 @@ export const validateRequest = (
     try {
       const validated = schema.parse(req[target]);
 
-      req[target] = validated;
+      if (target === "body") {
+        req[target] = validated;
+      } else {
+        Object.defineProperty(req, target, {
+          value: validated,
+          writable: true,
+          enumerable: true,
+          configurable: true,
+        });
+      }
 
       next();
     } catch (error) {
       if (error instanceof ZodError) {
-        const formattedErrors = error.errors.map((err) => ({
-          field: err.path.join("."),
-          message: err.message,
-          code: err.code,
+        const formattedErrors = error.issues.map((err: ZodIssue) => ({
+          field: err.path?.join?.(".") || "unknown",
+          message: err.message || "Validation error",
+          code: err.code || "invalid",
         }));
 
         return next(new ValidationError("Validation failed", formattedErrors));
@@ -56,23 +41,6 @@ export const validateRequest = (
   };
 };
 
-/**
- * Validate multiple targets at once
- *
- * @param schemas - Object mapping targets to their Zod schemas
- * @returns Express middleware function
- *
- * @example
- * ```ts
- * router.put('/users/:id',
- *   validateMultiple({
- *     params: z.object({ id: z.string().uuid() }),
- *     body: z.object({ name: z.string() }),
- *   }),
- *   userController.update
- * );
- * ```
- */
 export const validateMultiple = (
   schemas: Partial<Record<ValidationTarget, ZodSchema>>,
 ) => {
@@ -84,14 +52,25 @@ export const validateMultiple = (
       ZodSchema,
     ][]) {
       try {
-        req[target] = schema.parse(req[target]);
+        const validated = schema.parse(req[target]);
+
+        if (target === "body") {
+          req[target] = validated;
+        } else {
+          Object.defineProperty(req, target, {
+            value: validated,
+            writable: true,
+            enumerable: true,
+            configurable: true,
+          });
+        }
       } catch (error) {
         if (error instanceof ZodError) {
-          error.errors.forEach((err) => {
+          error.issues.forEach((err: ZodIssue) => {
             errors.push({
-              field: `${target}.${err.path.join(".")}`,
-              message: err.message,
-              code: err.code,
+              field: `${target}.${err.path?.join?.(".") || "unknown"}`,
+              message: err.message || "Validation error",
+              code: err.code || "invalid",
             });
           });
         } else {
