@@ -1,3 +1,3 @@
-export * from './axios-instance';
-export * from './generated';
-export * from './generated/schemas';
+export * from "./axios-instance";
+export * from "./generated";
+export * from "./generated/schemas";

@@ -47,11 +47,15 @@ export function apiVersion1Router(): Router {
   });
 
   const openApiSpec = generateOpenAPISpec();
-  fs.writeFile("./api-documentation.json", JSON.stringify(openApiSpec, null, 2), (err) => {
-    if (err) {
-      console.error("Error writing OpenAPI spec:", err);
-    }
-  });
+  fs.writeFile(
+    "./api-documentation.json",
+    JSON.stringify(openApiSpec, null, 2),
+    (err) => {
+      if (err) {
+        console.error("Error writing OpenAPI spec:", err);
+      }
+    },
+  );
   router.get("/openapi.json", (_, res) => {
     res.json(openApiSpec);
   });
