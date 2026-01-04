@@ -1,4 +1,4 @@
-import { UserListResponseDTO } from "../list-response.dto";
+import { GetResponseDTO } from "../responses/get-response";
 import { toUserResponseDTO } from "./to-user-response";
 
 /**
@@ -22,12 +22,11 @@ export function toUserListResponseDTO(
   total: number,
   page: number,
   limit: number,
-): UserListResponseDTO {
+): GetResponseDTO {
   return {
     users: users.map(toUserResponseDTO),
     pagination: {
       page,
-      limit,
       total,
       totalPages: Math.ceil(total / limit),
     },

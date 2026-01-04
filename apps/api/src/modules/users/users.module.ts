@@ -1,13 +1,14 @@
-import { Router } from "express";
-import { GetUserByIdUseCase } from "./application/use-cases/GetUserById.usecase.js";
-import { GetUsersUseCase } from "./application/use-cases/GetUsers.usecase.js";
-import { UpdateUserUseCase } from "./application/use-cases/UpdateUser.usecase.js";
-import { DeleteUserUseCase } from "./application/use-cases/DeleteUser.usecase.js";
-import { UsersController } from "./application/controllers/users.controller.js";
-import { createUsersRouter } from "./presentation/routes/users.routes.js";
-import { UserRepository } from "./infrastructure/database/repositories/user.repository.js";
+import { Router } from 'express';
+import { GetUserByIdUseCase } from './application/use-cases/GetUserById.usecase.js';
+import { GetUsersUseCase } from './application/use-cases/GetUsers.usecase.js';
+import { UpdateUserUseCase } from './application/use-cases/UpdateUser.usecase.js';
+import { DeleteUserUseCase } from './application/use-cases/DeleteUser.usecase.js';
+import { UsersController } from './application/controllers/users.controller.js';
+import { UserRepository } from './infrastructure/database/repositories/user.repository.js';
+import { DecoratorRouter } from '../../shared/infrastructure/decorators/router-generator.js';
+import type { IApiModule } from '../../shared/infrastructure/openapi/module-registry.js';
 
-class UsersModule {
+class UsersModule implements IApiModule {
   // ============================================
   // Infrastructure Layer (Data Access)
   // ============================================
@@ -27,10 +28,12 @@ class UsersModule {
   private readonly deleteUserUseCase: DeleteUserUseCase;
 
   // ============================================
-  // Presentation Layer (Controller)
+  // Presentation Layer (Controller & Router)
   // ============================================
 
   private readonly controller: UsersController;
+
+  private readonly decoratorRouter: DecoratorRouter;
 
   private readonly router: Router;
 
@@ -46,28 +49,25 @@ class UsersModule {
       this.getUserByIdUseCase,
       this.getUsersUseCase,
       this.updateUserUseCase,
-      this.deleteUserUseCase,
+      this.deleteUserUseCase
     );
 
-    this.router = createUsersRouter(this.controller);
+    this.decoratorRouter = new DecoratorRouter();
+    this.router = this.decoratorRouter.generateRouter(this.controller);
   }
 
-  /**
-   * Get the configured Express router for this module
-   *
-   * @returns Express Router with all user routes
-   */
   public getRouter(): Router {
     return this.router;
   }
 
-  /**
-   * Get the user repository instance
-   *
-   * @returns UserRepository instance
-   */
+
+
   public getUserRepository(): UserRepository {
     return this.userRepository;
+  }
+
+  public getController(): UsersController {
+    return this.controller;
   }
 }
 
