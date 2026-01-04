@@ -8,6 +8,7 @@ import {
 } from "../shared/middleware/error.middleware.js";
 import { moduleRegistry } from "../shared/infrastructure/openapi/module-registry.js";
 import { OpenAPISpecAggregator } from "../shared/infrastructure/openapi/openapi-spec-aggregator.js";
+import fs from "fs";
 
 function registerModules(): void {
   moduleRegistry.register("auth", authModule);
@@ -46,7 +47,11 @@ export function apiVersion1Router(): Router {
   });
 
   const openApiSpec = generateOpenAPISpec();
-
+  fs.writeFile("./api-documentation.json", JSON.stringify(openApiSpec, null, 2), (err) => {
+    if (err) {
+      console.error("Error writing OpenAPI spec:", err);
+    }
+  });
   router.get("/openapi.json", (_, res) => {
     res.json(openApiSpec);
   });
