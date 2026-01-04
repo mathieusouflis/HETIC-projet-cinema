@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
+    "generate-sdk": "npx orval",
     "build": "tsc",
     "build:watch": "pnpm build --watch",
     "check-types": "tsc --noEmit",
@@ -35,8 +36,6 @@
     "zod": "^4.0.0"
   },
   "devDependencies": {
-    "@hey-api/openapi-ts": "^0.89.2",
-    "@openapitools/openapi-generator-cli": "^2.27.0",
     "@packages/eslint-config": "workspace:*",
     "@packages/typescript-config": "workspace:*",
     "@packages/vitest-presets": "workspace:*",
@@ -53,6 +52,7 @@
     "@vitest/coverage-v8": "^4.0.15",
     "drizzle-kit": "^0.31.8",
     "eslint": "^9.39.0",
+    "orval": "^7.17.2",
     "supertest": "^7.1.0",
     "tsx": "^4.21.0",
     "typescript": "5.9.3",

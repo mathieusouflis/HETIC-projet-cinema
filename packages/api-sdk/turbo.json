@@ -1,0 +1,9 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "env": ["API_PORT"],
+      "outputs": []
+    }
+  }
+}
