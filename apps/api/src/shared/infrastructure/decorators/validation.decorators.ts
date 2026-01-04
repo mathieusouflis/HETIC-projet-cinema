@@ -1,10 +1,10 @@
-import 'reflect-metadata';
-import { z } from 'zod';
-import { METADATA_KEYS, type ValidationMetadata } from './metadata.js';
+import "reflect-metadata";
+import { z } from "zod";
+import { METADATA_KEYS, type ValidationMetadata } from "./metadata.js";
 
 function getOrCreateValidationMetadata(
   target: object,
-  propertyKey: string
+  propertyKey: string,
 ): ValidationMetadata {
   const key = `${METADATA_KEYS.ROUTE_VALIDATION.toString()}_${propertyKey}`;
 
@@ -22,7 +22,7 @@ export function ValidateBody(schema: z.ZodSchema) {
   return function (
     target: object,
     propertyKey: string,
-    _descriptor?: PropertyDescriptor
+    _descriptor?: PropertyDescriptor,
   ): void {
     const metadata = getOrCreateValidationMetadata(target, propertyKey);
     metadata.body = schema;
@@ -33,7 +33,7 @@ export function ValidateParams(schema: z.ZodSchema) {
   return function (
     target: object,
     propertyKey: string,
-    _descriptor?: PropertyDescriptor
+    _descriptor?: PropertyDescriptor,
   ): void {
     const metadata = getOrCreateValidationMetadata(target, propertyKey);
     metadata.params = schema;
@@ -44,7 +44,7 @@ export function ValidateQuery(schema: z.ZodSchema) {
   return function (
     target: object,
     propertyKey: string,
-    _descriptor?: PropertyDescriptor
+    _descriptor?: PropertyDescriptor,
   ): void {
     const metadata = getOrCreateValidationMetadata(target, propertyKey);
     metadata.query = schema;

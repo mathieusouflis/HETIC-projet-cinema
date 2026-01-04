@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-
 export const pageSchema = z.coerce
   .number("Page must be a number")
   .int("Page must be an integer")
@@ -89,7 +88,11 @@ export const paginationWithSearchQuerySchema = paginationQuerySchema.extend({
 
 export type PaginationQuery = z.infer<typeof paginationQuerySchema>;
 export type OffsetPaginationQuery = z.infer<typeof offsetPaginationQuerySchema>;
-export type OffsetAndPagePaginationQuery = z.infer<typeof optionalOffsetAndPagePaginationQuerySchema>;
+export type OffsetAndPagePaginationQuery = z.infer<
+  typeof optionalOffsetAndPagePaginationQuerySchema
+>;
 export type SortQuery = z.infer<typeof sortSchema>;
 export type SearchQuery = z.infer<typeof searchQuerySchema>;
-export type PaginationWithSearchQuery = z.infer<typeof paginationWithSearchQuerySchema>;
+export type PaginationWithSearchQuery = z.infer<
+  typeof paginationWithSearchQuerySchema
+>;

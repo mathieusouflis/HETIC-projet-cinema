@@ -4,7 +4,6 @@ import { ValidationError } from "../errors/index.js";
 
 type ValidationTarget = "body" | "query" | "params";
 
-
 export const validateRequest = (
   schema: ZodSchema,
   target: ValidationTarget = "body",

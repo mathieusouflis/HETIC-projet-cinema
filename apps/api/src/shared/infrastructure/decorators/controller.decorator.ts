@@ -1,6 +1,6 @@
-import 'reflect-metadata';
-import { METADATA_KEYS, type ControllerMetadata } from './metadata.js';
-import type { ControllerConstructor } from './types.js';
+import "reflect-metadata";
+import { METADATA_KEYS, type ControllerMetadata } from "./metadata.js";
+import type { ControllerConstructor } from "./types.js";
 
 interface ControllerOptions {
   tag: string;
@@ -22,7 +22,7 @@ export function Controller(options: ControllerOptions) {
     Reflect.defineMetadata(
       METADATA_KEYS.CONTROLLER_TAG,
       metadata,
-      constructor.prototype
+      constructor.prototype,
     );
 
     return constructor;

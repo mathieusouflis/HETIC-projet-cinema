@@ -1,17 +1,17 @@
-import 'reflect-metadata';
-import { z } from 'zod';
+import "reflect-metadata";
+import { z } from "zod";
 
 export const METADATA_KEYS = {
-  CONTROLLER_TAG: Symbol('controller:tag'),
-  CONTROLLER_PREFIX: Symbol('controller:prefix'),
-  ROUTES: Symbol('routes'),
-  ROUTE_VALIDATION: Symbol('route:validation'),
-  OPENAPI_RESPONSES: Symbol('openapi:responses'),
-  OPENAPI_SUMMARY: Symbol('openapi:summary'),
-  OPENAPI_DESCRIPTION: Symbol('openapi:description'),
+  CONTROLLER_TAG: Symbol("controller:tag"),
+  CONTROLLER_PREFIX: Symbol("controller:prefix"),
+  ROUTES: Symbol("routes"),
+  ROUTE_VALIDATION: Symbol("route:validation"),
+  OPENAPI_RESPONSES: Symbol("openapi:responses"),
+  OPENAPI_SUMMARY: Symbol("openapi:summary"),
+  OPENAPI_DESCRIPTION: Symbol("openapi:description"),
 } as const;
 
-export type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete';
+export type HttpMethod = "get" | "post" | "put" | "patch" | "delete";
 
 export interface ControllerMetadata {
   tag: string;

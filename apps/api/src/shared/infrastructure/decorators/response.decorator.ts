@@ -1,6 +1,6 @@
-import 'reflect-metadata';
-import { z } from 'zod';
-import { METADATA_KEYS, type ResponseMetadata } from './metadata.js';
+import "reflect-metadata";
+import { z } from "zod";
+import { METADATA_KEYS, type ResponseMetadata } from "./metadata.js";
 
 /**
  * Define an OpenAPI response for a route
@@ -16,16 +16,17 @@ import { METADATA_KEYS, type ResponseMetadata } from './metadata.js';
 export function ApiResponse(
   statusCode: number,
   description: string,
-  schema?: z.ZodSchema
+  schema?: z.ZodSchema,
 ) {
   return function (
     target: object,
     propertyKey: string,
-    _descriptor?: PropertyDescriptor
+    _descriptor?: PropertyDescriptor,
   ): void {
     const key = `${METADATA_KEYS.OPENAPI_RESPONSES.toString()}_${propertyKey}`;
 
-    const responses: ResponseMetadata[] = Reflect.getMetadata(key, target) || [];
+    const responses: ResponseMetadata[] =
+      Reflect.getMetadata(key, target) || [];
 
     responses.push({
       statusCode,

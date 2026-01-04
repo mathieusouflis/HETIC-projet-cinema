@@ -9,17 +9,15 @@ import {
 import { moduleRegistry } from "../shared/infrastructure/openapi/module-registry.js";
 import { OpenAPISpecAggregator } from "../shared/infrastructure/openapi/openapi-spec-aggregator.js";
 
-
 function registerModules(): void {
-  moduleRegistry.register('auth', authModule);
-  moduleRegistry.register('users', usersModule);
+  moduleRegistry.register("auth", authModule);
+  moduleRegistry.register("users", usersModule);
 }
 
 function generateOpenAPISpec() {
   const aggregator = new OpenAPISpecAggregator();
   return aggregator.generateSpec();
 }
-
 
 export function apiVersion1Router(): Router {
   const router = Router();
@@ -53,10 +51,14 @@ export function apiVersion1Router(): Router {
     res.json(openApiSpec);
   });
 
-  router.use("/docs", swaggerUi.serve, swaggerUi.setup(openApiSpec, {
-    customCss: '.swagger-ui .topbar { display: none }',
-    customSiteTitle: "Cinema API Documentation",
-  }));
+  router.use(
+    "/docs",
+    swaggerUi.serve,
+    swaggerUi.setup(openApiSpec, {
+      customCss: ".swagger-ui .topbar { display: none }",
+      customSiteTitle: "Cinema API Documentation",
+    }),
+  );
 
   router.use(notFoundMiddleware);
   router.use(errorMiddleware);

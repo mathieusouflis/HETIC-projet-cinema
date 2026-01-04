@@ -1,11 +1,15 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-export const refreshTokenSchema = z.jwt().describe('JWT refresh token for obtaining new access tokens')
-export const tokenSchema = z.jwt().describe('JWT access token for API authentication')
+export const refreshTokenSchema = z
+  .jwt()
+  .describe("JWT refresh token for obtaining new access tokens");
+export const tokenSchema = z
+  .jwt()
+  .describe("JWT access token for API authentication");
 
 export const tokensSchema = z.object({
   accessToken: tokenSchema,
-  refreshToken: refreshTokenSchema
+  refreshToken: refreshTokenSchema,
 });
 
 export const accessTokenSchema = z.object({
@@ -13,8 +17,12 @@ export const accessTokenSchema = z.object({
 });
 
 export const tokensWithMetadataSchema = tokensSchema.extend({
-  expiresIn: z.number().int().positive().describe('Access token expiration time in seconds'),
-  tokenType: z.literal('Bearer').default('Bearer'),
+  expiresIn: z
+    .number()
+    .int()
+    .positive()
+    .describe("Access token expiration time in seconds"),
+  tokenType: z.literal("Bearer").default("Bearer"),
 });
 
 export type Tokens = z.infer<typeof tokensSchema>;

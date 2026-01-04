@@ -1,17 +1,14 @@
 import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";
-import type { ITokenService, RefreshTokenPayload } from "../../../../shared/services/token/ITokenService.js";
+import type {
+  ITokenService,
+  RefreshTokenPayload,
+} from "../../../../shared/services/token/ITokenService.js";
 import { UnauthorizedError } from "../../../../shared/errors/UnauthorizedError.js";
 import { UserNotFoundError } from "../../../users/domain/errors/UserNotFoundError.js";
 import { toTokenResponseDTO } from "../dto/utils/to-token-response-dto.js";
 import { RefreshTokenDTO } from "../dto/request/regresh-token.dto.js";
 import { RefreshTokenResponseDTO } from "../dto/response/refresh-token-response.dto.js";
 
-/**
- * Refresh Token Use Case
- *
- * Handles token refresh business logic
- * Allows users to obtain a new access token using a valid refresh token
- */
 export class RefreshTokenUseCase {
   constructor(
     private readonly userRepository: IUserRepository,

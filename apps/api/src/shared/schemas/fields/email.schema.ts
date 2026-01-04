@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-
 export const emailSchema = z
   .email("Invalid email format")
   .nonempty("Email is required")

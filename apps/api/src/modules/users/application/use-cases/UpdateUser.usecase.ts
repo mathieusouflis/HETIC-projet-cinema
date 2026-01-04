@@ -15,7 +15,10 @@ export class UpdateUserUseCase {
    * @throws UserNotFoundError if user doesn't exist
    * @throws UsernameAlreadyExistsError if new username is already taken
    */
-  async execute(id: string, data: PatchIdRequestDTO): Promise<PatchIdResponseDTO> {
+  async execute(
+    id: string,
+    data: PatchIdRequestDTO,
+  ): Promise<PatchIdResponseDTO> {
     const existingUser = await this.userRepository.findById(id);
 
     if (!existingUser) {

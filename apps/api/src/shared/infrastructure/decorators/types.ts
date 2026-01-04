@@ -1,12 +1,12 @@
-import type { Request, Response, NextFunction, RequestHandler } from 'express';
-import { BaseController } from '../base/BaseController.js';
+import type { Request, Response, NextFunction, RequestHandler } from "express";
+import { BaseController } from "../base/BaseController.js";
 
 export { BaseController };
 
 export type RouteHandler = (
   req: Request,
   res: Response,
-  next?: NextFunction
+  next?: NextFunction,
 ) => Promise<void> | void;
 
 export type ControllerConstructor<T extends BaseController = BaseController> =
@@ -14,7 +14,7 @@ export type ControllerConstructor<T extends BaseController = BaseController> =
   new (...args: any[]) => T;
 
 export function isRouteHandler(value: unknown): value is RouteHandler {
-  return typeof value === 'function';
+  return typeof value === "function";
 }
 
 export function isController(value: unknown): value is BaseController {
@@ -23,7 +23,7 @@ export function isController(value: unknown): value is BaseController {
 
 export type MiddlewareStack = RequestHandler[];
 
-export const AUTH_MIDDLEWARE_MARKER = '__AUTH__' as const;
+export const AUTH_MIDDLEWARE_MARKER = "__AUTH__" as const;
 export type AuthMiddlewareMarker = typeof AUTH_MIDDLEWARE_MARKER;
 
 export type MiddlewareOrMarker = RequestHandler | AuthMiddlewareMarker;

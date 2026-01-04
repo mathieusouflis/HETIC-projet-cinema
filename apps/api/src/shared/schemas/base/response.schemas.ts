@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const successResponseSchema = z.object({
   success: z.literal(true),
@@ -28,7 +28,7 @@ export const baseDataResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
  * Success response with both data and message
  */
 export const baseDataWithMessageResponseSchema = <T extends z.ZodTypeAny>(
-  dataSchema: T
+  dataSchema: T,
 ) =>
   z.object({
     success: z.literal(true),
@@ -42,7 +42,7 @@ export const baseDataWithMessageResponseSchema = <T extends z.ZodTypeAny>(
  * Standard structure for paginated list responses
  */
 export const basePaginatedResponseSchema = <T extends z.ZodTypeAny>(
-  itemSchema: T
+  itemSchema: T,
 ) =>
   z.object({
     success: z.literal(true),
@@ -88,7 +88,7 @@ export function createSuccessResponse<T extends z.ZodTypeAny>(dataSchema: T) {
  * ```
  */
 export function createSuccessWithMessage<T extends z.ZodTypeAny>(
-  dataSchema: T
+  dataSchema: T,
 ) {
   return baseDataWithMessageResponseSchema(dataSchema);
 }

@@ -1,8 +1,8 @@
-import 'reflect-metadata';
-import type { RequestHandler } from 'express';
-import { AUTH_MIDDLEWARE_MARKER, type MiddlewareOrMarker } from './types.js';
+import "reflect-metadata";
+import type { RequestHandler } from "express";
+import { AUTH_MIDDLEWARE_MARKER, type MiddlewareOrMarker } from "./types.js";
 
-const MIDDLEWARES_METADATA_KEY = Symbol('route:middlewares');
+const MIDDLEWARES_METADATA_KEY = Symbol("route:middlewares");
 
 export interface MiddlewaresMetadata {
   middlewares: MiddlewareOrMarker[];
@@ -20,7 +20,7 @@ export function Middlewares(...middlewares: RequestHandler[]) {
   return function (
     target: object,
     propertyKey: string,
-    _descriptor?: PropertyDescriptor
+    _descriptor?: PropertyDescriptor,
   ): void {
     const key = `${MIDDLEWARES_METADATA_KEY.toString()}_${propertyKey}`;
 
@@ -42,7 +42,7 @@ export function Protected() {
   return function (
     target: object,
     propertyKey: string,
-    _descriptor?: PropertyDescriptor
+    _descriptor?: PropertyDescriptor,
   ): void {
     const key = `${MIDDLEWARES_METADATA_KEY.toString()}_${propertyKey}`;
 
@@ -56,7 +56,7 @@ export function Protected() {
 
 export function getMiddlewaresMetadata(
   target: object,
-  methodName: string
+  methodName: string,
 ): MiddlewaresMetadata | undefined {
   const key = `${MIDDLEWARES_METADATA_KEY.toString()}_${methodName}`;
   return Reflect.getMetadata(key, target);

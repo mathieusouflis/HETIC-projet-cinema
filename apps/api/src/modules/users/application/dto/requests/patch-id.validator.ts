@@ -4,12 +4,12 @@ import { uuidSchema } from "../../../../../shared/schemas/fields/uuid.schema";
 import { avatarUrlSchemaOptionalNullable } from "../../../../../shared/schemas/fields/url.schema";
 
 export const patchIdParamsSchema = z.object({
-  id: uuidSchema
+  id: uuidSchema,
 });
 
 export const patchIdBodySchema = z.object({
   username: usernameSchema.optional(),
-  avatarUrl: avatarUrlSchemaOptionalNullable
+  avatarUrl: avatarUrlSchemaOptionalNullable,
 });
 
 export type PatchIdRequestDTO = z.infer<typeof patchIdBodySchema>;
