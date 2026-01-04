@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "^0.89.2",
+    "@openapitools/openapi-generator-cli": "^2.27.0",
     "@packages/eslint-config": "workspace:*",
     "@packages/typescript-config": "workspace:*",
     "@packages/vitest-presets": "workspace:*",
