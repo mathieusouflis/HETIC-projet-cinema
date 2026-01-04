@@ -2,10 +2,10 @@ import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepo
 import type { IPasswordService } from "../../../../shared/services/password/IPasswordService.js";
 import type { ITokenService } from "../../../../shared/services/token/ITokenService.js";
 import { UnauthorizedError } from "../../../../shared/errors/UnauthorizedError.js";
-import { LoginDTO } from "../dto/login.dto.js";
-import { AuthResponseDTO } from "../dto/auth-response.dto.js";
 import { toAuthResponseDTO } from "../dto/utils/to-auth-response-dto.js";
 import { toUserResponseDTO } from "../../../users/application/dto/utils/to-user-response.js";
+import { LoginDTO } from "../dto/request/login.dto.js";
+import { AuthResponseDTO } from "../dto/response/auth-response.dto.js";
 
 /**
  * Login Use Case
@@ -20,8 +20,6 @@ export class LoginUseCase {
   ) {}
 
   /**
-   * Execute the login use case
-   *
    * @param data - Login credentials (email, password)
    * @returns Promise resolving to AuthResponseDTO with user and tokens
    * @throws UnauthorizedError if credentials are invalid
