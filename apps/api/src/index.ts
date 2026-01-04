@@ -1,3 +1,5 @@
+import "reflect-metadata";
+import "./shared/infrastructure/openapi/zod-openapi.js";
 import { log } from "@packages/logger";
 import { createServer } from "./server.js";
 import { config } from "@packages/config";

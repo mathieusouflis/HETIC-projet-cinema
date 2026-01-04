@@ -2,6 +2,7 @@ import bodyParser from "body-parser";
 import express, { type Express } from "express";
 import morgan from "morgan";
 import cors from "cors";
+import "./shared/infrastructure/openapi/zod-openapi.js";
 import { apiVersion1Router } from "./modules";
 
 const { json, urlencoded } = bodyParser;
