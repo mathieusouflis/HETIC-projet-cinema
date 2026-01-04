@@ -1,5 +1,9 @@
-import 'reflect-metadata';
-import { MetadataStorage, type HttpMethod, type RouteMetadata } from './metadata.js';
+import "reflect-metadata";
+import {
+  MetadataStorage,
+  type HttpMethod,
+  type RouteMetadata,
+} from "./metadata.js";
 
 interface RouteOptions {
   path?: string;
@@ -12,16 +16,16 @@ function createRouteDecorator(method: HttpMethod) {
     return function (
       target: object,
       propertyKey: string,
-      _descriptor?: PropertyDescriptor
+      _descriptor?: PropertyDescriptor,
     ): void {
-      let path = '';
+      let path = "";
       let summary: string | undefined;
       let description: string | undefined;
 
-      if (typeof pathOrOptions === 'string') {
+      if (typeof pathOrOptions === "string") {
         path = pathOrOptions;
       } else if (pathOrOptions) {
-        path = pathOrOptions.path || '';
+        path = pathOrOptions.path || "";
         summary = pathOrOptions.summary;
         description = pathOrOptions.description;
       }
@@ -50,7 +54,7 @@ function createRouteDecorator(method: HttpMethod) {
  * async getUser() {}
  * ```
  */
-export const Get = createRouteDecorator('get');
+export const Get = createRouteDecorator("get");
 
 /**
  * POST route decorator
@@ -60,7 +64,7 @@ export const Get = createRouteDecorator('get');
  * async createUser() {}
  * ```
  */
-export const Post = createRouteDecorator('post');
+export const Post = createRouteDecorator("post");
 
 /**
  * PUT route decorator
@@ -70,7 +74,7 @@ export const Post = createRouteDecorator('post');
  * async updateUser() {}
  * ```
  */
-export const Put = createRouteDecorator('put');
+export const Put = createRouteDecorator("put");
 
 /**
  * PATCH route decorator
@@ -80,7 +84,7 @@ export const Put = createRouteDecorator('put');
  * async patchUser() {}
  * ```
  */
-export const Patch = createRouteDecorator('patch');
+export const Patch = createRouteDecorator("patch");
 
 /**
  * DELETE route decorator
@@ -90,10 +94,14 @@ export const Patch = createRouteDecorator('patch');
  * async deleteUser() {}
  * ```
  */
-export const Delete = createRouteDecorator('delete');
+export const Delete = createRouteDecorator("delete");
 
 export function Summary(summary: string) {
-  return function (target: object, propertyKey: string, _descriptor?: PropertyDescriptor): void {
+  return function (
+    target: object,
+    propertyKey: string,
+    _descriptor?: PropertyDescriptor,
+  ): void {
     const routes = MetadataStorage.getRoutes(target);
     const route = routes.find((r) => r.methodName === propertyKey);
     if (route) {
@@ -103,7 +111,11 @@ export function Summary(summary: string) {
 }
 
 export function Description(description: string) {
-  return function (target: object, propertyKey: string, _descriptor?: PropertyDescriptor): void {
+  return function (
+    target: object,
+    propertyKey: string,
+    _descriptor?: PropertyDescriptor,
+  ): void {
     const routes = MetadataStorage.getRoutes(target);
     const route = routes.find((r) => r.methodName === propertyKey);
     if (route) {

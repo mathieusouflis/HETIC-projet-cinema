@@ -1,12 +1,12 @@
-import { Router } from 'express';
-import { GetUserByIdUseCase } from './application/use-cases/GetUserById.usecase.js';
-import { GetUsersUseCase } from './application/use-cases/GetUsers.usecase.js';
-import { UpdateUserUseCase } from './application/use-cases/UpdateUser.usecase.js';
-import { DeleteUserUseCase } from './application/use-cases/DeleteUser.usecase.js';
-import { UsersController } from './application/controllers/users.controller.js';
-import { UserRepository } from './infrastructure/database/repositories/user.repository.js';
-import { DecoratorRouter } from '../../shared/infrastructure/decorators/router-generator.js';
-import type { IApiModule } from '../../shared/infrastructure/openapi/module-registry.js';
+import { Router } from "express";
+import { GetUserByIdUseCase } from "./application/use-cases/GetUserById.usecase.js";
+import { GetUsersUseCase } from "./application/use-cases/GetUsers.usecase.js";
+import { UpdateUserUseCase } from "./application/use-cases/UpdateUser.usecase.js";
+import { DeleteUserUseCase } from "./application/use-cases/DeleteUser.usecase.js";
+import { UsersController } from "./application/controllers/users.controller.js";
+import { UserRepository } from "./infrastructure/database/repositories/user.repository.js";
+import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-generator.js";
+import type { IApiModule } from "../../shared/infrastructure/openapi/module-registry.js";
 
 class UsersModule implements IApiModule {
   // ============================================
@@ -49,7 +49,7 @@ class UsersModule implements IApiModule {
       this.getUserByIdUseCase,
       this.getUsersUseCase,
       this.updateUserUseCase,
-      this.deleteUserUseCase
+      this.deleteUserUseCase,
     );
 
     this.decoratorRouter = new DecoratorRouter();
@@ -59,8 +59,6 @@ class UsersModule implements IApiModule {
   public getRouter(): Router {
     return this.router;
   }
-
-
 
   public getUserRepository(): UserRepository {
     return this.userRepository;

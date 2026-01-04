@@ -21,7 +21,7 @@ import {
 import { sql } from "drizzle-orm";
 import { users as usersSchema } from "../modules/users/infrastructure/database/schemas/users.schema";
 
-export const users = usersSchema
+export const users = usersSchema;
 
 export const refreshTokens = pgTable(
   "refresh_tokens",

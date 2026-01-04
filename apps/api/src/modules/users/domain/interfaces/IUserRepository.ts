@@ -1,4 +1,8 @@
-import type { User, CreateUserProps, UpdateUserProps } from "../entities/user.entity.js";
+import type {
+  User,
+  CreateUserProps,
+  UpdateUserProps,
+} from "../entities/user.entity.js";
 
 export interface IUserRepository {
   /**

@@ -1,18 +1,18 @@
-import { Router } from 'express';
-import { PasswordService } from '../../shared/services/password/PasswordService.js';
-import { JWTService } from '../../shared/services/token/JWTService.js';
-import { RefreshTokenUseCase } from './application/use-cases/refresh-token.usecase.js';
-import { AuthController } from './application/controllers/auth.controller.js';
-import type { IUserRepository } from '../users/domain/interfaces/IUserRepository.js';
-import type { IPasswordService } from '../../shared/services/password/IPasswordService.js';
-import type { ITokenService } from '../../shared/services/token/ITokenService.js';
-import { RegisterUseCase } from './application/use-cases/register.usecase.js';
-import { LoginUseCase } from './application/use-cases/login.usecase.js';
-import { UserRepository } from '../users/infrastructure/database/repositories/user.repository.js';
-import { DecoratorRouter } from '../../shared/infrastructure/decorators/router-generator.js';
-import type { IApiModule } from '../../shared/infrastructure/openapi/module-registry.js';
+import { Router } from "express";
+import { PasswordService } from "../../shared/services/password/PasswordService.js";
+import { JWTService } from "../../shared/services/token/JWTService.js";
+import { RefreshTokenUseCase } from "./application/use-cases/refresh-token.usecase.js";
+import { AuthController } from "./application/controllers/auth.controller.js";
+import type { IUserRepository } from "../users/domain/interfaces/IUserRepository.js";
+import type { IPasswordService } from "../../shared/services/password/IPasswordService.js";
+import type { ITokenService } from "../../shared/services/token/ITokenService.js";
+import { RegisterUseCase } from "./application/use-cases/register.usecase.js";
+import { LoginUseCase } from "./application/use-cases/login.usecase.js";
+import { UserRepository } from "../users/infrastructure/database/repositories/user.repository.js";
+import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-generator.js";
+import type { IApiModule } from "../../shared/infrastructure/openapi/module-registry.js";
 
-class AuthModuleDecorated implements IApiModule {
+class AuthModule implements IApiModule {
   // ============================================
   // Infrastructure Layer (External Services)
   // ============================================
@@ -51,24 +51,24 @@ class AuthModuleDecorated implements IApiModule {
     this.registerUseCase = new RegisterUseCase(
       this.userRepository,
       this.passwordService,
-      this.tokenService
+      this.tokenService,
     );
 
     this.loginUseCase = new LoginUseCase(
       this.userRepository,
       this.passwordService,
-      this.tokenService
+      this.tokenService,
     );
 
     this.refreshTokenUseCase = new RefreshTokenUseCase(
       this.userRepository,
-      this.tokenService
+      this.tokenService,
     );
 
     this.controller = new AuthController(
       this.registerUseCase,
       this.loginUseCase,
-      this.refreshTokenUseCase
+      this.refreshTokenUseCase,
     );
 
     this.decoratorRouter = new DecoratorRouter();
@@ -92,4 +92,4 @@ class AuthModuleDecorated implements IApiModule {
   }
 }
 
-export const authModule = new AuthModuleDecorated();
+export const authModule = new AuthModule();

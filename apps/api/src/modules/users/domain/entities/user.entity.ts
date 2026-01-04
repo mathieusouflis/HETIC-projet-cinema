@@ -1,4 +1,7 @@
-import type { NewUserRow, UserRow } from "../../infrastructure/database/schemas/users.schema.js";
+import type {
+  NewUserRow,
+  UserRow,
+} from "../../infrastructure/database/schemas/users.schema.js";
 
 export class User {
   public readonly id: string;
@@ -128,16 +131,19 @@ export class User {
   }
 }
 
-export type CreateUserProps = NewUserRow
+export type CreateUserProps = NewUserRow;
 
-export type UpdateUserProps = Partial<Pick<UserRow,
-  | "email"
-  | "username"
-  | "passwordHash"
-  | "displayName"
-  | "avatarUrl"
-  | "bio"
-  | "theme"
-  | "language"
-  | "emailNotifications"
->>;
+export type UpdateUserProps = Partial<
+  Pick<
+    UserRow,
+    | "email"
+    | "username"
+    | "passwordHash"
+    | "displayName"
+    | "avatarUrl"
+    | "bio"
+    | "theme"
+    | "language"
+    | "emailNotifications"
+  >
+>;

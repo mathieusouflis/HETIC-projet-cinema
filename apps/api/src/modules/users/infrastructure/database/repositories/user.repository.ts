@@ -8,32 +8,11 @@ import {
   type UpdateUserProps,
 } from "../../../domain/entities/user.entity.js";
 
-/**
- * PostgreSQL User Repository Implementation
- *
- * Implements IUserRepository interface using Drizzle ORM
- *
- * @example
- * ```ts
- * const userRepository = new UserRepository();
- * const user = await userRepository.findById('123');
- * ```
- */
 export class UserRepository implements IUserRepository {
-  /**
-   * @param row - Database row from users table
-   * @returns User domain entity
-   */
   private mapToDomain(row: UserRow): User {
     return new User(row);
   }
 
-  /**
-   * Find a user by their unique ID
-   *
-   * @param id - User's unique identifier
-   * @returns Promise resolving to User entity or null if not found
-   */
   async findById(id: string): Promise<User | null> {
     const [row] = await db
       .select()
@@ -48,12 +27,6 @@ export class UserRepository implements IUserRepository {
     return this.mapToDomain(row);
   }
 
-  /**
-   * Find a user by their email address
-   *
-   * @param email - User's email address
-   * @returns Promise resolving to User entity or null if not found
-   */
   async findByEmail(email: string): Promise<User | null> {
     const [row] = await db
       .select()
@@ -68,12 +41,6 @@ export class UserRepository implements IUserRepository {
     return this.mapToDomain(row);
   }
 
-  /**
-   * Find a user by their username
-   *
-   * @param username - User's username
-   * @returns Promise resolving to User entity or null if not found
-   */
   async findByUsername(username: string): Promise<User | null> {
     const [row] = await db
       .select()
@@ -88,13 +55,6 @@ export class UserRepository implements IUserRepository {
     return this.mapToDomain(row);
   }
 
-  /**
-   * Find a user by OAuth provider and ID
-   *
-   * @param provider - OAuth provider name (e.g., 'google', 'github')
-   * @param oauthId - User's ID from the OAuth provider
-   * @returns Promise resolving to User entity or null if not found
-   */
   async findByOAuth(provider: string, oauthId: string): Promise<User | null> {
     const [row] = await db
       .select()
@@ -109,12 +69,6 @@ export class UserRepository implements IUserRepository {
     return this.mapToDomain(row);
   }
 
-  /**
-   * Check if a user exists with the given email
-   *
-   * @param email - Email address to check
-   * @returns Promise resolving to true if email exists, false otherwise
-   */
   async existsByEmail(email: string): Promise<boolean> {
     const [result] = await db
       .select({ count: count() })
@@ -124,12 +78,6 @@ export class UserRepository implements IUserRepository {
     return (result?.count ?? 0) > 0;
   }
 
-  /**
-   * Check if a user exists with the given username
-   *
-   * @param username - Username to check
-   * @returns Promise resolving to true if username exists, false otherwise
-   */
   async existsByUsername(username: string): Promise<boolean> {
     const [result] = await db
       .select({ count: count() })
@@ -139,12 +87,6 @@ export class UserRepository implements IUserRepository {
     return (result?.count ?? 0) > 0;
   }
 
-  /**
-   * Create a new user
-   *
-   * @param data - User creation data
-   * @returns Promise resolving to the created User entity
-   */
   async create(data: CreateUserProps): Promise<User> {
     const [row] = await db
       .insert(users)
@@ -170,13 +112,6 @@ export class UserRepository implements IUserRepository {
     return this.mapToDomain(row);
   }
 
-  /**
-   * Update an existing user
-   *
-   * @param id - User's unique identifier
-   * @param data - Partial user data to update
-   * @returns Promise resolving to the updated User entity
-   */
   async update(id: string, data: UpdateUserProps): Promise<User> {
     const updateData: Partial<UserRow> = {
       updatedAt: new Date().toISOString(),
@@ -223,22 +158,10 @@ export class UserRepository implements IUserRepository {
     return this.mapToDomain(row);
   }
 
-  /**
-   * Delete a user by their ID
-   *
-   * @param id - User's unique identifier
-   * @returns Promise resolving when deletion is complete
-   */
   async delete(id: string): Promise<void> {
     await db.delete(users).where(eq(users.id, id));
   }
 
-  /**
-   * Get all users with pagination
-   *
-   * @param options - Pagination options
-   * @returns Promise resolving to array of User entities and total count
-   */
   async findAll(options: {
     page: number;
     limit: number;

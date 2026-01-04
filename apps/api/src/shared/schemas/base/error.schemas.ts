@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const baseErrorResponseSchema = z.object({
   success: z.literal(false),
@@ -25,12 +25,12 @@ export const validationErrorResponseSchema = z.object({
 
 export const unauthorizedErrorResponseSchema = z.object({
   success: z.literal(false),
-  error: z.string().default('Not authenticated'),
+  error: z.string().default("Not authenticated"),
 });
 
 export const forbiddenErrorResponseSchema = z.object({
   success: z.literal(false),
-  error: z.string().default('Forbidden - insufficient permissions'),
+  error: z.string().default("Forbidden - insufficient permissions"),
 });
 
 export const notFoundErrorResponseSchema = z.object({
@@ -51,7 +51,7 @@ export const conflictErrorResponseSchema = z.object({
 
 export const internalServerErrorResponseSchema = z.object({
   success: z.literal(false),
-  error: z.string().default('Internal server error'),
+  error: z.string().default("Internal server error"),
   details: z.string().optional(),
 });
 
@@ -80,7 +80,7 @@ export function createErrorResponse(message: string) {
  */
 export function createDetailedError<T extends z.ZodTypeAny>(
   message: string,
-  detailsSchema: T
+  detailsSchema: T,
 ) {
   return z.object({
     success: z.literal(false),
@@ -103,4 +103,6 @@ export type UnauthorizedError = z.infer<typeof unauthorizedErrorResponseSchema>;
 export type ForbiddenError = z.infer<typeof forbiddenErrorResponseSchema>;
 export type NotFoundError = z.infer<typeof notFoundErrorResponseSchema>;
 export type ConflictError = z.infer<typeof conflictErrorResponseSchema>;
-export type InternalServerError = z.infer<typeof internalServerErrorResponseSchema>;
+export type InternalServerError = z.infer<
+  typeof internalServerErrorResponseSchema
+>;
