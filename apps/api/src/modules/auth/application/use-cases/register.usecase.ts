@@ -3,10 +3,10 @@ import type { IPasswordService } from "../../../../shared/services/password/IPas
 import type { ITokenService } from "../../../../shared/services/token/ITokenService.js";
 import { EmailAlreadyExistsError } from "../../../users/domain/errors/EmailAlreadyExistsError.js";
 import { UsernameAlreadyExistsError } from "../../../users/domain/errors/UsernameAlreadyExistsError.js";
-import { RegisterDTO } from "../dto/register.dto.js";
-import { AuthResponseDTO } from "../dto/auth-response.dto.js";
 import { toAuthResponseDTO } from "../dto/utils/to-auth-response-dto.js";
 import { toUserResponseDTO } from "../../../users/application/dto/utils/to-user-response.js";
+import { AuthResponseDTO } from "../dto/response/auth-response.dto.js";
+import { RegisterDTO } from "../dto/request/register.dto.js";
 
 /**
  * Register Use Case
@@ -21,8 +21,6 @@ export class RegisterUseCase {
   ) {}
 
   /**
-   * Execute the registration use case
-   *
    * @param data - Registration data (email, username, password)
    * @returns Promise resolving to AuthResponseDTO with user and tokens
    * @throws EmailAlreadyExistsError if email is already registered

@@ -1,5 +1,5 @@
-import { UserResponseDTO } from "../../../../users/application/dto/user-response.dto";
-import { AuthResponseDTO } from "../auth-response.dto";
+import { AuthResponseDTO } from "../response/auth-response.dto";
+import { UserProfileResponseDTO } from "../response/user-profile-respose.dto";
 
 /**
  * Transform user and tokens to AuthResponseDTO
@@ -10,7 +10,7 @@ import { AuthResponseDTO } from "../auth-response.dto";
  * @returns AuthResponseDTO
  */
 export function toAuthResponseDTO(
-  user: UserResponseDTO,
+  user: UserProfileResponseDTO,
   accessToken: string,
   refreshToken: string,
 ): AuthResponseDTO {

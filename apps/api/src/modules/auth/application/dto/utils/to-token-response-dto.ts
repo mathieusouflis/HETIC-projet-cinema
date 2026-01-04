@@ -1,4 +1,4 @@
-import { TokenResponseDTO } from "../token-response.dro";
+import { RefreshTokenResponseDTO } from "../response/refresh-token-response.dto";
 
 /**
  * Transform tokens to TokenResponseDTO
@@ -10,7 +10,7 @@ import { TokenResponseDTO } from "../token-response.dro";
 export function toTokenResponseDTO(
   accessToken: string,
   refreshToken: string,
-): TokenResponseDTO {
+): RefreshTokenResponseDTO {
   return {
     accessToken,
     refreshToken,
