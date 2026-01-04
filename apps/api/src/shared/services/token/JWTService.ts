@@ -14,7 +14,7 @@ export class JWTService implements ITokenService {
   private readonly refreshTokenExpirySeconds: number;
 
   constructor() {
-    this.accessTokenSecret = config.env.JWT_SECRET;
+    this.accessTokenSecret = config.env.JWT_SECRET + "_access";
     this.refreshTokenSecret = config.env.JWT_SECRET + "_refresh";
     this.accessTokenExpirySeconds = 15 * 60;
     this.refreshTokenExpirySeconds = 7 * 24 * 60 * 60;
