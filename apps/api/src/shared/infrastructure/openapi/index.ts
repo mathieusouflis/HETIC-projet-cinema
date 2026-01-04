@@ -1,14 +1,8 @@
-import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
+export { OpenAPISpecAggregator } from './openapi-spec-aggregator.js';
 
-class OpenApi {
-  private registry: OpenAPIRegistry;
-  constructor() {
-    this.registry = new OpenAPIRegistry()
-  }
+export { ModuleRegistry, moduleRegistry } from './module-registry.js';
+export type { IApiModule } from './module-registry.js';
 
-  getRegistry() {
-    return this.registry;
-  }
-}
+export { getSharedRegistry, resetSharedRegistry } from './shared-registry.js';
 
-export const openApi = new OpenApi();
+export { z, initializeZodOpenAPI } from './zod-openapi.js';

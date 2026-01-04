@@ -16,6 +16,7 @@ import { validateRequest } from '../../middleware/validation.middleware.js';
 import { getMiddlewaresMetadata } from './auth.decorator.js';
 import { authMiddleware } from '../../middleware/auth.middleware.js';
 import { AUTH_MIDDLEWARE_MARKER, BaseController } from './types.js';
+import { getSharedRegistry } from '../openapi/shared-registry.js';
 
 export interface OpenAPISpec {
   openapi: string;
@@ -35,15 +36,8 @@ export class DecoratorRouter {
   private router: Router;
 
   constructor() {
-    this.registry = new OpenAPIRegistry();
+    this.registry = getSharedRegistry();
     this.router = Router();
-
-    this.registry.registerComponent('securitySchemes', 'BearerAuth', {
-      type: 'http',
-      scheme: 'bearer',
-      bearerFormat: 'JWT',
-      description: 'Enter your JWT token in the format: Bearer <token>',
-    });
   }
 
   public generateRouter(controllerInstance: BaseController): Router {
