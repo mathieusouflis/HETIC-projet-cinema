@@ -9,22 +9,21 @@ import axios from "axios";
 import type { AxiosRequestConfig, AxiosResponse } from "axios";
 
 import type {
-  GetAuthMe200,
-  GetUsers200,
-  GetUsersId200,
-  GetUsersMe200,
-  GetUsersParams,
-  PatchUsersId200,
-  PatchUsersIdBody,
-  PatchUsersMe200,
-  PatchUsersMeBody,
-  PostAuthLogin200,
-  PostAuthLoginBody,
-  PostAuthLogout200,
-  PostAuthRefresh200,
-  PostAuthRefreshBody,
-  PostAuthRegister201,
-  PostAuthRegisterBody,
+  GETAuthMe200,
+  GETUsers200,
+  GETUsersId200,
+  GETUsersMe200,
+  GETUsersParams,
+  PATCHUsersId200,
+  PATCHUsersIdBody,
+  PATCHUsersMe200,
+  PATCHUsersMeBody,
+  POSTAuthLogin200,
+  POSTAuthLoginBody,
+  POSTAuthLogout200,
+  POSTAuthRefresh200,
+  POSTAuthRegister201,
+  POSTAuthRegisterBody,
 } from "./schemas";
 
 export const getCinemaAPI = () => {
@@ -32,7 +31,7 @@ export const getCinemaAPI = () => {
    * Retrieve a user profile by their unique identifier
    * @summary Get user by ID
    */
-  const getUsersId = <TData = AxiosResponse<GetUsersId200>>(
+  const gETUsersId = <TData = AxiosResponse<GETUsersId200>>(
     options?: AxiosRequestConfig,
   ): Promise<TData> => {
     return axios.get(`/users/:id`, options);
@@ -42,18 +41,18 @@ export const getCinemaAPI = () => {
    * Update a user profile (admin only or own profile)
    * @summary Update user profile
    */
-  const patchUsersId = <TData = AxiosResponse<PatchUsersId200>>(
-    patchUsersIdBody: PatchUsersIdBody,
+  const pATCHUsersId = <TData = AxiosResponse<PATCHUsersId200>>(
+    pATCHUsersIdBody: PATCHUsersIdBody,
     options?: AxiosRequestConfig,
   ): Promise<TData> => {
-    return axios.patch(`/users/:id`, patchUsersIdBody, options);
+    return axios.patch(`/users/:id`, pATCHUsersIdBody, options);
   };
 
   /**
    * Delete a user account (admin only or own account)
    * @summary Delete user
    */
-  const deleteUsersId = <TData = AxiosResponse<void>>(
+  const dELETEUsersId = <TData = AxiosResponse<void>>(
     options?: AxiosRequestConfig,
   ): Promise<TData> => {
     return axios.delete(`/users/:id`, options);
@@ -63,8 +62,8 @@ export const getCinemaAPI = () => {
    * Retrieve a paginated list of all users
    * @summary Get all users
    */
-  const getUsers = <TData = AxiosResponse<GetUsers200>>(
-    params?: GetUsersParams,
+  const gETUsers = <TData = AxiosResponse<GETUsers200>>(
+    params?: GETUsersParams,
     options?: AxiosRequestConfig,
   ): Promise<TData> => {
     return axios.get(`/users/`, {
@@ -77,7 +76,7 @@ export const getCinemaAPI = () => {
    * Retrieve the authenticated user own profile
    * @summary Get current user profile
    */
-  const getUsersMe = <TData = AxiosResponse<GetUsersMe200>>(
+  const gETUsersMe = <TData = AxiosResponse<GETUsersMe200>>(
     options?: AxiosRequestConfig,
   ): Promise<TData> => {
     return axios.get(`/users/me`, options);
@@ -87,51 +86,50 @@ export const getCinemaAPI = () => {
    * Update the authenticated user own profile
    * @summary Update current user profile
    */
-  const patchUsersMe = <TData = AxiosResponse<PatchUsersMe200>>(
-    patchUsersMeBody: PatchUsersMeBody,
+  const pATCHUsersMe = <TData = AxiosResponse<PATCHUsersMe200>>(
+    pATCHUsersMeBody: PATCHUsersMeBody,
     options?: AxiosRequestConfig,
   ): Promise<TData> => {
-    return axios.patch(`/users/me`, patchUsersMeBody, options);
+    return axios.patch(`/users/me`, pATCHUsersMeBody, options);
   };
 
   /**
    * Create a new user account with email, username, and password
    * @summary Register a new user
    */
-  const postAuthRegister = <TData = AxiosResponse<PostAuthRegister201>>(
-    postAuthRegisterBody: PostAuthRegisterBody,
+  const pOSTAuthRegister = <TData = AxiosResponse<POSTAuthRegister201>>(
+    pOSTAuthRegisterBody: POSTAuthRegisterBody,
     options?: AxiosRequestConfig,
   ): Promise<TData> => {
-    return axios.post(`/auth/register`, postAuthRegisterBody, options);
+    return axios.post(`/auth/register`, pOSTAuthRegisterBody, options);
   };
 
   /**
    * Authenticate user with email and password, receive access tokens
    * @summary Login user
    */
-  const postAuthLogin = <TData = AxiosResponse<PostAuthLogin200>>(
-    postAuthLoginBody: PostAuthLoginBody,
+  const pOSTAuthLogin = <TData = AxiosResponse<POSTAuthLogin200>>(
+    pOSTAuthLoginBody: POSTAuthLoginBody,
     options?: AxiosRequestConfig,
   ): Promise<TData> => {
-    return axios.post(`/auth/login`, postAuthLoginBody, options);
+    return axios.post(`/auth/login`, pOSTAuthLoginBody, options);
   };
 
   /**
    * Get new access and refresh tokens using a valid refresh token
    * @summary Refresh access token
    */
-  const postAuthRefresh = <TData = AxiosResponse<PostAuthRefresh200>>(
-    postAuthRefreshBody: PostAuthRefreshBody,
+  const pOSTAuthRefresh = <TData = AxiosResponse<POSTAuthRefresh200>>(
     options?: AxiosRequestConfig,
   ): Promise<TData> => {
-    return axios.post(`/auth/refresh`, postAuthRefreshBody, options);
+    return axios.post(`/auth/refresh`, undefined, options);
   };
 
   /**
    * Logout the current authenticated user (invalidate session)
    * @summary Logout user
    */
-  const postAuthLogout = <TData = AxiosResponse<PostAuthLogout200>>(
+  const pOSTAuthLogout = <TData = AxiosResponse<POSTAuthLogout200>>(
     options?: AxiosRequestConfig,
   ): Promise<TData> => {
     return axios.post(`/auth/logout`, undefined, options);
@@ -141,34 +139,34 @@ export const getCinemaAPI = () => {
    * Get the authenticated user information from JWT token
    * @summary Get current user profile
    */
-  const getAuthMe = <TData = AxiosResponse<GetAuthMe200>>(
+  const gETAuthMe = <TData = AxiosResponse<GETAuthMe200>>(
     options?: AxiosRequestConfig,
   ): Promise<TData> => {
     return axios.get(`/auth/me`, options);
   };
 
   return {
-    getUsersId,
-    patchUsersId,
-    deleteUsersId,
-    getUsers,
-    getUsersMe,
-    patchUsersMe,
-    postAuthRegister,
-    postAuthLogin,
-    postAuthRefresh,
-    postAuthLogout,
-    getAuthMe,
+    gETUsersId,
+    pATCHUsersId,
+    dELETEUsersId,
+    gETUsers,
+    gETUsersMe,
+    pATCHUsersMe,
+    pOSTAuthRegister,
+    pOSTAuthLogin,
+    pOSTAuthRefresh,
+    pOSTAuthLogout,
+    gETAuthMe,
   };
 };
-export type GetUsersIdResult = AxiosResponse<GetUsersId200>;
-export type PatchUsersIdResult = AxiosResponse<PatchUsersId200>;
-export type DeleteUsersIdResult = AxiosResponse<void>;
-export type GetUsersResult = AxiosResponse<GetUsers200>;
-export type GetUsersMeResult = AxiosResponse<GetUsersMe200>;
-export type PatchUsersMeResult = AxiosResponse<PatchUsersMe200>;
-export type PostAuthRegisterResult = AxiosResponse<PostAuthRegister201>;
-export type PostAuthLoginResult = AxiosResponse<PostAuthLogin200>;
-export type PostAuthRefreshResult = AxiosResponse<PostAuthRefresh200>;
-export type PostAuthLogoutResult = AxiosResponse<PostAuthLogout200>;
-export type GetAuthMeResult = AxiosResponse<GetAuthMe200>;
+export type GETUsersIdResult = AxiosResponse<GETUsersId200>;
+export type PATCHUsersIdResult = AxiosResponse<PATCHUsersId200>;
+export type DELETEUsersIdResult = AxiosResponse<void>;
+export type GETUsersResult = AxiosResponse<GETUsers200>;
+export type GETUsersMeResult = AxiosResponse<GETUsersMe200>;
+export type PATCHUsersMeResult = AxiosResponse<PATCHUsersMe200>;
+export type POSTAuthRegisterResult = AxiosResponse<POSTAuthRegister201>;
+export type POSTAuthLoginResult = AxiosResponse<POSTAuthLogin200>;
+export type POSTAuthRefreshResult = AxiosResponse<POSTAuthRefresh200>;
+export type POSTAuthLogoutResult = AxiosResponse<POSTAuthLogout200>;
+export type GETAuthMeResult = AxiosResponse<GETAuthMe200>;

@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type PatchUsersId404 = {
+export type PATCHUsersId404 = {
   success: boolean;
   error: string;
 };

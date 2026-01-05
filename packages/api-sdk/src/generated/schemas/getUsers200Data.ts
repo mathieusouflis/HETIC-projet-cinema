@@ -5,10 +5,10 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { GetUsers200DataUsersItem } from "./getUsers200DataUsersItem";
-import type { GetUsers200DataPagination } from "./getUsers200DataPagination";
+import type { GETUsers200DataUsersItem } from "./gETUsers200DataUsersItem";
+import type { GETUsers200DataPagination } from "./gETUsers200DataPagination";
 
-export type GetUsers200Data = {
-  users: GetUsers200DataUsersItem[];
-  pagination: GetUsers200DataPagination;
+export type GETUsers200Data = {
+  users: GETUsers200DataUsersItem[];
+  pagination: GETUsers200DataPagination;
 };

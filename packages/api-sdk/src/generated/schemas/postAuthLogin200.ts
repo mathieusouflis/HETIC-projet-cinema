@@ -5,9 +5,9 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { PostAuthLogin200Data } from "./postAuthLogin200Data";
+import type { POSTAuthLogin200Data } from "./pOSTAuthLogin200Data";
 
-export type PostAuthLogin200 = {
+export type POSTAuthLogin200 = {
   success: boolean;
-  data: PostAuthLogin200Data;
+  data: POSTAuthLogin200Data;
 };

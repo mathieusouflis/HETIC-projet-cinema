@@ -5,10 +5,10 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { GetUsers200DataUsersItemCreatedAtAnyOf } from "./getUsers200DataUsersItemCreatedAtAnyOf";
+import type { GETUsers200DataUsersItemCreatedAtAnyOf } from "./gETUsers200DataUsersItemCreatedAtAnyOf";
 
-export type GetUsers200DataUsersItemCreatedAt =
+export type GETUsers200DataUsersItemCreatedAt =
   | string
   | null
   | string
-  | GetUsers200DataUsersItemCreatedAtAnyOf;
+  | GETUsers200DataUsersItemCreatedAtAnyOf;

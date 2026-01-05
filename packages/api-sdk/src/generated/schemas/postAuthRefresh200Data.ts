@@ -5,10 +5,10 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { PostAuthRefresh200DataUser } from "./postAuthRefresh200DataUser";
-import type { PostAuthRefresh200DataTokens } from "./postAuthRefresh200DataTokens";
+import type { POSTAuthRefresh200DataUser } from "./pOSTAuthRefresh200DataUser";
 
-export type PostAuthRefresh200Data = {
-  user: PostAuthRefresh200DataUser;
-  tokens: PostAuthRefresh200DataTokens;
+export type POSTAuthRefresh200Data = {
+  user: POSTAuthRefresh200DataUser;
+  /** JWT access token for API authentication */
+  accessToken: string;
 };

@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type PatchUsersIdBody = {
+export type PATCHUsersIdBody = {
   /**
    * @minLength 3
    * @maxLength 30

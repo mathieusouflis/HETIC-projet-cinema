@@ -9,4 +9,4 @@
 /**
  * @nullable
  */
-export type PostAuthLogin200DataUserCreatedAtAnyOf = unknown | null;
+export type POSTAuthLogin200DataUserCreatedAtAnyOf = unknown | null;

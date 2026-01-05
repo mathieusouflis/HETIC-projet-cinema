@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type PatchUsersMe200Data = {
+export type PATCHUsersMe200Data = {
   /** @minLength 1 */
   userId: string;
   /**

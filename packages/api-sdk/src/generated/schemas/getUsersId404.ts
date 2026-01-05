@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetUsersId404 = {
+export type GETUsersId404 = {
   success: boolean;
   error: string;
 };

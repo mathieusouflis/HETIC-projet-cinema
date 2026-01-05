@@ -9,4 +9,4 @@
 /**
  * @nullable
  */
-export type GetUsersId200DataCreatedAtAnyOf = unknown | null;
+export type GETUsersId200DataCreatedAtAnyOf = unknown | null;

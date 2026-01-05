@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetAuthMe401 = {
+export type GETAuthMe401 = {
   success: boolean;
   error?: string;
 };

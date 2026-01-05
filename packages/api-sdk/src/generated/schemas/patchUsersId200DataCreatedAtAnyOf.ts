@@ -9,4 +9,4 @@
 /**
  * @nullable
  */
-export type PatchUsersId200DataCreatedAtAnyOf = unknown | null;
+export type PATCHUsersId200DataCreatedAtAnyOf = unknown | null;

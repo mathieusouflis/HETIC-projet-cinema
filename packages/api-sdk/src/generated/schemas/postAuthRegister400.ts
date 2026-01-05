@@ -5,10 +5,10 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { PostAuthRegister400DetailsItem } from "./postAuthRegister400DetailsItem";
+import type { POSTAuthRegister400DetailsItem } from "./pOSTAuthRegister400DetailsItem";
 
-export type PostAuthRegister400 = {
+export type POSTAuthRegister400 = {
   success: boolean;
   error: string;
-  details: PostAuthRegister400DetailsItem[];
+  details: POSTAuthRegister400DetailsItem[];
 };

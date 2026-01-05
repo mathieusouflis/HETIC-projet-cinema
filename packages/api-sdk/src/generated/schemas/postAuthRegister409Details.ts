@@ -5,10 +5,10 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { PostAuthRegister409DetailsConflictingValue } from "./postAuthRegister409DetailsConflictingValue";
+import type { POSTAuthRegister409DetailsConflictingValue } from "./pOSTAuthRegister409DetailsConflictingValue";
 
-export type PostAuthRegister409Details = {
+export type POSTAuthRegister409Details = {
   field?: string;
   /** @nullable */
-  conflictingValue?: PostAuthRegister409DetailsConflictingValue;
+  conflictingValue?: POSTAuthRegister409DetailsConflictingValue;
 };

@@ -5,9 +5,9 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { PostAuthRegister201Data } from "./postAuthRegister201Data";
+import type { POSTAuthRegister201Data } from "./pOSTAuthRegister201Data";
 
-export type PostAuthRegister201 = {
+export type POSTAuthRegister201 = {
   success: boolean;
-  data: PostAuthRegister201Data;
+  data: POSTAuthRegister201Data;
 };

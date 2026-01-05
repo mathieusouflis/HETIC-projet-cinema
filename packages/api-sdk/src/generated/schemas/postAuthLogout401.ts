@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type PostAuthLogout401 = {
+export type POSTAuthLogout401 = {
   success: boolean;
   error?: string;
 };
