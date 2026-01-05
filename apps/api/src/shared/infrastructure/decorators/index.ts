@@ -1,5 +1,6 @@
 export * from "./auth.decorator";
 export * from "./controller.decorator";
+export * from "./header.decorator";
 export * from "./metadata";
 export * from "./response.decorator";
 export * from "./route.decorators";

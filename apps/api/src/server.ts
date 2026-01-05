@@ -4,6 +4,7 @@ import morgan from "morgan";
 import cors from "cors";
 import "./shared/infrastructure/openapi/zod-openapi.js";
 import { apiVersion1Router } from "./modules";
+import cookieParser from "cookie-parser"
 
 const { json, urlencoded } = bodyParser;
 
@@ -15,6 +16,7 @@ export const createServer = (): Express => {
     .use(urlencoded({ extended: true }))
     .use(json())
     .use(cors())
+    .use(cookieParser())
     .use("/api/v1", apiVersion1Router())
     .get("/status", (_, res) => {
       return res.json({ ok: true });
