@@ -12,10 +12,5 @@ export type POSTAuthLoginBody = {
    * @maxLength 255
    */
   email: string;
-  /**
-   * @minLength 8
-   * @maxLength 100
-   * @pattern [A-Z]
-   */
   password: string;
 };
