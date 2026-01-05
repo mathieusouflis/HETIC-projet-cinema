@@ -5,7 +5,7 @@ import type {
 } from "../../../../shared/services/token/ITokenService.js";
 import { UnauthorizedError } from "../../../../shared/errors/UnauthorizedError.js";
 import { UserNotFoundError } from "../../../users/domain/errors/UserNotFoundError.js";
-import { RefreshTokenDTO } from "../dto/request/regresh-token.dto.js";
+import { RefreshTokenDTO } from "../dto/request/refresh-token.dto.js";
 import { RefreshTokenResponseDTO } from "../dto/response/refresh-token-response.dto.js";
 import { RefreshToken } from "../../../../shared/services/token/index.js";
 
