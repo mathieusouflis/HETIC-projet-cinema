@@ -1288,10 +1288,7 @@
                     "format": "email"
                   },
                   "password": {
-                    "type": "string",
-                    "minLength": 8,
-                    "maxLength": 100,
-                    "pattern": "[A-Z]"
+                    "type": "string"
                   }
                 },
                 "required": [
