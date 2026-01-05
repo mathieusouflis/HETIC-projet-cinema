@@ -1,8 +1,11 @@
 import type { Request, Response, NextFunction } from "express";
-import { ZodError, ZodIssue, type ZodSchema } from "zod";
+import z, { ZodError } from "zod";
 import { ValidationError } from "../errors/index.js";
 
 type ValidationTarget = "body" | "query" | "params";
+
+type ZodIssue = ZodError["issues"][number];
+type ZodSchema = z.ZodType;
 
 export const validateRequest = (
   schema: ZodSchema,
@@ -27,9 +30,9 @@ export const validateRequest = (
     } catch (error) {
       if (error instanceof ZodError) {
         const formattedErrors = error.issues.map((err: ZodIssue) => ({
-          field: err.path?.join?.(".") || "unknown",
-          message: err.message || "Validation error",
-          code: err.code || "invalid",
+          field: err.path.length > 0 ? err.path.join(".") : "unknown",
+          message: err.message,
+          code: err.code,
         }));
 
         return next(new ValidationError("Validation failed", formattedErrors));
@@ -66,10 +69,11 @@ export const validateMultiple = (
       } catch (error) {
         if (error instanceof ZodError) {
           error.issues.forEach((err: ZodIssue) => {
+            const fieldPath = err.path.length > 0 ? err.path.join(".") : "unknown";
             errors.push({
-              field: `${target}.${err.path?.join?.(".") || "unknown"}`,
-              message: err.message || "Validation error",
-              code: err.code || "invalid",
+              field: `${target}.${fieldPath}`,
+              message: err.message,
+              code: err.code,
             });
           });
         } else {
