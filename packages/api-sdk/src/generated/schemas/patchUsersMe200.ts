@@ -5,9 +5,9 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { PatchUsersMe200Data } from "./patchUsersMe200Data";
+import type { PATCHUsersMe200Data } from "./pATCHUsersMe200Data";
 
-export type PatchUsersMe200 = {
+export type PATCHUsersMe200 = {
   success: boolean;
-  data: PatchUsersMe200Data;
+  data: PATCHUsersMe200Data;
 };

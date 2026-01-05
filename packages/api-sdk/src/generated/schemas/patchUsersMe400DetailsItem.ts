@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type PatchUsersMe400DetailsItem = {
+export type PATCHUsersMe400DetailsItem = {
   field: string;
   message: string;
   code?: string;

@@ -5,10 +5,10 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { PostAuthRegister201DataUser } from "./postAuthRegister201DataUser";
-import type { PostAuthRegister201DataTokens } from "./postAuthRegister201DataTokens";
+import type { POSTAuthRegister201DataUser } from "./pOSTAuthRegister201DataUser";
 
-export type PostAuthRegister201Data = {
-  user: PostAuthRegister201DataUser;
-  tokens: PostAuthRegister201DataTokens;
+export type POSTAuthRegister201Data = {
+  user: POSTAuthRegister201DataUser;
+  /** JWT access token for API authentication */
+  accessToken: string;
 };

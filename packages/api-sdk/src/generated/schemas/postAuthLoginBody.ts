@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type PostAuthLoginBody = {
+export type POSTAuthLoginBody = {
   /**
    * @minLength 1
    * @maxLength 255

@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetAuthMe200Data = {
+export type GETAuthMe200Data = {
   userId: string;
   email: string;
   username?: string;

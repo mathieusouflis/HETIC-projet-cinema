@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type PostAuthRefresh401 = {
+export type POSTAuthRefresh401 = {
   success: boolean;
   error?: string;
 };

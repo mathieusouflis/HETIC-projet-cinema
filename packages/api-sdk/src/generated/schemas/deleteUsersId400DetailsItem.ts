@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type DeleteUsersId400DetailsItem = {
+export type DELETEUsersId400DetailsItem = {
   field: string;
   message: string;
   code?: string;

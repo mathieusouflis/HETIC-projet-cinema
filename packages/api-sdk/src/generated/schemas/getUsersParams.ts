@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetUsersParams = {
+export type GETUsersParams = {
   /**
    * @minimum 1
    */

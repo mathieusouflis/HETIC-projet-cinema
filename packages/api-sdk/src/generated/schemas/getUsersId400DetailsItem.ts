@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetUsersId400DetailsItem = {
+export type GETUsersId400DetailsItem = {
   field: string;
   message: string;
   code?: string;

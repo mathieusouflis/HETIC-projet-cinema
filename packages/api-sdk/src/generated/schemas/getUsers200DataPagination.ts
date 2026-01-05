@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetUsers200DataPagination = {
+export type GETUsers200DataPagination = {
   /** @minimum 1 */
   page?: number;
   /** @minimum 0 */

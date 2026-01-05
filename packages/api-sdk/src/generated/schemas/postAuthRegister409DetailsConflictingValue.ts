@@ -9,4 +9,4 @@
 /**
  * @nullable
  */
-export type PostAuthRegister409DetailsConflictingValue = unknown | null;
+export type POSTAuthRegister409DetailsConflictingValue = unknown | null;

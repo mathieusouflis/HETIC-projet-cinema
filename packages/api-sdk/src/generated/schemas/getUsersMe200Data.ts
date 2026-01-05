@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetUsersMe200Data = {
+export type GETUsersMe200Data = {
   /** @minLength 1 */
   userId: string;
   /**

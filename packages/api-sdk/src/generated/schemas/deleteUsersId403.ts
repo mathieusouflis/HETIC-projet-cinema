@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type DeleteUsersId403 = {
+export type DELETEUsersId403 = {
   success: boolean;
   error?: string;
 };

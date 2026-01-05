@@ -5,12 +5,12 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { PatchUsersId200DataCreatedAt } from "./patchUsersId200DataCreatedAt";
+import type { PATCHUsersId200DataCreatedAt } from "./pATCHUsersId200DataCreatedAt";
 
-export type PatchUsersId200Data = {
+export type PATCHUsersId200Data = {
   id: string;
   username: string;
   /** @nullable */
   avatarUrl?: string | null;
-  createdAt: PatchUsersId200DataCreatedAt;
+  createdAt: PATCHUsersId200DataCreatedAt;
 };

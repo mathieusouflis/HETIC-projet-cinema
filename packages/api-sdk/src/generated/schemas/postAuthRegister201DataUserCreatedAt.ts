@@ -5,10 +5,10 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { PostAuthRegister201DataUserCreatedAtAnyOf } from "./postAuthRegister201DataUserCreatedAtAnyOf";
+import type { POSTAuthRegister201DataUserCreatedAtAnyOf } from "./pOSTAuthRegister201DataUserCreatedAtAnyOf";
 
-export type PostAuthRegister201DataUserCreatedAt =
+export type POSTAuthRegister201DataUserCreatedAt =
   | string
   | null
   | string
-  | PostAuthRegister201DataUserCreatedAtAnyOf;
+  | POSTAuthRegister201DataUserCreatedAtAnyOf;

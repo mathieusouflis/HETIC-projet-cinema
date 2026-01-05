@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type PostAuthRegister400DetailsItem = {
+export type POSTAuthRegister400DetailsItem = {
   field: string;
   message: string;
   code?: string;
