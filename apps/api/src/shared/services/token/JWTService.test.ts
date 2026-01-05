@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { JWTService } from "./JWTService";
 import { AccessTokenPayload, RefreshTokenPayload } from "./ITokenService";
 import jwt from "jsonwebtoken";
+import { config } from "@packages/config";
 
 describe("JWT service test", () => {
   const jwtService = new JWTService();
@@ -150,7 +151,7 @@ describe("JWT service test", () => {
     it("should throw error for expired access token", () => {
       const expiredToken = jwt.sign(
         { userId: "1", email: "test@example.com", type: "access" },
-        process.env.JWT_SECRET + "_access",
+        config.env.JWT_SECRET + "_access",
         { expiresIn: "0s" }
       );
 
@@ -176,7 +177,7 @@ describe("JWT service test", () => {
     it("should throw error for token with wrong type field", () => {
       const wrongTypeToken = jwt.sign(
         { userId: "1", email: "test@example.com", type: "wrong" },
-        process.env.JWT_SECRET + "_refresh",
+        config.env.JWT_SECRET + "_refresh",
         { expiresIn: "15m" }
       );
 
@@ -217,7 +218,7 @@ describe("JWT service test", () => {
     it("should throw error for expired refresh token", () => {
       const expiredToken = jwt.sign(
         { userId: "1", type: "refresh" },
-        process.env.JWT_SECRET + "_refresh",
+        config.env.JWT_SECRET + "_refresh",
         { expiresIn: "0s" }
       );
 
@@ -243,7 +244,7 @@ describe("JWT service test", () => {
     it("should throw error for token with wrong type field", () => {
       const wrongTypeToken = jwt.sign(
         { userId: "1", type: "wrong" },
-        process.env.JWT_SECRET + "_refresh",
+        config.env.JWT_SECRET + "_refresh",
         { expiresIn: "7d" }
       );
 
@@ -258,11 +259,11 @@ describe("JWT service test", () => {
       const { accessToken, refreshToken } = jwtService.generateTokenPair("1", "test@example.com");
 
       expect(() => {
-        jwt.verify(accessToken, process.env.JWT_SECRET + "_refresh");
+        jwt.verify(accessToken, config.env.JWT_SECRET + "_refresh");
       }).toThrow();
 
       expect(() => {
-        jwt.verify(refreshToken, process.env.JWT_SECRET + "_access");
+        jwt.verify(refreshToken, config.env.JWT_SECRET + "_access");
       }).toThrow();
     });
 

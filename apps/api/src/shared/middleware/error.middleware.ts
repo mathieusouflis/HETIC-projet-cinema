@@ -2,6 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import { AppError } from "../errors/AppError.js";
 import { ValidationError } from "../errors/ValidationError.js";
 import { log } from "@packages/logger";
+import { config } from "@packages/config";
 
 interface ErrorResponse {
   success: false;
@@ -11,7 +12,7 @@ interface ErrorResponse {
 }
 
 const isDevelopment = (): boolean => {
-  return process.env.NODE_ENV === "development";
+  return config.env.NODE_ENV === "development";
 };
 
 export const errorMiddleware = (
