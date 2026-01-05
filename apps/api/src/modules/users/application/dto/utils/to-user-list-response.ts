@@ -1,3 +1,4 @@
+import { User } from "../../../domain";
 import { GetResponseDTO } from "../responses/get-response";
 import { toUserResponseDTO } from "./to-user-response";
 
@@ -11,20 +12,14 @@ import { toUserResponseDTO } from "./to-user-response";
  * @returns UserListResponseDTO with pagination info
  */
 export function toUserListResponseDTO(
-  users: Array<{
-    id: string;
-    email: string;
-    username: string;
-    avatarUrl: string | null;
-    createdAt: Date;
-    updatedAt: Date;
-  }>,
+  users: User[],
   total: number,
   page: number,
   limit: number,
 ): GetResponseDTO {
+
   return {
-    users: users.map(toUserResponseDTO),
+    users: users.map((user) => toUserResponseDTO(user)),
     pagination: {
       page,
       total,
