@@ -3,6 +3,8 @@ export default {
     input: "./api-documentation.json",
     output: {
       mode: "split",
+      namingConvention: 'kebab-case',
+
       target: "../../packages/api-sdk/src/generated/index.ts",
       schemas: "../../packages/api-sdk/src/generated/schemas",
       client: "axios",

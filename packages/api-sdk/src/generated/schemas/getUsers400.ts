@@ -5,7 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { GETUsers400DetailsItem } from "./gETUsers400DetailsItem";
+import type { GETUsers400DetailsItem } from "./getusers400-details-item";
 
 export type GETUsers400 = {
   success: boolean;
