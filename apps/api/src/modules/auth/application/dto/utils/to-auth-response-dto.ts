@@ -12,13 +12,9 @@ import { UserProfileResponseDTO } from "../response/user-profile-respose.dto";
 export function toAuthResponseDTO(
   user: UserProfileResponseDTO,
   accessToken: string,
-  refreshToken: string,
 ): AuthResponseDTO {
   return {
     user,
-    tokens: {
       accessToken,
-      refreshToken,
-    },
   };
 }

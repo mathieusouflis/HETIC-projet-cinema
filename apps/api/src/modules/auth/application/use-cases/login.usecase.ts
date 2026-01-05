@@ -6,6 +6,7 @@ import { toAuthResponseDTO } from "../dto/utils/to-auth-response-dto.js";
 import { toUserResponseDTO } from "../../../users/application/dto/utils/to-user-response.js";
 import { LoginDTO } from "../dto/request/login.dto.js";
 import { AuthResponseDTO } from "../dto/response/auth-response.dto.js";
+import { RefreshToken } from "../../../../shared/services/token/index.js";
 
 /**
  * Login Use Case
@@ -24,7 +25,7 @@ export class LoginUseCase {
    * @returns Promise resolving to AuthResponseDTO with user and tokens
    * @throws UnauthorizedError if credentials are invalid
    */
-  async execute(data: LoginDTO): Promise<AuthResponseDTO> {
+  async execute(data: LoginDTO): Promise<[AuthResponseDTO, RefreshToken]> {
     const user = await this.userRepository.findByEmail(data.email);
 
     if (!user) {
@@ -51,6 +52,6 @@ export class LoginUseCase {
 
     const userResponse = toUserResponseDTO(user);
 
-    return toAuthResponseDTO(userResponse, accessToken, refreshToken);
+    return [toAuthResponseDTO(userResponse, accessToken), refreshToken];
   }
 }
