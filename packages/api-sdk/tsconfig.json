@@ -1,6 +1,7 @@
 {
   "extends": "@packages/typescript-config/node-app.json",
   "compilerOptions": {
+    "forceConsistentCasingInFileNames": false,
     "outDir": "./dist",
     "rootDir": "./src",
   },
