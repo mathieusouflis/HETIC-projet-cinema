@@ -216,17 +216,15 @@ describe("JWT service test", () => {
     });
 
     it("should throw error for expired refresh token", () => {
-      const expiredToken = jwt.sign(
-        { userId: "1", type: "refresh" },
-        config.env.JWT_SECRET + "_refresh",
-        { expiresIn: "0s" }
-      );
+      const expiredToken = jwtService.generateRefreshToken({ userId: "1" });
 
-      setTimeout(() => {
+      vi.useFakeTimers()
+      vi.advanceTimersByTime(1000 * 60 * 60 * 60 * 24 * 255)
+
         expect(() => {
           jwtService.verifyRefreshToken(expiredToken);
         }).toThrowError("Refresh token expired");
-      }, 100);
+
     });
 
     it("should throw error for malformed token", () => {
