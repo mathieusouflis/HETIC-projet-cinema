@@ -3,9 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "turbo run generate-sdk && turbo run build",
-    "build:watch": "turbo run generate-sdk && turbo run build:watch",
-    "check-types": "turbo run generate-sdk && turbo run check-types",
+    "build": "turbo run build",
+    "build:watch": "turbo run build:watch",
+    "check-types": "turbo run check-types",
     "generate-sdk": "turbo run generate-sdk",
     "clean": "turbo run clean && rm -rf .turbo node_modules/.cache packages/*/.turbo apps/*/.turbo",
     "db:logs": "docker compose -f docker-compose.dev.yaml logs -f",

@@ -4,7 +4,14 @@ import {
   OpenAPIRegistry,
   OpenApiGeneratorV3,
   type RouteConfig,
+  type ResponseConfig,
 } from "@asteasolutions/zod-to-openapi";
+
+import type {
+  HeaderObject,
+  ParameterObject,
+  ReferenceObject,
+} from "openapi3-ts/oas30";
 import {
   METADATA_KEYS,
   MetadataStorage,
@@ -17,6 +24,18 @@ import { getMiddlewaresMetadata } from "./auth.decorator.js";
 import { authMiddleware } from "../../middleware/auth.middleware.js";
 import { AUTH_MIDDLEWARE_MARKER, BaseController } from "./types.js";
 import { getSharedRegistry } from "../openapi/shared-registry.js";
+import {
+  getRequiredHeadersMetadata,
+  getSetHeadersMetadata,
+  getRequiredCookieMetadata,
+  getSetCookieMetadata,
+  createRequiredHeadersMiddleware,
+  createSetHeadersMiddleware,
+  createRequiredCookieMiddleware,
+} from "./header.decorator.js";
+
+
+
 
 export interface OpenAPISpec {
   openapi: string;
@@ -75,6 +94,34 @@ export class DecoratorRouter {
 
     const middlewares: RequestHandler[] = [];
 
+    const requiredHeadersMetadata = getRequiredHeadersMetadata(
+      prototype,
+      route.methodName,
+    );
+    if (requiredHeadersMetadata) {
+      middlewares.push(
+        createRequiredHeadersMiddleware(requiredHeadersMetadata.headers),
+      );
+    }
+
+    const requiredCookieMetadata = getRequiredCookieMetadata(
+      prototype,
+      route.methodName,
+    );
+    if (requiredCookieMetadata) {
+      middlewares.push(
+        createRequiredCookieMiddleware(requiredCookieMetadata.name),
+      );
+    }
+
+    const setHeadersMetadata = getSetHeadersMetadata(
+      prototype,
+      route.methodName,
+    );
+    if (setHeadersMetadata) {
+      middlewares.push(createSetHeadersMiddleware(setHeadersMetadata.headers));
+    }
+
     if (validationMetadata.body) {
       middlewares.push(validateRequest(validationMetadata.body, "body"));
     }
@@ -132,6 +179,23 @@ export class DecoratorRouter {
     const responses: ResponseMetadata[] =
       Reflect.getMetadata(responseKey, prototype) || [];
 
+    const requiredHeadersMetadata = getRequiredHeadersMetadata(
+      prototype,
+      route.methodName,
+    );
+    const setHeadersMetadata = getSetHeadersMetadata(
+      prototype,
+      route.methodName,
+    );
+    const requiredCookieMetadata = getRequiredCookieMetadata(
+      prototype,
+      route.methodName,
+    );
+    const setCookieMetadata = getSetCookieMetadata(
+      prototype,
+      route.methodName,
+    );
+
     const requestSchema: RouteConfig["request"] = {};
 
     if (validation.params) {
@@ -157,9 +221,27 @@ export class DecoratorRouter {
       };
     }
 
-    const responseSchema: RouteConfig["responses"] = {};
+    const responseSchema: Record<number, ResponseConfig | ReferenceObject> = {};
     responses.forEach((resp) => {
-      responseSchema[resp.statusCode] = {
+      const responseHeaders: Record<string, HeaderObject | ReferenceObject> = {};
+
+      if (setHeadersMetadata) {
+        setHeadersMetadata.headers.forEach((header) => {
+          responseHeaders[header.name] = {
+            schema: { type: "string" },
+            description: `Response header: ${header.name}`,
+          };
+        });
+      }
+
+      if (setCookieMetadata) {
+        responseHeaders["Set-Cookie"] = {
+          schema: { type: "string" },
+          description: `Sets cookie: ${setCookieMetadata.name}`,
+        };
+      }
+
+      const responseConfig: ResponseConfig = {
         description: resp.description,
         ...(resp.schema && {
           content: {
@@ -168,10 +250,43 @@ export class DecoratorRouter {
             },
           },
         }),
+        ...(Object.keys(responseHeaders).length > 0 && {
+          headers: responseHeaders,
+        }),
       };
+
+      responseSchema[resp.statusCode] = responseConfig;
     });
 
-    this.registry.registerPath({
+    const parameters: (ParameterObject | ReferenceObject)[] = [];
+
+    if (requiredHeadersMetadata) {
+      requiredHeadersMetadata.headers.forEach((headerName) => {
+        const parameter: ParameterObject = {
+          name: headerName,
+          in: "header",
+          required: true,
+          schema: { type: "string" as const },
+          description: `Required header: ${headerName}`,
+          }
+        parameters.push(parameter);
+      });
+    }
+
+    if (requiredCookieMetadata) {
+      const parameter: ParameterObject = {
+        name: "cookie",
+        in: "header",
+        required: true,
+        schema: { type: "string" as const },
+        description: `Required cookie: ${requiredCookieMetadata.name}`,
+      }
+
+      parameters.push(parameter);
+    }
+
+    const routeConfig: RouteConfig = {
+      operationId: `${route.method.toUpperCase()}${fullPath}`,
       method: route.method,
       path: fullPath,
       summary: route.summary,
@@ -181,7 +296,10 @@ export class DecoratorRouter {
         Object.keys(requestSchema).length > 0 ? requestSchema : undefined,
       responses: Object.keys(responseSchema).length > 0 ? responseSchema : {},
       security: isProtected ? [{ BearerAuth: [] }] : undefined,
-    });
+      ...(parameters.length > 0 && { parameters }),
+    };
+
+    this.registry.registerPath(routeConfig);
   }
 
   public generateOpenAPISpec(): OpenAPISpec {
