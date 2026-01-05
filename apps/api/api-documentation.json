@@ -3,7 +3,8 @@
   "info": {
     "version": "1.0.0",
     "title": "Cinema API",
-    "description": "Comprehensive API documentation for the Cinema application"
+    "description": "Comprehensive API documentation for the Cinema application",
+    "contact": {}
   },
   "servers": [
     {
@@ -26,6 +27,7 @@
   "paths": {
     "/users/:id": {
       "get": {
+        "operationId": "GET/users/:id",
         "summary": "Get user by ID",
         "description": "Retrieve a user profile by their unique identifier",
         "tags": [
@@ -179,6 +181,7 @@
         }
       },
       "patch": {
+        "operationId": "PATCH/users/:id",
         "summary": "Update user profile",
         "description": "Update a user profile (admin only or own profile)",
         "tags": [
@@ -410,6 +413,7 @@
         }
       },
       "delete": {
+        "operationId": "DELETE/users/:id",
         "summary": "Delete user",
         "description": "Delete a user account (admin only or own account)",
         "tags": [
@@ -563,6 +567,7 @@
     },
     "/users/": {
       "get": {
+        "operationId": "GET/users/",
         "summary": "Get all users",
         "description": "Retrieve a paginated list of all users",
         "tags": [
@@ -788,6 +793,7 @@
     },
     "/users/me": {
       "get": {
+        "operationId": "GET/users/me",
         "summary": "Get current user profile",
         "description": "Retrieve the authenticated user own profile",
         "tags": [
@@ -876,6 +882,7 @@
         }
       },
       "patch": {
+        "operationId": "PATCH/users/me",
         "summary": "Update current user profile",
         "description": "Update the authenticated user own profile",
         "tags": [
@@ -1036,6 +1043,7 @@
     },
     "/auth/register": {
       "post": {
+        "operationId": "POST/auth/register",
         "summary": "Register a new user",
         "description": "Create a new user account with email, username, and password",
         "tags": [
@@ -1078,6 +1086,14 @@
         "responses": {
           "201": {
             "description": "User registered successfully",
+            "headers": {
+              "Set-Cookie": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Sets cookie: refreshToken"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -1130,27 +1146,14 @@
                             "createdAt"
                           ]
                         },
-                        "tokens": {
-                          "type": "object",
-                          "properties": {
-                            "accessToken": {
-                              "type": "string",
-                              "description": "JWT access token for API authentication"
-                            },
-                            "refreshToken": {
-                              "type": "string",
-                              "description": "JWT refresh token for obtaining new access tokens"
-                            }
-                          },
-                          "required": [
-                            "accessToken",
-                            "refreshToken"
-                          ]
+                        "accessToken": {
+                          "type": "string",
+                          "description": "JWT access token for API authentication"
                         }
                       },
                       "required": [
                         "user",
-                        "tokens"
+                        "accessToken"
                       ]
                     }
                   },
@@ -1164,6 +1167,14 @@
           },
           "400": {
             "description": "Invalid input data",
+            "headers": {
+              "Set-Cookie": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Sets cookie: refreshToken"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -1211,6 +1222,14 @@
           },
           "409": {
             "description": "Email or username already exists",
+            "headers": {
+              "Set-Cookie": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Sets cookie: refreshToken"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -1250,6 +1269,7 @@
     },
     "/auth/login": {
       "post": {
+        "operationId": "POST/auth/login",
         "summary": "Login user",
         "description": "Authenticate user with email and password, receive access tokens",
         "tags": [
@@ -1285,6 +1305,14 @@
         "responses": {
           "200": {
             "description": "Login successful",
+            "headers": {
+              "Set-Cookie": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Sets cookie: refreshToken"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -1337,27 +1365,14 @@
                             "createdAt"
                           ]
                         },
-                        "tokens": {
-                          "type": "object",
-                          "properties": {
-                            "accessToken": {
-                              "type": "string",
-                              "description": "JWT access token for API authentication"
-                            },
-                            "refreshToken": {
-                              "type": "string",
-                              "description": "JWT refresh token for obtaining new access tokens"
-                            }
-                          },
-                          "required": [
-                            "accessToken",
-                            "refreshToken"
-                          ]
+                        "accessToken": {
+                          "type": "string",
+                          "description": "JWT access token for API authentication"
                         }
                       },
                       "required": [
                         "user",
-                        "tokens"
+                        "accessToken"
                       ]
                     }
                   },
@@ -1371,6 +1386,14 @@
           },
           "400": {
             "description": "Invalid credentials",
+            "headers": {
+              "Set-Cookie": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Sets cookie: refreshToken"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -1418,6 +1441,14 @@
           },
           "401": {
             "description": "Unauthorized - wrong email or password",
+            "headers": {
+              "Set-Cookie": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Sets cookie: refreshToken"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -1446,32 +1477,34 @@
     },
     "/auth/refresh": {
       "post": {
+        "operationId": "POST/auth/refresh",
         "summary": "Refresh access token",
         "description": "Get new access and refresh tokens using a valid refresh token",
         "tags": [
           "Authentication"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "refreshToken": {
-                    "type": "string",
-                    "description": "JWT refresh token for obtaining new access tokens"
-                  }
-                },
-                "required": [
-                  "refreshToken"
-                ]
-              }
-            }
+        "parameters": [
+          {
+            "name": "cookie",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Required cookie: refreshToken"
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Tokens refreshed successfully",
+            "headers": {
+              "Set-Cookie": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Sets cookie: refreshToken"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -1524,27 +1557,14 @@
                             "createdAt"
                           ]
                         },
-                        "tokens": {
-                          "type": "object",
-                          "properties": {
-                            "accessToken": {
-                              "type": "string",
-                              "description": "JWT access token for API authentication"
-                            },
-                            "refreshToken": {
-                              "type": "string",
-                              "description": "JWT refresh token for obtaining new access tokens"
-                            }
-                          },
-                          "required": [
-                            "accessToken",
-                            "refreshToken"
-                          ]
+                        "accessToken": {
+                          "type": "string",
+                          "description": "JWT access token for API authentication"
                         }
                       },
                       "required": [
                         "user",
-                        "tokens"
+                        "accessToken"
                       ]
                     }
                   },
@@ -1558,6 +1578,14 @@
           },
           "401": {
             "description": "Invalid or expired refresh token",
+            "headers": {
+              "Set-Cookie": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Sets cookie: refreshToken"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -1586,6 +1614,7 @@
     },
     "/auth/logout": {
       "post": {
+        "operationId": "POST/auth/logout",
         "summary": "Logout user",
         "description": "Logout the current authenticated user (invalidate session)",
         "tags": [
@@ -1651,6 +1680,7 @@
     },
     "/auth/me": {
       "get": {
+        "operationId": "GET/auth/me",
         "summary": "Get current user profile",
         "description": "Get the authenticated user information from JWT token",
         "tags": [

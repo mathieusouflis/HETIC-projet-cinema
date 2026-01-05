@@ -4,7 +4,8 @@ type AsyncRequestHandler = (
   req: Request,
   res: Response,
   next: NextFunction,
-) => Promise<void | Response>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Required for controller routes response validation
+) => Promise<any>;
 
 /**
  * Wrapper function for async Express route handlers

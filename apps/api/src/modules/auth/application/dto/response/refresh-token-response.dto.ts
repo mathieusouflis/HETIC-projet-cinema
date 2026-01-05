@@ -1,6 +1,6 @@
 import z from "zod";
-import { tokensSchema } from "../../../../../shared/services/token";
+import { tokenSchema } from "../../../../../shared/services/token";
 
-export const refreshTokenResponseDTO = tokensSchema;
+export const refreshTokenResponseDTO = tokenSchema;
 
 export type RefreshTokenResponseDTO = z.infer<typeof refreshTokenResponseDTO>;

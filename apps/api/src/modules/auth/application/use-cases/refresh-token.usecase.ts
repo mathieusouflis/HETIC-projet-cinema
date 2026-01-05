@@ -5,9 +5,9 @@ import type {
 } from "../../../../shared/services/token/ITokenService.js";
 import { UnauthorizedError } from "../../../../shared/errors/UnauthorizedError.js";
 import { UserNotFoundError } from "../../../users/domain/errors/UserNotFoundError.js";
-import { toTokenResponseDTO } from "../dto/utils/to-token-response-dto.js";
 import { RefreshTokenDTO } from "../dto/request/regresh-token.dto.js";
 import { RefreshTokenResponseDTO } from "../dto/response/refresh-token-response.dto.js";
+import { RefreshToken } from "../../../../shared/services/token/index.js";
 
 export class RefreshTokenUseCase {
   constructor(
@@ -21,7 +21,7 @@ export class RefreshTokenUseCase {
    * @throws UnauthorizedError if refresh token is invalid or expired
    * @throws UserNotFoundError if user no longer exists
    */
-  async execute(data: RefreshTokenDTO): Promise<RefreshTokenResponseDTO> {
+  async execute(data: RefreshTokenDTO): Promise<[RefreshTokenResponseDTO, RefreshToken]> {
     let payload: RefreshTokenPayload;
 
     try {
@@ -41,6 +41,6 @@ export class RefreshTokenUseCase {
       user.email,
     );
 
-    return toTokenResponseDTO(accessToken, refreshToken);
+    return [accessToken, refreshToken];
   }
 }

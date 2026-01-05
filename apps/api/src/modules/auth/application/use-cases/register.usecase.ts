@@ -26,7 +26,7 @@ export class RegisterUseCase {
    * @throws EmailAlreadyExistsError if email is already registered
    * @throws UsernameAlreadyExistsError if username is already taken
    */
-  async execute(data: RegisterDTO): Promise<AuthResponseDTO> {
+  async execute(data: RegisterDTO): Promise<[AuthResponseDTO, string]> {
     const emailExists = await this.userRepository.existsByEmail(data.email);
 
     if (emailExists) {
@@ -56,6 +56,6 @@ export class RegisterUseCase {
 
     const userResponse = toUserResponseDTO(user);
 
-    return toAuthResponseDTO(userResponse, accessToken, refreshToken);
+    return [toAuthResponseDTO(userResponse, accessToken), refreshToken];
   }
 }
