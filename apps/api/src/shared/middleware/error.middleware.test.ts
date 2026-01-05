@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
 import type { Request, Response, NextFunction } from "express";
 
-
 const mockConfig = vi.hoisted(() => ({
   config: {
     env: {
@@ -59,7 +58,7 @@ describe("errorMiddleware", () => {
         expect.objectContaining({
           success: false,
           error: "Invalid credentials",
-        })
+        }),
       );
     });
 
@@ -73,7 +72,7 @@ describe("errorMiddleware", () => {
         expect.objectContaining({
           success: false,
           error: "User not found",
-        })
+        }),
       );
     });
 
@@ -87,7 +86,7 @@ describe("errorMiddleware", () => {
         expect.objectContaining({
           success: false,
           error: "Email already exists",
-        })
+        }),
       );
     });
 
@@ -101,7 +100,7 @@ describe("errorMiddleware", () => {
         expect.objectContaining({
           success: false,
           error: "Access denied",
-        })
+        }),
       );
     });
 
@@ -115,7 +114,7 @@ describe("errorMiddleware", () => {
         expect.objectContaining({
           success: false,
           error: "Custom error",
-        })
+        }),
       );
     });
   });
@@ -136,7 +135,7 @@ describe("errorMiddleware", () => {
           success: false,
           error: "Validation failed",
           details,
-        })
+        }),
       );
     });
 
@@ -150,7 +149,7 @@ describe("errorMiddleware", () => {
         expect.objectContaining({
           success: false,
           error: "Validation failed",
-        })
+        }),
       );
     });
 
@@ -165,7 +164,7 @@ describe("errorMiddleware", () => {
           success: false,
           error: "Validation failed",
           details: [],
-        })
+        }),
       );
     });
   });
@@ -182,7 +181,7 @@ describe("errorMiddleware", () => {
         expect.objectContaining({
           success: false,
           error: "Invalid token",
-        })
+        }),
       );
     });
 
@@ -197,7 +196,7 @@ describe("errorMiddleware", () => {
         expect.objectContaining({
           success: false,
           error: "Token expired",
-        })
+        }),
       );
     });
   });
@@ -214,7 +213,7 @@ describe("errorMiddleware", () => {
         expect.objectContaining({
           success: false,
           error: "Invalid request body",
-        })
+        }),
       );
     });
 
@@ -227,7 +226,7 @@ describe("errorMiddleware", () => {
       expect(jsonMock).toHaveBeenCalledWith(
         expect.objectContaining({
           success: false,
-        })
+        }),
       );
     });
   });
@@ -242,7 +241,7 @@ describe("errorMiddleware", () => {
       expect(jsonMock).toHaveBeenCalledWith(
         expect.objectContaining({
           success: false,
-        })
+        }),
       );
     });
 
@@ -257,7 +256,7 @@ describe("errorMiddleware", () => {
           success: false,
           error: "Internal server error",
           stack: expect.any(String),
-        })
+        }),
       );
     });
 
@@ -287,7 +286,7 @@ describe("errorMiddleware", () => {
         expect.objectContaining({
           success: false,
           error: "Database connection failed",
-        })
+        }),
       );
     });
   });
@@ -305,7 +304,7 @@ describe("errorMiddleware", () => {
           success: false,
           error: "Test error",
           stack: expect.any(String),
-        })
+        }),
       );
     });
 
@@ -332,7 +331,7 @@ describe("errorMiddleware", () => {
           success: false,
           error: "User not found",
           stack: expect.any(String),
-        })
+        }),
       );
     });
 
@@ -357,7 +356,7 @@ describe("errorMiddleware", () => {
       expect(jsonMock).toHaveBeenCalledWith(
         expect.objectContaining({
           success: false,
-        })
+        }),
       );
     });
   });
@@ -377,7 +376,7 @@ describe("errorMiddleware", () => {
           error: "Validation failed",
           details,
           stack: expect.any(String),
-        })
+        }),
       );
     });
 

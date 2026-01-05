@@ -4,6 +4,7 @@ Cinema uses PostgreSQL. You can run it via Docker or locally.
 
 {% tabs %}
 {% tab title="Docker (recommended)" %}
+
 #### Start Postgres
 
 From the repo root:
@@ -29,9 +30,11 @@ cd apps/api && pnpm db:migrate
 ```bash
 cd apps/api && pnpm db:seed
 ```
+
 {% endtab %}
 
 {% tab title="Local PostgreSQL" %}
+
 #### Create database and user
 
 Example using `psql`:
@@ -53,6 +56,7 @@ Update your `.env` to match.
 ```bash
 cd apps/api && pnpm db:migrate
 ```
+
 {% endtab %}
 {% endtabs %}
 
@@ -64,4 +68,4 @@ pg_isready
 
 If migrations succeed, move on:
 
-* [Running the API](../api/running-the-api.md)
+- [Running the API](../api/running-the-api.md)

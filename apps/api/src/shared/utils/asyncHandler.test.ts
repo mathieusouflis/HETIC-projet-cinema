@@ -3,7 +3,7 @@ import type { Request, Response, NextFunction } from "express";
 import { asyncHandler } from "./asyncHandler";
 
 describe("asyncHandler", () => {
-  const mockRequest = () => ({} as Request);
+  const mockRequest = () => ({}) as Request;
   const mockResponse = () =>
     ({
       json: vi.fn(),

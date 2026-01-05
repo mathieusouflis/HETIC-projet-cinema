@@ -78,7 +78,9 @@ export function RequiredHeaders(headers: string[]) {
  * });
  * ```
  */
-export function SetHeaders(headers: Record<string, string | ((req: Request, res: Response) => string)>) {
+export function SetHeaders(
+  headers: Record<string, string | ((req: Request, res: Response) => string)>,
+) {
   return function (
     target: object,
     propertyKey: string,
@@ -134,7 +136,7 @@ export function RequiredCookie(cookieName: string) {
  * Decorator to specify that a route requires a refresh token cookie
  */
 export function RefreshTokenCookie() {
-  return RequiredCookie('refreshToken');
+  return RequiredCookie("refreshToken");
 }
 
 /**
@@ -161,7 +163,7 @@ export function RefreshTokenCookie() {
  */
 export function SetCookie(
   cookieName: string,
-  options?: CookieMetadata['options']
+  options?: CookieMetadata["options"],
 ) {
   return function (
     target: object,
@@ -226,7 +228,9 @@ export function getSetCookieMetadata(
 /**
  * Middleware factory to check required headers
  */
-export function createRequiredHeadersMiddleware(headers: string[]): RequestHandler {
+export function createRequiredHeadersMiddleware(
+  headers: string[],
+): RequestHandler {
   return (req: Request, res: Response, next: NextFunction) => {
     const missingHeaders: string[] = [];
 
@@ -252,13 +256,14 @@ export function createRequiredHeadersMiddleware(headers: string[]): RequestHandl
  * Middleware factory to set response headers
  */
 export function createSetHeadersMiddleware(
-  headers: SetHeadersMetadata['headers']
+  headers: SetHeadersMetadata["headers"],
 ): RequestHandler {
   return (req: Request, res: Response, next: NextFunction) => {
     for (const header of headers) {
-      const value = typeof header.value === 'function'
-        ? header.value(req, res)
-        : header.value;
+      const value =
+        typeof header.value === "function"
+          ? header.value(req, res)
+          : header.value;
       res.setHeader(header.name, value);
     }
 
@@ -269,7 +274,9 @@ export function createSetHeadersMiddleware(
 /**
  * Middleware factory to check required cookies
  */
-export function createRequiredCookieMiddleware(cookieName: string): RequestHandler {
+export function createRequiredCookieMiddleware(
+  cookieName: string,
+): RequestHandler {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.cookies || !req.cookies[cookieName]) {
       res.status(401).json({

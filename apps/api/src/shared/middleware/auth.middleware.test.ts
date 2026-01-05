@@ -17,7 +17,7 @@ describe("authMiddleware", () => {
   beforeEach(() => {
     req = {
       headers: {},
-      params: {}
+      params: {},
     };
     res = {};
     next = (error?: unknown) => {
@@ -127,7 +127,6 @@ describe("authMiddleware", () => {
         userId: "user-123",
         email: "test@example.com",
       });
-
 
       vi.useFakeTimers();
       vi.advanceTimersByTime(1000 * 60 * 60 * 24 * 255);

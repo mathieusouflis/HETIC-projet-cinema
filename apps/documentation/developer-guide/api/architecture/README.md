@@ -8,27 +8,27 @@ Our architecture is designed to achieve the following objectives:
 
 ### 1. **Maintainability**
 
-* Clear separation of concerns
-* Modular code organization
-* Easy to understand and modify
+- Clear separation of concerns
+- Modular code organization
+- Easy to understand and modify
 
 ### 2. **Testability**
 
-* Dependency injection for easy mocking
-* Isolated business logic
-* Comprehensive test coverage
+- Dependency injection for easy mocking
+- Isolated business logic
+- Comprehensive test coverage
 
 ### 3. **Scalability**
 
-* Modular design for feature additions
-* Performance-optimized database queries
-* Horizontal scaling capabilities
+- Modular design for feature additions
+- Performance-optimized database queries
+- Horizontal scaling capabilities
 
 ### 4. **Developer Experience**
 
-* Type safety throughout the codebase
-* Consistent patterns and conventions
-* Self-documenting code structure
+- Type safety throughout the codebase
+- Consistent patterns and conventions
+- Self-documenting code structure
 
 ## 🏗️ Clean Architecture Layers
 
@@ -39,7 +39,7 @@ graph TD
     A[Presentation Layer] --> B[Application Layer]
     B --> C[Domain Layer]
     D[Infrastructure Layer] --> C
-    
+
     A -.-> E[HTTP/WebSocket Requests]
     D -.-> F[Database/External APIs]
 ```
@@ -50,17 +50,17 @@ graph TD
 
 The innermost layer containing:
 
-* **Entities** - Core business objects
-* **Interfaces** - Contracts for external dependencies
-* **Business Rules** - Pure business logic
-* **Domain Errors** - Business-specific exceptions
+- **Entities** - Core business objects
+- **Interfaces** - Contracts for external dependencies
+- **Business Rules** - Pure business logic
+- **Domain Errors** - Business-specific exceptions
 
 **Key Characteristics**:
 
-* No dependencies on external frameworks
-* Contains pure business logic
-* Framework-agnostic
-* Highly testable
+- No dependencies on external frameworks
+- Contains pure business logic
+- Framework-agnostic
+- Highly testable
 
 ```typescript
 // Example: User Entity
@@ -68,7 +68,7 @@ export class User {
   constructor(
     public readonly id: string,
     public readonly email: string,
-    public readonly username: string
+    public readonly username: string,
   ) {}
 
   // Pure business logic
@@ -85,34 +85,34 @@ export class User {
 
 Orchestrates the flow of data and coordinates between layers:
 
-* **Use Cases** - Application-specific business rules
-* **DTOs** - Data transfer objects
-* **Validators** - Input validation schemas
-* **Controllers** - HTTP request handlers
+- **Use Cases** - Application-specific business rules
+- **DTOs** - Data transfer objects
+- **Validators** - Input validation schemas
+- **Controllers** - HTTP request handlers
 
 **Key Characteristics**:
 
-* Implements use cases
-* Depends only on the Domain layer
-* Contains application-specific logic
-* Coordinates between layers
+- Implements use cases
+- Depends only on the Domain layer
+- Contains application-specific logic
+- Coordinates between layers
 
 ```typescript
 // Example: Use Case
 export class RegisterUserUseCase {
   constructor(
     private readonly userRepository: IUserRepository,
-    private readonly passwordService: IPasswordService
+    private readonly passwordService: IPasswordService,
   ) {}
 
   async execute(data: RegisterDTO): Promise<UserResponseDTO> {
     // Business logic orchestration
     const exists = await this.userRepository.existsByEmail(data.email);
     if (exists) throw new EmailAlreadyExistsError(data.email);
-    
+
     const passwordHash = await this.passwordService.hash(data.password);
     const user = await this.userRepository.create({ ...data, passwordHash });
-    
+
     return toUserResponseDTO(user);
   }
 }
@@ -124,17 +124,17 @@ export class RegisterUserUseCase {
 
 Provides concrete implementations for external concerns:
 
-* **Repositories** - Database access implementations
-* **Services** - External API integrations
-* **Database Schemas** - Data persistence models
-* **Configuration** - External service setup
+- **Repositories** - Database access implementations
+- **Services** - External API integrations
+- **Database Schemas** - Data persistence models
+- **Configuration** - External service setup
 
 **Key Characteristics**:
 
-* Implements interfaces defined in Domain layer
-* Handles external dependencies
-* Framework-specific code
-* Easily replaceable implementations
+- Implements interfaces defined in Domain layer
+- Handles external dependencies
+- Framework-specific code
+- Easily replaceable implementations
 
 ```typescript
 // Example: Repository Implementation
@@ -157,28 +157,24 @@ export class UserRepository implements IUserRepository {
 
 Handles external communication protocols:
 
-* **Routes** - HTTP endpoint definitions
-* **Middleware** - Request/response processing
-* **WebSocket Handlers** - Real-time communication
-* **Input Validation** - Request data validation
+- **Routes** - HTTP endpoint definitions
+- **Middleware** - Request/response processing
+- **WebSocket Handlers** - Real-time communication
+- **Input Validation** - Request data validation
 
 **Key Characteristics**:
 
-* Protocol-specific (HTTP, WebSocket)
-* Handles request/response formatting
-* Applies middleware and validation
-* Routes requests to appropriate use cases
+- Protocol-specific (HTTP, WebSocket)
+- Handles request/response formatting
+- Applies middleware and validation
+- Routes requests to appropriate use cases
 
 ```typescript
 // Example: Route Definition
 export function createAuthRouter(controller: AuthController): Router {
   const router = Router();
 
-  router.post(
-    '/login',
-    validateRequest(loginSchema),
-    controller.login
-  );
+  router.post("/login", validateRequest(loginSchema), controller.login);
 
   return router;
 }
@@ -242,10 +238,10 @@ We use **Constructor Injection** for dependency management:
 
 ### Benefits
 
-* **Testability** - Easy to mock dependencies
-* **Flexibility** - Swap implementations easily
-* **Explicitness** - Dependencies are clearly declared
-* **Type Safety** - TypeScript ensures correct types
+- **Testability** - Easy to mock dependencies
+- **Flexibility** - Swap implementations easily
+- **Explicitness** - Dependencies are clearly declared
+- **Type Safety** - TypeScript ensures correct types
 
 ### Implementation Pattern
 
@@ -265,7 +261,7 @@ class UserRepository implements IUserRepository {
 // 3. Inject in use case
 class LoginUseCase {
   constructor(
-    private readonly userRepository: IUserRepository // Interface, not implementation
+    private readonly userRepository: IUserRepository, // Interface, not implementation
   ) {}
 }
 
@@ -300,17 +296,17 @@ graph LR
 
 ```typescript
 // Each module defines its own schemas
-export const users = pgTable('users', {
-  id: serial('id').primaryKey(),
-  email: varchar('email', { length: 255 }).notNull().unique(),
-  username: varchar('username', { length: 50 }).notNull(),
-  passwordHash: text('password_hash').notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  username: varchar("username", { length: 50 }).notNull(),
+  passwordHash: text("password_hash").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // Aggregated in database/schema.ts
-export * from '../modules/users/infrastructure/database/schemas/users.schema';
-export * from '../modules/auth/infrastructure/database/schemas/sessions.schema';
+export * from "../modules/users/infrastructure/database/schemas/users.schema";
+export * from "../modules/auth/infrastructure/database/schemas/sessions.schema";
 ```
 
 ## Security Architecture
@@ -322,13 +318,13 @@ sequenceDiagram
     participant Client
     participant API
     participant Database
-    
+
     Client->>API: POST /auth/login
     API->>Database: Verify credentials
     Database->>API: User data
     API->>API: Generate JWT tokens
     API->>Client: Access + Refresh tokens
-    
+
     Client->>API: GET /users/me (with token)
     API->>API: Verify JWT
     API->>Client: User data
@@ -381,11 +377,11 @@ graph TD
     B -->|Domain Error| C[Business Exception]
     B -->|Validation Error| D[Validation Exception]
     B -->|System Error| E[Technical Exception]
-    
+
     C --> F[Error Middleware]
     D --> F
     E --> F
-    
+
     F --> G[Formatted Response]
     G --> H[Client]
 ```
@@ -419,7 +415,7 @@ interface ErrorResponse {
 graph TD
     A[Unit Tests] --> B[Integration Tests]
     B --> C[E2E Tests]
-    
+
     A -.-> D[Use Cases, Entities]
     B -.-> E[Controllers, Repositories]
     C -.-> F[Full API Workflows]
@@ -433,10 +429,10 @@ graph TD
 
 ### Testing Benefits from Architecture
 
-* **Domain Layer** - Pure functions, easy to test
-* **Dependency Injection** - Easy mocking
-* **Interface Segregation** - Focused test scenarios
-* **Error Handling** - Predictable error scenarios
+- **Domain Layer** - Pure functions, easy to test
+- **Dependency Injection** - Easy mocking
+- **Interface Segregation** - Focused test scenarios
+- **Error Handling** - Predictable error scenarios
 
 ## Extensibility Points
 
@@ -485,7 +481,7 @@ Extend authentication options:
 export class OAuthUseCase {
   constructor(
     private readonly userRepository: IUserRepository,
-    private readonly oauthService: IOAuthService
+    private readonly oauthService: IOAuthService,
   ) {}
 }
 ```
@@ -494,23 +490,23 @@ export class OAuthUseCase {
 
 ### Database Optimization
 
-* **Connection Pooling** - Reuse database connections
-* **Query Optimization** - Efficient SQL generation
-* **Indexing Strategy** - Optimize common queries
-* **Pagination** - Handle large datasets
+- **Connection Pooling** - Reuse database connections
+- **Query Optimization** - Efficient SQL generation
+- **Indexing Strategy** - Optimize common queries
+- **Pagination** - Handle large datasets
 
 ### Caching Strategy
 
-* **Application Cache** - In-memory caching for frequent data
-* **Database Cache** - Query result caching
-* **CDN Integration** - Static asset caching
+- **Application Cache** - In-memory caching for frequent data
+- **Database Cache** - Query result caching
+- **CDN Integration** - Static asset caching
 
 ### Monitoring Points
 
-* **Request Latency** - API response times
-* **Database Performance** - Query execution times
-* **Error Rates** - System health monitoring
-* **Resource Usage** - CPU, memory, database connections
+- **Request Latency** - API response times
+- **Database Performance** - Query execution times
+- **Error Rates** - System health monitoring
+- **Resource Usage** - CPU, memory, database connections
 
 ## Next Steps
 
@@ -523,6 +519,6 @@ Ready to dive deeper? Explore these sections:
 
 Or jump to practical guides:
 
-* [**Creating a Module**](../../strategy/api/creating-a-new-module.md) - Build your first module
-* [**Adding Endpoints**](../../strategy/api/adding-endpoints.md) - Extend existing functionality
-* [**Writing Tests**](../../strategy/api/writing-tests.md) - Test your code effectively
+- [**Creating a Module**](../../strategy/api/creating-a-new-module.md) - Build your first module
+- [**Adding Endpoints**](../../strategy/api/adding-endpoints.md) - Extend existing functionality
+- [**Writing Tests**](../../strategy/api/writing-tests.md) - Test your code effectively

@@ -14,12 +14,12 @@ This page addresses common questions about the Cinema Project, from development 
 
 **A:** You need:
 
-* **Node.js 20+** - JavaScript runtime
-* **pnpm** - Package manager (preferred over npm/yarn)
-* **PostgreSQL 14+** - Database server
-* **Git** - Version control
-* **8GB RAM** minimum for development
-* **Docker** (optional) for containerized database
+- **Node.js 20+** - JavaScript runtime
+- **pnpm** - Package manager (preferred over npm/yarn)
+- **PostgreSQL 14+** - Database server
+- **Git** - Version control
+- **8GB RAM** minimum for development
+- **Docker** (optional) for containerized database
 
 ### Q: Why does the installation fail with permission errors?
 
@@ -66,11 +66,11 @@ pnpm dev
 
 **A:** Clean Architecture provides several benefits for our project:
 
-* **Maintainability** - Clear separation of concerns makes code easier to understand and modify
-* **Testability** - Dependencies can be easily mocked and tested in isolation
-* **Scalability** - New features can be added without affecting existing code
-* **Framework Independence** - Business logic is isolated from external frameworks
-* **Team Development** - Multiple developers can work on different layers simultaneously
+- **Maintainability** - Clear separation of concerns makes code easier to understand and modify
+- **Testability** - Dependencies can be easily mocked and tested in isolation
+- **Scalability** - New features can be added without affecting existing code
+- **Framework Independence** - Business logic is isolated from external frameworks
+- **Team Development** - Multiple developers can work on different layers simultaneously
 
 ### Q: What's the difference between the layers?
 
@@ -96,10 +96,10 @@ pnpm dev
 
 **A:** Dependency injection provides:
 
-* **Testability** - Easy to mock dependencies for testing
-* **Flexibility** - Can swap implementations without changing dependent code
-* **Loose Coupling** - Components depend on interfaces, not concrete implementations
-* **Configuration** - Can configure different implementations for different environments
+- **Testability** - Easy to mock dependencies for testing
+- **Flexibility** - Can swap implementations without changing dependent code
+- **Loose Coupling** - Components depend on interfaces, not concrete implementations
+- **Configuration** - Can configure different implementations for different environments
 
 ## 🛠️ Development
 
@@ -254,9 +254,9 @@ const usersWithPosts = await userRepository.findAllWithPosts();
 
 **A:**
 
-* **Unit tests** - Test individual functions/classes in isolation with mocked dependencies
-* **Integration tests** - Test how multiple components work together
-* **E2E tests** - Test complete user workflows through the API
+- **Unit tests** - Test individual functions/classes in isolation with mocked dependencies
+- **Integration tests** - Test how multiple components work together
+- **E2E tests** - Test complete user workflows through the API
 
 ### Q: How do I mock dependencies in tests?
 
@@ -275,12 +275,12 @@ beforeEach(() => {
   mockUserRepository.findById.mockClear();
 });
 
-it('should find user by ID', async () => {
-  const user = new User('1', 'test@example.com');
+it("should find user by ID", async () => {
+  const user = new User("1", "test@example.com");
   mockUserRepository.findById.mockResolvedValue(user);
-  
-  const result = await userService.findById('1');
-  
+
+  const result = await userService.findById("1");
+
   expect(result).toBe(user);
 });
 ```
@@ -290,7 +290,7 @@ it('should find user by ID', async () => {
 **A:** Use test containers or in-memory databases:
 
 ```typescript
-describe('UserRepository Integration', () => {
+describe("UserRepository Integration", () => {
   let testDb: TestDatabase;
 
   beforeAll(async () => {
@@ -301,10 +301,10 @@ describe('UserRepository Integration', () => {
     await testDb.cleanup();
   });
 
-  it('should create user in database', async () => {
-    const userData = { email: 'test@example.com', username: 'test' };
+  it("should create user in database", async () => {
+    const userData = { email: "test@example.com", username: "test" };
     const user = await userRepository.create(userData);
-    
+
     expect(user.id).toBeDefined();
     expect(user.email).toBe(userData.email);
   });
@@ -341,16 +341,18 @@ A->>C: {newAccessToken, newRefreshToken}" %}
 
 ```typescript
 // In route definition
-router.get('/protected', 
-  authenticateToken,  // Middleware
-  controller.protectedEndpoint
+router.get(
+  "/protected",
+  authenticateToken, // Middleware
+  controller.protectedEndpoint,
 );
 
 // Or with role-based access
-router.delete('/users/:id',
+router.delete(
+  "/users/:id",
   authenticateToken,
   requireOwnership, // Custom middleware
-  controller.deleteUser
+  controller.deleteUser,
 );
 ```
 
@@ -401,11 +403,11 @@ LOG_LEVEL="info"
 
 **A:** Consider these monitoring solutions:
 
-* **Application logs** - Use structured logging (Winston, Pino)
-* **Error tracking** - Sentry, Bugsnag
-* **Performance monitoring** - New Relic, DataDog
-* **Database monitoring** - Built-in PostgreSQL logs, pgAnalyze
-* **Health checks** - Implement `/health` endpoint
+- **Application logs** - Use structured logging (Winston, Pino)
+- **Error tracking** - Sentry, Bugsnag
+- **Performance monitoring** - New Relic, DataDog
+- **Database monitoring** - Built-in PostgreSQL logs, pgAnalyze
+- **Health checks** - Implement `/health` endpoint
 
 ## 🐛 Troubleshooting
 
@@ -553,12 +555,12 @@ If you don't find your answer here:
 
 ### Quick Links
 
-* [Contributing Guidelines](/broken/pages/bPFVNS4fuZsP7dD8WnvG)
-* [Developer Setup](../developer/)
-* [API Documentation](api/api-documentation.md)
-* [Architecture Overview](/broken/pages/nQOSVe3FoMTuVtJZnSRT)
-* [GitHub Repository](https://github.com/mathieusouflis/HETIC-projet-cinema)
+- [Contributing Guidelines](/broken/pages/bPFVNS4fuZsP7dD8WnvG)
+- [Developer Setup](../developer/)
+- [API Documentation](api/api-documentation.md)
+- [Architecture Overview](/broken/pages/nQOSVe3FoMTuVtJZnSRT)
+- [GitHub Repository](https://github.com/mathieusouflis/HETIC-projet-cinema)
 
-***
+---
 
 **Can't find what you're looking for?** Open a [new discussion](https://github.com/mathieusouflis/HETIC-projet-cinema/discussions/new) and we'll help you out!

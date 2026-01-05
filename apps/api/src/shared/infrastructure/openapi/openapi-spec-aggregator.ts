@@ -15,7 +15,7 @@ export class OpenAPISpecAggregator {
         title: "Cinema API",
         description:
           "Comprehensive API documentation for the Cinema application",
-          contact: {}
+        contact: {},
       },
       servers: [
         {

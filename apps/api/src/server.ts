@@ -4,7 +4,7 @@ import morgan from "morgan";
 import cors from "cors";
 import "./shared/infrastructure/openapi/zod-openapi.js";
 import { apiVersion1Router } from "./modules";
-import cookieParser from "cookie-parser"
+import cookieParser from "cookie-parser";
 
 const { json, urlencoded } = bodyParser;
 

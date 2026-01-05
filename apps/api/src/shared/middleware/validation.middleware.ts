@@ -69,7 +69,8 @@ export const validateMultiple = (
       } catch (error) {
         if (error instanceof ZodError) {
           error.issues.forEach((err: ZodIssue) => {
-            const fieldPath = err.path.length > 0 ? err.path.join(".") : "unknown";
+            const fieldPath =
+              err.path.length > 0 ? err.path.join(".") : "unknown";
             errors.push({
               field: `${target}.${fieldPath}`,
               message: err.message,

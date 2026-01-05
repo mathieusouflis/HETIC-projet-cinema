@@ -3,10 +3,9 @@ import { createMockedUserRepository } from "../../../users/domain/interfaces/use
 import { DeleteUserUseCase } from "./DeleteUser.usecase";
 
 describe("LoginUseCase", () => {
-
   const mockedUserRepository = createMockedUserRepository();
 
-  const useCase = new DeleteUserUseCase(mockedUserRepository)
+  const useCase = new DeleteUserUseCase(mockedUserRepository);
 
   it("should throw an error when user not found", async () => {
     const id = "1";

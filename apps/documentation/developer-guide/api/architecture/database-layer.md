@@ -4,9 +4,9 @@ The API uses PostgreSQL plus an ORM (Drizzle). Keep DB access behind repositorie
 
 ### Core pieces
 
-* **Schemas** define tables.
-* **Migrations** version schema changes.
-* **Repositories** implement domain interfaces.
+- **Schemas** define tables.
+- **Migrations** version schema changes.
+- **Repositories** implement domain interfaces.
 
 ### Typical workflow
 
@@ -27,5 +27,5 @@ They should call a repository interface.
 
 ### Related
 
-* [Database Setup](../../tools-and-setup/database-setup.md)
-* [Project Structure](project-structure.md)
+- [Database Setup](../../tools-and-setup/database-setup.md)
+- [Project Structure](project-structure.md)

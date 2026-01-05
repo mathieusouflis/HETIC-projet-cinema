@@ -3,10 +3,9 @@ import { createMockedUserRepository } from "../../domain/interfaces/user.reposit
 import { GetUserByIdUseCase } from "./GetUserById.usecase";
 
 describe("LoginUseCase", () => {
-
   const mockedUserRepository = createMockedUserRepository();
 
-  const useCase = new GetUserByIdUseCase(mockedUserRepository)
+  const useCase = new GetUserByIdUseCase(mockedUserRepository);
 
   it("should throw an error when user not found", async () => {
     const id = "1";

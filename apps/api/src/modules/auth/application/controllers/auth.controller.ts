@@ -13,7 +13,10 @@ import {
 } from "../../../../shared/schemas/index.js";
 import { registerValidator } from "../dto/request/register.dto.js";
 import { loginValidator } from "../dto/request/login.dto.js";
-import { authResponseDataValidator, AuthResponseDTO } from "../dto/response/auth-response.dto.js";
+import {
+  authResponseDataValidator,
+  AuthResponseDTO,
+} from "../dto/response/auth-response.dto.js";
 import { Controller } from "../../../../shared/infrastructure/decorators/controller.decorator.js";
 import { BaseController } from "../../../../shared/infrastructure/base/BaseController.js";
 import {
@@ -23,8 +26,14 @@ import {
 import { ValidateBody } from "../../../../shared/infrastructure/decorators/validation.decorators.js";
 import { ApiResponse } from "../../../../shared/infrastructure/decorators/response.decorator.js";
 import { Protected } from "../../../../shared/infrastructure/decorators/auth.decorator.js";
-import { RefreshTokenCookie, SetCookie } from "../../../../shared/infrastructure/decorators/header.decorator.js";
-import { UserProfile, userProfileSchema } from "../../../users/application/schema/user.schema.js";
+import {
+  RefreshTokenCookie,
+  SetCookie,
+} from "../../../../shared/infrastructure/decorators/header.decorator.js";
+import {
+  UserProfile,
+  userProfileSchema,
+} from "../../../users/application/schema/user.schema.js";
 import { config } from "@packages/config";
 import { RefreshTokenResponseDTO } from "../dto/response/refresh-token-response.dto.js";
 
@@ -33,13 +42,12 @@ const cookiesOptions = {
   domain: config.env.backend.host,
   maxAge: 7 * 24 * 60 * 60,
   sameSite: "strict",
-  secure: config.env.NODE_ENV === "production"
-} as const
+  secure: config.env.NODE_ENV === "production",
+} as const;
 
-function returnRefreshTokenCookie(refreshToken: string, res: Response){
-  res.cookie(cookieName, refreshToken, cookiesOptions)
+function returnRefreshTokenCookie(refreshToken: string, res: Response) {
+  res.cookie(cookieName, refreshToken, cookiesOptions);
 }
-
 
 @Controller({
   tag: "Authentication",
@@ -83,7 +91,7 @@ export class AuthController extends BaseController {
         password,
       });
 
-      returnRefreshTokenCookie(refreshToken, res)
+      returnRefreshTokenCookie(refreshToken, res);
 
       res.status(201).json({
         success: true,
@@ -114,24 +122,26 @@ export class AuthController extends BaseController {
     unauthorizedErrorResponseSchema,
   )
   @SetCookie(cookieName, cookiesOptions)
-  login = asyncHandler(async (req: Request, res: Response): Promise<AuthResponseDTO> => {
-    const { email, password } = req.body;
+  login = asyncHandler(
+    async (req: Request, res: Response): Promise<AuthResponseDTO> => {
+      const { email, password } = req.body;
 
-    const [result, refreshToken] = await this.loginUseCase.execute({
-      email,
-      password,
-    });
+      const [result, refreshToken] = await this.loginUseCase.execute({
+        email,
+        password,
+      });
 
-    returnRefreshTokenCookie(refreshToken, res)
+      returnRefreshTokenCookie(refreshToken, res);
 
-    res.status(200).json({
-      success: true,
-      message: "Login successful",
-      data: result,
-    });
+      res.status(200).json({
+        success: true,
+        message: "Login successful",
+        data: result,
+      });
 
-    return result
-  });
+      return result;
+    },
+  );
 
   @Post({
     path: "/refresh",
@@ -151,23 +161,26 @@ export class AuthController extends BaseController {
     unauthorizedErrorResponseSchema,
   )
   @SetCookie(cookieName, cookiesOptions)
-  refresh = asyncHandler(async (req: Request, res: Response): Promise<RefreshTokenResponseDTO> => {
-    const { refreshToken: _refreshToken } = req.cookies
+  refresh = asyncHandler(
+    async (req: Request, res: Response): Promise<RefreshTokenResponseDTO> => {
+      const { refreshToken: _refreshToken } = req.cookies;
 
-    const [accessToken, refreshToken] = await this.refreshTokenUseCase.execute({
-      refreshToken: _refreshToken,
-    });
+      const [accessToken, refreshToken] =
+        await this.refreshTokenUseCase.execute({
+          refreshToken: _refreshToken,
+        });
 
-    returnRefreshTokenCookie(refreshToken, res)
+      returnRefreshTokenCookie(refreshToken, res);
 
-    res.status(200).json({
-      success: true,
-      message: "Tokens refreshed successfully",
-      data: accessToken,
-    });
+      res.status(200).json({
+        success: true,
+        message: "Tokens refreshed successfully",
+        data: accessToken,
+      });
 
-    return accessToken
-  });
+      return accessToken;
+    },
+  );
 
   @Post({
     path: "/logout",
@@ -201,27 +214,29 @@ export class AuthController extends BaseController {
     "Not authenticated - missing or invalid token",
     unauthorizedErrorResponseSchema,
   )
-  getMe = asyncHandler(async (req: Request, res: Response): Promise<UserProfile | void> => {
-    const user = req.user;
+  getMe = asyncHandler(
+    async (req: Request, res: Response): Promise<UserProfile | void> => {
+      const user = req.user;
 
-    if (!user) {
-      res.status(401).json({
-        success: false,
-        error: "User not authenticated",
+      if (!user) {
+        res.status(401).json({
+          success: false,
+          error: "User not authenticated",
+        });
+        return;
+      }
+
+      const userProfile: UserProfile = {
+        userId: user.userId,
+        email: user.email,
+      };
+
+      res.status(200).json({
+        success: true,
+        data: userProfile,
       });
-      return;
-    }
 
-    const userProfile: UserProfile = {
-      userId: user.userId,
-      email: user.email
-    }
-
-    res.status(200).json({
-      success: true,
-      data: userProfile,
-    });
-
-    return userProfile
-  });
+      return userProfile;
+    },
+  );
 }

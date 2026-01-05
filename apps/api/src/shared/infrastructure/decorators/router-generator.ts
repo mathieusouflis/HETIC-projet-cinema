@@ -34,9 +34,6 @@ import {
   createRequiredCookieMiddleware,
 } from "./header.decorator.js";
 
-
-
-
 export interface OpenAPISpec {
   openapi: string;
   info: {
@@ -191,10 +188,7 @@ export class DecoratorRouter {
       prototype,
       route.methodName,
     );
-    const setCookieMetadata = getSetCookieMetadata(
-      prototype,
-      route.methodName,
-    );
+    const setCookieMetadata = getSetCookieMetadata(prototype, route.methodName);
 
     const requestSchema: RouteConfig["request"] = {};
 
@@ -223,7 +217,8 @@ export class DecoratorRouter {
 
     const responseSchema: Record<number, ResponseConfig | ReferenceObject> = {};
     responses.forEach((resp) => {
-      const responseHeaders: Record<string, HeaderObject | ReferenceObject> = {};
+      const responseHeaders: Record<string, HeaderObject | ReferenceObject> =
+        {};
 
       if (setHeadersMetadata) {
         setHeadersMetadata.headers.forEach((header) => {
@@ -268,7 +263,7 @@ export class DecoratorRouter {
           required: true,
           schema: { type: "string" as const },
           description: `Required header: ${headerName}`,
-          }
+        };
         parameters.push(parameter);
       });
     }
@@ -280,7 +275,7 @@ export class DecoratorRouter {
         required: true,
         schema: { type: "string" as const },
         description: `Required cookie: ${requiredCookieMetadata.name}`,
-      }
+      };
 
       parameters.push(parameter);
     }

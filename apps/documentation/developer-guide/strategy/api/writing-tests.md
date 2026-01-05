@@ -4,10 +4,10 @@ Tests are your safety net for refactors. Aim for fast unit tests, plus a few int
 
 ### What to test
 
-* **Domain**: entities and pure business rules
-* **Application**: use cases (mock interfaces)
-* **Presentation**: request validation + controller behavior
-* **Infrastructure**: repository integration against a test database (when needed)
+- **Domain**: entities and pure business rules
+- **Application**: use cases (mock interfaces)
+- **Presentation**: request validation + controller behavior
+- **Infrastructure**: repository integration against a test database (when needed)
 
 ### Common commands
 

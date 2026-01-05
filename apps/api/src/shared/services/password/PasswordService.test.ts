@@ -1,4 +1,4 @@
-import { describe } from "vitest"
+import { describe } from "vitest";
 import { PasswordService } from "./PasswordService";
 
 describe("Password service test", () => {

@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { ValidationError } from './ValidationError';
+import { describe, it, expect } from "vitest";
+import { ValidationError } from "./ValidationError";
 
-describe('ValidationError', () => {
-  it('Should instanciate ValidationError', () => {
+describe("ValidationError", () => {
+  it("Should instanciate ValidationError", () => {
     expect(new ValidationError()).toBeDefined();
   });
 });

@@ -17,7 +17,6 @@ export function toUserListResponseDTO(
   page: number,
   limit: number,
 ): GetResponseDTO {
-
   return {
     users: users.map((user) => toUserResponseDTO(user)),
     pagination: {

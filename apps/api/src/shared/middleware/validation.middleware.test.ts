@@ -99,7 +99,7 @@ describe("validateRequest", () => {
             message: expect.any(String),
             code: expect.any(String),
           }),
-        ])
+        ]),
       );
     });
 
@@ -213,7 +213,7 @@ describe("validateRequest", () => {
           z.object({
             id: z.number(),
             name: z.string(),
-          })
+          }),
         ),
       });
 
@@ -526,7 +526,7 @@ describe("validateMultiple", () => {
         expect.objectContaining({
           field: "params.id",
         }),
-      ])
+      ]),
     );
   });
 

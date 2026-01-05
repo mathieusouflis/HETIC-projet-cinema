@@ -2,20 +2,24 @@
 
 ### Testing Strategy
 
-* **Unit Tests** - Test individual functions and classes
-* **Integration Tests** - Test component interactions
-* **E2E Tests** - Test complete user workflows
+- **Unit Tests** - Test individual functions and classes
+- **Integration Tests** - Test component interactions
+- **E2E Tests** - Test complete user workflows
 
 ### Test Structure
 
 ```typescript
 // Arrange - Act - Assert pattern
-describe('UserService', () => {
-  describe('createUser', () => {
-    it('should create user with valid data', async () => {
+describe("UserService", () => {
+  describe("createUser", () => {
+    it("should create user with valid data", async () => {
       // Arrange
-      const request = { email: 'test@example.com', username: 'test', password: 'password' };
-      const mockUser = new User('1', 'test@example.com', 'test');
+      const request = {
+        email: "test@example.com",
+        username: "test",
+        password: "password",
+      };
+      const mockUser = new User("1", "test@example.com", "test");
       mockUserRepository.create.mockResolvedValue(mockUser);
 
       // Act
@@ -26,13 +30,19 @@ describe('UserService', () => {
       expect(mockUserRepository.create).toHaveBeenCalledWith(request);
     });
 
-    it('should throw error when email already exists', async () => {
+    it("should throw error when email already exists", async () => {
       // Arrange
-      const request = { email: 'existing@example.com', username: 'test', password: 'password' };
+      const request = {
+        email: "existing@example.com",
+        username: "test",
+        password: "password",
+      };
       mockUserRepository.existsByEmail.mockResolvedValue(true);
 
       // Act & Assert
-      await expect(userService.createUser(request)).rejects.toThrow(EmailAlreadyExistsError);
+      await expect(userService.createUser(request)).rejects.toThrow(
+        EmailAlreadyExistsError,
+      );
     });
   });
 });
@@ -40,9 +50,9 @@ describe('UserService', () => {
 
 ### Test Coverage Requirements
 
-* **Minimum coverage**: 90%
-* **New code**: 100% coverage required
-* **Critical paths**: Authentication, data persistence, business logic
+- **Minimum coverage**: 90%
+- **New code**: 100% coverage required
+- **Critical paths**: Authentication, data persistence, business logic
 
 ### Testing Commands
 

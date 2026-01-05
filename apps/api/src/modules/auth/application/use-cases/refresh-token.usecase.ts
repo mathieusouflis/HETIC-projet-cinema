@@ -21,7 +21,9 @@ export class RefreshTokenUseCase {
    * @throws UnauthorizedError if refresh token is invalid or expired
    * @throws UserNotFoundError if user no longer exists
    */
-  async execute(data: RefreshTokenDTO): Promise<[RefreshTokenResponseDTO, RefreshToken]> {
+  async execute(
+    data: RefreshTokenDTO,
+  ): Promise<[RefreshTokenResponseDTO, RefreshToken]> {
     let payload: RefreshTokenPayload;
 
     try {

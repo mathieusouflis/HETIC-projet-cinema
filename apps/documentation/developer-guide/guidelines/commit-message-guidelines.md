@@ -14,13 +14,13 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/) specifica
 
 ### Types
 
-* **feat**: New feature
-* **fix**: Bug fix
-* **docs**: Documentation changes
-* **style**: Code style changes (formatting, etc.)
-* **refactor**: Code refactoring
-* **test**: Adding or updating tests
-* **chore**: Maintenance tasks
+- **feat**: New feature
+- **fix**: Bug fix
+- **docs**: Documentation changes
+- **style**: Code style changes (formatting, etc.)
+- **refactor**: Code refactoring
+- **test**: Adding or updating tests
+- **chore**: Maintenance tasks
 
 ### Examples
 
@@ -44,6 +44,6 @@ BREAKING CHANGE: User IDs are now UUIDs instead of incremental integers
 
 We use Husky for automated checks:
 
-* **pre-commit**: Lint and format staged files
-* **commit-msg**: Validate commit message format
-* **pre-push**: Run tests before pushing
+- **pre-commit**: Lint and format staged files
+- **commit-msg**: Validate commit message format
+- **pre-push**: Run tests before pushing

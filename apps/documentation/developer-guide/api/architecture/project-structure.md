@@ -324,17 +324,17 @@ Using TypeScript path mapping for clean imports:
 
 ```typescript
 // ✅ Shared utilities
-import { asyncHandler } from '@/shared/utils';
-import { authMiddleware } from '@/shared/middleware';
-import { AppError } from '@/shared/errors';
+import { asyncHandler } from "@/shared/utils";
+import { authMiddleware } from "@/shared/middleware";
+import { AppError } from "@/shared/errors";
 
 // ✅ Module imports
-import { User } from '@/modules/users/domain/entities/user.entity';
-import type { IUserRepository } from '@/modules/users/domain/interfaces/IUserRepository';
+import { User } from "@/modules/users/domain/entities/user.entity";
+import type { IUserRepository } from "@/modules/users/domain/interfaces/IUserRepository";
 
 // ✅ Database and config
-import { db } from '@/database';
-import { databaseConfig } from '@/config/database';
+import { db } from "@/database";
+import { databaseConfig } from "@/config/database";
 ```
 
 ### Import Order Convention
@@ -345,16 +345,16 @@ import { databaseConfig } from '@/config/database';
 
 ```typescript
 // 1. External libraries
-import { Router } from 'express';
-import { z } from 'zod';
+import { Router } from "express";
+import { z } from "zod";
 
 // 2. Internal absolute imports
-import { asyncHandler } from '@/shared/utils';
-import type { IUserRepository } from '@/modules/users/domain';
+import { asyncHandler } from "@/shared/utils";
+import type { IUserRepository } from "@/modules/users/domain";
 
 // 3. Relative imports
-import type { AuthController } from '../controllers/auth.controller';
-import { createUserSchema } from './validators/user.validator';
+import type { AuthController } from "../controllers/auth.controller";
+import { createUserSchema } from "./validators/user.validator";
 ```
 
 ## Module Dependencies
@@ -366,7 +366,7 @@ graph TD
     A[Presentation Layer] --> B[Application Layer]
     B --> C[Domain Layer]
     D[Infrastructure Layer] --> C
-    
+
     E[Shared Services] --> C
     F[Shared Middleware] --> A
     G[Shared Errors] --> C
@@ -377,35 +377,35 @@ graph TD
 
 #### Domain Layer Can Import:
 
-* ✅ Other domain entities
-* ✅ Shared errors (domain-specific)
-* ❌ Application layer
-* ❌ Infrastructure layer
-* ❌ Presentation layer
+- ✅ Other domain entities
+- ✅ Shared errors (domain-specific)
+- ❌ Application layer
+- ❌ Infrastructure layer
+- ❌ Presentation layer
 
 #### Application Layer Can Import:
 
-* ✅ Domain layer (entities, interfaces, errors)
-* ✅ Shared services (via interfaces)
-* ✅ Shared errors
-* ❌ Infrastructure layer
-* ❌ Presentation layer
+- ✅ Domain layer (entities, interfaces, errors)
+- ✅ Shared services (via interfaces)
+- ✅ Shared errors
+- ❌ Infrastructure layer
+- ❌ Presentation layer
 
 #### Infrastructure Layer Can Import:
 
-* ✅ Domain layer (interfaces, entities)
-* ✅ External libraries (Drizzle, bcrypt, etc.)
-* ✅ Shared services
-* ❌ Application layer
-* ❌ Presentation layer
+- ✅ Domain layer (interfaces, entities)
+- ✅ External libraries (Drizzle, bcrypt, etc.)
+- ✅ Shared services
+- ❌ Application layer
+- ❌ Presentation layer
 
 #### Presentation Layer Can Import:
 
-* ✅ Application layer (controllers, DTOs)
-* ✅ Shared middleware
-* ✅ Shared errors
-* ❌ Domain layer directly
-* ❌ Infrastructure layer directly
+- ✅ Application layer (controllers, DTOs)
+- ✅ Shared middleware
+- ✅ Shared errors
+- ❌ Domain layer directly
+- ❌ Infrastructure layer directly
 
 ## Test File Organization
 
@@ -488,27 +488,27 @@ src/
 
 ### 1. **Predictability**
 
-* Developers know exactly where to find specific functionality
-* Consistent patterns across all modules
-* Easy navigation and file discovery
+- Developers know exactly where to find specific functionality
+- Consistent patterns across all modules
+- Easy navigation and file discovery
 
 ### 2. **Scalability**
 
-* Easy to add new modules without affecting existing code
-* Clear boundaries prevent tight coupling
-* Parallel development across teams
+- Easy to add new modules without affecting existing code
+- Clear boundaries prevent tight coupling
+- Parallel development across teams
 
 ### 3. **Maintainability**
 
-* Changes are isolated to specific layers and modules
-* Clear dependency rules prevent architectural drift
-* Easy to refactor or replace components
+- Changes are isolated to specific layers and modules
+- Clear dependency rules prevent architectural drift
+- Easy to refactor or replace components
 
 ### 4. **Testability**
 
-* Test files are co-located with source code
-* Clear separation allows focused testing strategies
-* Dependency injection enables easy mocking
+- Test files are co-located with source code
+- Clear separation allows focused testing strategies
+- Dependency injection enables easy mocking
 
 ## Common Structure Mistakes
 
@@ -529,7 +529,7 @@ src/controllers/users.controller.ts
 modules/users/domain/User.ts
 └── imports from modules/auth/ ❌
 
-modules/auth/domain/Session.ts  
+modules/auth/domain/Session.ts
 └── imports from modules/users/ ❌
 ```
 
@@ -579,6 +579,6 @@ This structure supports the project's goals of maintainability, testability, and
 
 ## Related Documentation
 
-* [**Clean Architecture Principles**](clean-architecture.md) - Architectural philosophy
-* [**Module Pattern**](module-pattern.md) - Deep dive into modules
-* [**Creating a Module**](../../strategy/api/creating-a-new-module.md) - Practical implementation guide
+- [**Clean Architecture Principles**](clean-architecture.md) - Architectural philosophy
+- [**Module Pattern**](module-pattern.md) - Deep dive into modules
+- [**Creating a Module**](../../strategy/api/creating-a-new-module.md) - Practical implementation guide

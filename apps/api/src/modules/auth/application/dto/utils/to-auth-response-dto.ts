@@ -15,6 +15,6 @@ export function toAuthResponseDTO(
 ): AuthResponseDTO {
   return {
     user,
-      accessToken,
+    accessToken,
   };
 }

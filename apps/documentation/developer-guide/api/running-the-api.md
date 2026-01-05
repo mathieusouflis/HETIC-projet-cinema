@@ -18,7 +18,7 @@ cd apps/api && pnpm dev
 
 The API base URL is typically:
 
-* `http://localhost:3000/api/v1`
+- `http://localhost:3000/api/v1`
 
 ### Quick health check
 

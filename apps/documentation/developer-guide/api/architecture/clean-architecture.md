@@ -12,10 +12,10 @@ Clean Architecture is a software design philosophy that creates systems which ar
 
 Clean Architecture, introduced by Robert C. Martin (Uncle Bob), is an architectural pattern that emphasizes:
 
-* **Independence** from frameworks, databases, and external agencies
-* **Testability** through dependency inversion
-* **Maintainability** via clear separation of concerns
-* **Flexibility** to adapt to changing requirements
+- **Independence** from frameworks, databases, and external agencies
+- **Testability** through dependency inversion
+- **Maintainability** via clear separation of concerns
+- **Flexibility** to adapt to changing requirements
 
 ## The Dependency Rule
 
@@ -28,23 +28,23 @@ graph TB
     subgraph "Outer Layer"
         A[Frameworks & Drivers<br/>Express, PostgreSQL, etc.]
     end
-    
+
     subgraph "Interface Adapters"
         B[Controllers<br/>Presenters<br/>Gateways]
     end
-    
+
     subgraph "Application Business Rules"
         C[Use Cases<br/>Application Services]
     end
-    
+
     subgraph "Enterprise Business Rules"
         D[Entities<br/>Domain Services]
     end
-    
+
     A --> B
     B --> C
     C --> D
-    
+
     style D fill:#e1f5fe
     style D color:black
     style C fill:#f3e5f5
@@ -74,7 +74,7 @@ export class User {
     public readonly email: string,
     public readonly username: string,
     private readonly passwordHash: string,
-    public readonly createdAt: Date
+    public readonly createdAt: Date,
   ) {}
 
   // Pure business logic - no external dependencies
@@ -124,10 +124,10 @@ export class EmailAlreadyExistsError extends ConflictError {
 
 **Key Principles:**
 
-* ✅ No imports from outer layers
-* ✅ Framework-agnostic code
-* ✅ Pure business logic only
-* ✅ Highly testable
+- ✅ No imports from outer layers
+- ✅ Framework-agnostic code
+- ✅ Pure business logic only
+- ✅ Highly testable
 
 ### 2. Application Business Rules (Use Cases Layer)
 
@@ -144,13 +144,13 @@ export class RegisterUserUseCase {
   constructor(
     private readonly userRepository: IUserRepository, // Interface, not implementation
     private readonly passwordService: IPasswordService,
-    private readonly tokenService: ITokenService
+    private readonly tokenService: ITokenService,
   ) {}
 
   async execute(data: RegisterDTO): Promise<AuthResponseDTO> {
     // 1. Validate business rules using domain entities
     if (!User.isValidUsername(data.username)) {
-      throw new ValidationError('Invalid username format');
+      throw new ValidationError("Invalid username format");
     }
 
     // 2. Check business constraints
@@ -161,7 +161,7 @@ export class RegisterUserUseCase {
 
     // 3. Apply business logic
     const passwordHash = await this.passwordService.hash(data.password);
-    
+
     // 4. Create domain entity
     const user = await this.userRepository.create({
       email: data.email,
@@ -172,13 +172,13 @@ export class RegisterUserUseCase {
     // 5. Generate tokens using domain data
     const { accessToken, refreshToken } = this.tokenService.generateTokenPair(
       user.id,
-      user.email
+      user.email,
     );
 
     // 6. Return application-specific response
     return {
       user: toUserResponseDTO(user),
-      tokens: { accessToken, refreshToken }
+      tokens: { accessToken, refreshToken },
     };
   }
 }
@@ -206,10 +206,10 @@ export interface AuthResponseDTO {
 
 **Key Principles:**
 
-* ✅ Depends only on Domain layer
-* ✅ Contains application-specific logic
-* ✅ Orchestrates between entities and external services
-* ✅ No knowledge of UI or database details
+- ✅ Depends only on Domain layer
+- ✅ Contains application-specific logic
+- ✅ Orchestrates between entities and external services
+- ✅ No knowledge of UI or database details
 
 ### 3. Interface Adapters (Controllers & Gateways)
 
@@ -224,27 +224,29 @@ Convert HTTP requests to use case calls:
 ```typescript
 export class AuthController {
   constructor(
-    private readonly registerUseCase: RegisterUseCase // Use case, not direct repository
+    private readonly registerUseCase: RegisterUseCase, // Use case, not direct repository
   ) {}
 
-  register = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    // Convert HTTP request to DTO
-    const registerData: RegisterDTO = {
-      email: req.body.email,
-      username: req.body.username,
-      password: req.body.password,
-    };
+  register = asyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      // Convert HTTP request to DTO
+      const registerData: RegisterDTO = {
+        email: req.body.email,
+        username: req.body.username,
+        password: req.body.password,
+      };
 
-    // Execute use case
-    const result = await this.registerUseCase.execute(registerData);
+      // Execute use case
+      const result = await this.registerUseCase.execute(registerData);
 
-    // Convert to HTTP response
-    res.status(201).json({
-      success: true,
-      message: 'User registered successfully',
-      data: result,
-    });
-  });
+      // Convert to HTTP response
+      res.status(201).json({
+        success: true,
+        message: "User registered successfully",
+        data: result,
+      });
+    },
+  );
 }
 ```
 
@@ -274,7 +276,7 @@ export class UserRepository implements IUserRepository {
       row.email,
       row.username,
       row.passwordHash,
-      row.createdAt
+      row.createdAt,
     );
   }
 }
@@ -282,10 +284,10 @@ export class UserRepository implements IUserRepository {
 
 **Key Principles:**
 
-* ✅ Implements interfaces defined in inner layers
-* ✅ Converts between different data formats
-* ✅ Contains framework-specific code
-* ✅ Can be easily replaced or modified
+- ✅ Implements interfaces defined in inner layers
+- ✅ Converts between different data formats
+- ✅ Contains framework-specific code
+- ✅ Can be easily replaced or modified
 
 ### 4. Frameworks & Drivers (External Layer)
 
@@ -293,11 +295,11 @@ export class UserRepository implements IUserRepository {
 
 The outermost layer containing:
 
-* Web frameworks (Express.js)
-* Databases (PostgreSQL)
-* External APIs
-* Device drivers
-* Configuration
+- Web frameworks (Express.js)
+- Databases (PostgreSQL)
+- External APIs
+- Device drivers
+- Configuration
 
 ## Dependency Inversion in Action
 
@@ -308,7 +310,7 @@ Here's how dependency inversion works in practice:
 ```typescript
 class LoginUseCase {
   private userRepository = new PostgreSQLUserRepository(); // Direct dependency
-  
+
   async execute(credentials: LoginDTO) {
     // Tightly coupled to PostgreSQL implementation
     const user = await this.userRepository.findByEmail(credentials.email);
@@ -328,9 +330,9 @@ interface IUserRepository {
 // 2. Use case depends on interface, not implementation
 class LoginUseCase {
   constructor(
-    private readonly userRepository: IUserRepository // Interface dependency
+    private readonly userRepository: IUserRepository, // Interface dependency
   ) {}
-  
+
   async execute(credentials: LoginDTO) {
     const user = await this.userRepository.findByEmail(credentials.email);
     // ...
@@ -358,7 +360,7 @@ Clean Architecture makes testing dramatically easier:
 ### Unit Testing Use Cases
 
 ```typescript
-describe('RegisterUserUseCase', () => {
+describe("RegisterUserUseCase", () => {
   let useCase: RegisterUserUseCase;
   let mockUserRepository: jest.Mocked<IUserRepository>;
   let mockPasswordService: jest.Mocked<IPasswordService>;
@@ -371,31 +373,28 @@ describe('RegisterUserUseCase', () => {
     } as any;
 
     mockPasswordService = {
-      hash: jest.fn().mockResolvedValue('hashed-password'),
+      hash: jest.fn().mockResolvedValue("hashed-password"),
     } as any;
 
     // Inject mocks
-    useCase = new RegisterUserUseCase(
-      mockUserRepository,
-      mockPasswordService
-    );
+    useCase = new RegisterUserUseCase(mockUserRepository, mockPasswordService);
   });
 
-  it('should register a new user successfully', async () => {
+  it("should register a new user successfully", async () => {
     // Arrange
     mockUserRepository.existsByEmail.mockResolvedValue(false);
     mockUserRepository.create.mockResolvedValue(mockUser);
 
     // Act
     const result = await useCase.execute({
-      email: 'test@example.com',
-      username: 'testuser',
-      password: 'password123'
+      email: "test@example.com",
+      username: "testuser",
+      password: "password123",
     });
 
     // Assert
-    expect(result.user.email).toBe('test@example.com');
-    expect(mockPasswordService.hash).toHaveBeenCalledWith('password123');
+    expect(result.user.email).toBe("test@example.com");
+    expect(mockPasswordService.hash).toHaveBeenCalledWith("password123");
   });
 });
 ```
@@ -403,22 +402,20 @@ describe('RegisterUserUseCase', () => {
 ### Integration Testing Controllers
 
 ```typescript
-describe('AuthController', () => {
+describe("AuthController", () => {
   let app: Express;
-  
+
   beforeEach(() => {
     // Test with real implementations but test database
     app = createTestApp();
   });
 
-  it('should register a user via HTTP', async () => {
-    const response = await request(app)
-      .post('/api/v1/auth/register')
-      .send({
-        email: 'test@example.com',
-        username: 'testuser',
-        password: 'Password123'
-      });
+  it("should register a user via HTTP", async () => {
+    const response = await request(app).post("/api/v1/auth/register").send({
+      email: "test@example.com",
+      username: "testuser",
+      password: "Password123",
+    });
 
     expect(response.status).toBe(201);
     expect(response.body.success).toBe(true);
@@ -492,7 +489,7 @@ export class AuthModuleFactory {
     const registerUseCase = new RegisterUseCase(
       userRepository,
       passwordService,
-      tokenService
+      tokenService,
     );
 
     // Create controller
@@ -507,27 +504,27 @@ export class AuthModuleFactory {
 
 ### 1. Framework Independence
 
-* Can swap Express for Fastify without changing business logic
-* Database changes don't affect use cases
-* External API changes are isolated
+- Can swap Express for Fastify without changing business logic
+- Database changes don't affect use cases
+- External API changes are isolated
 
 ### 2. Testability
 
-* Unit test business logic in isolation
-* Mock external dependencies easily
-* Test different scenarios comprehensively
+- Unit test business logic in isolation
+- Mock external dependencies easily
+- Test different scenarios comprehensively
 
 ### 3. Maintainability
 
-* Clear separation of concerns
-* Easy to locate and modify specific functionality
-* Reduced coupling between components
+- Clear separation of concerns
+- Easy to locate and modify specific functionality
+- Reduced coupling between components
 
 ### 4. Team Development
 
-* Different teams can work on different layers
-* Clear interfaces define contracts between teams
-* Parallel development possible
+- Different teams can work on different layers
+- Clear interfaces define contracts between teams
+- Parallel development possible
 
 ## Common Pitfalls
 
@@ -565,8 +562,11 @@ export interface User {
 
 ```typescript
 export class User {
-  constructor(public readonly id: string, public readonly email: string) {}
-  
+  constructor(
+    public readonly id: string,
+    public readonly email: string,
+  ) {}
+
   // Rich behavior
   isEmailValid(): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email);
@@ -580,7 +580,7 @@ export class User {
 
 ```typescript
 // In domain layer
-import { Request } from 'express'; // Violates dependency rule
+import { Request } from "express"; // Violates dependency rule
 
 export class User {
   constructor(private req: Request) {} // Framework dependency in domain
@@ -608,14 +608,14 @@ Clean Architecture in the Cinema API provides:
 
 The investment in this architectural approach pays dividends in:
 
-* Reduced bugs through better testing
-* Faster development through clear patterns
-* Easier onboarding for new team members
-* Greater flexibility to adapt to changing requirements
+- Reduced bugs through better testing
+- Faster development through clear patterns
+- Easier onboarding for new team members
+- Greater flexibility to adapt to changing requirements
 
 ## 🔗 Related Documentation
 
-* [**Project Structure**](project-structure.md) - How files are organized
-* [**Module Pattern**](module-pattern.md) - Module-specific architecture
-* [**Dependency Injection**](dependency-injection.md) - DI implementation details
-* [**Creating a Module**](../../strategy/api/creating-a-new-module.md) - Practical application
+- [**Project Structure**](project-structure.md) - How files are organized
+- [**Module Pattern**](module-pattern.md) - Module-specific architecture
+- [**Dependency Injection**](dependency-injection.md) - DI implementation details
+- [**Creating a Module**](../../strategy/api/creating-a-new-module.md) - Practical application
