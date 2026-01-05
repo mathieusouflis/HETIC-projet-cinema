@@ -1,3 +1,4 @@
+import { User } from "../../../domain";
 import { GetIdResponseDTO } from "../responses/get-id-response";
 
 /**
@@ -6,12 +7,7 @@ import { GetIdResponseDTO } from "../responses/get-id-response";
  * @param user - User entity or user-like object
  * @returns UserResponseDTO without sensitive data
  */
-export function toUserResponseDTO(user: {
-  id: string;
-  username: string;
-  avatarUrl: string | null;
-  createdAt: Date;
-}): GetIdResponseDTO {
+export function toUserResponseDTO(user: User): GetIdResponseDTO {
   return {
     id: user.id,
     username: user.username,
