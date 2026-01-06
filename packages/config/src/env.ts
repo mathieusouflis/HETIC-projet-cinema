@@ -14,6 +14,12 @@ export const env = {
     version: 1,
   },
 
+  // External API'S
+  externalApi: {
+    omdbApiKey: process.env.OMDB_API_KEY || "your_omdb_api_key_here",
+    tmdbApiKey: process.env.TMDB_API_KEY || "your_tmdb_api_key_here",
+  },
+
   // Frontend Configuration
   frontend: {
     port: process.env.FRONTEND_PORT || 3001,
