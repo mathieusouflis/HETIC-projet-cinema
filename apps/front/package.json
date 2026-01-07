@@ -13,8 +13,9 @@
     "lint": "eslint src/"
   },
   "dependencies": {
-    "@packages/ui": "workspace:*",
     "@packages/config": "workspace:*",
+    "@packages/ui": "workspace:*",
+    "posthog-js": "^1.315.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
   },
