@@ -5,7 +5,9 @@ import { AppError } from "./AppError.js";
  * Returns HTTP 500 Forbidden
  */
 export class ServerError extends AppError {
-  constructor(message: string = "Server error occured, please contact the administrator.") {
+  constructor(
+    message: string = "Server error occured, please contact the administrator.",
+  ) {
     super(message);
   }
 }
