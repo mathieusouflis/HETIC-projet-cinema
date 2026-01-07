@@ -123,7 +123,7 @@ export class AuthController extends BaseController {
   )
   @SetCookie(cookieName, cookiesOptions)
   login = asyncHandler(
-    async (req: Request, res: Response): Promise<AuthResponseDTO> => {
+    async (req, res: Response): Promise<AuthResponseDTO> => {
       const { email, password } = req.body;
 
       const [result, refreshToken] = await this.loginUseCase.execute({

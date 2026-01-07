@@ -7,8 +7,8 @@ type ValidationTarget = "body" | "query" | "params";
 type ZodIssue = ZodError["issues"][number];
 type ZodSchema = z.ZodType;
 
-export const validateRequest = (
-  schema: ZodSchema,
+export const validateRequest = <T extends ZodSchema>(
+  schema: T,
   target: ValidationTarget = "body",
 ) => {
   return (req: Request, _res: Response, next: NextFunction): void => {
@@ -43,15 +43,15 @@ export const validateRequest = (
   };
 };
 
-export const validateMultiple = (
-  schemas: Partial<Record<ValidationTarget, ZodSchema>>,
+export const validateMultiple = <T extends ZodSchema, R extends Record<ValidationTarget, T>>(
+  schemas: Partial<R>,
 ) => {
   return (req: Request, _res: Response, next: NextFunction): void => {
     const errors: { field: string; message: string; code: string }[] = [];
 
     for (const [target, schema] of Object.entries(schemas) as [
       ValidationTarget,
-      ZodSchema,
+      T,
     ][]) {
       try {
         const validated = schema.parse(req[target]);
