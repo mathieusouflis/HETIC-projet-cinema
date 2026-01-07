@@ -25,6 +25,10 @@ export const env = {
     port: process.env.FRONTEND_PORT || 3001,
     host: process.env.FRONTEND_HOST || "localhost",
     url: process.env.FRONTEND_URL || "http://localhost:3001",
+    posthog: {
+      key: process.env.VITE_PUBLIC_POSTHOG_KEY || "",
+      host: process.env.VITE_PUBLIC_POSTHOG_HOST || "https://eu.i.posthog.com"
+    }
   },
 
   // Database Configuration

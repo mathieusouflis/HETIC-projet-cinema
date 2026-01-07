@@ -24,6 +24,7 @@
     },
     "dev": {
       "dependsOn": ["^build"],
+      "env": ["FRONTEND_PORT", "FRONTEND_HOST", "FRONTEND_URL", "VITE_PUBLIC_POSTHOG_KEY", "VITE_PUBLIC_POSTHOG_HOST", "NODE_ENV" ],
       "cache": false,
       "persistent": true
     },
