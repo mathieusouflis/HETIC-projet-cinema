@@ -55,7 +55,7 @@
     "drizzle-kit": "^0.31.8",
     "eslint": "^9.39.0",
     "orval": "^7.17.2",
-    "supertest": "^7.1.0",
+    "supertest": "^7.2.2",
     "tsx": "^4.21.0",
     "typescript": "5.9.3",
     "vitest": "4.0.16"
