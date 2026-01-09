@@ -1,3 +1,3 @@
 export * from "./ITokenService.js";
 export * from "./JWTService.js";
-export * from "./schemas";
+export * as Schemas from "./schemas";

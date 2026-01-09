@@ -1,5 +1,6 @@
 import { Router } from "express";
 import swaggerUi from "swagger-ui-express";
+import type { Server as SocketIOServer } from "socket.io";
 import { usersModule } from "./users/users.module.js";
 import { authModule } from "./auth/auth.module.js";
 import {
@@ -8,7 +9,10 @@ import {
 } from "../shared/middleware/error.middleware.js";
 import { moduleRegistry } from "../shared/infrastructure/openapi/module-registry.js";
 import { OpenAPISpecAggregator } from "../shared/infrastructure/openapi/openapi-spec-aggregator.js";
+import { asyncAPIGenerator } from "../shared/infrastructure/documentation/asyncapi-generator.js";
+import { chatModule } from "./chat/chat.module.js";
 import fs from "fs";
+import { logger } from "@packages/logger";
 
 function registerModules(): void {
   moduleRegistry.register("auth", authModule);
@@ -73,4 +77,11 @@ export function apiVersion1Router(): Router {
   router.use(errorMiddleware);
 
   return router;
+}
+
+export function registerAllWebSocketEvents(io: SocketIOServer): void {
+  chatModule.registerEvents(io);
+  asyncAPIGenerator.registerController(chatModule.getEventController());
+
+  logger.success("All WebSocket events registered");
 }

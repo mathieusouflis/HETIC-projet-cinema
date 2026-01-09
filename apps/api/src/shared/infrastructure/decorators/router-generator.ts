@@ -22,7 +22,7 @@ import {
 import { validateRequest } from "../../middleware/validation.middleware.js";
 import { getMiddlewaresMetadata } from "./auth.decorator.js";
 import { authMiddleware } from "../../middleware/auth.middleware.js";
-import { AUTH_MIDDLEWARE_MARKER, BaseController } from "./types.js";
+import { AUTH_MIDDLEWARE_MARKER } from "./types.js";
 import { getSharedRegistry } from "../openapi/shared-registry.js";
 import {
   getRequiredHeadersMetadata,
@@ -33,6 +33,7 @@ import {
   createSetHeadersMiddleware,
   createRequiredCookieMiddleware,
 } from "./header.decorator.js";
+import { BaseController } from "../base/controllers/BaseController.js";
 
 export interface OpenAPISpec {
   openapi: string;

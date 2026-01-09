@@ -21,7 +21,7 @@ export const errorMiddleware = (
   res: Response,
   _next: NextFunction,
 ): void => {
-  logger.info(`❌ Error: ${err.message}`);
+  logger.error(`${err.message}`);
 
   if (isDevelopment() && err.stack) {
     logger.info(err.stack);

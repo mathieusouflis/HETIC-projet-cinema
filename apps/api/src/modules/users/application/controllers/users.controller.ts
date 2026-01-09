@@ -4,15 +4,8 @@ import type { GetUserByIdUseCase } from "../use-cases/GetUserById.usecase.js";
 import type { GetUsersUseCase } from "../use-cases/GetUsers.usecase.js";
 import type { UpdateUserUseCase } from "../use-cases/UpdateUser.usecase.js";
 import type { DeleteUserUseCase } from "../use-cases/DeleteUser.usecase.js";
-import {
-  validationErrorResponseSchema,
-  unauthorizedErrorResponseSchema,
-  forbiddenErrorResponseSchema,
-  notFoundErrorResponseSchema,
-  createSuccessResponse,
-} from "../../../../shared/schemas/index.js";
+
 import { Controller } from "../../../../shared/infrastructure/decorators/controller.decorator.js";
-import { BaseController } from "../../../../shared/infrastructure/base/BaseController.js";
 import {
   Delete,
   Get,
@@ -38,6 +31,8 @@ import { getMeResponseSchema } from "../dto/responses/get-me-response.js";
 import { patchMeResponseSchema } from "../dto/responses/patch-me-response.js";
 import { patchMeBodySchema } from "../dto/requests/patch-me.validator.js";
 import { GetQueryDTO, getQuerySchema } from "../dto/requests/get.validator.js";
+import { Shared } from "../../../../shared/index.js";
+import { BaseController } from "../../../../shared/infrastructure/base/controllers/BaseController.js";
 
 @Controller({
   tag: "Users",
@@ -63,10 +58,10 @@ export class UsersController extends BaseController {
   @ApiResponse(
     200,
     "User retrieved successfully",
-    createSuccessResponse(getIdResponseSchema),
+    Shared.Schemas.Base.createSuccessResponse(getIdResponseSchema),
   )
-  @ApiResponse(400, "Invalid user ID", validationErrorResponseSchema)
-  @ApiResponse(404, "User not found", notFoundErrorResponseSchema)
+  @ApiResponse(400, "Invalid user ID", Shared.Schemas.Base.validationErrorResponseSchema)
+  @ApiResponse(404, "User not found", Shared.Schemas.Base.notFoundErrorResponseSchema)
   getById = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id!;
 
@@ -88,14 +83,14 @@ export class UsersController extends BaseController {
   @ApiResponse(
     200,
     "Users retrieved successfully",
-    createSuccessResponse(getResponseSchema),
+    Shared.Schemas.Base.createSuccessResponse(getResponseSchema),
   )
   @ApiResponse(
     400,
     "Invalid pagination parameters",
-    validationErrorResponseSchema,
+    Shared.Schemas.Base.validationErrorResponseSchema,
   )
-  @ApiResponse(401, "Not authenticated", unauthorizedErrorResponseSchema)
+  @ApiResponse(401, "Not authenticated", Shared.Schemas.Base.unauthorizedErrorResponseSchema)
   getAll = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { page, limit, offset, sort } = req.query as unknown as GetQueryDTO;
 
@@ -123,16 +118,16 @@ export class UsersController extends BaseController {
   @ApiResponse(
     200,
     "User updated successfully",
-    createSuccessResponse(patchIdResponseSchema),
+    Shared.Schemas.Base.createSuccessResponse(patchIdResponseSchema),
   )
-  @ApiResponse(400, "Invalid input data", validationErrorResponseSchema)
-  @ApiResponse(401, "Not authenticated", unauthorizedErrorResponseSchema)
+  @ApiResponse(400, "Invalid input data", Shared.Schemas.Base.validationErrorResponseSchema)
+  @ApiResponse(401, "Not authenticated", Shared.Schemas.Base.unauthorizedErrorResponseSchema)
   @ApiResponse(
     403,
     "Forbidden - cannot update other users",
-    forbiddenErrorResponseSchema,
+    Shared.Schemas.Base.forbiddenErrorResponseSchema,
   )
-  @ApiResponse(404, "User not found", notFoundErrorResponseSchema)
+  @ApiResponse(404, "User not found", Shared.Schemas.Base.notFoundErrorResponseSchema)
   update = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id!;
     const updateData = req.body;
@@ -153,14 +148,14 @@ export class UsersController extends BaseController {
   @Protected()
   @ValidateParams(deleteIdParamsSchema)
   @ApiResponse(204, "User deleted successfully")
-  @ApiResponse(400, "Invalid user ID", validationErrorResponseSchema)
-  @ApiResponse(401, "Not authenticated", unauthorizedErrorResponseSchema)
+  @ApiResponse(400, "Invalid user ID", Shared.Schemas.Base.validationErrorResponseSchema)
+  @ApiResponse(401, "Not authenticated", Shared.Schemas.Base.unauthorizedErrorResponseSchema)
   @ApiResponse(
     403,
     "Forbidden - cannot delete other users",
-    forbiddenErrorResponseSchema,
+    Shared.Schemas.Base.forbiddenErrorResponseSchema,
   )
-  @ApiResponse(404, "User not found", notFoundErrorResponseSchema)
+  @ApiResponse(404, "User not found", Shared.Schemas.Base.notFoundErrorResponseSchema)
   delete = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id!;
 
@@ -178,9 +173,9 @@ export class UsersController extends BaseController {
   @ApiResponse(
     200,
     "User profile retrieved successfully",
-    createSuccessResponse(getMeResponseSchema),
+    Shared.Schemas.Base.createSuccessResponse(getMeResponseSchema),
   )
-  @ApiResponse(401, "Not authenticated", unauthorizedErrorResponseSchema)
+  @ApiResponse(401, "Not authenticated", Shared.Schemas.Base.unauthorizedErrorResponseSchema)
   getMe = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?.userId;
 
@@ -210,10 +205,10 @@ export class UsersController extends BaseController {
   @ApiResponse(
     200,
     "User profile updated successfully",
-    createSuccessResponse(patchMeResponseSchema),
+    Shared.Schemas.Base.createSuccessResponse(patchMeResponseSchema),
   )
-  @ApiResponse(400, "Invalid input data", validationErrorResponseSchema)
-  @ApiResponse(401, "Not authenticated", unauthorizedErrorResponseSchema)
+  @ApiResponse(400, "Invalid input data", Shared.Schemas.Base.validationErrorResponseSchema)
+  @ApiResponse(401, "Not authenticated", Shared.Schemas.Base.unauthorizedErrorResponseSchema)
   updateMe = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
       const userId = req.user?.userId;

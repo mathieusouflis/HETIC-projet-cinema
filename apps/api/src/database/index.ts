@@ -10,11 +10,11 @@ const pool = new Pool({
 });
 
 pool.on("connect", () => {
-  logger.info("✅ PostgreSQL client connected");
+  logger.info("🔌 PostgreSQL client connected");
 });
 
 pool.on("error", (err) => {
-  logger.info(`❌ PostgreSQL pool error: ${err.message}`);
+  logger.error(`PostgreSQL pool error: ${err.message}`);
 });
 
 export const db = drizzle(pool, { schema });

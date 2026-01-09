@@ -4,13 +4,6 @@ import type { RefreshTokenUseCase } from "../use-cases/refresh-token.usecase.js"
 import { RegisterUseCase } from "../use-cases/register.usecase.js";
 import { LoginUseCase } from "../use-cases/login.usecase.js";
 
-import {
-  validationErrorResponseSchema,
-  unauthorizedErrorResponseSchema,
-  conflictErrorResponseSchema,
-  successResponseSchema,
-  createSuccessResponse,
-} from "../../../../shared/schemas/index.js";
 import { registerValidator } from "../dto/request/register.dto.js";
 import { loginValidator } from "../dto/request/login.dto.js";
 import {
@@ -18,7 +11,7 @@ import {
   AuthResponseDTO,
 } from "../dto/response/auth-response.dto.js";
 import { Controller } from "../../../../shared/infrastructure/decorators/controller.decorator.js";
-import { BaseController } from "../../../../shared/infrastructure/base/BaseController.js";
+import { BaseController } from "../../../../shared/infrastructure/base/controllers/BaseController.js";
 import {
   Get,
   Post,
@@ -36,6 +29,8 @@ import {
 } from "../../../users/application/schema/user.schema.js";
 import { config } from "@packages/config";
 import { RefreshTokenResponseDTO } from "../dto/response/refresh-token-response.dto.js";
+import { createSuccessResponse, successResponseSchema } from "../../../../shared/schemas/base/response.schemas.js";
+import { conflictErrorResponseSchema, unauthorizedErrorResponseSchema, validationErrorResponseSchema } from "../../../../shared/schemas/base/error.schemas.js";
 
 const cookieName = "refreshToken";
 const cookiesOptions = {

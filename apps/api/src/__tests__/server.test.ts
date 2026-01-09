@@ -23,7 +23,8 @@ import { createServer } from "../server";
 
 describe("Server", () => {
   it("health check returns 200", async () => {
-    const response = await supertest(createServer()).get("/status");
+    const { app } = createServer();
+    const response = await supertest(app).get("/status");
 
     expect(response.status).toBe(200);
     expect(response.body.ok).toBe(true);

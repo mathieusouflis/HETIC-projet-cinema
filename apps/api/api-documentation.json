@@ -79,7 +79,7 @@
                             {
                               "type": "string",
                               "nullable": true,
-                              "format": "date"
+                              "format": "date-time"
                             },
                             {
                               "type": "string",
@@ -261,7 +261,7 @@
                             {
                               "type": "string",
                               "nullable": true,
-                              "format": "date"
+                              "format": "date-time"
                             },
                             {
                               "type": "string",
@@ -660,7 +660,7 @@
                                   {
                                     "type": "string",
                                     "nullable": true,
-                                    "format": "date"
+                                    "format": "date-time"
                                   },
                                   {
                                     "type": "string",
@@ -1128,7 +1128,7 @@
                                 {
                                   "type": "string",
                                   "nullable": true,
-                                  "format": "date"
+                                  "format": "date-time"
                                 },
                                 {
                                   "type": "string",
@@ -1344,7 +1344,7 @@
                                 {
                                   "type": "string",
                                   "nullable": true,
-                                  "format": "date"
+                                  "format": "date-time"
                                 },
                                 {
                                   "type": "string",
@@ -1536,7 +1536,7 @@
                                 {
                                   "type": "string",
                                   "nullable": true,
-                                  "format": "date"
+                                  "format": "date-time"
                                 },
                                 {
                                   "type": "string",

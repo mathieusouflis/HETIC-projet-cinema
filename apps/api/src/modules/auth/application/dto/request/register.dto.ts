@@ -1,14 +1,10 @@
 import { z } from "zod";
-import {
-  emailSchema,
-  passwordSchema,
-  usernameSchema,
-} from "../../../../../shared/schemas";
+import { Shared } from "../../../../../shared";
 
 export const registerValidator = z.object({
-  email: emailSchema,
-  username: usernameSchema,
-  password: passwordSchema,
+  email: Shared.Schemas.Fields.emailSchema,
+  username: Shared.Schemas.Fields.usernameSchema,
+  password: Shared.Schemas.Fields.passwordSchema,
 });
 
 export type RegisterDTO = z.infer<typeof registerValidator>;
