@@ -22,7 +22,7 @@
     "@packages/config": "workspace:*",
     "@packages/logger": "workspace:*",
     "bcrypt": "^6.0.0",
-    "body-parser": "^2.2.1",
+    "body-parser": "^2.2.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
