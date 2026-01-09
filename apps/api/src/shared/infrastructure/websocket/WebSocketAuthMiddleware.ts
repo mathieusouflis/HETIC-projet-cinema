@@ -1,6 +1,6 @@
 import type { Socket } from "socket.io";
-import { WebSocketAuthError } from "../../errors/WebSocketError.js";
 import { logger } from "@packages/logger";
+import { WebSocketAuthError } from "../../errors/websocket";
 
 /**
  * Global authentication middleware for WebSocket events

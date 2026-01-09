@@ -1,13 +1,9 @@
 import type { Socket } from "socket.io";
 import { logger } from "@packages/logger";
 import { config } from "@packages/config";
-import {
-  WebSocketError,
-  WebSocketAuthError,
-  WebSocketValidationError,
-  WebSocketInternalError,
-} from "../../errors/WebSocketError.js";
+
 import { ZodError } from "zod";
+import { WebSocketAuthError, WebSocketError, WebSocketInternalError, WebSocketValidationError } from "../../errors/websocket";
 
 /**
  * Centralized WebSocket error handler

@@ -4,12 +4,11 @@ import { WebSocketMetadataStorage } from "../decorators/web-socket/websocket.met
 import { webSocketValidationService } from "./WebSocketValidationService.js";
 import { webSocketMiddlewareRunner } from "./WebSocketMiddlewareRunner.js";
 import { webSocketErrorHandler } from "./WebSocketErrorHandler.js";
-import {
-  WebSocketHandlerNotFoundError,
-  WebSocketAckValidationError,
-} from "../../errors/WebSocketError.js";
+
 import { logger } from "@packages/logger";
 import { globalAuthEventMiddleware } from "./WebSocketAuthMiddleware.js";
+import { WebSocketHandlerNotFoundError } from "../../errors/websocket/websocket-handler-error.js";
+import { WebSocketAckValidationError } from "../../errors/websocket/websocket-ack-validator-error.js";
 
 /**
  * Acknowledgment callback type

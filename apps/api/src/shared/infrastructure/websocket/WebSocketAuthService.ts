@@ -1,7 +1,7 @@
 import type { Socket } from "socket.io";
 import { socketAuthMiddleware } from "../../middleware/socket-auth.middleware.js";
-import { WebSocketAuthError } from "../../errors/WebSocketError.js";
 import { logger } from "@packages/logger";
+import { WebSocketAuthError } from "../../errors/websocket/websocket-auth-error.js";
 
 /**
  * Service responsible for WebSocket authentication
