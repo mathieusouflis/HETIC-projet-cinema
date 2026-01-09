@@ -1,2 +1,2 @@
-export type { IPasswordService } from "./IPasswordService.js";
-export { PasswordService } from "./PasswordService.js";
+export * from "./IPasswordService.js";
+export * from "./PasswordService.js";

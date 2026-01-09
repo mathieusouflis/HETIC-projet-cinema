@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { avatarUrlSchemaOptionalNullable } from "../../../../../shared/schemas/fields/url.schema";
-import { usernameSchemaOptional } from "../../../../../shared/schemas";
+import { Shared } from "../../../../../shared";
 
 export const patchMeBodySchema = z.object({
-  username: usernameSchemaOptional,
+  username: Shared.Schemas.Fields.usernameSchemaOptional,
   avatarUrl: avatarUrlSchemaOptionalNullable,
 });

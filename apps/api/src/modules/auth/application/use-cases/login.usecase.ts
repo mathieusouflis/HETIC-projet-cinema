@@ -6,7 +6,7 @@ import { toAuthResponseDTO } from "../dto/utils/to-auth-response-dto.js";
 import { toUserResponseDTO } from "../../../users/application/dto/utils/to-user-response.js";
 import { LoginDTO } from "../dto/request/login.dto.js";
 import { AuthResponseDTO } from "../dto/response/auth-response.dto.js";
-import { RefreshToken } from "../../../../shared/services/token/index.js";
+import { RefreshToken } from "../../../../shared/services/token/schemas/tokens.schema.js";
 
 /**
  * Login Use Case

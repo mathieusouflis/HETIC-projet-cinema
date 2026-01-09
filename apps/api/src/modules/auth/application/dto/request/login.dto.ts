@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { emailSchema } from "../../../../../shared/schemas";
+import { Shared } from "../../../../../shared";
 
 export const loginValidator = z.object({
-  email: emailSchema,
+  email: Shared.Schemas.Fields.emailSchema,
   password: z.string(),
 });
 

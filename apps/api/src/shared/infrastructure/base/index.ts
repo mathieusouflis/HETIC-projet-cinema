@@ -1,1 +1,2 @@
-export * from "./BaseController";
+export * as Controllers from "./controllers"
+export * as Modules from "./modules"

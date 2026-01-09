@@ -1,10 +1,4 @@
-export {
-  authMiddleware,
-  optionalAuthMiddleware,
-  requireRole,
-  requireOwnership,
-} from "./auth.middleware.js";
-
-export { validateRequest, validateMultiple } from "./validation.middleware.js";
-
-export { errorMiddleware, notFoundMiddleware } from "./error.middleware.js";
+export * from "./auth.middleware.js";
+export * from "./error.middleware.js";
+export * from "./validation.middleware.js";
+export * from "./socket-auth.middleware.js"
