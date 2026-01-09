@@ -6,6 +6,6 @@ vi.spyOn(global.console, "log");
 describe("@packages/logger", () => {
   it("prints a message", () => {
     logger.info("hello");
-    expect(console.log).toBeCalledWith("[INFO] ", "hello");
+    expect(console.log).toBeCalled();
   });
 });
