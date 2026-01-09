@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { AppError } from "../errors/AppError.js";
 import { ValidationError } from "../errors/ValidationError.js";
-import { log } from "@packages/logger";
+import { logger } from "@packages/logger";
 import { config } from "@packages/config";
 
 interface ErrorResponse {
@@ -21,10 +21,10 @@ export const errorMiddleware = (
   res: Response,
   _next: NextFunction,
 ): void => {
-  log(`❌ Error: ${err.message}`);
+  logger.info(`❌ Error: ${err.message}`);
 
   if (isDevelopment() && err.stack) {
-    log(err.stack);
+    logger.info(err.stack);
   }
 
   const response: ErrorResponse = {
