@@ -12,7 +12,12 @@ const mockConfig = vi.hoisted(() => ({
 vi.mock("@packages/config", () => mockConfig);
 
 vi.mock("@packages/logger", () => ({
-  log: vi.fn(),
+  logger: {
+    info: vi.fn(),
+    error: vi.fn(),
+    warn: vi.fn(),
+    debug: vi.fn(),
+  },
 }));
 
 import { errorMiddleware, notFoundMiddleware } from "./error.middleware.js";
