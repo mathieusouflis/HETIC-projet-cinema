@@ -1,0 +1,383 @@
+{
+  "asyncapi": "3.0.0",
+  "info": {
+    "title": "Cinema WebSocket API",
+    "version": "1.0.0",
+    "description": "Real-time WebSocket API for cinema application"
+  },
+  "servers": {
+    "production": {
+      "host": "localhost:3000 || \"localhost:3000\"}",
+      "protocol": "wss",
+      "description": "WebSocket server"
+    }
+  },
+  "channels": {
+    "_chat_chat_join": {
+      "address": "/chat/chat:join",
+      "description": "Join a chat room",
+      "messages": {
+        "chat_join_message": {
+          "$ref": "#/components/messages/chat_join_message"
+        }
+      }
+    },
+    "_chat_chat_join_ack": {
+      "address": "/chat/chat:join/ack",
+      "description": "Acknowledgment channel for chat:join",
+      "messages": {
+        "chat_join_ack_message": {
+          "$ref": "#/components/messages/chat_join_ack_message"
+        }
+      }
+    },
+    "_chat_chat_leave": {
+      "address": "/chat/chat:leave",
+      "description": "Leave a chat room",
+      "messages": {
+        "chat_leave_message": {
+          "$ref": "#/components/messages/chat_leave_message"
+        }
+      }
+    },
+    "_chat_chat_message": {
+      "address": "/chat/chat:message",
+      "description": "Send a message to a chat room",
+      "messages": {
+        "chat_message_message": {
+          "$ref": "#/components/messages/chat_message_message"
+        }
+      }
+    },
+    "_chat_chat_message_ack": {
+      "address": "/chat/chat:message/ack",
+      "description": "Acknowledgment channel for chat:message",
+      "messages": {
+        "chat_message_ack_message": {
+          "$ref": "#/components/messages/chat_message_ack_message"
+        }
+      }
+    },
+    "_chat_chat_typing": {
+      "address": "/chat/chat:typing",
+      "description": "Notify others that user is typing",
+      "messages": {
+        "chat_typing_message": {
+          "$ref": "#/components/messages/chat_typing_message"
+        }
+      }
+    },
+    "_chat_chat_new_message": {
+      "address": "/chat/chat:new-message",
+      "description": "New message received in chat room",
+      "messages": {
+        "chat_new_message_message": {
+          "$ref": "#/components/messages/chat_new_message_message"
+        }
+      }
+    },
+    "_chat_chat_user_joined": {
+      "address": "/chat/chat:user-joined",
+      "description": "User joined the chat room",
+      "messages": {
+        "chat_user_joined_message": {
+          "$ref": "#/components/messages/chat_user_joined_message"
+        }
+      }
+    },
+    "_chat_chat_user_left": {
+      "address": "/chat/chat:user-left",
+      "description": "User left the chat room",
+      "messages": {
+        "chat_user_left_message": {
+          "$ref": "#/components/messages/chat_user_left_message"
+        }
+      }
+    },
+    "_chat_chat_user_typing": {
+      "address": "/chat/chat:user-typing",
+      "description": "User is typing indicator",
+      "messages": {
+        "chat_user_typing_message": {
+          "$ref": "#/components/messages/chat_user_typing_message"
+        }
+      }
+    }
+  },
+  "operations": {
+    "receive_chat_join": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/_chat_chat_join"
+      },
+      "title": "Receive chat:join",
+      "summary": "Join a chat room",
+      "reply": {
+        "channel": {
+          "$ref": "#/channels/_chat_chat_join_ack"
+        }
+      }
+    },
+    "receive_chat_leave": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/_chat_chat_leave"
+      },
+      "title": "Receive chat:leave",
+      "summary": "Leave a chat room"
+    },
+    "receive_chat_message": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/_chat_chat_message"
+      },
+      "title": "Receive chat:message",
+      "summary": "Send a message to a chat room",
+      "reply": {
+        "channel": {
+          "$ref": "#/channels/_chat_chat_message_ack"
+        }
+      }
+    },
+    "receive_chat_typing": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/_chat_chat_typing"
+      },
+      "title": "Receive chat:typing",
+      "summary": "Notify others that user is typing"
+    },
+    "send_chat_new_message": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/_chat_chat_new_message"
+      },
+      "title": "Send chat:new-message",
+      "summary": "New message received in chat room"
+    },
+    "send_chat_user_joined": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/_chat_chat_user_joined"
+      },
+      "title": "Send chat:user-joined",
+      "summary": "User joined the chat room"
+    },
+    "send_chat_user_left": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/_chat_chat_user_left"
+      },
+      "title": "Send chat:user-left",
+      "summary": "User left the chat room"
+    },
+    "send_chat_user_typing": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/_chat_chat_user_typing"
+      },
+      "title": "Send chat:user-typing",
+      "summary": "User is typing indicator"
+    }
+  },
+  "components": {
+    "messages": {
+      "chat_join_message": {
+        "name": "chat:join",
+        "title": "Join a chat room",
+        "description": "Join a chat room",
+        "payload": {
+          "$id": "ChatJoinDTO",
+          "type": "object",
+          "properties": {
+            "roomId": {
+              "type": "string"
+            },
+            "userId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "username": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "roomId",
+            "userId",
+            "username"
+          ]
+        }
+      },
+      "chat_join_ack_message": {
+        "name": "chat:joinAck",
+        "title": "chat:join Acknowledgment",
+        "description": "Acknowledgment response for chat:join",
+        "payload": {
+          "$id": "ChatJoinResponse",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "users": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "users"
+          ]
+        }
+      },
+      "chat_leave_message": {
+        "name": "chat:leave",
+        "title": "Leave a chat room",
+        "description": "Leave a chat room",
+        "payload": {
+          "$id": "ChatLeaveDTO",
+          "type": "object",
+          "properties": {
+            "roomId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "roomId"
+          ]
+        }
+      },
+      "chat_message_message": {
+        "name": "chat:message",
+        "title": "Send a message to a chat room",
+        "description": "Send a message to a chat room",
+        "payload": {
+          "$id": "ChatMessageDTO",
+          "type": "object",
+          "properties": {
+            "roomId": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "userId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "username": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "roomId",
+            "message",
+            "userId",
+            "username"
+          ]
+        }
+      },
+      "chat_message_ack_message": {
+        "name": "chat:messageAck",
+        "title": "chat:message Acknowledgment",
+        "description": "Acknowledgment response for chat:message",
+        "payload": {
+          "$id": "ChatMessageResponse",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "messageId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "error": {
+              "type": "string"
+            },
+            "timestamp": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "success",
+            "timestamp"
+          ]
+        }
+      },
+      "chat_typing_message": {
+        "name": "chat:typing",
+        "title": "Notify others that user is typing",
+        "description": "Notify others that user is typing",
+        "payload": {
+          "$id": "ChatTypingDTO",
+          "type": "object",
+          "properties": {
+            "roomId": {
+              "type": "string"
+            },
+            "userId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "username": {
+              "type": "string"
+            },
+            "isTyping": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "roomId",
+            "userId",
+            "username",
+            "isTyping"
+          ]
+        }
+      },
+      "chat_new_message_message": {
+        "name": "chat:new-message",
+        "title": "New message received in chat room",
+        "description": "New message received in chat room",
+        "payload": {
+          "$id": "ChatNewMessageMessage",
+          "type": "object"
+        }
+      },
+      "chat_user_joined_message": {
+        "name": "chat:user-joined",
+        "title": "User joined the chat room",
+        "description": "User joined the chat room",
+        "payload": {
+          "$id": "ChatUserJoinedMessage",
+          "type": "object"
+        }
+      },
+      "chat_user_left_message": {
+        "name": "chat:user-left",
+        "title": "User left the chat room",
+        "description": "User left the chat room",
+        "payload": {
+          "$id": "ChatUserLeftMessage",
+          "type": "object"
+        }
+      },
+      "chat_user_typing_message": {
+        "name": "chat:user-typing",
+        "title": "User is typing indicator",
+        "description": "User is typing indicator",
+        "payload": {
+          "$id": "ChatUserTypingMessage",
+          "type": "object"
+        }
+      }
+    },
+    "schemas": {}
+  }
+}
