@@ -3,12 +3,13 @@ import "./shared/infrastructure/openapi/zod-openapi.js";
 import { logger } from "@packages/logger";
 import { createServer } from "./server.js";
 import { config } from "@packages/config";
-import { registerAllWebSocketEvents } from "./modules/index.js";
+import { generateWebSocketAPIDocumentation, registerAllWebSocketEvents } from "./modules/index.js";
 
 const port = config.env.backend.port || 5001;
 const { httpServer, io } = createServer();
 
 registerAllWebSocketEvents(io);
+generateWebSocketAPIDocumentation()
 
 httpServer.listen(port, () => {
   logger.info(`🚀 \x1b[35mAPI server\x1b[0m running on http://localhost:${port}`);

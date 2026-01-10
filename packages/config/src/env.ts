@@ -12,6 +12,7 @@ export const env = {
     host: process.env.BACKEND_HOST || "localhost",
     apiUrl: process.env.BACKEND_API_URL || "http://localhost:3000",
     version: 1,
+    webSocketUrl: `${process.env.NODE_ENV === "production" ? "wss" : "ws"}://${process.env.BACKEND_HOST}:${process.env.BACKEND_PORT ? `${process.env.BACKEND_PORT}` : ""} || "localhost:3000"}`
   },
 
   // External API'S
