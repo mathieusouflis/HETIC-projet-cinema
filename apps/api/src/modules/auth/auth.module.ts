@@ -10,9 +10,9 @@ import { RegisterUseCase } from "./application/use-cases/register.usecase.js";
 import { LoginUseCase } from "./application/use-cases/login.usecase.js";
 import { UserRepository } from "../users/infrastructure/database/repositories/user.repository.js";
 import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-generator.js";
-import type { IApiModule } from "../../shared/infrastructure/openapi/module-registry.js";
+import { RestModule } from "../../shared/infrastructure/base/modules/RestModule.js";
 
-class AuthModule implements IApiModule {
+class AuthModule extends RestModule {
   // ============================================
   // Infrastructure Layer (External Services)
   // ============================================
@@ -44,6 +44,10 @@ class AuthModule implements IApiModule {
   private readonly router: Router;
 
   constructor() {
+    super({
+      name: 'AuthModule',
+      description: 'Module for authentication and authorization'
+    })
     this.userRepository = new UserRepository();
     this.passwordService = new PasswordService();
     this.tokenService = new JWTService();
