@@ -9,8 +9,8 @@ import {
 } from "../shared/middleware/error.middleware.js";
 import { moduleRegistry } from "../shared/infrastructure/openapi/module-registry.js";
 import { OpenAPISpecAggregator } from "../shared/infrastructure/openapi/openapi-spec-aggregator.js";
-import { asyncAPIGenerator } from "../shared/infrastructure/documentation/asyncapi-generator.js";
-import { chatModule } from "./chat/chat.module.js";
+// import { asyncAPIGenerator } from "../shared/infrastructure/documentation/asyncapi-generator.js"; // TODO: Uncomment when chat module is needed
+// import { chatModule } from "./chat/chat.module.js"; // TODO: Uncomment when chat module is needed
 import fs from "fs";
 import { logger } from "@packages/logger";
 
@@ -79,9 +79,10 @@ export function apiVersion1Router(): Router {
   return router;
 }
 
-export function registerAllWebSocketEvents(io: SocketIOServer): void {
-  chatModule.registerEvents(io);
-  asyncAPIGenerator.registerController(chatModule.getEventController());
+export function registerAllWebSocketEvents(_io: SocketIOServer): void {
+  // TODO: Uncomment when chat module is needed
+  // chatModule.registerEvents(io);
+  // asyncAPIGenerator.registerController(chatModule.getEventController());
 
   logger.success("All WebSocket events registered");
 }
