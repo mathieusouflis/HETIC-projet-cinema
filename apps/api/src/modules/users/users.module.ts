@@ -6,9 +6,10 @@ import { DeleteUserUseCase } from "./application/use-cases/DeleteUser.usecase.js
 import { UsersController } from "./application/controllers/users.controller.js";
 import { UserRepository } from "./infrastructure/database/repositories/user.repository.js";
 import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-generator.js";
-import type { IApiModule } from "../../shared/infrastructure/openapi/module-registry.js";
+import { GetMeUseCase } from "./application/use-cases/GetMe.usecase.js";
+import { RestModule } from "../../shared/infrastructure/base/modules/RestModule.js";
 
-class UsersModule implements IApiModule {
+class UsersModule extends RestModule {
   // ============================================
   // Infrastructure Layer (Data Access)
   // ============================================
@@ -22,6 +23,8 @@ class UsersModule implements IApiModule {
   private readonly getUserByIdUseCase: GetUserByIdUseCase;
 
   private readonly getUsersUseCase: GetUsersUseCase;
+
+  private readonly getMeUseCase: GetMeUseCase;
 
   private readonly updateUserUseCase: UpdateUserUseCase;
 
@@ -38,9 +41,14 @@ class UsersModule implements IApiModule {
   private readonly router: Router;
 
   constructor() {
+    super({
+      name: "Users Module",
+      description: "Module for managing users"
+    })
     this.userRepository = new UserRepository();
 
     this.getUserByIdUseCase = new GetUserByIdUseCase(this.userRepository);
+    this.getMeUseCase = new GetMeUseCase(this.userRepository);
     this.getUsersUseCase = new GetUsersUseCase(this.userRepository);
     this.updateUserUseCase = new UpdateUserUseCase(this.userRepository);
     this.deleteUserUseCase = new DeleteUserUseCase(this.userRepository);
@@ -50,6 +58,7 @@ class UsersModule implements IApiModule {
       this.getUsersUseCase,
       this.updateUserUseCase,
       this.deleteUserUseCase,
+      this.getMeUseCase
     );
 
     this.decoratorRouter = new DecoratorRouter();
