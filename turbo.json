@@ -2,9 +2,17 @@
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
   "tasks": {
-    "generate-sdk": {
+    "generate-api-sdk": {
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "dependsOn": ["^generate-sdk"]
+      "dependsOn": ["^generate-api-sdk"]
+    },
+    "generate-websocket-models": {
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "dependsOn": ["^generate-websocket-models"]
+    },
+    "generate-websocket-sdk": {
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "dependsOn": ["^generate-websocket-sdk"]
     },
     "build": {
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
