@@ -200,6 +200,10 @@ export class AsyncAPIGenerator {
     });
   }
 
+  private transformEventNameToId(name: string): string {
+    return name.split(":").map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join("").split("-").map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join("")
+  }
+
   /**
    * Process a receive operation (client sends to server)
    * In AsyncAPI v3, this is action: receive (we receive from client)
@@ -227,7 +231,10 @@ export class AsyncAPIGenerator {
       name: event.eventName,
       title: event.description || event.eventName,
       description: event.description,
-      payload: messagePayload,
+      payload: {
+        "$id": `${this.transformEventNameToId(event.eventName)}DTO`,
+        ...messagePayload
+      },
     };
     this.messages.set(messageId, message);
 
@@ -267,7 +274,10 @@ export class AsyncAPIGenerator {
         name: `${event.eventName}Ack`,
         title: `${event.eventName} Acknowledgment`,
         description: `Acknowledgment response for ${event.eventName}`,
-        payload: ackPayload,
+        payload: {
+          "$id": `${this.transformEventNameToId(event.eventName)}Response`,
+          ...ackPayload
+        },
       };
       this.messages.set(ackMessageId, ackMessage);
 
@@ -311,7 +321,10 @@ export class AsyncAPIGenerator {
       name: emit.eventName,
       title: emit.description || emit.eventName,
       description: emit.description,
-      payload: messagePayload,
+      payload: {
+        "$id": `${this.transformEventNameToId(emit.eventName)}Message`,
+        ...messagePayload
+      },
     };
     this.messages.set(messageId, message);
 

@@ -28,6 +28,7 @@
     "node": ">=18"
   },
   "dependencies": {
+    "@asyncapi/cli": "^5.0.5",
     "lint-staged": "^16.2.7"
   }
 }
