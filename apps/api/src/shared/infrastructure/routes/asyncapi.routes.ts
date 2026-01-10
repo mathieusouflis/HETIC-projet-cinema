@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { asyncAPIGenerator } from "../documentation/asyncapi-generator.js";
+import { config } from "@packages/config";
 
 /**
  * Create router for AsyncAPI documentation endpoints
@@ -12,12 +13,12 @@ export function createAsyncAPIRouter(): Router {
    * Get AsyncAPI specification as JSON
    * @route GET /asyncapi.json
    */
-  router.get("/asyncapi.json", (req, res) => {
+  router.get("/asyncapi.json", (_req, res) => {
     const spec = asyncAPIGenerator.generateSpec({
       title: "Cinema WebSocket API",
       version: "1.0.0",
       description: "Real-time WebSocket API for cinema application",
-      serverUrl: `ws://${req.get("host") || "localhost:5001"}`,
+      serverUrl: config.env.backend.webSocketUrl
     });
 
     res.json(spec);

@@ -13,6 +13,9 @@ import { OpenAPISpecAggregator } from "../shared/infrastructure/openapi/openapi-
 // import { chatModule } from "./chat/chat.module.js"; // TODO: Uncomment when chat module is needed
 import fs from "fs";
 import { logger } from "@packages/logger";
+import { asyncAPIGenerator } from "../shared/infrastructure/documentation/asyncapi-generator.js";
+import { config } from "@packages/config";
+import { chatModule } from "./chat/chat.module.js";
 
 function registerModules(): void {
   moduleRegistry.register("auth", authModule);
@@ -79,10 +82,30 @@ export function apiVersion1Router(): Router {
   return router;
 }
 
-export function registerAllWebSocketEvents(_io: SocketIOServer): void {
+export function registerAllWebSocketEvents(io: SocketIOServer): void {
   // TODO: Uncomment when chat module is needed
-  // chatModule.registerEvents(io);
-  // asyncAPIGenerator.registerController(chatModule.getEventController());
+  chatModule.registerEvents(io);
+  asyncAPIGenerator.registerController(chatModule.getEventController());
+  logger.success("All WebSocket events registered");
+}
+
+export function generateWebSocketAPIDocumentation() {
+  const spec = asyncAPIGenerator.generateSpec({
+    title: "Cinema WebSocket API",
+    version: "1.0.0",
+    description: "Real-time WebSocket API for cinema application",
+    serverUrl: config.env.backend.webSocketUrl
+  });
+
+  fs.writeFile(
+    "./websocket-api-documentation.json",
+    JSON.stringify(spec, null, 2),
+    (err) => {
+      if (err) {
+        console.error("Error writing AsyncAPI spec:", err);
+      }
+    },
+  );
 
   logger.success("All WebSocket events registered");
 }

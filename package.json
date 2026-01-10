@@ -3,10 +3,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm generate-sdk && turbo run build",
-    "build:watch": "pnpm generate-sdk && turbo run build:watch",
-    "check-types": "pnpm generate-sdk && turbo run check-types",
-    "generate-sdk": "turbo run generate-sdk",
+    "build": "pnpm generate-sdks && turbo run build",
+    "build:watch": "pnpm generate-sdks && turbo run build:watch",
+    "check-types": "pnpm generate-sdks && turbo run check-types",
+    "generate-api-sdk": "turbo run generate-sdk",
+    "generate-websocket-models": "turbo run generate-websocket-models",
+    "generate-websocket-sdk": "turbo run generate-websocket-sdk",
+    "generate-sdks": "turbo run generate-websocket-models generate-websocket-sdk generate-api-sdk",
     "clean": "turbo run clean && rm -rf .turbo dist node_modules/.cache packages/*/.turbo packages/*/dist apps/*/.turbo apps/*/dist",
     "db:logs": "docker compose -f docker-compose.dev.yaml logs -f",
     "db:shell": "docker compose -f docker-compose.dev.yaml exec db psql -U ${DB_USER:-root} -d ${DB_DATABASE:-database}",
@@ -28,6 +31,7 @@
     "node": ">=18"
   },
   "dependencies": {
+    "@asyncapi/cli": "^5.0.5",
     "lint-staged": "^16.2.7"
   }
 }
