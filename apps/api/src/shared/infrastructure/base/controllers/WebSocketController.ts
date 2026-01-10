@@ -172,10 +172,6 @@ export abstract class WebSocketController {
     );
   }
 
-  // ============================================
-  // Protected Helper Methods
-  // ============================================
-
   /**
    * Emit event to specific room
    * @example
@@ -300,10 +296,6 @@ export abstract class WebSocketController {
     socket.disconnect(true);
   }
 
-  // ============================================
-  // Lifecycle Hooks (Override in subclasses)
-  // ============================================
-
   /**
    * Called when a client connects to the namespace
    * Override this method to implement custom connection logic
@@ -336,10 +328,6 @@ export abstract class WebSocketController {
   protected handleError(socket: Socket, error: Error): void {
     logger.error(`Socket error for ${socket.id}:`, error.message);
   }
-
-  // ============================================
-  // Metadata (for AsyncAPI generation)
-  // ============================================
 
   /**
    * Get metadata about this WebSocket controller for documentation
