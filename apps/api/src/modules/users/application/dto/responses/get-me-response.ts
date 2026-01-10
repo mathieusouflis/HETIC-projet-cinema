@@ -8,3 +8,5 @@ export const getMeResponseSchema = z.object({
   email: emailSchema,
   username: usernameSchema,
 });
+
+export type GetMeDTO = z.infer<typeof getMeResponseSchema>;
