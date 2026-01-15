@@ -49,18 +49,18 @@
     "@types/express": "5.0.6",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/morgan": "^1.9.9",
-    "@types/node": "^25.0.3",
+    "@types/node": "^25.0.8",
     "@types/pg": "^8.16.0",
     "@types/socket.io": "^3.0.2",
     "@types/supertest": "^6.0.2",
     "@types/swagger-ui-express": "^4.1.8",
-    "@vitest/coverage-v8": "^4.0.15",
+    "@vitest/coverage-v8": "^4.0.17",
     "drizzle-kit": "^0.31.8",
     "eslint": "^9.39.0",
-    "orval": "^7.17.2",
+    "orval": "^7.18.0",
     "supertest": "^7.2.2",
     "tsx": "^4.21.0",
     "typescript": "5.9.3",
-    "vitest": "4.0.16"
+    "vitest": "4.0.17"
   }
 }
