@@ -9,9 +9,9 @@
     "node/vitest-preset.ts"
   ],
   "dependencies": {
-    "@vitest/coverage-v8": "^4.0.15",
-    "@vitest/ui": "^4.0.15",
-    "vitest": "4.0.16"
+    "@vitest/coverage-v8": "^4.0.17",
+    "@vitest/ui": "^4.0.17",
+    "vitest": "4.0.17"
   },
   "devDependencies": {
     "jsdom": "^27.4.0"
