@@ -20,6 +20,8 @@ import {
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { users as usersSchema } from "../modules/users/infrastructure/database/schemas/users.schema";
+import { userWatchlist as userWatchlistSchema } from "@/modules/watchlists/infrastructure/database/schemas/watchlists.schema";
+import { contentSchema } from "@/modules/content/infrastructure/database/schemas/content.schema";
 
 export const users = usersSchema;
 
@@ -105,68 +107,7 @@ export const friendships = pgTable(
   ],
 );
 
-export const content = pgTable(
-  "content",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    type: varchar({ length: 20 }).notNull(),
-    title: varchar({ length: 255 }).notNull(),
-    originalTitle: varchar("original_title", { length: 255 }),
-    slug: varchar({ length: 255 }).notNull(),
-    synopsis: text(),
-    posterUrl: text("poster_url"),
-    backdropUrl: text("backdrop_url"),
-    trailerUrl: text("trailer_url"),
-    releaseDate: date("release_date"),
-    year: integer(),
-    durationMinutes: integer("duration_minutes"),
-    tmdbId: integer("tmdb_id"),
-    imdbId: varchar("imdb_id", { length: 20 }),
-    averageRating: numeric("average_rating", {
-      precision: 3,
-      scale: 2,
-    }).default("0"),
-    totalRatings: integer("total_ratings").default(0),
-    totalViews: integer("total_views").default(0),
-    createdAt: timestamp("created_at", {
-      withTimezone: true,
-      mode: "string",
-    }).defaultNow(),
-    updatedAt: timestamp("updated_at", {
-      withTimezone: true,
-      mode: "string",
-    }).defaultNow(),
-  },
-  (table) => [
-    index("idx_content_rating").using(
-      "btree",
-      table.averageRating.desc().nullsFirst().op("numeric_ops"),
-    ),
-    index("idx_content_slug").using(
-      "btree",
-      table.slug.asc().nullsLast().op("text_ops"),
-    ),
-    index("idx_content_tmdb").using(
-      "btree",
-      table.tmdbId.asc().nullsLast().op("int4_ops"),
-    ),
-    index("idx_content_type").using(
-      "btree",
-      table.type.asc().nullsLast().op("text_ops"),
-    ),
-    index("idx_content_year").using(
-      "btree",
-      table.year.asc().nullsLast().op("int4_ops"),
-    ),
-    unique("content_slug_key").on(table.slug),
-    unique("content_tmdb_id_key").on(table.tmdbId),
-    unique("content_imdb_id_key").on(table.imdbId),
-    check(
-      "valid_type",
-      sql`(type)::text = ANY ((ARRAY['movie'::character varying, 'series'::character varying])::text[])`,
-    ),
-  ],
-);
+export const content = contentSchema;
 
 export const categories = pgTable(
   "categories",
@@ -629,48 +570,7 @@ export const reviews = pgTable(
   ],
 );
 
-export const userWatchlist = pgTable(
-  "user_watchlist",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    userId: uuid("user_id").notNull(),
-    contentId: uuid("content_id").notNull(),
-    status: varchar({ length: 20 }).default("to_watch").notNull(),
-    currentSeason: integer("current_season"),
-    currentEpisode: integer("current_episode"),
-    addedAt: timestamp("added_at", {
-      withTimezone: true,
-      mode: "string",
-    }).defaultNow(),
-    startedAt: timestamp("started_at", { withTimezone: true, mode: "string" }),
-    completedAt: timestamp("completed_at", {
-      withTimezone: true,
-      mode: "string",
-    }),
-  },
-  (table) => [
-    index("idx_watchlist_content").using(
-      "btree",
-      table.contentId.asc().nullsLast().op("uuid_ops"),
-    ),
-    index("idx_watchlist_user").using(
-      "btree",
-      table.userId.asc().nullsLast().op("uuid_ops"),
-      table.status.asc().nullsLast().op("text_ops"),
-    ),
-    foreignKey({
-      columns: [table.userId],
-      foreignColumns: [users.id],
-      name: "user_watchlist_user_id_fkey",
-    }).onDelete("cascade"),
-    foreignKey({
-      columns: [table.contentId],
-      foreignColumns: [content.id],
-      name: "user_watchlist_content_id_fkey",
-    }).onDelete("cascade"),
-    unique("unique_watchlist_entry").on(table.userId, table.contentId),
-  ],
-);
+export const userWatchlist = userWatchlistSchema;
 
 export const lists = pgTable(
   "lists",
