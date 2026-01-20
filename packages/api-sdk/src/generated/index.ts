@@ -10,6 +10,8 @@ import type { AxiosRequestConfig, AxiosResponse } from "axios";
 
 import type {
   GETAuthMe200,
+  GETContents200Item,
+  GETContentsParams,
   GETUsers200,
   GETUsersId200,
   GETUsersMe200,
@@ -145,6 +147,19 @@ export const getCinemaAPI = () => {
     return axios.get(`/auth/me`, options);
   };
 
+  /**
+   * List contents by type
+   */
+  const gETContents = <TData = AxiosResponse<GETContents200Item[]>>(
+    params?: GETContentsParams,
+    options?: AxiosRequestConfig,
+  ): Promise<TData> => {
+    return axios.get(`/contents/`, {
+      ...options,
+      params: { ...params, ...options?.params },
+    });
+  };
+
   return {
     gETUsersId,
     pATCHUsersId,
@@ -157,6 +172,7 @@ export const getCinemaAPI = () => {
     pOSTAuthRefresh,
     pOSTAuthLogout,
     gETAuthMe,
+    gETContents,
   };
 };
 export type GETUsersIdResult = AxiosResponse<GETUsersId200>;
@@ -170,3 +186,4 @@ export type POSTAuthLoginResult = AxiosResponse<POSTAuthLogin200>;
 export type POSTAuthRefreshResult = AxiosResponse<POSTAuthRefresh200>;
 export type POSTAuthLogoutResult = AxiosResponse<POSTAuthLogout200>;
 export type GETAuthMeResult = AxiosResponse<GETAuthMe200>;
+export type GETContentsResult = AxiosResponse<GETContents200Item[]>;
