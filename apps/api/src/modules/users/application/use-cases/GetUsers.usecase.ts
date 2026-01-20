@@ -11,8 +11,8 @@ export class GetUsersUseCase {
    * @returns Promise resolving to UserListResponseDTO with users and pagination info
    */
   async execute(pagination: GetQueryDTO): Promise<GetResponseDTO> {
-    const page = Math.max(1, pagination.page);
-    const limit = Math.min(100, Math.max(1, pagination.limit));
+    const page = Math.max(1, pagination.page ?? 0);
+    const limit = Math.min(100, Math.max(1, pagination.limit ?? 0));
 
     const { users, total } = await this.userRepository.findAll({
       page,
