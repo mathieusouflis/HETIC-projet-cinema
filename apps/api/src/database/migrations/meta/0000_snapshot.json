@@ -1,5 +1,5 @@
 {
-  "id": "1511183a-6b04-4fce-be05-bc820577ba48",
+  "id": "7840b4f0-a9bc-4afb-81ef-c6bd04b60060",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -147,12 +147,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "imdb_id": {
-          "name": "imdb_id",
-          "type": "varchar(20)",
-          "primaryKey": false,
-          "notNull": false
-        },
         "average_rating": {
           "name": "average_rating",
           "type": "numeric(3, 2)",
@@ -287,20 +281,13 @@
           "columns": [
             "tmdb_id"
           ]
-        },
-        "content_imdb_id_key": {
-          "name": "content_imdb_id_key",
-          "nullsNotDistinct": false,
-          "columns": [
-            "imdb_id"
-          ]
         }
       },
       "policies": {},
       "checkConstraints": {
         "valid_type": {
           "name": "valid_type",
-          "value": "(type)::text = ANY ((ARRAY['movie'::character varying, 'series'::character varying])::text[])"
+          "value": "(type)::text = ANY ((ARRAY['movie'::character varying, 'serie'::character varying])::text[])"
         }
       },
       "isRLSEnabled": false
@@ -330,8 +317,7 @@
               "expression": "category_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -432,8 +418,7 @@
               "expression": "content_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -448,15 +433,13 @@
               "expression": "person_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             },
             {
               "expression": "role",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -561,8 +544,7 @@
               "expression": "conversation_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -577,8 +559,7 @@
               "expression": "user_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -764,15 +745,13 @@
               "expression": "season_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "int4_ops"
+              "nulls": "last"
             },
             {
               "expression": "episode_number",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -869,15 +848,13 @@
               "expression": "friend_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
+              "nulls": "last"
             },
             {
               "expression": "status",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -892,15 +869,13 @@
               "expression": "user_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
+              "nulls": "last"
             },
             {
               "expression": "status",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -1008,15 +983,13 @@
               "expression": "list_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "int4_ops"
+              "nulls": "last"
             },
             {
               "expression": "order_index",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -1214,15 +1187,13 @@
               "expression": "is_public",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "timestamptz_ops"
+              "nulls": "last"
             },
             {
               "expression": "created_at",
               "isExpression": false,
               "asc": false,
-              "nulls": "first",
-              "opclass": "timestamptz_ops"
+              "nulls": "first"
             }
           ],
           "isUnique": false,
@@ -1237,8 +1208,7 @@
               "expression": "user_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -1338,15 +1308,13 @@
               "expression": "conversation_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "timestamptz_ops"
+              "nulls": "last"
             },
             {
               "expression": "created_at",
               "isExpression": false,
               "asc": false,
-              "nulls": "first",
-              "opclass": "timestamptz_ops"
+              "nulls": "first"
             }
           ],
           "isUnique": false,
@@ -1361,15 +1329,13 @@
               "expression": "watchparty_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             },
             {
               "expression": "created_at",
               "isExpression": false,
               "asc": false,
-              "nulls": "first",
-              "opclass": "uuid_ops"
+              "nulls": "first"
             }
           ],
           "isUnique": false,
@@ -1501,22 +1467,19 @@
               "expression": "user_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "timestamptz_ops"
+              "nulls": "last"
             },
             {
               "expression": "is_read",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             },
             {
               "expression": "created_at",
               "isExpression": false,
               "asc": false,
-              "nulls": "first",
-              "opclass": "uuid_ops"
+              "nulls": "first"
             }
           ],
           "isUnique": false,
@@ -1655,8 +1618,7 @@
               "expression": "name",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -1671,8 +1633,7 @@
               "expression": "tmdb_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "int4_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -1815,8 +1776,7 @@
               "expression": "content_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -1831,8 +1791,7 @@
               "expression": "user_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -1958,8 +1917,7 @@
               "expression": "expires_at",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "timestamptz_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -1974,8 +1932,7 @@
               "expression": "token_hash",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -1990,8 +1947,7 @@
               "expression": "user_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -2172,15 +2128,13 @@
               "expression": "content_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             },
             {
               "expression": "created_at",
               "isExpression": false,
               "asc": false,
-              "nulls": "first",
-              "opclass": "timestamptz_ops"
+              "nulls": "first"
             }
           ],
           "isUnique": false,
@@ -2195,8 +2149,7 @@
               "expression": "parent_review_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -2211,8 +2164,7 @@
               "expression": "user_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -2331,15 +2283,13 @@
               "expression": "series_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "int4_ops"
+              "nulls": "last"
             },
             {
               "expression": "season_number",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -2513,8 +2463,7 @@
               "expression": "content_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -2529,8 +2478,7 @@
               "expression": "event_type",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -2545,15 +2493,13 @@
               "expression": "user_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "timestamptz_ops"
+              "nulls": "last"
             },
             {
               "expression": "created_at",
               "isExpression": false,
               "asc": false,
-              "nulls": "first",
-              "opclass": "timestamptz_ops"
+              "nulls": "first"
             }
           ],
           "isUnique": false,
@@ -2800,8 +2746,7 @@
               "expression": "content_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -2816,15 +2761,13 @@
               "expression": "user_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             },
             {
               "expression": "status",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -3185,8 +3128,7 @@
               "expression": "content_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -3201,22 +3143,19 @@
               "expression": "content_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             },
             {
               "expression": "season_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             },
             {
               "expression": "episode_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -3231,8 +3170,7 @@
               "expression": "created_by",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -3247,8 +3185,7 @@
               "expression": "episode_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -3263,15 +3200,13 @@
               "expression": "scheduled_at",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
+              "nulls": "last"
             },
             {
               "expression": "status",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "timestamptz_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -3286,8 +3221,7 @@
               "expression": "season_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -3302,8 +3236,7 @@
               "expression": "status",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -3461,8 +3394,7 @@
               "expression": "invitee_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -3477,8 +3409,7 @@
               "expression": "invite_token",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -3608,15 +3539,13 @@
               "expression": "watchparty_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             },
             {
               "expression": "status",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -3631,8 +3560,7 @@
               "expression": "user_id",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -3771,12 +3699,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "imdb_id": {
-          "name": "imdb_id",
-          "type": "varchar(20)",
-          "primaryKey": false,
-          "notNull": false
-        },
         "average_rating": {
           "name": "average_rating",
           "type": "numeric(3, 2)",
@@ -3814,7 +3736,7 @@
           "notNull": false
         }
       },
-      "definition": "SELECT id, type, title, original_title, slug, synopsis, poster_url, backdrop_url, trailer_url, release_date, year, duration_minutes, tmdb_id, imdb_id, average_rating, total_ratings, total_views, created_at, updated_at, COALESCE(total_ratings::numeric * average_rating, 0::numeric) AS popularity_score FROM content c ORDER BY (COALESCE(total_ratings::numeric * average_rating, 0::numeric)) DESC",
+      "definition": "SELECT id, type, title, original_title, slug, synopsis, poster_url, backdrop_url, trailer_url, release_date, year, duration_minutes, tmdb_id, average_rating, total_ratings, total_views, created_at, updated_at, COALESCE(total_ratings::numeric * average_rating, 0::numeric) AS popularity_score FROM content c ORDER BY (COALESCE(total_ratings::numeric * average_rating, 0::numeric)) DESC",
       "name": "popular_content",
       "schema": "public",
       "isExisting": false,
