@@ -1,7 +1,6 @@
 import { eq, or } from "drizzle-orm";
 import { db } from "../../../../../database";
 import { content as contentTable } from "../../../../../database/schema";
-import { logger } from "@packages/logger";
 import { CreateSerieProps, Serie } from "../../../domain/entities/serie.entity";
 
 export class DrizzleSerieAdapter  {
@@ -38,11 +37,7 @@ export class DrizzleSerieAdapter  {
   }
 
   async createSerie(serie: CreateSerieProps): Promise<Serie> {
-    logger.info("Creating serie:", serie);
-
     const result = await db.insert(contentTable).values(serie).returning();
-
-    logger.info(result);
 
     if (!result || result.length === 0) {
       throw new Error('Serie not created');
