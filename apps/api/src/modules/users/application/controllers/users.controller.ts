@@ -97,13 +97,12 @@ export class UsersController extends BaseController {
   )
   @ApiResponse(401, "Not authenticated", Shared.Schemas.Base.unauthorizedErrorResponseSchema)
   getAll = asyncHandler(async (req: Request, res: Response): Promise<GetResponseDTO> => {
-    const { page, limit, offset, sort } = req.query as unknown as GetQueryDTO;
+    const { page, limit, offset } = req.query as GetQueryDTO;
 
     const result = await this.getUsersUseCase.execute({
       page,
       limit,
       offset,
-      sort,
     });
 
     res.status(200).json({
