@@ -19,7 +19,6 @@ export class Content {
   public readonly year: number | null;
   public readonly durationMinutes: number | null;
   public readonly tmdbId: number | null;
-  public readonly imdbId: string | null;
   public readonly averageRating: number;
   public readonly totalRatings: number;
   public readonly totalViews: number;
@@ -40,7 +39,6 @@ export class Content {
     this.year = props.year ?? null;
     this.durationMinutes = props.durationMinutes ?? null;
     this.tmdbId = props.tmdbId ?? null;
-    this.imdbId = props.imdbId ?? null;
     this.averageRating = parseFloat(props.averageRating?.toString() ?? "0");
     this.totalRatings = props.totalRatings ?? 0;
     this.totalViews = props.totalViews ?? 0;
@@ -93,7 +91,7 @@ export class Content {
    * @returns true if either tmdbId or imdbId is set
    */
   public hasExternalIds(): boolean {
-    return this.tmdbId !== null || this.imdbId !== null;
+    return this.tmdbId !== null;
   }
 
   /**
@@ -211,7 +209,6 @@ export class Content {
       year: this.year,
       durationMinutes: this.durationMinutes,
       tmdbId: this.tmdbId,
-      imdbId: this.imdbId,
       averageRating: this.averageRating,
       totalRatings: this.totalRatings,
       totalViews: this.totalViews,
