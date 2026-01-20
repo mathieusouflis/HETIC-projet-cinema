@@ -29,7 +29,6 @@ export const contentSchema = pgTable(
     year: integer(),
     durationMinutes: integer("duration_minutes"),
     tmdbId: integer("tmdb_id"),
-    imdbId: varchar("imdb_id", { length: 20 }),
     averageRating: numeric("average_rating", {
       precision: 3,
       scale: 2,
@@ -68,7 +67,6 @@ export const contentSchema = pgTable(
     ),
     unique("content_slug_key").on(table.slug),
     unique("content_tmdb_id_key").on(table.tmdbId),
-    unique("content_imdb_id_key").on(table.imdbId),
     check(
       "valid_type",
       sql`(type)::text = ANY ((ARRAY['movie'::character varying, 'series'::character varying])::text[])`,
