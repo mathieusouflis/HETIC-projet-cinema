@@ -21,8 +21,4 @@ export type GETUsersParams = {
    * @maximum 100
    */
   limit?: number;
-  /**
-   * @pattern ^[a-zA-Z][a-zA-Z0-9_]*(:(?:asc|desc|ASC|DESC))?$
-   */
-  sort?: string;
 };
