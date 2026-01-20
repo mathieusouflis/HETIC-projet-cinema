@@ -34,7 +34,7 @@ export class MovieRepository implements IMoviesRepository {
   async listMovies(_title?: string): Promise<Movie[]> {
     const tmdbMovies = await this.tmdbAdapter.listMovies();
     const moviesCreated = await this.processMovies(tmdbMovies);
-    const moviesListed = await this.listMovies()
+    const moviesListed = await this.drizzleAdapter.listMovies()
 
     return [...moviesCreated, ...moviesListed];
 
