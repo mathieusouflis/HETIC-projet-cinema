@@ -69,7 +69,7 @@ export const contentSchema = pgTable(
     unique("content_tmdb_id_key").on(table.tmdbId),
     check(
       "valid_type",
-      sql`(type)::text = ANY ((ARRAY['movie'::character varying, 'series'::character varying])::text[])`,
+      sql`(type)::text = ANY ((ARRAY['movie'::character varying, 'serie'::character varying])::text[])`,
     ),
   ],
 );

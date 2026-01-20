@@ -2,27 +2,22 @@ import { Router } from "express";
 import { RestModule } from "../../shared/infrastructure/base/modules/RestModule.js";
 import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-generator.js";
 import { ContentsController } from "./application/controllers/contents.controller.js";
+import { ContentsRepository } from "./infrastructure/database/repositories/contents.repository.js";
+import { QueryContentUseCase } from "./application/use-cases/query-content.use-case.js";
 
-class UsersModule extends RestModule {
+class ContentsModule extends RestModule {
   // ============================================
   // Infrastructure Layer (Data Access)
   // ============================================
 
-  // private readonly userRepository: UserRepository;
+
+  private readonly repository: ContentsRepository;
 
   // ============================================
   // Application Layer (Use Cases)
   // ============================================
 
-  // private readonly getUserByIdUseCase: GetUserByIdUseCase;
-
-  // private readonly getUsersUseCase: GetUsersUseCase;
-
-  // private readonly getMeUseCase: GetMeUseCase;
-
-  // private readonly updateUserUseCase: UpdateUserUseCase;
-
-  // private readonly deleteUserUseCase: DeleteUserUseCase;
+  private readonly queryContentsUseCase: QueryContentUseCase;
 
   // ============================================
   // Presentation Layer (Controller & Router)
@@ -40,8 +35,12 @@ class UsersModule extends RestModule {
       description: "Module for managing users"
     })
 
-    this.controller = new ContentsController(
-    );
+
+    this.repository = new ContentsRepository()
+
+    this.queryContentsUseCase = new QueryContentUseCase(this.repository)
+    this.controller = new ContentsController(this.queryContentsUseCase);
+
 
     this.decoratorRouter = new DecoratorRouter();
     this.router = this.decoratorRouter.generateRouter(this.controller);
@@ -51,13 +50,15 @@ class UsersModule extends RestModule {
     return this.router;
   }
 
-  // public getUserRepository(): UserRepository {
-  //   return this.userRepository;
-  // }
+
+  public getContentsRepository(): ContentsRepository {
+    return this.repository;
+  }
+
 
   public getController(): ContentsController {
     return this.controller;
   }
 }
 
-export const usersModule = new UsersModule();
+export const contentsModule = new ContentsModule();
