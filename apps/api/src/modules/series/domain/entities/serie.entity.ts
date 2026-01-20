@@ -23,9 +23,9 @@ export class Serie extends Content {
   }
 
 }
-export type CreateSerieProps = NewContentRow & {
+export type CreateSerieProps = {
   type: "serie";
-};
+} & NewContentRow;
 
 export type UpdateSerieProps = Partial<
   Pick<
