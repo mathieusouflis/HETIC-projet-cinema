@@ -13,10 +13,12 @@ import { OpenAPISpecAggregator } from "../shared/infrastructure/openapi/openapi-
 // import { chatModule } from "./chat/chat.module.js"; // TODO: Uncomment when chat module is needed
 import fs from "fs";
 import { logger } from "@packages/logger";
+import { contentsModule } from "./contents/contents.module.js";
 
 function registerModules(): void {
   moduleRegistry.register("auth", authModule);
   moduleRegistry.register("users", usersModule);
+  moduleRegistry.register("contents", contentsModule);
 }
 
 function generateOpenAPISpec() {

@@ -3,7 +3,7 @@ import type {
   NewContentRow,
 } from "../../infrastructure/database/schemas/contents.schema.js";
 
-export type ContentType = "movie" | "series";
+export type ContentType = "movie" | "serie";
 
 export class Content {
   public readonly id: string;
@@ -59,7 +59,7 @@ export class Content {
    * @returns true if content type is "series"
    */
   public isSeries(): boolean {
-    return this.type === "series";
+    return this.type === "serie";
   }
 
   /**
