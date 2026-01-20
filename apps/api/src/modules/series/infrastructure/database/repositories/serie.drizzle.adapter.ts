@@ -1,15 +1,15 @@
-
 import { eq, or } from "drizzle-orm";
 import { db } from "../../../../../database";
 import { content as contentTable } from "../../../../../database/schema";
-import { Content, CreateContentProps } from "../../../../contents/domain/entities/content.entity";
+import { logger } from "@packages/logger";
+import { CreateSerieProps, Serie } from "../../../domain/entities/serie.entity";
 
 export class DrizzleSerieAdapter  {
-  async getContentById(_id: string): Promise<Content | null> {
+  async getContentById(_id: string): Promise<Serie | null> {
     return null;
   }
 
-  async listSeries(title?: string, tmdbIds?: number[]): Promise<Content[]> {
+  async listSeries(title?: string, tmdbIds?: number[]): Promise<Serie[]> {
     const query = db.select().from(contentTable);
     query.where(eq(contentTable.type, "serie"));
 
@@ -21,9 +21,9 @@ export class DrizzleSerieAdapter  {
       query.where(or(...tmdbIds.map((id) => eq(contentTable.tmdbId, id))));
     }
 
-    const result = await query
+    const result = await query;
 
-    return result.map((row) => new Content(row));
+    return result.map((row) => new Serie(row));
   }
 
   async checkSerieExistsInDb<Id extends number>(tmdbIds: Id[]): Promise<Record<Id, boolean>> {
@@ -37,8 +37,12 @@ export class DrizzleSerieAdapter  {
       return seriesStatusInDatabase;
   }
 
-  async createSerie(serie: CreateContentProps): Promise<Content> {
+  async createSerie(serie: CreateSerieProps): Promise<Serie> {
+    logger.info("Creating serie:", serie);
+
     const result = await db.insert(contentTable).values(serie).returning();
+
+    logger.info(result);
 
     if (!result || result.length === 0) {
       throw new Error('Serie not created');
@@ -50,7 +54,7 @@ export class DrizzleSerieAdapter  {
       throw new Error('Unexpected error: Created serie is undefined');
     }
 
-    return new Content(createdContent);
+    return new Serie(createdContent);
   }
 
 }

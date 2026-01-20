@@ -3,18 +3,17 @@ import { CreateSerieProps } from "../../../domain/entities/serie.entity";
 
 
 type TMDBSerie = {
-  adult: boolean,
   backdrop_path: string,
+  first_air_date: string,
   genre_ids: number[],
   id: number,
+  name: string,
+  origin_country: string[],
   original_language: string,
-  original_title: string,
+  original_name: string,
   overview: string,
   popularity: number,
   poster_path: string,
-  release_date: string,
-  title: string,
-  video: boolean,
   vote_average: number,
   vote_count: number
 }
@@ -56,14 +55,14 @@ export class TMDBSeriesAdapter  {
   async parseResultToSerie(result: TMDBSerie): Promise<CreateSerieProps> {
     return {
       slug: result.id.toString(),
-      title: result.title,
+      title: result.name ?? null,
       type: "serie",
       backdropUrl: result.backdrop_path,
       posterUrl: result.poster_path,
       tmdbId: result.id,
-      originalTitle: result.original_title,
-      releaseDate: result.release_date,
-      trailerUrl: result.video ? await this.getSerieTrailerUrl(result.id) : null
+      originalTitle: result.original_name ?? null,
+      releaseDate: result.first_air_date ?? null,
+      trailerUrl: await this.getSerieTrailerUrl(result.id) ?? null
     }
   }
   async getContentById(id: string): Promise<CreateSerieProps | null> {
