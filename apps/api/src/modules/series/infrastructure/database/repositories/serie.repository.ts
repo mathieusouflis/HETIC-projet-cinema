@@ -1,4 +1,3 @@
-import { logger } from "@packages/logger";
 import { TMDBSeriesAdapter } from "../../../../series/infrastructure/database/repositories/serie.tmdb.adapter";
 import { CreateSerieProps, Serie } from "../../../domain/entities/serie.entity";
 import { ISeriesRepository } from "../../../domain/interfaces/ISeriesRepository";
@@ -33,12 +32,9 @@ export class SerieRepository implements ISeriesRepository {
   }
 
   async listSeries(_title?: string): Promise<Serie[]> {
-    logger.info('Listing series')
     const tmdbSeries = await this.tmdbAdapter.listSeries();
     const seriesCreated = await this.processSeries(tmdbSeries);
-    logger.info(`Series Created : ${seriesCreated.length}`)
     const seriesListed = await this.drizzleAdapter.listSeries()
-    logger.info(`Series listed : ${seriesCreated.length}`)
 
     return [...seriesCreated, ...seriesListed];
 

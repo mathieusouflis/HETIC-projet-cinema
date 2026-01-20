@@ -39,7 +39,6 @@ export class DrizzleMovieAdapter  {
 
   async createMovie(movie: CreateContentProps): Promise<Content> {
     const result = await db.insert(contentTable).values(movie).returning();
-
     if (!result || result.length === 0) {
       throw new Error('Content not created');
     }
