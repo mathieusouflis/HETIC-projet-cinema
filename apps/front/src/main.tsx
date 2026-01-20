@@ -1,6 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { PostHogProvider } from "posthog-js/react";
+// import { PostHogProvider } from "posthog-js/react";
 import App from "./app";
 import "./index.css";
 
@@ -9,7 +9,7 @@ if (el) {
   const root = createRoot(el);
   root.render(
     <React.StrictMode>
-      <PostHogProvider
+      {/*<PostHogProvider
         apiKey={import.meta.env.VITE_PUBLIC_POSTHOG_KEY}
         options={{
           api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
@@ -17,9 +17,9 @@ if (el) {
           capture_exceptions: true,
           debug: import.meta.env.NODE_ENV === "development",
         }}
-      >
+      >*/}
         <App />
-      </PostHogProvider>
+      {/*</PostHogProvider>*/}
     </React.StrictMode>,
   );
 } else {
