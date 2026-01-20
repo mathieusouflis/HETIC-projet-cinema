@@ -19,7 +19,7 @@ export class TmdbService implements ITmdbService {
     endpoint: string,
     params?: Record<string, string>,
   ): Promise<T> {
-    const url = `${this.baseUrl}${this.version}/${endpoint}?api_key=${this.apiKey}&language=${this.lang}`;
+    const url = `${this.baseUrl}${this.version}/${endpoint}${endpoint.includes("?") ? "&" : "?"}api_key=${this.apiKey}&language=${this.lang}`;
     let paramsUrl: string = "";
     if (params) {
       paramsUrl = Object.keys(params).reduce((acc, key) => {
