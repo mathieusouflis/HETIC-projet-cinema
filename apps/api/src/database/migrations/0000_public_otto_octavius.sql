@@ -22,7 +22,6 @@ CREATE TABLE "content" (
 	"year" integer,
 	"duration_minutes" integer,
 	"tmdb_id" integer,
-	"imdb_id" varchar(20),
 	"average_rating" numeric(3, 2) DEFAULT '0',
 	"total_ratings" integer DEFAULT 0,
 	"total_views" integer DEFAULT 0,
@@ -30,8 +29,7 @@ CREATE TABLE "content" (
 	"updated_at" timestamp with time zone DEFAULT now(),
 	CONSTRAINT "content_slug_key" UNIQUE("slug"),
 	CONSTRAINT "content_tmdb_id_key" UNIQUE("tmdb_id"),
-	CONSTRAINT "content_imdb_id_key" UNIQUE("imdb_id"),
-	CONSTRAINT "valid_type" CHECK ((type)::text = ANY ((ARRAY['movie'::character varying, 'series'::character varying])::text[]))
+	CONSTRAINT "valid_type" CHECK ((type)::text = ANY ((ARRAY['movie'::character varying, 'serie'::character varying])::text[]))
 );
 --> statement-breakpoint
 CREATE TABLE "content_categories" (
@@ -400,48 +398,48 @@ CREATE INDEX "idx_content_slug" ON "content" USING btree ("slug" text_ops);--> s
 CREATE INDEX "idx_content_tmdb" ON "content" USING btree ("tmdb_id" int4_ops);--> statement-breakpoint
 CREATE INDEX "idx_content_type" ON "content" USING btree ("type" text_ops);--> statement-breakpoint
 CREATE INDEX "idx_content_year" ON "content" USING btree ("year" int4_ops);--> statement-breakpoint
-CREATE INDEX "idx_content_categories_category" ON "content_categories" USING btree ("category_id" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_credits_content" ON "content_credits" USING btree ("content_id" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_credits_person" ON "content_credits" USING btree ("person_id" uuid_ops,"role" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_conv_participants_conv" ON "conversation_participants" USING btree ("conversation_id" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_conv_participants_user" ON "conversation_participants" USING btree ("user_id" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_episodes_season" ON "episodes" USING btree ("season_id" int4_ops,"episode_number" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_friendships_friend" ON "friendships" USING btree ("friend_id" text_ops,"status" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_friendships_user" ON "friendships" USING btree ("user_id" text_ops,"status" text_ops);--> statement-breakpoint
-CREATE INDEX "idx_list_items_list" ON "list_items" USING btree ("list_id" int4_ops,"order_index" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_lists_public" ON "lists" USING btree ("is_public" timestamptz_ops,"created_at" timestamptz_ops);--> statement-breakpoint
-CREATE INDEX "idx_lists_user" ON "lists" USING btree ("user_id" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_messages_conversation" ON "messages" USING btree ("conversation_id" timestamptz_ops,"created_at" timestamptz_ops);--> statement-breakpoint
-CREATE INDEX "idx_messages_watchparty" ON "messages" USING btree ("watchparty_id" uuid_ops,"created_at" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_notifications_user" ON "notifications" USING btree ("user_id" timestamptz_ops,"is_read" uuid_ops,"created_at" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_people_name" ON "people" USING btree ("name" text_ops);--> statement-breakpoint
-CREATE INDEX "idx_people_tmdb" ON "people" USING btree ("tmdb_id" int4_ops);--> statement-breakpoint
-CREATE INDEX "idx_ratings_content" ON "ratings" USING btree ("content_id" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_ratings_user" ON "ratings" USING btree ("user_id" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_refresh_tokens_expires" ON "refresh_tokens" USING btree ("expires_at" timestamptz_ops);--> statement-breakpoint
-CREATE INDEX "idx_refresh_tokens_hash" ON "refresh_tokens" USING btree ("token_hash" text_ops);--> statement-breakpoint
-CREATE INDEX "idx_refresh_tokens_user" ON "refresh_tokens" USING btree ("user_id" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_reviews_content" ON "reviews" USING btree ("content_id" uuid_ops,"created_at" timestamptz_ops);--> statement-breakpoint
-CREATE INDEX "idx_reviews_parent" ON "reviews" USING btree ("parent_review_id" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_reviews_user" ON "reviews" USING btree ("user_id" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_seasons_series" ON "seasons" USING btree ("series_id" int4_ops,"season_number" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_activity_content" ON "user_activity_logs" USING btree ("content_id" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_activity_type" ON "user_activity_logs" USING btree ("event_type" text_ops);--> statement-breakpoint
-CREATE INDEX "idx_activity_user" ON "user_activity_logs" USING btree ("user_id" timestamptz_ops,"created_at" timestamptz_ops);--> statement-breakpoint
-CREATE INDEX "idx_watchlist_content" ON "user_watchlist" USING btree ("content_id" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_watchlist_user" ON "user_watchlist" USING btree ("user_id" uuid_ops,"status" text_ops);--> statement-breakpoint
+CREATE INDEX "idx_content_categories_category" ON "content_categories" USING btree ("category_id");--> statement-breakpoint
+CREATE INDEX "idx_credits_content" ON "content_credits" USING btree ("content_id");--> statement-breakpoint
+CREATE INDEX "idx_credits_person" ON "content_credits" USING btree ("person_id","role");--> statement-breakpoint
+CREATE INDEX "idx_conv_participants_conv" ON "conversation_participants" USING btree ("conversation_id");--> statement-breakpoint
+CREATE INDEX "idx_conv_participants_user" ON "conversation_participants" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "idx_episodes_season" ON "episodes" USING btree ("season_id","episode_number");--> statement-breakpoint
+CREATE INDEX "idx_friendships_friend" ON "friendships" USING btree ("friend_id","status");--> statement-breakpoint
+CREATE INDEX "idx_friendships_user" ON "friendships" USING btree ("user_id","status");--> statement-breakpoint
+CREATE INDEX "idx_list_items_list" ON "list_items" USING btree ("list_id","order_index");--> statement-breakpoint
+CREATE INDEX "idx_lists_public" ON "lists" USING btree ("is_public","created_at" DESC NULLS FIRST);--> statement-breakpoint
+CREATE INDEX "idx_lists_user" ON "lists" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "idx_messages_conversation" ON "messages" USING btree ("conversation_id","created_at" DESC NULLS FIRST);--> statement-breakpoint
+CREATE INDEX "idx_messages_watchparty" ON "messages" USING btree ("watchparty_id","created_at" DESC NULLS FIRST);--> statement-breakpoint
+CREATE INDEX "idx_notifications_user" ON "notifications" USING btree ("user_id","is_read","created_at" DESC NULLS FIRST);--> statement-breakpoint
+CREATE INDEX "idx_people_name" ON "people" USING btree ("name");--> statement-breakpoint
+CREATE INDEX "idx_people_tmdb" ON "people" USING btree ("tmdb_id");--> statement-breakpoint
+CREATE INDEX "idx_ratings_content" ON "ratings" USING btree ("content_id");--> statement-breakpoint
+CREATE INDEX "idx_ratings_user" ON "ratings" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "idx_refresh_tokens_expires" ON "refresh_tokens" USING btree ("expires_at");--> statement-breakpoint
+CREATE INDEX "idx_refresh_tokens_hash" ON "refresh_tokens" USING btree ("token_hash");--> statement-breakpoint
+CREATE INDEX "idx_refresh_tokens_user" ON "refresh_tokens" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "idx_reviews_content" ON "reviews" USING btree ("content_id","created_at" DESC NULLS FIRST);--> statement-breakpoint
+CREATE INDEX "idx_reviews_parent" ON "reviews" USING btree ("parent_review_id");--> statement-breakpoint
+CREATE INDEX "idx_reviews_user" ON "reviews" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "idx_seasons_series" ON "seasons" USING btree ("series_id","season_number");--> statement-breakpoint
+CREATE INDEX "idx_activity_content" ON "user_activity_logs" USING btree ("content_id");--> statement-breakpoint
+CREATE INDEX "idx_activity_type" ON "user_activity_logs" USING btree ("event_type");--> statement-breakpoint
+CREATE INDEX "idx_activity_user" ON "user_activity_logs" USING btree ("user_id","created_at" DESC NULLS FIRST);--> statement-breakpoint
+CREATE INDEX "idx_watchlist_content" ON "user_watchlist" USING btree ("content_id");--> statement-breakpoint
+CREATE INDEX "idx_watchlist_user" ON "user_watchlist" USING btree ("user_id","status");--> statement-breakpoint
 CREATE INDEX "idx_users_email" ON "users" USING btree ("email" text_ops);--> statement-breakpoint
 CREATE INDEX "idx_users_oauth" ON "users" USING btree ("oauth_provider" text_ops,"oauth_id" text_ops);--> statement-breakpoint
-CREATE INDEX "idx_watchparties_content" ON "watchparties" USING btree ("content_id" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_watchparties_content_related" ON "watchparties" USING btree ("content_id" uuid_ops,"season_id" uuid_ops,"episode_id" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_watchparties_creator" ON "watchparties" USING btree ("created_by" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_watchparties_episode" ON "watchparties" USING btree ("episode_id" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_watchparties_scheduled" ON "watchparties" USING btree ("scheduled_at" text_ops,"status" timestamptz_ops);--> statement-breakpoint
-CREATE INDEX "idx_watchparties_season" ON "watchparties" USING btree ("season_id" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_watchparties_status" ON "watchparties" USING btree ("status" text_ops);--> statement-breakpoint
-CREATE INDEX "idx_invitations_invitee" ON "watchparty_invitations" USING btree ("invitee_id" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_invitations_token" ON "watchparty_invitations" USING btree ("invite_token" text_ops);--> statement-breakpoint
-CREATE INDEX "idx_watchparty_participants_party" ON "watchparty_participants" USING btree ("watchparty_id" uuid_ops,"status" uuid_ops);--> statement-breakpoint
-CREATE INDEX "idx_watchparty_participants_user" ON "watchparty_participants" USING btree ("user_id" uuid_ops);--> statement-breakpoint
-CREATE VIEW "public"."popular_content" AS (SELECT id, type, title, original_title, slug, synopsis, poster_url, backdrop_url, trailer_url, release_date, year, duration_minutes, tmdb_id, imdb_id, average_rating, total_ratings, total_views, created_at, updated_at, COALESCE(total_ratings::numeric * average_rating, 0::numeric) AS popularity_score FROM content c ORDER BY (COALESCE(total_ratings::numeric * average_rating, 0::numeric)) DESC);--> statement-breakpoint
+CREATE INDEX "idx_watchparties_content" ON "watchparties" USING btree ("content_id");--> statement-breakpoint
+CREATE INDEX "idx_watchparties_content_related" ON "watchparties" USING btree ("content_id","season_id","episode_id");--> statement-breakpoint
+CREATE INDEX "idx_watchparties_creator" ON "watchparties" USING btree ("created_by");--> statement-breakpoint
+CREATE INDEX "idx_watchparties_episode" ON "watchparties" USING btree ("episode_id");--> statement-breakpoint
+CREATE INDEX "idx_watchparties_scheduled" ON "watchparties" USING btree ("scheduled_at","status");--> statement-breakpoint
+CREATE INDEX "idx_watchparties_season" ON "watchparties" USING btree ("season_id");--> statement-breakpoint
+CREATE INDEX "idx_watchparties_status" ON "watchparties" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "idx_invitations_invitee" ON "watchparty_invitations" USING btree ("invitee_id");--> statement-breakpoint
+CREATE INDEX "idx_invitations_token" ON "watchparty_invitations" USING btree ("invite_token");--> statement-breakpoint
+CREATE INDEX "idx_watchparty_participants_party" ON "watchparty_participants" USING btree ("watchparty_id","status");--> statement-breakpoint
+CREATE INDEX "idx_watchparty_participants_user" ON "watchparty_participants" USING btree ("user_id");--> statement-breakpoint
+CREATE VIEW "public"."popular_content" AS (SELECT id, type, title, original_title, slug, synopsis, poster_url, backdrop_url, trailer_url, release_date, year, duration_minutes, tmdb_id, average_rating, total_ratings, total_views, created_at, updated_at, COALESCE(total_ratings::numeric * average_rating, 0::numeric) AS popularity_score FROM content c ORDER BY (COALESCE(total_ratings::numeric * average_rating, 0::numeric)) DESC);--> statement-breakpoint
 CREATE VIEW "public"."upcoming_watchparties" AS (SELECT wp.id, wp.created_by, wp.content_id, wp.season_id, wp.episode_id, wp.name, wp.description, wp.is_public, wp.max_participants, wp.platform_id, wp.platform_url, wp.scheduled_at, wp.started_at, wp.ended_at, wp.status, wp.current_position_timestamp, wp.is_playing, wp.leader_user_id, wp.created_at, wp.updated_at, u.username AS creator_username, c.title AS content_title, sp.name AS platform_name, count(wpp.id) AS participant_count FROM watchparties wp JOIN users u ON wp.created_by = u.id JOIN content c ON wp.content_id = c.id JOIN streaming_platforms sp ON wp.platform_id = sp.id LEFT JOIN watchparty_participants wpp ON wp.id = wpp.watchparty_id AND wpp.status::text = 'confirmed'::text WHERE wp.status::text = 'scheduled'::text AND wp.scheduled_at > now() GROUP BY wp.id, u.username, c.title, sp.name);

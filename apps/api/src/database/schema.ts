@@ -46,15 +46,15 @@ export const refreshTokens = pgTable(
   (table) => [
     index("idx_refresh_tokens_expires").using(
       "btree",
-      table.expiresAt.asc().nullsLast().op("timestamptz_ops"),
+      table.expiresAt.asc().nullsLast(),
     ),
     index("idx_refresh_tokens_hash").using(
       "btree",
-      table.tokenHash.asc().nullsLast().op("text_ops"),
+      table.tokenHash.asc().nullsLast(),
     ),
     index("idx_refresh_tokens_user").using(
       "btree",
-      table.userId.asc().nullsLast().op("uuid_ops"),
+      table.userId.asc().nullsLast(),
     ),
     foreignKey({
       columns: [table.userId],
@@ -83,13 +83,13 @@ export const friendships = pgTable(
   (table) => [
     index("idx_friendships_friend").using(
       "btree",
-      table.friendId.asc().nullsLast().op("text_ops"),
-      table.status.asc().nullsLast().op("uuid_ops"),
+      table.friendId.asc().nullsLast(),
+      table.status.asc().nullsLast(),
     ),
     index("idx_friendships_user").using(
       "btree",
-      table.userId.asc().nullsLast().op("text_ops"),
-      table.status.asc().nullsLast().op("text_ops"),
+      table.userId.asc().nullsLast(),
+      table.status.asc().nullsLast(),
     ),
     foreignKey({
       columns: [table.userId],
@@ -139,12 +139,12 @@ export const contentCredits = pgTable(
   (table) => [
     index("idx_credits_content").using(
       "btree",
-      table.contentId.asc().nullsLast().op("uuid_ops"),
+      table.contentId.asc().nullsLast(),
     ),
     index("idx_credits_person").using(
       "btree",
-      table.personId.asc().nullsLast().op("uuid_ops"),
-      table.role.asc().nullsLast().op("uuid_ops"),
+      table.personId.asc().nullsLast(),
+      table.role.asc().nullsLast(),
     ),
     foreignKey({
       columns: [table.contentId],
@@ -182,11 +182,11 @@ export const people = pgTable(
   (table) => [
     index("idx_people_name").using(
       "btree",
-      table.name.asc().nullsLast().op("text_ops"),
+      table.name.asc().nullsLast(),
     ),
     index("idx_people_tmdb").using(
       "btree",
-      table.tmdbId.asc().nullsLast().op("int4_ops"),
+      table.tmdbId.asc().nullsLast(),
     ),
     unique("people_tmdb_id_key").on(table.tmdbId),
   ],
@@ -207,8 +207,8 @@ export const seasons = pgTable(
   (table) => [
     index("idx_seasons_series").using(
       "btree",
-      table.seriesId.asc().nullsLast().op("int4_ops"),
-      table.seasonNumber.asc().nullsLast().op("uuid_ops"),
+      table.seriesId.asc().nullsLast(),
+      table.seasonNumber.asc().nullsLast(),
     ),
     foreignKey({
       columns: [table.seriesId],
@@ -235,8 +235,8 @@ export const episodes = pgTable(
   (table) => [
     index("idx_episodes_season").using(
       "btree",
-      table.seasonId.asc().nullsLast().op("int4_ops"),
-      table.episodeNumber.asc().nullsLast().op("uuid_ops"),
+      table.seasonId.asc().nullsLast(),
+      table.episodeNumber.asc().nullsLast(),
     ),
     foreignKey({
       columns: [table.seasonId],
@@ -293,11 +293,11 @@ export const conversationParticipants = pgTable(
   (table) => [
     index("idx_conv_participants_conv").using(
       "btree",
-      table.conversationId.asc().nullsLast().op("uuid_ops"),
+      table.conversationId.asc().nullsLast(),
     ),
     index("idx_conv_participants_user").using(
       "btree",
-      table.userId.asc().nullsLast().op("uuid_ops"),
+      table.userId.asc().nullsLast(),
     ),
     foreignKey({
       columns: [table.conversationId],
@@ -349,34 +349,34 @@ export const watchparties = pgTable(
   (table) => [
     index("idx_watchparties_content").using(
       "btree",
-      table.contentId.asc().nullsLast().op("uuid_ops"),
+      table.contentId.asc().nullsLast(),
     ),
     index("idx_watchparties_content_related").using(
       "btree",
-      table.contentId.asc().nullsLast().op("uuid_ops"),
-      table.seasonId.asc().nullsLast().op("uuid_ops"),
-      table.episodeId.asc().nullsLast().op("uuid_ops"),
+      table.contentId.asc().nullsLast(),
+      table.seasonId.asc().nullsLast(),
+      table.episodeId.asc().nullsLast(),
     ),
     index("idx_watchparties_creator").using(
       "btree",
-      table.createdBy.asc().nullsLast().op("uuid_ops"),
+      table.createdBy.asc().nullsLast(),
     ),
     index("idx_watchparties_episode").using(
       "btree",
-      table.episodeId.asc().nullsLast().op("uuid_ops"),
+      table.episodeId.asc().nullsLast(),
     ),
     index("idx_watchparties_scheduled").using(
       "btree",
-      table.scheduledAt.asc().nullsLast().op("text_ops"),
-      table.status.asc().nullsLast().op("timestamptz_ops"),
+      table.scheduledAt.asc().nullsLast(),
+      table.status.asc().nullsLast(),
     ),
     index("idx_watchparties_season").using(
       "btree",
-      table.seasonId.asc().nullsLast().op("uuid_ops"),
+      table.seasonId.asc().nullsLast(),
     ),
     index("idx_watchparties_status").using(
       "btree",
-      table.status.asc().nullsLast().op("text_ops"),
+      table.status.asc().nullsLast(),
     ),
     foreignKey({
       columns: [table.createdBy],
@@ -450,13 +450,13 @@ export const messages = pgTable(
   (table) => [
     index("idx_messages_conversation").using(
       "btree",
-      table.conversationId.asc().nullsLast().op("timestamptz_ops"),
-      table.createdAt.desc().nullsFirst().op("timestamptz_ops"),
+      table.conversationId.asc().nullsLast(),
+      table.createdAt.desc().nullsFirst(),
     ),
     index("idx_messages_watchparty").using(
       "btree",
-      table.watchpartyId.asc().nullsLast().op("uuid_ops"),
-      table.createdAt.desc().nullsFirst().op("uuid_ops"),
+      table.watchpartyId.asc().nullsLast(),
+      table.createdAt.desc().nullsFirst(),
     ),
     foreignKey({
       columns: [table.conversationId],
@@ -495,11 +495,11 @@ export const ratings = pgTable(
   (table) => [
     index("idx_ratings_content").using(
       "btree",
-      table.contentId.asc().nullsLast().op("uuid_ops"),
+      table.contentId.asc().nullsLast(),
     ),
     index("idx_ratings_user").using(
       "btree",
-      table.userId.asc().nullsLast().op("uuid_ops"),
+      table.userId.asc().nullsLast(),
     ),
     foreignKey({
       columns: [table.userId],
@@ -540,16 +540,16 @@ export const reviews = pgTable(
   (table) => [
     index("idx_reviews_content").using(
       "btree",
-      table.contentId.asc().nullsLast().op("uuid_ops"),
-      table.createdAt.desc().nullsFirst().op("timestamptz_ops"),
+      table.contentId.asc().nullsLast(),
+      table.createdAt.desc().nullsFirst(),
     ),
     index("idx_reviews_parent").using(
       "btree",
-      table.parentReviewId.asc().nullsLast().op("uuid_ops"),
+      table.parentReviewId.asc().nullsLast(),
     ),
     index("idx_reviews_user").using(
       "btree",
-      table.userId.asc().nullsLast().op("uuid_ops"),
+      table.userId.asc().nullsLast(),
     ),
     foreignKey({
       columns: [table.userId],
@@ -591,12 +591,12 @@ export const userWatchlist = pgTable(
   (table) => [
     index("idx_watchlist_content").using(
       "btree",
-      table.contentId.asc().nullsLast().op("uuid_ops"),
+      table.contentId.asc().nullsLast(),
     ),
     index("idx_watchlist_user").using(
       "btree",
-      table.userId.asc().nullsLast().op("uuid_ops"),
-      table.status.asc().nullsLast().op("text_ops"),
+      table.userId.asc().nullsLast(),
+      table.status.asc().nullsLast(),
     ),
     foreignKey({
       columns: [table.userId],
@@ -635,12 +635,12 @@ export const lists = pgTable(
   (table) => [
     index("idx_lists_public").using(
       "btree",
-      table.isPublic.asc().nullsLast().op("timestamptz_ops"),
-      table.createdAt.desc().nullsFirst().op("timestamptz_ops"),
+      table.isPublic.asc().nullsLast(),
+      table.createdAt.desc().nullsFirst(),
     ),
     index("idx_lists_user").using(
       "btree",
-      table.userId.asc().nullsLast().op("uuid_ops"),
+      table.userId.asc().nullsLast(),
     ),
     foreignKey({
       columns: [table.userId],
@@ -666,8 +666,8 @@ export const listItems = pgTable(
   (table) => [
     index("idx_list_items_list").using(
       "btree",
-      table.listId.asc().nullsLast().op("int4_ops"),
-      table.orderIndex.asc().nullsLast().op("uuid_ops"),
+      table.listId.asc().nullsLast(),
+      table.orderIndex.asc().nullsLast(),
     ),
     foreignKey({
       columns: [table.listId],
@@ -697,12 +697,12 @@ export const watchpartyParticipants = pgTable(
   (table) => [
     index("idx_watchparty_participants_party").using(
       "btree",
-      table.watchpartyId.asc().nullsLast().op("uuid_ops"),
-      table.status.asc().nullsLast().op("uuid_ops"),
+      table.watchpartyId.asc().nullsLast(),
+      table.status.asc().nullsLast(),
     ),
     index("idx_watchparty_participants_user").using(
       "btree",
-      table.userId.asc().nullsLast().op("uuid_ops"),
+      table.userId.asc().nullsLast(),
     ),
     foreignKey({
       columns: [table.watchpartyId],
@@ -739,11 +739,11 @@ export const watchpartyInvitations = pgTable(
   (table) => [
     index("idx_invitations_invitee").using(
       "btree",
-      table.inviteeId.asc().nullsLast().op("uuid_ops"),
+      table.inviteeId.asc().nullsLast(),
     ),
     index("idx_invitations_token").using(
       "btree",
-      table.inviteToken.asc().nullsLast().op("text_ops"),
+      table.inviteToken.asc().nullsLast(),
     ),
     foreignKey({
       columns: [table.watchpartyId],
@@ -782,16 +782,16 @@ export const userActivityLogs = pgTable(
   (table) => [
     index("idx_activity_content").using(
       "btree",
-      table.contentId.asc().nullsLast().op("uuid_ops"),
+      table.contentId.asc().nullsLast(),
     ),
     index("idx_activity_type").using(
       "btree",
-      table.eventType.asc().nullsLast().op("text_ops"),
+      table.eventType.asc().nullsLast(),
     ),
     index("idx_activity_user").using(
       "btree",
-      table.userId.asc().nullsLast().op("timestamptz_ops"),
-      table.createdAt.desc().nullsFirst().op("timestamptz_ops"),
+      table.userId.asc().nullsLast(),
+      table.createdAt.desc().nullsFirst(),
     ),
     foreignKey({
       columns: [table.userId],
@@ -864,9 +864,9 @@ export const notifications = pgTable(
   (table) => [
     index("idx_notifications_user").using(
       "btree",
-      table.userId.asc().nullsLast().op("timestamptz_ops"),
-      table.isRead.asc().nullsLast().op("uuid_ops"),
-      table.createdAt.desc().nullsFirst().op("uuid_ops"),
+      table.userId.asc().nullsLast(),
+      table.isRead.asc().nullsLast(),
+      table.createdAt.desc().nullsFirst(),
     ),
     foreignKey({
       columns: [table.userId],
@@ -900,7 +900,7 @@ export const contentCategories = pgTable(
   (table) => [
     index("idx_content_categories_category").using(
       "btree",
-      table.categoryId.asc().nullsLast().op("uuid_ops"),
+      table.categoryId.asc().nullsLast(),
     ),
     foreignKey({
       columns: [table.contentId],
@@ -1016,7 +1016,6 @@ export const popularContent = pgView("popular_content", {
   year: integer(),
   durationMinutes: integer("duration_minutes"),
   tmdbId: integer("tmdb_id"),
-  imdbId: varchar("imdb_id", { length: 20 }),
   averageRating: numeric("average_rating", { precision: 3, scale: 2 }),
   totalRatings: integer("total_ratings"),
   totalViews: integer("total_views"),
@@ -1024,7 +1023,7 @@ export const popularContent = pgView("popular_content", {
   updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" }),
   popularityScore: numeric("popularity_score"),
 }).as(
-  sql`SELECT id, type, title, original_title, slug, synopsis, poster_url, backdrop_url, trailer_url, release_date, year, duration_minutes, tmdb_id, imdb_id, average_rating, total_ratings, total_views, created_at, updated_at, COALESCE(total_ratings::numeric * average_rating, 0::numeric) AS popularity_score FROM content c ORDER BY (COALESCE(total_ratings::numeric * average_rating, 0::numeric)) DESC`,
+  sql`SELECT id, type, title, original_title, slug, synopsis, poster_url, backdrop_url, trailer_url, release_date, year, duration_minutes, tmdb_id, average_rating, total_ratings, total_views, created_at, updated_at, COALESCE(total_ratings::numeric * average_rating, 0::numeric) AS popularity_score FROM content c ORDER BY (COALESCE(total_ratings::numeric * average_rating, 0::numeric)) DESC`,
 );
 
 export const upcomingWatchparties = pgView("upcoming_watchparties", {
