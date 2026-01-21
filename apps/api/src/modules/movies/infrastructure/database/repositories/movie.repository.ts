@@ -1,3 +1,4 @@
+import { PaginationQuery } from "../../../../../shared/schemas/base/pagination.schema";
 import { TMDBMoviesAdapter } from "../../../../movies/infrastructure/database/repositories/movie.tmdb.adapter";
 import { CreateMovieProps, Movie } from "../../../domain/entities/movie.entity";
 import { IMoviesRepository } from "../../../domain/interfaces/IMoviesRepository";
@@ -31,7 +32,7 @@ export class MovieRepository implements IMoviesRepository {
     return await Promise.all(moviesToCreate.map((movie) => this.drizzleAdapter.createMovie(movie)));
   }
 
-  async listMovies(_title?: string): Promise<Movie[]> {
+  async listMovies(_title?: string, _options?: PaginationQuery): Promise<Movie[]> {
     const tmdbMovies = await this.tmdbAdapter.listMovies();
     const moviesCreated = await this.processMovies(tmdbMovies);
     const moviesListed = await this.drizzleAdapter.listMovies()
