@@ -2,7 +2,7 @@ import { Router } from "express";
 import { RestModule } from "../../shared/infrastructure/base/modules/RestModule.js";
 import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-generator.js";
 import { ContentsController } from "./application/controllers/contents.controller.js";
-import { ContentsRepository } from "./infrastructure/database/repositories/contents.repository.js";
+import { ContentsRepository } from "./infrastructure/database/repositories/content/contents.repository.js";
 import { QueryContentUseCase } from "./application/use-cases/query-content.use-case.js";
 
 class ContentsModule extends RestModule {
