@@ -1,5 +1,8 @@
+import { logger } from "@packages/logger";
 import { TmdbService } from "../../../../../shared/services/tmdb";
+import { TMDBFetchStatusRepository } from "../../../../contents/infrastructure/database/repositories/tmdb-fetch-status/tmdb-fetch-status.repository";
 import { CreateSerieProps } from "../../../domain/entities/serie.entity";
+import { MetadataNotFoundError } from "../../../../contents/infrastructure/database/repositories/tmdb-fetch-status/errors/metadata-not-found";
 
 
 type TMDBSerie = {
@@ -47,9 +50,12 @@ type GetSerieById = {
 
 export class TMDBSeriesAdapter  {
   private tmdbService: TmdbService;
+  private tmdbFetchStatusRepository: TMDBFetchStatusRepository;
+
 
   constructor() {
     this.tmdbService = new TmdbService();
+    this.tmdbFetchStatusRepository = new TMDBFetchStatusRepository();
   }
 
   async parseResultToSerie(result: TMDBSerie): Promise<CreateSerieProps> {
@@ -76,12 +82,34 @@ export class TMDBSeriesAdapter  {
     return trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : null;
   }
 
-  async listSeries(): Promise<CreateSerieProps[]> {
-      const result = await this.tmdbService.request("GET", "discover/tv") as DiscoverSerieResult;
+  private async fetchAndParseSeries(PATH: string, page: number): Promise<CreateSerieProps[]> {
+    const result = await this.tmdbService.request("GET", PATH, { page: page.toString() }) as DiscoverSerieResult;
+    const series = await Promise.all(result.results.map(async content => await this.parseResultToSerie(content)));
+    await this.tmdbFetchStatusRepository.setPathMetadatas(PATH, { page: page });
+    return series;
+  }
 
-      const series = await Promise.all(result.results.map(async content => await this.parseResultToSerie(content)));
+  async listSeries(page: number = 1): Promise<CreateSerieProps[]> {
+    const PATH = "discover/tv";
+    try {
+      const metadata = await this.tmdbFetchStatusRepository.getPathMetadatas(PATH);
 
-      return series;
+      if (metadata.page < page) {
+        const series = await this.fetchAndParseSeries(PATH, page);
+        return series;
+      }
+
+    } catch (error) {
+      if (error instanceof MetadataNotFoundError) {
+        const series = await this.fetchAndParseSeries(PATH, page);
+        return series;
+
+      }
+
+      logger.error(`Error fetching series: ${error}`);
+    }
+
+    return [];
   }
 
 }
