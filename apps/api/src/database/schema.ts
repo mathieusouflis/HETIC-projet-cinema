@@ -21,8 +21,11 @@ import {
 import { sql } from "drizzle-orm";
 import { users as usersSchema } from "../modules/users/infrastructure/database/schemas/users.schema";
 import { contentSchema } from "../modules/contents/infrastructure/database/schemas/contents.schema";
+import { tmdbFetchStatusSchema } from "../modules/contents/infrastructure/database/schemas/tmdb-fetch-status.schema";
 
 export const users = usersSchema;
+
+export const tmdbFetchStatus = tmdbFetchStatusSchema;
 
 export const refreshTokens = pgTable(
   "refresh_tokens",
