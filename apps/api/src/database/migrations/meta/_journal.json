@@ -15,6 +15,13 @@
       "when": 1769024000916,
       "tag": "0001_fair_omega_red",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1769028416241,
+      "tag": "0002_superb_sharon_carter",
+      "breakpoints": true
     }
   ]
 }
