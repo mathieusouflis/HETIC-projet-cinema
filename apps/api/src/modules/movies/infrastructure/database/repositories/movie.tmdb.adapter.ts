@@ -1,5 +1,8 @@
+import { logger } from "@packages/logger";
 import { TmdbService } from "../../../../../shared/services/tmdb";
+import { TMDBFetchStatusRepository } from "../../../../contents/infrastructure/database/repositories/tmdb-fetch-status/tmdb-fetch-status.repository";
 import { CreateMovieProps } from "../../../domain/entities/movie.entity";
+import { MetadataNotFoundError } from "../../../../contents/infrastructure/database/repositories/tmdb-fetch-status/errors/metadata-not-found";
 
 
 type TMDBMovie = {
@@ -48,9 +51,11 @@ type GetMovieById = {
 
 export class TMDBMoviesAdapter  {
   private tmdbService: TmdbService;
+  private tmdbFetchStatusRepository: TMDBFetchStatusRepository
 
   constructor() {
     this.tmdbService = new TmdbService();
+    this.tmdbFetchStatusRepository = new TMDBFetchStatusRepository();
   }
 
   async parseResultToMovie(result: TMDBMovie): Promise<CreateMovieProps> {
@@ -77,12 +82,33 @@ export class TMDBMoviesAdapter  {
     return trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : null;
   }
 
-  async listMovies(): Promise<CreateMovieProps[]> {
-      const result = await this.tmdbService.request("GET", "discover/movie") as DiscoverMovieResult;
+  private async fetchAndParseMovies(PATH: string, page: number): Promise<CreateMovieProps[]> {
+    const result = await this.tmdbService.request("GET", PATH, { page: page.toString() }) as DiscoverMovieResult;
+    const movies = await Promise.all(result.results.map(async content => await this.parseResultToMovie(content)));
+    await this.tmdbFetchStatusRepository.setPathMetadatas(PATH, { page: page });
+    return movies;
+  }
 
-      const movies = await Promise.all(result.results.map(async content => await this.parseResultToMovie(content)));
+  async listMovies(page: number = 1): Promise<CreateMovieProps[]> {
+    const PATH = "discover/movie";
+    try {
+      const metadata = await this.tmdbFetchStatusRepository.getPathMetadatas(PATH);
 
-      return movies;
+      if (metadata.page < page) {
+        const movies = await this.fetchAndParseMovies(PATH, page);
+        return movies;
+      }
+
+    } catch (error) {
+      if (error instanceof MetadataNotFoundError) {
+        const movies = await this.fetchAndParseMovies(PATH, page);
+        return movies;
+      }
+
+      logger.error(`Error fetching movies: ${error}`);
+    }
+
+    return [];
   }
 
 }

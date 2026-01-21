@@ -13,17 +13,18 @@ export const tmdbFetchStatusSchema = pgTable(
   "tmdb_fetch_status",
   {
     id: uuid().defaultRandom().primaryKey().notNull(),
-    path: varchar({ length: 255 }).notNull(),
+    path: varchar({ length: 255 }).notNull().unique(),
     type: varchar({ length: 20 }).notNull(),
-    metadata: jsonb().notNull(),
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    metadata: jsonb().$type<Record<string, any>>().notNull(),
     createdAt: timestamp("created_at", {
       withTimezone: true,
       mode: "string",
-    }).defaultNow(),
+    }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", {
       withTimezone: true,
       mode: "string",
-    }).defaultNow(),
+    }).defaultNow().$onUpdate(() => sql`now()`).notNull(),
   },
   (table) => [
     index("idx_fetch_status_type").using(
