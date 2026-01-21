@@ -1,7 +1,7 @@
-import { MovieRepository } from "../../../../movies/infrastructure/database/repositories/movie.repository";
-import { SerieRepository } from "../../../../series/infrastructure/database/repositories/serie.repository";
-import { Content } from "../../../domain/entities/content.entity";
-import { IContentRepository } from "../../../domain/interfaces/IContentRepository";
+import { MovieRepository } from "../../../../../movies/infrastructure/database/repositories/movie.repository";
+import { SerieRepository } from "../../../../../series/infrastructure/database/repositories/serie.repository";
+import { Content } from "../../../../domain/entities/content.entity";
+import { IContentRepository } from "../../../../domain/interfaces/IContentRepository";
 
 export class ContentsRepository implements IContentRepository {
 
