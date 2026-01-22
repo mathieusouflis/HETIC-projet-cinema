@@ -23,6 +23,11 @@ export class Serie extends Content {
   }
 
 }
+
+export type SerieProps = ContentRow & {
+  type: "serie";
+};
+
 export type CreateSerieProps = {
   type: "serie";
 } & NewContentRow;
