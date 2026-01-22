@@ -1,44 +1,56 @@
-import { PaginationQuery } from "../../../../../shared/schemas/base/pagination.schema";
-import { TMDBMoviesAdapter } from "../../../../movies/infrastructure/database/repositories/movie.tmdb.adapter";
-import { CreateMovieProps, Movie } from "../../../domain/entities/movie.entity";
+import { BaseContentRepository } from "../../../../contents/infrastructure/database/repositories/base/base-content.repository";
+import { Movie, CreateMovieProps } from "../../../domain/entities/movie.entity";
 import { IMoviesRepository } from "../../../domain/interfaces/IMoviesRepository";
+import { TMDBMoviesAdapter } from "./movie.tmdb.adapter";
 import { DrizzleMovieAdapter } from "./movie.drizzle.adapter";
+import { PaginationQuery } from "../../../../../shared/schemas/base/pagination.schema";
 
-export class MovieRepository implements IMoviesRepository {
-
-  private tmdbAdapter: TMDBMoviesAdapter;
-  private drizzleAdapter: DrizzleMovieAdapter;
+/**
+ * Movie Repository
+ * Handles movie-specific business logic
+ */
+export class MovieRepository
+  extends BaseContentRepository<Movie, CreateMovieProps, TMDBMoviesAdapter, DrizzleMovieAdapter>
+  implements IMoviesRepository
+{
+  protected contentTypeName = "movies";
 
   constructor() {
-    this.tmdbAdapter = new TMDBMoviesAdapter()
-    this.drizzleAdapter = new DrizzleMovieAdapter()
+    super(new TMDBMoviesAdapter(), new DrizzleMovieAdapter());
   }
 
+  // Implement interface methods with proper naming
   async createMovie(content: CreateMovieProps): Promise<Movie> {
-    const createdContent = await this.drizzleAdapter.createMovie(content)
-    return createdContent;
+    return this.create(content);
   }
 
-  async getMovieById(_id: string): Promise<Movie | null> {
-    return null;
+  async getMovieById(id: string): Promise<Movie | null> {
+    return this.getById(id);
   }
 
-  async processMovies(tmdbMovies: CreateMovieProps[]): Promise<Movie[]> {
-    const tmdbMovieIds = tmdbMovies.map((movie) => movie.tmdbId).filter((id) => id !== null && id !== undefined);
-
-    const tmdbMoviesWithStatus = await this.drizzleAdapter.checkMovieExistsInDb(tmdbMovieIds);
-    const moviesToCreate = tmdbMovies.filter((movie) => movie.tmdbId && !tmdbMoviesWithStatus[movie.tmdbId]);
-
-    return await Promise.all(moviesToCreate.map((movie) => this.drizzleAdapter.createMovie(movie)));
+  async listMovies(
+    title?: string,
+    country?: string,
+    categories?: string[],
+    options?: PaginationQuery
+  ): Promise<Movie[]> {
+    return this.list(title, country, categories, options);
   }
 
-  async listMovies(_title?: string, _options?: PaginationQuery): Promise<Movie[]> {
-    const tmdbMovies = await this.tmdbAdapter.listMovies();
-    const moviesCreated = await this.processMovies(tmdbMovies);
-    const moviesListed = await this.drizzleAdapter.listMovies()
-
-    return [...moviesCreated, ...moviesListed];
-
+  async searchMovies(query: string, options?: PaginationQuery): Promise<Movie[]> {
+    return this.search(query, options);
   }
 
+  // Additional movie-specific methods can be added here
+  async updateMovie(id: string, props: Partial<CreateMovieProps>): Promise<Movie> {
+    return this.update(id, props);
+  }
+
+  async deleteMovie(id: string): Promise<void> {
+    return this.delete(id);
+  }
+
+  async getMovieCount(title?: string, country?: string, categories?: string[]): Promise<number> {
+    return this.getCount(title, country, categories);
+  }
 }

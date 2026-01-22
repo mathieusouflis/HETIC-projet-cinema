@@ -12,5 +12,5 @@ export type GETContentsContentType =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GETContentsContentType = {
   movie: "movie",
-  series: "series",
+  serie: "serie",
 } as const;

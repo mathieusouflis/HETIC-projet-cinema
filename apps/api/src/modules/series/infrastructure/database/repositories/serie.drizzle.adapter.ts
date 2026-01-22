@@ -1,55 +1,37 @@
-import { eq, or } from "drizzle-orm";
-import { db } from "../../../../../database";
-import { content as contentTable } from "../../../../../database/schema";
-import { CreateSerieProps, Serie } from "../../../domain/entities/serie.entity";
+import { PaginationQuery } from "../../../../../shared/schemas/base/pagination.schema";
+import { BaseDrizzleAdapter } from "../../../../contents/infrastructure/database/repositories/base/base-drizzle.adapter";
+import { CreateSerieProps, Serie, SerieProps } from "../../../domain/entities/serie.entity";
 
-export class DrizzleSerieAdapter  {
-  async getContentById(_id: string): Promise<Serie | null> {
-    return null;
+/**
+ * Drizzle Serie Adapter
+ * Handles database operations for TV series
+ */
+export class DrizzleSerieAdapter extends BaseDrizzleAdapter<Serie, CreateSerieProps> {
+  protected contentType = "serie" as const;
+
+  /**
+   * Create a Serie entity from database row
+   */
+  protected createEntity(row: SerieProps): Serie {
+    return new Serie(row);
   }
 
-  async listSeries(title?: string, tmdbIds?: number[]): Promise<Serie[]> {
-    const query = db.select().from(contentTable);
-    query.where(eq(contentTable.type, "serie"));
+  // Convenience method aliases for backward compatibility
+  async createSerie(serie: CreateSerieProps): Promise<Serie> {
+    return this.createContent(serie);
+  }
 
-    if (title) {
-        query.where(eq(contentTable.title, title));
-    }
-
-    if (tmdbIds && tmdbIds.length > 0) {
-      query.where(or(...tmdbIds.map((id) => eq(contentTable.tmdbId, id))));
-    }
-
-    const result = await query;
-
-    return result.map((row) => new Serie(row));
+  async listSeries(
+    title?: string,
+    country?: string,
+    categories?: string[],
+    tmdbIds?: number[],
+    options?: PaginationQuery
+  ): Promise<Serie[]> {
+    return this.listContent(title, country, categories, tmdbIds, options);
   }
 
   async checkSerieExistsInDb<Id extends number>(tmdbIds: Id[]): Promise<Record<Id, boolean>> {
-      const result = await this.listSeries(undefined, tmdbIds);
-
-      const seriesStatusInDatabase: Record<Id, boolean> = tmdbIds.reduce((acc, id) => {
-          acc[id] = result.some((serie) => serie.tmdbId === id);
-          return acc;
-      }, {} as Record<Id, boolean>);
-
-      return seriesStatusInDatabase;
+    return this.checkContentExistsInDb(tmdbIds);
   }
-
-  async createSerie(serie: CreateSerieProps): Promise<Serie> {
-    const result = await db.insert(contentTable).values(serie).returning();
-
-    if (!result || result.length === 0) {
-      throw new Error('Serie not created');
-    }
-
-    const createdContent = result[0];
-
-    if (!createdContent) {
-      throw new Error('Unexpected error: Created serie is undefined');
-    }
-
-    return new Serie(createdContent);
-  }
-
 }

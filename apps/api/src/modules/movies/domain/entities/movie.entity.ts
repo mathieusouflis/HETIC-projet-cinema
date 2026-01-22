@@ -23,6 +23,11 @@ export class Movie extends Content {
   }
 
 }
+
+export type MovieProps = ContentRow & {
+  type: "movie";
+};
+
 export type CreateMovieProps = NewContentRow & {
   type: "movie";
 };
