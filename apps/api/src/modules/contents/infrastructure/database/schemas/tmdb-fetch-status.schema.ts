@@ -17,6 +17,10 @@ export const tmdbFetchStatusSchema = pgTable(
     type: varchar({ length: 20 }).notNull(),
     //eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata: jsonb().$type<Record<string, any>>().notNull(),
+    expiresAt: timestamp("expires_at", {
+      withTimezone: true,
+      mode: "string",
+    }),
     createdAt: timestamp("created_at", {
       withTimezone: true,
       mode: "string",
@@ -33,7 +37,11 @@ export const tmdbFetchStatusSchema = pgTable(
     ),
     check(
       "valid_type",
-      sql`(type)::text = ANY ((ARRAY['discover'::character varying])::text[])`,
+      sql`(type)::text = ANY ((ARRAY['discover'::character varying, 'search'::character varying])::text[])`,
+    ),
+    check(
+      "remove_expired",
+      sql`expires_at > now()`,
     ),
   ],
 );
