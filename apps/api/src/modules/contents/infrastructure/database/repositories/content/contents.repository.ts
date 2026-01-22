@@ -1,3 +1,4 @@
+import { PaginationQuery } from "../../../../../../shared/schemas/base/pagination.schema";
 import { MovieRepository } from "../../../../../movies/infrastructure/database/repositories/movie.repository";
 import { SerieRepository } from "../../../../../series/infrastructure/database/repositories/serie.repository";
 import { Content } from "../../../../domain/entities/content.entity";
@@ -13,18 +14,36 @@ export class ContentsRepository implements IContentRepository {
     this.seriesRepository = new SerieRepository()
   }
 
-  async listContents(type?: string, _title?: string): Promise<Content[]> {
+  async listContents(type?: string, title?: string, country?: string, categories?: string[], options?: PaginationQuery): Promise<Content[]> {
     switch (type) {
       case "movie": {
-        return this.moviesRepository.listMovies();
+        return this.moviesRepository.listMovies(title, country, categories, options);
       }
       case "serie": {
-        return this.seriesRepository.listSeries();
+        return this.seriesRepository.listSeries(title, country, categories, options);
       }
       default: {
         const [movies, series] = await Promise.all([
-          this.moviesRepository.listMovies(),
-          this.seriesRepository.listSeries(),
+          this.moviesRepository.listMovies(title, country, categories, options),
+          this.seriesRepository.listSeries(title, country, categories, options),
+        ]);
+        return [...movies, ...series];
+      }
+    }
+  }
+
+  async searchContents(query: string, type?: string, options?: PaginationQuery): Promise<Content[]> {
+    switch (type) {
+      case "movie": {
+        return this.moviesRepository.searchMovies(query, options);
+      }
+      case "serie": {
+        return this.seriesRepository.searchSeries(query, options);
+      }
+      default: {
+        const [movies, series] = await Promise.all([
+          this.moviesRepository.searchMovies(query, options),
+          this.seriesRepository.searchSeries(query, options),
         ]);
         return [...movies, ...series];
       }

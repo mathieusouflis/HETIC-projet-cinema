@@ -3,7 +3,7 @@ import { optionalOffsetAndPagePaginationQuerySchema } from "../../../../../share
 
 export const queryContentRequestSchema = z.object({
   title: z.string().optional(),
-  contentType: z.enum(["movie", "series"]).optional(),
+  contentType: z.enum(["movie", "serie"]).optional(),
   synopsis: z.string().optional(),
   releaseDate: z.date().optional(),
   year: z.number().optional(),
