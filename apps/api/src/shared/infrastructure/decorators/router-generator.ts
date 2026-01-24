@@ -69,6 +69,10 @@ export class DecoratorRouter {
     return this.router;
   }
 
+  private parsePath(path: string): string {
+    return path.replaceAll("{", ":").replaceAll("}", "");
+  }
+
   private registerRoute(
     controllerInstance: BaseController,
     route: RouteMetadata,
@@ -146,7 +150,7 @@ export class DecoratorRouter {
 
     middlewares.push(handler as RequestHandler);
 
-    this.router[route.method](fullPath, ...middlewares);
+    this.router[route.method](this.parsePath(fullPath), ...middlewares);
 
     this.registerOpenAPIRoute(
       route,
