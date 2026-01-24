@@ -4,6 +4,7 @@ import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-g
 import { ContentsController } from "./application/controllers/contents.controller.js";
 import { ContentsRepository } from "./infrastructure/database/repositories/content/contents.repository.js";
 import { QueryContentUseCase } from "./application/use-cases/query-content.use-case.js";
+import { GetContentByIdUseCase } from "./application/use-cases/get-content-by-id.use-case.js";
 
 class ContentsModule extends RestModule {
   // ============================================
@@ -18,6 +19,7 @@ class ContentsModule extends RestModule {
   // ============================================
 
   private readonly queryContentsUseCase: QueryContentUseCase;
+  private readonly getContentByIdUseCase: GetContentByIdUseCase;
 
   // ============================================
   // Presentation Layer (Controller & Router)
@@ -39,7 +41,8 @@ class ContentsModule extends RestModule {
     this.repository = new ContentsRepository()
 
     this.queryContentsUseCase = new QueryContentUseCase(this.repository)
-    this.controller = new ContentsController(this.queryContentsUseCase);
+    this.getContentByIdUseCase = new GetContentByIdUseCase(this.repository)
+    this.controller = new ContentsController(this.queryContentsUseCase, this.getContentByIdUseCase);
 
 
     this.decoratorRouter = new DecoratorRouter();

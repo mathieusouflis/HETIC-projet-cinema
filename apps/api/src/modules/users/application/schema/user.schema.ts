@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const userSchema = z.object({
-  id: z.string().uuid(),
-  email: z.string().email(),
+  id: z.uuid(),
+  email: z.email(),
   username: z.string().min(3).max(30),
   createdAt: z.coerce.date().or(z.string().datetime()),
   updatedAt: z.coerce.date().or(z.string().datetime()),
@@ -13,21 +13,21 @@ export const userWithProfileSchema = userSchema.extend({
 });
 
 export const minimalUserSchema = z.object({
-  id: z.string().uuid(),
+  id: z.uuid(),
   username: z.string(),
-  avatarUrl: z.string().url().nullable().optional(),
+  avatarUrl: z.url().nullable().optional(),
 });
 
 export const publicUserSchema = z.object({
-  id: z.string().uuid(),
+  id: z.uuid(),
   username: z.string(),
   avatarUrl: z.string().url().nullable().optional(),
   createdAt: z.coerce.date().or(z.string().datetime()),
 });
 
 export const userProfileSchema = z.object({
-  userId: z.string().uuid(),
-  email: z.string().email(),
+  userId: z.uuid(),
+  email: z.email(),
   username: z.string().optional(),
 });
 
