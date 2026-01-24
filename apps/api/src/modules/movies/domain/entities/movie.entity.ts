@@ -4,6 +4,8 @@ import { ContentRow, NewContentRow } from "../../../contents/infrastructure/data
 
 export class Movie extends Content {
 
+  public readonly type = "movie";
+
   constructor(props: ContentRow) {
     super({ ...props, type: "movie" });
   }
@@ -20,6 +22,14 @@ export class Movie extends Content {
    */
   public isSeries(): boolean {
     return false;
+  }
+
+  public toJSON() {
+    const response = super.toJSON()
+    return {
+      ...response,
+      type: "movie",
+    } as const
   }
 
 }

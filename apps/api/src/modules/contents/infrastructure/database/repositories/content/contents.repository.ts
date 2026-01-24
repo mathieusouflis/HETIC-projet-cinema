@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { db } from "../../../../../../database";
 import { content } from "../../../../../../database/schema";
 import { PaginationQuery } from "../../../../../../shared/schemas/base/pagination.schema";
-import { MovieRepository } from "../../../../../movies/infrastructure/database/repositories/movie.repository";
+import { MoviesRepository } from "../../../../../movies/infrastructure/database/repositories/movie.repository";
 import { SerieRepository } from "../../../../../series/infrastructure/database/repositories/serie.repository";
 import { Content } from "../../../../domain/entities/content.entity";
 import { IContentRepository } from "../../../../domain/interfaces/IContentRepository";
@@ -10,11 +10,11 @@ import { logger } from "@packages/logger";
 
 export class ContentsRepository implements IContentRepository {
 
-  private moviesRepository: MovieRepository;
+  private moviesRepository: MoviesRepository;
   private seriesRepository: SerieRepository;
 
   constructor() {
-    this.moviesRepository = new MovieRepository()
+    this.moviesRepository = new MoviesRepository()
     this.seriesRepository = new SerieRepository()
   }
 
