@@ -28,6 +28,7 @@
     "node": ">=18"
   },
   "dependencies": {
+    "@tanstack/react-router": "^1.154.12",
     "lint-staged": "^16.2.7"
   }
 }
