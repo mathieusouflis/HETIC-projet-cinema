@@ -9,17 +9,16 @@ import { PaginationQuery } from "../../../../../shared/schemas/base/pagination.s
  * Movie Repository
  * Handles movie-specific business logic
  */
-export class MovieRepository
+export class MoviesRepository
   extends BaseContentRepository<Movie, CreateMovieProps, TMDBMoviesAdapter, DrizzleMovieAdapter>
   implements IMoviesRepository
 {
-  protected contentTypeName = "movies";
+  protected contentTypeName = "movie";
 
   constructor() {
     super(new TMDBMoviesAdapter(), new DrizzleMovieAdapter());
   }
 
-  // Implement interface methods with proper naming
   async createMovie(content: CreateMovieProps): Promise<Movie> {
     return this.create(content);
   }
@@ -41,7 +40,6 @@ export class MovieRepository
     return this.search(query, options);
   }
 
-  // Additional movie-specific methods can be added here
   async updateMovie(id: string, props: Partial<CreateMovieProps>): Promise<Movie> {
     return this.update(id, props);
   }

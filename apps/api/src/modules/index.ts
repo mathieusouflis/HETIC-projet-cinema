@@ -14,11 +14,13 @@ import { OpenAPISpecAggregator } from "../shared/infrastructure/openapi/openapi-
 import fs from "fs";
 import { logger } from "@packages/logger";
 import { contentsModule } from "./contents/contents.module.js";
+import { moviesModule } from "./movies/movie.module.js";
 
 function registerModules(): void {
   moduleRegistry.register("auth", authModule);
   moduleRegistry.register("users", usersModule);
   moduleRegistry.register("contents", contentsModule);
+  moduleRegistry.register("movies", moviesModule)
 }
 
 function generateOpenAPISpec() {
