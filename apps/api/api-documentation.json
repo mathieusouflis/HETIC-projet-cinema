@@ -1848,115 +1848,289 @@
         ],
         "responses": {
           "200": {
+            "description": "Contents retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "movie",
+                              "serie"
+                            ]
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "originalTitle": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "slug": {
+                            "type": "string"
+                          },
+                          "synopsis": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "posterUrl": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "uri"
+                          },
+                          "backdropUrl": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "uri"
+                          },
+                          "trailerUrl": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "uri"
+                          },
+                          "releaseDate": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "date-time"
+                          },
+                          "year": {
+                            "type": "integer",
+                            "nullable": true,
+                            "minimum": 1800
+                          },
+                          "durationMinutes": {
+                            "type": "integer",
+                            "nullable": true,
+                            "minimum": 0
+                          },
+                          "tmdbId": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "averageRating": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 10
+                          },
+                          "totalRatings": {
+                            "type": "integer",
+                            "minimum": 0
+                          },
+                          "totalViews": {
+                            "type": "integer",
+                            "minimum": 0
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "type",
+                          "title",
+                          "originalTitle",
+                          "synopsis",
+                          "posterUrl",
+                          "backdropUrl",
+                          "trailerUrl",
+                          "releaseDate",
+                          "year",
+                          "durationMinutes",
+                          "tmdbId",
+                          "averageRating",
+                          "totalRatings",
+                          "totalViews",
+                          "createdAt",
+                          "updatedAt"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/contents/:id": {
+      "get": {
+        "operationId": "GET/contents/:id",
+        "description": "Get content by id",
+        "tags": [
+          "Contents"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
             "description": "Content retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "format": "uuid"
-                      },
-                      "type": {
-                        "type": "string",
-                        "enum": [
-                          "movie",
-                          "serie"
-                        ]
-                      },
-                      "title": {
-                        "type": "string"
-                      },
-                      "originalTitle": {
-                        "type": "string",
-                        "nullable": true
-                      },
-                      "slug": {
-                        "type": "string"
-                      },
-                      "synopsis": {
-                        "type": "string",
-                        "nullable": true
-                      },
-                      "posterUrl": {
-                        "type": "string",
-                        "nullable": true,
-                        "format": "uri"
-                      },
-                      "backdropUrl": {
-                        "type": "string",
-                        "nullable": true,
-                        "format": "uri"
-                      },
-                      "trailerUrl": {
-                        "type": "string",
-                        "nullable": true,
-                        "format": "uri"
-                      },
-                      "releaseDate": {
-                        "type": "string",
-                        "nullable": true,
-                        "format": "date-time"
-                      },
-                      "year": {
-                        "type": "integer",
-                        "nullable": true,
-                        "minimum": 1800
-                      },
-                      "durationMinutes": {
-                        "type": "integer",
-                        "nullable": true,
-                        "minimum": 0
-                      },
-                      "tmdbId": {
-                        "type": "integer",
-                        "nullable": true
-                      },
-                      "averageRating": {
-                        "type": "number",
-                        "minimum": 0,
-                        "maximum": 10
-                      },
-                      "totalRatings": {
-                        "type": "integer",
-                        "minimum": 0
-                      },
-                      "totalViews": {
-                        "type": "integer",
-                        "minimum": 0
-                      },
-                      "createdAt": {
-                        "type": "string",
-                        "format": "date-time"
-                      },
-                      "updatedAt": {
-                        "type": "string",
-                        "format": "date-time"
-                      }
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
                     },
-                    "required": [
-                      "id",
-                      "type",
-                      "title",
-                      "originalTitle",
-                      "synopsis",
-                      "posterUrl",
-                      "backdropUrl",
-                      "trailerUrl",
-                      "releaseDate",
-                      "year",
-                      "durationMinutes",
-                      "tmdbId",
-                      "averageRating",
-                      "totalRatings",
-                      "totalViews",
-                      "createdAt",
-                      "updatedAt"
-                    ]
-                  }
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "movie",
+                        "serie"
+                      ]
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "originalTitle": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "slug": {
+                      "type": "string"
+                    },
+                    "synopsis": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "posterUrl": {
+                      "type": "string",
+                      "nullable": true,
+                      "format": "uri"
+                    },
+                    "backdropUrl": {
+                      "type": "string",
+                      "nullable": true,
+                      "format": "uri"
+                    },
+                    "trailerUrl": {
+                      "type": "string",
+                      "nullable": true,
+                      "format": "uri"
+                    },
+                    "releaseDate": {
+                      "type": "string",
+                      "nullable": true,
+                      "format": "date-time"
+                    },
+                    "year": {
+                      "type": "integer",
+                      "nullable": true,
+                      "minimum": 1800
+                    },
+                    "durationMinutes": {
+                      "type": "integer",
+                      "nullable": true,
+                      "minimum": 0
+                    },
+                    "tmdbId": {
+                      "type": "integer",
+                      "nullable": true
+                    },
+                    "averageRating": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 10
+                    },
+                    "totalRatings": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "totalViews": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "type",
+                    "title",
+                    "originalTitle",
+                    "synopsis",
+                    "posterUrl",
+                    "backdropUrl",
+                    "trailerUrl",
+                    "releaseDate",
+                    "year",
+                    "durationMinutes",
+                    "tmdbId",
+                    "averageRating",
+                    "totalRatings",
+                    "totalViews",
+                    "createdAt",
+                    "updatedAt"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Content not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "error"
+                  ]
                 }
               }
             }
