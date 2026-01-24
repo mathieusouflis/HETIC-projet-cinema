@@ -1,9 +1,8 @@
 import { z } from "zod";
 
 export const uuidSchema = z
-  .string("ID must be a string")
-  .nonempty("ID is required")
-  .uuid("Invalid ID format");
+  .uuid({ message: "Invalid ID format", version: "v4" })
+  .nonempty("ID is required");
 
 export const uuidSchemaOptional = uuidSchema.optional();
 
