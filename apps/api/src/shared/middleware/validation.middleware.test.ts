@@ -318,7 +318,7 @@ describe("validateRequest", () => {
   describe("params validation", () => {
     it("should validate valid URL parameters", () => {
       const schema = z.object({
-        id: z.string().uuid(),
+        id: z.uuid(),
       });
 
       req.params = {
@@ -336,7 +336,7 @@ describe("validateRequest", () => {
 
     it("should fail validation for invalid URL parameters", () => {
       const schema = z.object({
-        id: z.string().uuid(),
+        id: z.uuid(),
       });
 
       req.params = {
@@ -501,7 +501,7 @@ describe("validateMultiple", () => {
         page: z.string().regex(/^\d+$/),
       }),
       params: z.object({
-        id: z.string().uuid(),
+        id: z.uuid(),
       }),
     };
 
