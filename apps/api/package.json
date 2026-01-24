@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
-    "generate-sdk": "npx orval",
+    "generate-sdk": "rm -rf ../../packages/api-sdk/src/generated && pnpm orval",
     "build": "tsc",
     "build:watch": "pnpm build --watch",
     "check-types": "tsc --noEmit",
