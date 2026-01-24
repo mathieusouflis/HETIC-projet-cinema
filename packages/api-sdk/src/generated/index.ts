@@ -13,6 +13,9 @@ import type {
   GETContents200,
   GETContentsId200,
   GETContentsParams,
+  GETMovies200,
+  GETMoviesId200,
+  GETMoviesParams,
   GETUsers200,
   GETUsersId200,
   GETUsersMe200,
@@ -34,9 +37,10 @@ import type {
  * @summary Get user by ID
  */
 export const gETUsersId = <TData = AxiosResponse<GETUsersId200>>(
+  id: string,
   options?: AxiosRequestConfig,
 ): Promise<TData> => {
-  return axios.get(`/users/:id`, options);
+  return axios.get(`/users/${id}`, options);
 };
 
 /**
@@ -44,10 +48,11 @@ export const gETUsersId = <TData = AxiosResponse<GETUsersId200>>(
  * @summary Update user profile
  */
 export const pATCHUsersId = <TData = AxiosResponse<PATCHUsersId200>>(
+  id: string,
   pATCHUsersIdBody: PATCHUsersIdBody,
   options?: AxiosRequestConfig,
 ): Promise<TData> => {
-  return axios.patch(`/users/:id`, pATCHUsersIdBody, options);
+  return axios.patch(`/users/${id}`, pATCHUsersIdBody, options);
 };
 
 /**
@@ -55,9 +60,10 @@ export const pATCHUsersId = <TData = AxiosResponse<PATCHUsersId200>>(
  * @summary Delete user
  */
 export const dELETEUsersId = <TData = AxiosResponse<void>>(
+  id: string,
   options?: AxiosRequestConfig,
 ): Promise<TData> => {
-  return axios.delete(`/users/:id`, options);
+  return axios.delete(`/users/${id}`, options);
 };
 
 /**
@@ -164,9 +170,33 @@ export const gETContents = <TData = AxiosResponse<GETContents200>>(
  * Get content by id
  */
 export const gETContentsId = <TData = AxiosResponse<GETContentsId200>>(
+  id: string,
   options?: AxiosRequestConfig,
 ): Promise<TData> => {
-  return axios.get(`/contents/:id`, options);
+  return axios.get(`/contents/${id}`, options);
+};
+
+/**
+ * List movies by type
+ */
+export const gETMovies = <TData = AxiosResponse<GETMovies200>>(
+  params?: GETMoviesParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.get(`/movies/`, {
+    ...options,
+    params: { ...params, ...options?.params },
+  });
+};
+
+/**
+ * Get movie by id
+ */
+export const gETMoviesId = <TData = AxiosResponse<GETMoviesId200>>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.get(`/movies/${id}`, options);
 };
 
 export type GETUsersIdResult = AxiosResponse<GETUsersId200>;
@@ -182,3 +212,5 @@ export type POSTAuthLogoutResult = AxiosResponse<POSTAuthLogout200>;
 export type GETAuthMeResult = AxiosResponse<GETAuthMe200>;
 export type GETContentsResult = AxiosResponse<GETContents200>;
 export type GETContentsIdResult = AxiosResponse<GETContentsId200>;
+export type GETMoviesResult = AxiosResponse<GETMovies200>;
+export type GETMoviesIdResult = AxiosResponse<GETMoviesId200>;
