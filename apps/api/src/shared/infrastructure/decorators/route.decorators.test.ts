@@ -47,7 +47,7 @@ describe("Route Decorators tests", () => {
       expect(routes).toHaveLength(1);
       expect(routes[0]).toMatchObject({
         method: "get",
-        path: "/users/:id",
+        path: "/users/{id}",
         methodName: "getUser",
         summary: "Get user by ID",
         description: "Retrieves a single user",
@@ -152,7 +152,7 @@ describe("Route Decorators tests", () => {
       expect(routes).toHaveLength(1);
       expect(routes[0]).toMatchObject({
         method: "put",
-        path: "/users/:id",
+        path: "/users/{id}",
         methodName: "updateUser",
       });
     });
@@ -167,7 +167,7 @@ describe("Route Decorators tests", () => {
 
       expect(routes[0]).toMatchObject({
         method: "put",
-        path: "/users/:id",
+        path: "/users/{id}",
         summary: "Update user",
       });
     });
@@ -185,7 +185,7 @@ describe("Route Decorators tests", () => {
       expect(routes).toHaveLength(1);
       expect(routes[0]).toMatchObject({
         method: "patch",
-        path: "/users/:id",
+        path: "/users/{id}",
         methodName: "patchUser",
       });
     });
@@ -200,7 +200,7 @@ describe("Route Decorators tests", () => {
 
       expect(routes[0]).toMatchObject({
         method: "patch",
-        path: "/users/:id",
+        path: "/users/{id}",
         summary: "Partially update user",
       });
     });
@@ -218,7 +218,7 @@ describe("Route Decorators tests", () => {
       expect(routes).toHaveLength(1);
       expect(routes[0]).toMatchObject({
         method: "delete",
-        path: "/users/:id",
+        path: "/users/{id}",
         methodName: "deleteUser",
       });
     });
@@ -237,7 +237,7 @@ describe("Route Decorators tests", () => {
 
       expect(routes[0]).toMatchObject({
         method: "delete",
-        path: "/users/:id",
+        path: "/users/{id}",
         summary: "Delete user",
         description: "Removes a user",
       });
@@ -455,7 +455,7 @@ describe("Route Decorators tests", () => {
 
       const routes = MetadataStorage.getRoutes(TestController.prototype);
 
-      expect(routes[0]?.path).toBe("/users/:id/posts/:postId");
+      expect(routes[0]?.path).toBe("/users/{id}/posts/{postId}");
     });
 
     it("should handle routes with query parameters in path", () => {
