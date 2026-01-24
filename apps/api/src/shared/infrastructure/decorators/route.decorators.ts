@@ -11,6 +11,10 @@ interface RouteOptions {
   description?: string;
 }
 
+function parsePath(path: string): string {
+  return path.split("/").map(part => part.startsWith(":") ? `{${part.slice(1)}}` : part).join("/");
+}
+
 function createRouteDecorator(method: HttpMethod) {
   return function (pathOrOptions?: string | RouteOptions) {
     return function (
@@ -23,9 +27,9 @@ function createRouteDecorator(method: HttpMethod) {
       let description: string | undefined;
 
       if (typeof pathOrOptions === "string") {
-        path = pathOrOptions;
+        path = parsePath(pathOrOptions);
       } else if (pathOrOptions) {
-        path = pathOrOptions.path || "";
+        path = parsePath(pathOrOptions.path || "");
         summary = pathOrOptions.summary;
         description = pathOrOptions.description;
       }
