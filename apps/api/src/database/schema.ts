@@ -22,6 +22,7 @@ import { sql } from "drizzle-orm";
 import { users as usersSchema } from "../modules/users/infrastructure/database/schemas/users.schema";
 import { contentSchema } from "../modules/contents/infrastructure/database/schemas/contents.schema";
 import { tmdbFetchStatusSchema } from "../modules/contents/infrastructure/database/schemas/tmdb-fetch-status.schema";
+import { userWatchlistSchema } from "../modules/user-watchlist/infrastructure/schemas/user-watchlist.schema";
 
 export const users = usersSchema;
 
@@ -572,48 +573,7 @@ export const reviews = pgTable(
   ],
 );
 
-export const userWatchlist = pgTable(
-  "user_watchlist",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    userId: uuid("user_id").notNull(),
-    contentId: uuid("content_id").notNull(),
-    status: varchar({ length: 20 }).default("to_watch").notNull(),
-    currentSeason: integer("current_season"),
-    currentEpisode: integer("current_episode"),
-    addedAt: timestamp("added_at", {
-      withTimezone: true,
-      mode: "string",
-    }).defaultNow(),
-    startedAt: timestamp("started_at", { withTimezone: true, mode: "string" }),
-    completedAt: timestamp("completed_at", {
-      withTimezone: true,
-      mode: "string",
-    }),
-  },
-  (table) => [
-    index("idx_watchlist_content").using(
-      "btree",
-      table.contentId.asc().nullsLast(),
-    ),
-    index("idx_watchlist_user").using(
-      "btree",
-      table.userId.asc().nullsLast(),
-      table.status.asc().nullsLast(),
-    ),
-    foreignKey({
-      columns: [table.userId],
-      foreignColumns: [users.id],
-      name: "user_watchlist_user_id_fkey",
-    }).onDelete("cascade"),
-    foreignKey({
-      columns: [table.contentId],
-      foreignColumns: [content.id],
-      name: "user_watchlist_content_id_fkey",
-    }).onDelete("cascade"),
-    unique("unique_watchlist_entry").on(table.userId, table.contentId),
-  ],
-);
+export const userWatchlist = userWatchlistSchema
 
 export const lists = pgTable(
   "lists",
