@@ -4,6 +4,8 @@ import { ContentRow, NewContentRow } from "../../../contents/infrastructure/data
 
 export class Serie extends Content {
 
+  public readonly type = "serie";
+
   constructor(props: ContentRow) {
     super({ ...props, type: "serie" });
   }
@@ -20,6 +22,14 @@ export class Serie extends Content {
    */
   public isSeries(): boolean {
     return true;
+  }
+
+  public toJSON() {
+    const response = super.toJSON()
+    return {
+      ...response,
+      type: "serie",
+    } as const
   }
 
 }
