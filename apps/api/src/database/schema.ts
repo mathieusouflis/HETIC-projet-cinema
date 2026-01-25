@@ -22,7 +22,7 @@ import { sql } from "drizzle-orm";
 import { users as usersSchema } from "../modules/users/infrastructure/database/schemas/users.schema";
 import { contentSchema } from "../modules/contents/infrastructure/database/schemas/contents.schema";
 import { tmdbFetchStatusSchema } from "../modules/contents/infrastructure/database/schemas/tmdb-fetch-status.schema";
-import { userWatchlistSchema, watchlistStatusEnum as watchlistCustomEnumImported } from "../modules/user-watchlist/infrastructure/schemas/user-watchlist.schema";
+import { watchlistSchema, watchlistStatusEnum as watchlistCustomEnumImported } from "../modules/watchlist/infrastructure/schemas/watchlist.schema";
 
 export const users = usersSchema;
 
@@ -574,7 +574,7 @@ export const reviews = pgTable(
 );
 
 export const watchlistStatusEnum = watchlistCustomEnumImported
-export const userWatchlist = userWatchlistSchema
+export const watchlist = watchlistSchema
 
 export const lists = pgTable(
   "lists",

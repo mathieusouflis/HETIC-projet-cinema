@@ -2885,6 +2885,131 @@
           }
         }
       }
+    },
+    "/watchlist/": {
+      "get": {
+        "operationId": "GET/watchlist/",
+        "description": "Query watchlist",
+        "tags": [
+          "Watchlist"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "completed",
+                "dropped",
+                "not_interested",
+                "plan_to_watch",
+                "undecided",
+                "watching"
+              ]
+            },
+            "required": false,
+            "name": "status",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Watchlist retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "format": "uuid"
+                          },
+                          "userId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "format": "uuid"
+                          },
+                          "contentId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "format": "uuid"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "completed",
+                              "dropped",
+                              "not_interested",
+                              "plan_to_watch",
+                              "undecided",
+                              "watching"
+                            ]
+                          },
+                          "currentEpisode": {
+                            "type": "number",
+                            "nullable": true,
+                            "minimum": 1
+                          },
+                          "currentSeason": {
+                            "type": "number",
+                            "nullable": true,
+                            "minimum": 1
+                          },
+                          "addedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "startedAt": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "date-time"
+                          },
+                          "completedAt": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "date-time"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "userId",
+                          "contentId",
+                          "status",
+                          "currentEpisode",
+                          "currentSeason",
+                          "addedAt",
+                          "startedAt",
+                          "completedAt"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

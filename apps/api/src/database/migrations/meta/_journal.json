@@ -36,6 +36,13 @@
       "when": 1769352997292,
       "tag": "0004_neat_iron_lad",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1769371902748,
+      "tag": "0005_violet_energizer",
+      "breakpoints": true
     }
   ]
 }

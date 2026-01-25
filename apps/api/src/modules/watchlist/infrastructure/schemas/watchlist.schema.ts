@@ -1,13 +1,16 @@
-import { index, unique, foreignKey, integer, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { index, unique, foreignKey, integer, pgTable, timestamp, uuid, pgEnum } from "drizzle-orm/pg-core";
 import { content, users } from "../../../../database/schema";
 
-export const userWatchlistSchema = pgTable(
-  "user_watchlist",
+
+export const watchlistStatusEnum = pgEnum("watchlistStatus", ["plan_to_watch", "watching", "completed", "dropped", "undecided", "not_interested"])
+
+export const watchlistSchema = pgTable(
+  "watchlists",
   {
     id: uuid().defaultRandom().primaryKey().notNull(),
     userId: uuid("user_id").notNull(),
     contentId: uuid("content_id").notNull(),
-    status: varchar({ length: 20 }).default("to_watch").notNull(),
+    status: watchlistStatusEnum().default("plan_to_watch").notNull(),
     currentSeason: integer("current_season"),
     currentEpisode: integer("current_episode"),
     addedAt: timestamp("added_at", {
@@ -43,3 +46,6 @@ export const userWatchlistSchema = pgTable(
     unique("unique_watchlist_entry").on(table.userId, table.contentId),
   ],
 );
+
+export type WatchlistRow = typeof watchlistSchema.$inferSelect;
+export type NewWatchlistRow = typeof watchlistSchema.$inferInsert;
