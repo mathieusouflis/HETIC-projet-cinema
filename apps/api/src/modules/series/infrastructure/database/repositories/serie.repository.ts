@@ -9,17 +9,16 @@ import { PaginationQuery } from "../../../../../shared/schemas/base/pagination.s
  * Serie Repository
  * Handles TV series-specific business logic
  */
-export class SerieRepository
+export class SeriesRepository
   extends BaseContentRepository<Serie, CreateSerieProps, TMDBSeriesAdapter, DrizzleSerieAdapter>
   implements ISeriesRepository
 {
-  protected contentTypeName = "series";
+  protected contentTypeName = "serie";
 
   constructor() {
     super(new TMDBSeriesAdapter(), new DrizzleSerieAdapter());
   }
 
-  // Implement interface methods with proper naming
   async createSerie(content: CreateSerieProps): Promise<Serie> {
     return this.create(content);
   }
@@ -41,7 +40,6 @@ export class SerieRepository
     return this.search(query, options);
   }
 
-  // Additional series-specific methods can be added here
   async updateSerie(id: string, props: Partial<CreateSerieProps>): Promise<Serie> {
     return this.update(id, props);
   }

@@ -15,12 +15,14 @@ import fs from "fs";
 import { logger } from "@packages/logger";
 import { contentsModule } from "./contents/contents.module.js";
 import { moviesModule } from "./movies/movie.module.js";
+import { seriesModule } from "./series/serie.module.js";
 
 function registerModules(): void {
   moduleRegistry.register("auth", authModule);
   moduleRegistry.register("users", usersModule);
   moduleRegistry.register("contents", contentsModule);
-  moduleRegistry.register("movies", moviesModule)
+  moduleRegistry.register("movies", moviesModule);
+  moduleRegistry.register("series", seriesModule);
 }
 
 function generateOpenAPISpec() {
