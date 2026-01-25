@@ -3,19 +3,19 @@ import { db } from "../../../../../../database";
 import { content } from "../../../../../../database/schema";
 import { PaginationQuery } from "../../../../../../shared/schemas/base/pagination.schema";
 import { MoviesRepository } from "../../../../../movies/infrastructure/database/repositories/movie.repository";
-import { SerieRepository } from "../../../../../series/infrastructure/database/repositories/serie.repository";
 import { Content } from "../../../../domain/entities/content.entity";
 import { IContentRepository } from "../../../../domain/interfaces/IContentRepository";
 import { logger } from "@packages/logger";
+import { SeriesRepository } from "../../../../../series/infrastructure/database/repositories/serie.repository";
 
 export class ContentsRepository implements IContentRepository {
 
   private moviesRepository: MoviesRepository;
-  private seriesRepository: SerieRepository;
+  private seriesRepository: SeriesRepository;
 
   constructor() {
     this.moviesRepository = new MoviesRepository()
-    this.seriesRepository = new SerieRepository()
+    this.seriesRepository = new SeriesRepository()
   }
 
   async getContentById(id: string): Promise<Content | undefined> {
