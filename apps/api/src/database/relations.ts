@@ -15,7 +15,7 @@ import {
   messages,
   ratings,
   reviews,
-  userWatchlist,
+  watchlist,
   lists,
   listItems,
   watchpartyParticipants,
@@ -56,7 +56,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   messages: many(messages),
   ratings: many(ratings),
   reviews: many(reviews),
-  userWatchlists: many(userWatchlist),
+  watchlists: many(watchlist),
   lists: many(lists),
   watchpartyParticipants: many(watchpartyParticipants),
   watchpartyInvitations_inviterId: many(watchpartyInvitations, {
@@ -108,7 +108,7 @@ export const contentRelations = relations(content, ({ many }) => ({
   watchparties: many(watchparties),
   ratings: many(ratings),
   reviews: many(reviews),
-  userWatchlists: many(userWatchlist),
+  watchlists: many(watchlist),
   listItems: many(listItems),
   userActivityLogs: many(userActivityLogs),
   notifications: many(notifications),
@@ -253,13 +253,13 @@ export const reviewsRelations = relations(reviews, ({ one, many }) => ({
   reviewLikes: many(reviewLikes),
 }));
 
-export const userWatchlistRelations = relations(userWatchlist, ({ one }) => ({
+export const watchlistRelations = relations(watchlist, ({ one }) => ({
   user: one(users, {
-    fields: [userWatchlist.userId],
+    fields: [watchlist.userId],
     references: [users.id],
   }),
   content: one(content, {
-    fields: [userWatchlist.contentId],
+    fields: [watchlist.contentId],
     references: [content.id],
   }),
 }));

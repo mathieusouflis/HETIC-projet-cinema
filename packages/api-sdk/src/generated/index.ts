@@ -16,10 +16,15 @@ import type {
   GETMovies200,
   GETMoviesId200,
   GETMoviesParams,
+  GETSeries200,
+  GETSeriesId200,
+  GETSeriesParams,
   GETUsers200,
   GETUsersId200,
   GETUsersMe200,
   GETUsersParams,
+  GETWatchlist200,
+  GETWatchlistParams,
   PATCHUsersId200,
   PATCHUsersIdBody,
   PATCHUsersMe200,
@@ -199,6 +204,42 @@ export const gETMoviesId = <TData = AxiosResponse<GETMoviesId200>>(
   return axios.get(`/movies/${id}`, options);
 };
 
+/**
+ * List series by type
+ */
+export const gETSeries = <TData = AxiosResponse<GETSeries200>>(
+  params?: GETSeriesParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.get(`/series/`, {
+    ...options,
+    params: { ...params, ...options?.params },
+  });
+};
+
+/**
+ * Get serie by id
+ */
+export const gETSeriesId = <TData = AxiosResponse<GETSeriesId200>>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.get(`/series/${id}`, options);
+};
+
+/**
+ * Query watchlist
+ */
+export const gETWatchlist = <TData = AxiosResponse<GETWatchlist200>>(
+  params?: GETWatchlistParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.get(`/watchlist/`, {
+    ...options,
+    params: { ...params, ...options?.params },
+  });
+};
+
 export type GETUsersIdResult = AxiosResponse<GETUsersId200>;
 export type PATCHUsersIdResult = AxiosResponse<PATCHUsersId200>;
 export type DELETEUsersIdResult = AxiosResponse<void>;
@@ -214,3 +255,6 @@ export type GETContentsResult = AxiosResponse<GETContents200>;
 export type GETContentsIdResult = AxiosResponse<GETContentsId200>;
 export type GETMoviesResult = AxiosResponse<GETMovies200>;
 export type GETMoviesIdResult = AxiosResponse<GETMoviesId200>;
+export type GETSeriesResult = AxiosResponse<GETSeries200>;
+export type GETSeriesIdResult = AxiosResponse<GETSeriesId200>;
+export type GETWatchlistResult = AxiosResponse<GETWatchlist200>;

@@ -1,8 +1,8 @@
 import type {
-  UserWatchlistRow,
-  NewUserWatchlistRow,
+  WatchlistRow,
+  NewWatchlistRow,
   watchlistStatusEnum
-} from "../../infrastructure/schemas/user-watchlist.schema.js";
+} from "../../infrastructure/schemas/watchlist.schema.js";
 
 
 export type WatchStatus = (typeof watchlistStatusEnum)["enumValues"][number];
@@ -10,7 +10,7 @@ export type WatchStatus = (typeof watchlistStatusEnum)["enumValues"][number];
 /**
  * Represents a user's watchlist entry for a specific content.
  */
-export class UserWatchlist {
+export class Watchlist {
   public readonly id: string;
   public readonly userId: string;
   public readonly contentId: string;
@@ -21,7 +21,7 @@ export class UserWatchlist {
   public readonly startedAt: Date | null;
   public readonly completedAt: Date | null;
 
-  constructor(props: UserWatchlistRow) {
+  constructor(props: WatchlistRow) {
     this.id = props.id;
     this.userId = props.userId;
     this.contentId = props.contentId;
@@ -82,11 +82,11 @@ export class UserWatchlist {
   }
 }
 
-export type CreateUserWatchlistProps = NewUserWatchlistRow;
+export type CreateWatchlistProps = NewWatchlistRow;
 
-export type UpdateUserWatchlistProps = Partial<
+export type UpdateWatchlistProps = Partial<
   Pick<
-    UserWatchlistRow,
+    WatchlistRow,
     | "status"
     | "currentSeason"
     | "currentEpisode"
