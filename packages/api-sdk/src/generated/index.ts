@@ -36,6 +36,8 @@ import type {
   POSTAuthRefresh200,
   POSTAuthRegister201,
   POSTAuthRegisterBody,
+  POSTWatchlist201,
+  POSTWatchlistBody,
 } from "./schemas";
 
 /**
@@ -242,6 +244,16 @@ export const gETWatchlist = <TData = AxiosResponse<GETWatchlist200>>(
 };
 
 /**
+ * Add content to personal watchlist
+ */
+export const pOSTWatchlist = <TData = AxiosResponse<POSTWatchlist201>>(
+  pOSTWatchlistBody: POSTWatchlistBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.post(`/watchlist/`, pOSTWatchlistBody, options);
+};
+
+/**
  * Get watchlist content by id
  */
 export const gETWatchlistId = <TData = AxiosResponse<GETWatchlistId200>>(
@@ -269,4 +281,5 @@ export type GETMoviesIdResult = AxiosResponse<GETMoviesId200>;
 export type GETSeriesResult = AxiosResponse<GETSeries200>;
 export type GETSeriesIdResult = AxiosResponse<GETSeriesId200>;
 export type GETWatchlistResult = AxiosResponse<GETWatchlist200>;
+export type POSTWatchlistResult = AxiosResponse<POSTWatchlist201>;
 export type GETWatchlistIdResult = AxiosResponse<GETWatchlistId200>;

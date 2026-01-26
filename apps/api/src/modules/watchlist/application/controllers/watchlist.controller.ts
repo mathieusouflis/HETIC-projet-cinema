@@ -3,9 +3,9 @@ import { BaseController } from "../../../../shared/infrastructure/base/controlle
 import { Protected } from "../../../../shared/infrastructure/decorators/auth.decorator.js";
 import { Controller } from "../../../../shared/infrastructure/decorators/controller.decorator.js";
 import { ApiResponse } from "../../../../shared/infrastructure/decorators/response.decorator.js";
-import { Get } from "../../../../shared/infrastructure/decorators/route.decorators.js";
-import { ValidateParams, ValidateQuery } from "../../../../shared/infrastructure/decorators/validation.decorators.js";
-import { notFoundErrorResponseSchema } from "../../../../shared/schemas/base/error.schemas.js";
+import { Get, Post } from "../../../../shared/infrastructure/decorators/route.decorators.js";
+import { ValidateBody, ValidateParams, ValidateQuery } from "../../../../shared/infrastructure/decorators/validation.decorators.js";
+import { commonErrorResponses, notFoundErrorResponseSchema } from "../../../../shared/schemas/base/error.schemas.js";
 import { createSuccessResponse } from "../../../../shared/schemas/base/response.schemas.js";
 import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
 import { QueryWatchlistRequest, queryWatchlistValidator } from "../dto/request/query-watchlist.query.validator.js";
@@ -15,6 +15,9 @@ import { ListWatchlistUseCase } from "../use-cases/list-watchlist.use-case.js";
 import { NotFoundError } from "../../../../shared/errors/NotFoundError.js";
 import { GetWatchlistByIdResponse, getWatchlistByIdResponseValidator } from "../dto/response/get-watchlist.response.validator.js";
 import { GetWatchlistContentUseCase } from "../use-cases/get-watchlist-content.use-case.js";
+import { AddContentToWatchlistBody, addContentToWatchlistBodyValidator } from "../dto/request/add-content-to-watchlist.body.validator.js";
+import { AddWatchlistContentResponse, addWatchlistContentResponseValidator } from "../dto/response/add-watchlist-content.response.validator.js";
+import { AddWatchlistContentUseCase } from "../use-cases/add-watchlist-content.use-case.js";
 
 @Controller({
   tag: "Watchlist",
@@ -26,6 +29,7 @@ export class WatchlistController extends BaseController {
   constructor(
     private readonly queryWatchlistUseCase: ListWatchlistUseCase,
     private readonly getWatchlistContentUseCase: GetWatchlistContentUseCase,
+    private readonly addWatchlistContentUseCase: AddWatchlistContentUseCase,
     // private readonly updateWatchlistContentUseCase: UpdateWatchlistContentUseCase,
     // private readonly deleteWatchlistContentUseCase: DeleteWatchlistContentUseCase
   ) {
@@ -82,6 +86,36 @@ export class WatchlistController extends BaseController {
     });
 
     return movie;
+  });
+
+  @Post({
+    path: "/",
+    description: "Add content to personal watchlist"
+  })
+  @Protected()
+  @ValidateBody(addContentToWatchlistBodyValidator)
+  @ApiResponse(400, "Bad request", commonErrorResponses["400"])
+  @ApiResponse(401, "User not connected", commonErrorResponses["401"])
+  @ApiResponse(409, "Content already in watchlist", commonErrorResponses["409"])
+  @ApiResponse(201, "Content added to watchlist successfully", createSuccessResponse(addWatchlistContentResponseValidator))
+  addContentToWatchlist = asyncHandler(async (req, res): Promise<AddWatchlistContentResponse> => {
+    const body = req.body as AddContentToWatchlistBody;
+
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      throw new UnauthorizedError("User not connected");
+    }
+
+    const movie = await this.addWatchlistContentUseCase.execute(userId, body);
+
+    res.status(201).json({
+      success: true,
+      message: "Content added to watchlist successfully",
+      data: movie
+    });
+
+    return movie
   });
 
 }
