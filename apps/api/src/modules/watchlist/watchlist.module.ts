@@ -11,6 +11,7 @@ import { ContentsRepository } from "../contents/infrastructure/database/reposito
 import { GetWatchlistByContentIdUseCase } from "./application/use-cases/get-watchlist-content.use-case.js";
 import { GetWatchlistByIdUseCase } from "./application/use-cases/get-watchlist.use-case.js";
 import { PatchWatchlistByIdUseCase } from "./application/use-cases/patch-watchlist.use-case.js";
+import { PatchWatchlistByContentIdUseCase } from "./application/use-cases/patch-watchlist-by-content.use-case.js";
 
 class WatchlistModule extends RestModule {
   // ============================================
@@ -30,6 +31,7 @@ class WatchlistModule extends RestModule {
   private readonly getWatchlistByContentIdUseCase: GetWatchlistByContentIdUseCase;
   private readonly getWatchlistByIdUseCase: GetWatchlistByIdUseCase;
   private readonly patchWatchlistByIdUseCase: PatchWatchlistByIdUseCase;
+  private readonly patchWatchlistByContentIdUseCase: PatchWatchlistByContentIdUseCase;
 
   // ============================================
   // Presentation Layer (Controller & Router)
@@ -56,8 +58,9 @@ class WatchlistModule extends RestModule {
     this.getWatchlistByContentIdUseCase = new GetWatchlistByContentIdUseCase(this.repository)
     this.getWatchlistByIdUseCase = new GetWatchlistByIdUseCase(this.repository)
     this.patchWatchlistByIdUseCase = new PatchWatchlistByIdUseCase(this.repository)
+    this.patchWatchlistByContentIdUseCase = new PatchWatchlistByContentIdUseCase(this.repository)
 
-    this.controller = new WatchlistController(this.listWatchlistUseCase, this.addWatchlistContentUseCase, this.getWatchlistByIdUseCase, this.getWatchlistByContentIdUseCase, this.patchWatchlistByIdUseCase);
+    this.controller = new WatchlistController(this.listWatchlistUseCase, this.addWatchlistContentUseCase, this.getWatchlistByIdUseCase, this.getWatchlistByContentIdUseCase, this.patchWatchlistByIdUseCase, this.patchWatchlistByContentIdUseCase);
 
     this.decoratorRouter = new DecoratorRouter();
     this.router = this.decoratorRouter.generateRouter(this.controller);
