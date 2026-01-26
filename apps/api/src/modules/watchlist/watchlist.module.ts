@@ -5,10 +5,11 @@ import { IWatchlistRepository } from "./domain/interfaces/IWatchlistRepository.j
 import { WatchlistController } from "./application/controllers/watchlist.controller.js";
 import { WatchlistRepository } from "./infrastructure/repositories/watchlist.repository.js";
 import { ListWatchlistUseCase } from "./application/use-cases/list-watchlist.use-case.js";
-import { GetWatchlistContentUseCase } from "./application/use-cases/get-watchlist-content.use-case.js";
 import { AddWatchlistContentUseCase } from "./application/use-cases/add-watchlist-content.use-case.js";
 import { IContentRepository } from "../contents/domain/interfaces/IContentRepository.js";
 import { ContentsRepository } from "../contents/infrastructure/database/repositories/content/contents.repository.js";
+import { GetWatchlistByContentIdUseCase } from "./application/use-cases/get-watchlist-content.use-case.js";
+import { GetWatchlistByIdUseCase } from "./application/use-cases/get-watchlist.use-case.js";
 
 class WatchlistModule extends RestModule {
   // ============================================
@@ -24,8 +25,9 @@ class WatchlistModule extends RestModule {
   // ============================================
 
   private readonly listWatchlistUseCase: ListWatchlistUseCase;
-  private readonly getWatchlistContentUseCase: GetWatchlistContentUseCase;
   private readonly addWatchlistContentUseCase: AddWatchlistContentUseCase;
+  private readonly getWatchlistByContentIdUseCase: GetWatchlistByContentIdUseCase;
+  private readonly getWatchlistByIdUseCase: GetWatchlistByIdUseCase;
 
   // ============================================
   // Presentation Layer (Controller & Router)
@@ -48,10 +50,11 @@ class WatchlistModule extends RestModule {
     this.contentRepository = new ContentsRepository()
 
     this.listWatchlistUseCase = new ListWatchlistUseCase(this.repository)
-    this.getWatchlistContentUseCase = new GetWatchlistContentUseCase(this.repository)
     this.addWatchlistContentUseCase = new AddWatchlistContentUseCase(this.repository, this.contentRepository)
+    this.getWatchlistByContentIdUseCase = new GetWatchlistByContentIdUseCase(this.repository)
+    this.getWatchlistByIdUseCase = new GetWatchlistByIdUseCase(this.repository)
 
-    this.controller = new WatchlistController(this.listWatchlistUseCase, this.getWatchlistContentUseCase, this.addWatchlistContentUseCase);
+    this.controller = new WatchlistController(this.listWatchlistUseCase, this.addWatchlistContentUseCase, this.getWatchlistByIdUseCase, this.getWatchlistByContentIdUseCase);
 
 
     this.decoratorRouter = new DecoratorRouter();
