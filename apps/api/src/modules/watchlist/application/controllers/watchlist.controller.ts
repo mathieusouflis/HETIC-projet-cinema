@@ -3,7 +3,7 @@ import { BaseController } from "../../../../shared/infrastructure/base/controlle
 import { Protected } from "../../../../shared/infrastructure/decorators/auth.decorator.js";
 import { Controller } from "../../../../shared/infrastructure/decorators/controller.decorator.js";
 import { ApiResponse } from "../../../../shared/infrastructure/decorators/response.decorator.js";
-import { Get, Post } from "../../../../shared/infrastructure/decorators/route.decorators.js";
+import { Get, Patch, Post } from "../../../../shared/infrastructure/decorators/route.decorators.js";
 import { ValidateBody, ValidateParams, ValidateQuery } from "../../../../shared/infrastructure/decorators/validation.decorators.js";
 import { commonErrorResponses, notFoundErrorResponseSchema, unauthorizedErrorResponseSchema } from "../../../../shared/schemas/base/error.schemas.js";
 import { createSuccessResponse } from "../../../../shared/schemas/base/response.schemas.js";
@@ -18,6 +18,10 @@ import { GetWatchlistByContentIdUseCase } from "../use-cases/get-watchlist-conte
 import { GetWatchlistByContentIdParams, getWatchlistByContentIdParamsValidator } from "../dto/request/get-watchlist-content-id.params.validator.js";
 import { GetWatchlistByContentIdResponse, getWatchlistByContentIdResponseValidator } from "../dto/response/get-watchlist-content.response.validator.js";
 import { GetWatchlistByIdUseCase } from "../use-cases/get-watchlist.use-case.js";
+import { PatchWatchlistBody, patchWatchlistBodyValidator } from "../dto/request/patch-watchlist.body.validator.js";
+import { PatchWatchlistResponse, patchWatchlistResponseValidator } from "../dto/response/patch-watchlist.response.validator.js";
+import { PatchWatchlistByIdUseCase } from "../use-cases/patch-watchlist.use-case.js";
+import { PatchWatchlistParams, patchWatchlistParamsValidator } from "../dto/request/patch-watchlist.params.validator.js";
 import { AddWatchlistContentUseCase } from "../use-cases/add-watchlist-content.use-case.js";
 import { AddContentToWatchlistBody, addContentToWatchlistBodyValidator } from "../dto/request/add-content-to-watchlist.body.validator.js";
 import { AddWatchlistContentResponse, addWatchlistContentResponseValidator } from "../dto/response/add-watchlist-content.response.validator.js";
@@ -34,7 +38,7 @@ export class WatchlistController extends BaseController {
     private readonly addWatchlistContentUseCase: AddWatchlistContentUseCase,
     private readonly getWatchlistByIdUseCase: GetWatchlistByIdUseCase,
     private readonly getWatchlistByContentIdUseCase: GetWatchlistByContentIdUseCase,
-    // private readonly updateWatchlistContentUseCase: UpdateWatchlistContentUseCase,
+    private readonly patchWatchlistByIdUseCase: PatchWatchlistByIdUseCase,
     // private readonly deleteWatchlistContentUseCase: DeleteWatchlistContentUseCase
   ) {
     super();
@@ -162,14 +166,35 @@ export class WatchlistController extends BaseController {
     return movie;
   });
 
-  // @Patch({
-  //   path: "/:id",
-  //   description: "Update watchlist content by id",
-  // })
-  // @Protected()
-  // @ValidateBody()
-  // @ApiResponse(404)
-  // @ApiResponse(401)
-  // @ApiResponse(200)
+  @Patch({
+    path: "/:id",
+    description: "Update watchlist content by id",
+  })
+  @Protected()
+  @ValidateBody(patchWatchlistBodyValidator)
+  @ValidateParams(patchWatchlistParamsValidator)
+  @ApiResponse(404, "Content not found in watchlist", notFoundErrorResponseSchema)
+  @ApiResponse(401, "You should be logged in to execute this action", unauthorizedErrorResponseSchema)
+  @ApiResponse(401, "You are not authorized to access this watchlist", unauthorizedErrorResponseSchema)
+  @ApiResponse(200, "Watchlist updated successfully", patchWatchlistResponseValidator)
+  patchWatchlistById = asyncHandler(async (req, res): Promise<PatchWatchlistResponse> => {
+    const { id } = req.params as PatchWatchlistParams;
+    const body = req.body as PatchWatchlistBody
+    const userId = req.user?.userId;
+
+    if(!userId) {
+      throw new UnauthorizedError("You should be logged in to execute this action");
+    }
+
+    const movie = await this.patchWatchlistByIdUseCase.execute(userId, id, body);
+
+    res.status(200).json({
+      success: true,
+      message: "Watchlist updated successfully",
+      data: movie,
+    });
+
+    return movie;
+  });
 
 }

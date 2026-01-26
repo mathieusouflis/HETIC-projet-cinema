@@ -10,6 +10,7 @@ import { IContentRepository } from "../contents/domain/interfaces/IContentReposi
 import { ContentsRepository } from "../contents/infrastructure/database/repositories/content/contents.repository.js";
 import { GetWatchlistByContentIdUseCase } from "./application/use-cases/get-watchlist-content.use-case.js";
 import { GetWatchlistByIdUseCase } from "./application/use-cases/get-watchlist.use-case.js";
+import { PatchWatchlistByIdUseCase } from "./application/use-cases/patch-watchlist.use-case.js";
 
 class WatchlistModule extends RestModule {
   // ============================================
@@ -28,6 +29,7 @@ class WatchlistModule extends RestModule {
   private readonly addWatchlistContentUseCase: AddWatchlistContentUseCase;
   private readonly getWatchlistByContentIdUseCase: GetWatchlistByContentIdUseCase;
   private readonly getWatchlistByIdUseCase: GetWatchlistByIdUseCase;
+  private readonly patchWatchlistByIdUseCase: PatchWatchlistByIdUseCase;
 
   // ============================================
   // Presentation Layer (Controller & Router)
@@ -53,9 +55,9 @@ class WatchlistModule extends RestModule {
     this.addWatchlistContentUseCase = new AddWatchlistContentUseCase(this.repository, this.contentRepository)
     this.getWatchlistByContentIdUseCase = new GetWatchlistByContentIdUseCase(this.repository)
     this.getWatchlistByIdUseCase = new GetWatchlistByIdUseCase(this.repository)
+    this.patchWatchlistByIdUseCase = new PatchWatchlistByIdUseCase(this.repository)
 
-    this.controller = new WatchlistController(this.listWatchlistUseCase, this.addWatchlistContentUseCase, this.getWatchlistByIdUseCase, this.getWatchlistByContentIdUseCase);
-
+    this.controller = new WatchlistController(this.listWatchlistUseCase, this.addWatchlistContentUseCase, this.getWatchlistByIdUseCase, this.getWatchlistByContentIdUseCase, this.patchWatchlistByIdUseCase);
 
     this.decoratorRouter = new DecoratorRouter();
     this.router = this.decoratorRouter.generateRouter(this.controller);
