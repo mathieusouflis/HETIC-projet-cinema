@@ -5,29 +5,9 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { PATCHWatchlistContentId200Status } from "./patchwatchlist-content-id200-status";
+import type { PATCHWatchlistContentId200Data } from "./patchwatchlist-content-id200-data";
 
 export type PATCHWatchlistContentId200 = {
-  /** @minLength 1 */
-  id: string;
-  /** @minLength 1 */
-  userId: string;
-  /** @minLength 1 */
-  contentId: string;
-  status: PATCHWatchlistContentId200Status;
-  /**
-   * @minimum 1
-   * @nullable
-   */
-  currentEpisode: number | null;
-  /**
-   * @minimum 1
-   * @nullable
-   */
-  currentSeason: number | null;
-  addedAt: string;
-  /** @nullable */
-  startedAt: string | null;
-  /** @nullable */
-  completedAt: string | null;
+  success: boolean;
+  data: PATCHWatchlistContentId200Data;
 };

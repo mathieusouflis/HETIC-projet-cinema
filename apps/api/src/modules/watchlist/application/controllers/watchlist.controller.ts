@@ -3,10 +3,10 @@ import { BaseController } from "../../../../shared/infrastructure/base/controlle
 import { Protected } from "../../../../shared/infrastructure/decorators/auth.decorator.js";
 import { Controller } from "../../../../shared/infrastructure/decorators/controller.decorator.js";
 import { ApiResponse } from "../../../../shared/infrastructure/decorators/response.decorator.js";
-import { Get, Patch, Post } from "../../../../shared/infrastructure/decorators/route.decorators.js";
+import { Delete, Get, Patch, Post } from "../../../../shared/infrastructure/decorators/route.decorators.js";
 import { ValidateBody, ValidateParams, ValidateQuery } from "../../../../shared/infrastructure/decorators/validation.decorators.js";
 import { commonErrorResponses, notFoundErrorResponseSchema, unauthorizedErrorResponseSchema } from "../../../../shared/schemas/base/error.schemas.js";
-import { createSuccessResponse } from "../../../../shared/schemas/base/response.schemas.js";
+import { createSuccessResponse, emptySuccessResponseSchema } from "../../../../shared/schemas/base/response.schemas.js";
 import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
 import { QueryWatchlistRequest, queryWatchlistValidator } from "../dto/request/query-watchlist.query.validator.js";
 import { GetWatchlistByIdParams, getWatchlistByIdParamsValidator } from "../dto/request/get-watchlist.params.validator.js";
@@ -24,9 +24,11 @@ import { PatchWatchlistByIdUseCase } from "../use-cases/patch-watchlist.use-case
 import { PatchWatchlistParams, patchWatchlistParamsValidator } from "../dto/request/patch-watchlist.params.validator.js";
 import { PatchWatchlistByContentIdParams, patchWatchlistByContentIdParamsValidator } from "../dto/request/patch-watchlist-by-content-id.params.validator.js";
 import { PatchWatchlistByContentIdUseCase } from "../use-cases/patch-watchlist-by-content.use-case.js";
-import { AddWatchlistContentUseCase } from "../use-cases/add-watchlist-content.use-case.js";
+import { DeleteWatchlistParams, deleteWatchlistParamsValidator } from "../dto/request/delete-watchlist.params.validator.js";
+import { DeleteWatchlistByIdUseCase } from "../use-cases/delete-watchlist.use-case.js";
 import { AddContentToWatchlistBody, addContentToWatchlistBodyValidator } from "../dto/request/add-content-to-watchlist.body.validator.js";
 import { AddWatchlistContentResponse, addWatchlistContentResponseValidator } from "../dto/response/add-watchlist-content.response.validator.js";
+import { AddWatchlistContentUseCase } from "../use-cases/add-watchlist-content.use-case.js";
 
 @Controller({
   tag: "Watchlist",
@@ -42,7 +44,7 @@ export class WatchlistController extends BaseController {
     private readonly getWatchlistByContentIdUseCase: GetWatchlistByContentIdUseCase,
     private readonly patchWatchlistByIdUseCase: PatchWatchlistByIdUseCase,
     private readonly patchWatchlistByContentIdUseCase: PatchWatchlistByContentIdUseCase,
-    // private readonly deleteWatchlistContentUseCase: DeleteWatchlistContentUseCase
+    private readonly deleteWatchlistByIdUseCase: DeleteWatchlistByIdUseCase,
   ) {
     super();
   }
@@ -82,7 +84,7 @@ export class WatchlistController extends BaseController {
   @ValidateParams(getWatchlistByContentIdParamsValidator)
   @ApiResponse(404, "Content not found in watchlist", notFoundErrorResponseSchema)
   @ApiResponse(401, "You should be logged in to execute this action", unauthorizedErrorResponseSchema)
-  @ApiResponse(200, "Content retrieved successfully", getWatchlistByContentIdResponseValidator)
+  @ApiResponse(200, "Content retrieved successfully", createSuccessResponse(getWatchlistByContentIdResponseValidator))
   getMovieById = asyncHandler(async (req, res): Promise<GetWatchlistByContentIdResponse> => {
     const { id } = req.params as GetWatchlistByContentIdParams;
     const userId = req.user?.userId;
@@ -145,7 +147,7 @@ export class WatchlistController extends BaseController {
   @ApiResponse(404, "Watchlist not found", notFoundErrorResponseSchema)
   @ApiResponse(401, "You should be logged in to execute this action", unauthorizedErrorResponseSchema)
   @ApiResponse(401, "You are not authorized to access this watchlist", unauthorizedErrorResponseSchema)
-  @ApiResponse(200, "Watchlist retrieved successfully", getWatchlistByIdResponseValidator)
+  @ApiResponse(200, "Watchlist retrieved successfully", createSuccessResponse(getWatchlistByIdResponseValidator))
   getWatchlistById = asyncHandler(async (req, res): Promise<GetWatchlistByIdResponse> => {
     const { id } = req.params as GetWatchlistByIdParams;
     const userId = req.user?.userId;
@@ -179,7 +181,7 @@ export class WatchlistController extends BaseController {
   @ApiResponse(404, "Content not found in watchlist", notFoundErrorResponseSchema)
   @ApiResponse(401, "You should be logged in to execute this action", unauthorizedErrorResponseSchema)
   @ApiResponse(401, "You are not authorized to access this watchlist", unauthorizedErrorResponseSchema)
-  @ApiResponse(200, "Watchlist updated successfully", patchWatchlistResponseValidator)
+  @ApiResponse(200, "Watchlist updated successfully", createSuccessResponse(patchWatchlistResponseValidator))
   patchWatchlistById = asyncHandler(async (req, res): Promise<PatchWatchlistResponse> => {
     const { id } = req.params as PatchWatchlistParams;
     const body = req.body as PatchWatchlistBody
@@ -211,7 +213,7 @@ export class WatchlistController extends BaseController {
   @ApiResponse(404, "Content not found in watchlist", notFoundErrorResponseSchema)
   @ApiResponse(401, "You should be logged in to execute this action", unauthorizedErrorResponseSchema)
   @ApiResponse(401, "You are not authorized to access this watchlist", unauthorizedErrorResponseSchema)
-  @ApiResponse(200, "Watchlist updated successfully", patchWatchlistResponseValidator)
+  @ApiResponse(200, "Watchlist updated successfully", createSuccessResponse(patchWatchlistResponseValidator))
   patchWatchlistByContentId = asyncHandler(async (req, res): Promise<PatchWatchlistResponse> => {
     const { id } = req.params as PatchWatchlistByContentIdParams;
     const body = req.body as PatchWatchlistBody
@@ -232,4 +234,30 @@ export class WatchlistController extends BaseController {
     return movie;
   });
 
+  @Delete({
+    path: "/:id",
+    description: "Delete watchlist by id",
+  })
+  @Protected()
+  @ValidateParams(deleteWatchlistParamsValidator)
+  @ApiResponse(404, "Content not found in watchlist", notFoundErrorResponseSchema)
+  @ApiResponse(401, "You should be logged in to execute this action", unauthorizedErrorResponseSchema)
+  @ApiResponse(401, "You are not authorized to access this watchlist", unauthorizedErrorResponseSchema)
+  @ApiResponse(204, "Watchlist deleted successfully", emptySuccessResponseSchema)
+  deleteWatchlistById = asyncHandler(async (req, res): Promise<void> => {
+    const { id } = req.params as DeleteWatchlistParams;
+    const userId = req.user?.userId;
+
+    if(!userId) {
+      throw new UnauthorizedError("You should be logged in to execute this action");
+    }
+
+    await this.deleteWatchlistByIdUseCase.execute(userId, id);
+
+    res.status(200).json({
+      success: true,
+      message: `Watchlist ${id} deleted successfully`,
+    });
+
+  });
 }
