@@ -23,6 +23,7 @@ import { users as usersSchema } from "../modules/users/infrastructure/database/s
 import { contentSchema } from "../modules/contents/infrastructure/database/schemas/contents.schema";
 import { tmdbFetchStatusSchema } from "../modules/contents/infrastructure/database/schemas/tmdb-fetch-status.schema";
 import { watchlistSchema, watchlistStatusEnum as watchlistCustomEnumImported } from "../modules/watchlist/infrastructure/schemas/watchlist.schema";
+import { peopleSchema } from "../modules/peoples/infrastructure/schemas/people.schema";
 
 export const users = usersSchema;
 
@@ -164,37 +165,7 @@ export const contentCredits = pgTable(
   ],
 );
 
-export const people = pgTable(
-  "people",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    name: varchar({ length: 255 }).notNull(),
-    bio: text(),
-    photoUrl: text("photo_url"),
-    birthDate: date("birth_date"),
-    nationality: varchar({ length: 100 }),
-    tmdbId: integer("tmdb_id"),
-    createdAt: timestamp("created_at", {
-      withTimezone: true,
-      mode: "string",
-    }).defaultNow(),
-    updatedAt: timestamp("updated_at", {
-      withTimezone: true,
-      mode: "string",
-    }).defaultNow(),
-  },
-  (table) => [
-    index("idx_people_name").using(
-      "btree",
-      table.name.asc().nullsLast(),
-    ),
-    index("idx_people_tmdb").using(
-      "btree",
-      table.tmdbId.asc().nullsLast(),
-    ),
-    unique("people_tmdb_id_key").on(table.tmdbId),
-  ],
-);
+export const people = peopleSchema
 
 export const seasons = pgTable(
   "seasons",
