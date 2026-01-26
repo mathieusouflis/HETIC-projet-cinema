@@ -84,13 +84,10 @@ export class Watchlist {
 
 export type CreateWatchlistProps = NewWatchlistRow;
 
-export type UpdateWatchlistProps = Partial<
-  Pick<
-    WatchlistRow,
-    | "status"
-    | "currentSeason"
-    | "currentEpisode"
-    | "startedAt"
-    | "completedAt"
-  >
->;
+export type UpdateWatchlistProps = {
+  status?: WatchlistRow["status"] | undefined;
+  currentSeason?: WatchlistRow["currentSeason"] | undefined;
+  currentEpisode?: WatchlistRow["currentEpisode"] | undefined;
+  startedAt?: WatchlistRow["startedAt"] | undefined;
+  completedAt?: WatchlistRow["completedAt"] | undefined;
+};
