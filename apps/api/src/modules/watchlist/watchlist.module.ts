@@ -12,6 +12,7 @@ import { GetWatchlistByContentIdUseCase } from "./application/use-cases/get-watc
 import { GetWatchlistByIdUseCase } from "./application/use-cases/get-watchlist.use-case.js";
 import { PatchWatchlistByIdUseCase } from "./application/use-cases/patch-watchlist.use-case.js";
 import { PatchWatchlistByContentIdUseCase } from "./application/use-cases/patch-watchlist-by-content.use-case.js";
+import { DeleteWatchlistByIdUseCase } from "./application/use-cases/delete-watchlist.use-case.js";
 
 class WatchlistModule extends RestModule {
   // ============================================
@@ -32,6 +33,7 @@ class WatchlistModule extends RestModule {
   private readonly getWatchlistByIdUseCase: GetWatchlistByIdUseCase;
   private readonly patchWatchlistByIdUseCase: PatchWatchlistByIdUseCase;
   private readonly patchWatchlistByContentIdUseCase: PatchWatchlistByContentIdUseCase;
+  private readonly deleteWatchlistByIdUseCase: DeleteWatchlistByIdUseCase;
 
   // ============================================
   // Presentation Layer (Controller & Router)
@@ -59,8 +61,9 @@ class WatchlistModule extends RestModule {
     this.getWatchlistByIdUseCase = new GetWatchlistByIdUseCase(this.repository)
     this.patchWatchlistByIdUseCase = new PatchWatchlistByIdUseCase(this.repository)
     this.patchWatchlistByContentIdUseCase = new PatchWatchlistByContentIdUseCase(this.repository)
+    this.deleteWatchlistByIdUseCase = new DeleteWatchlistByIdUseCase(this.repository)
 
-    this.controller = new WatchlistController(this.listWatchlistUseCase, this.addWatchlistContentUseCase, this.getWatchlistByIdUseCase, this.getWatchlistByContentIdUseCase, this.patchWatchlistByIdUseCase, this.patchWatchlistByContentIdUseCase);
+    this.controller = new WatchlistController(this.listWatchlistUseCase, this.addWatchlistContentUseCase, this.getWatchlistByIdUseCase, this.getWatchlistByContentIdUseCase, this.patchWatchlistByIdUseCase, this.patchWatchlistByContentIdUseCase, this.deleteWatchlistByIdUseCase);
 
     this.decoratorRouter = new DecoratorRouter();
     this.router = this.decoratorRouter.generateRouter(this.controller);
