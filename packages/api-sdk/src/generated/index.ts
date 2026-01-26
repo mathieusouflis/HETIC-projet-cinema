@@ -24,6 +24,7 @@ import type {
   GETUsersMe200,
   GETUsersParams,
   GETWatchlist200,
+  GETWatchlistContentId200,
   GETWatchlistId200,
   GETWatchlistParams,
   PATCHUsersId200,
@@ -256,6 +257,18 @@ export const pOSTWatchlist = <TData = AxiosResponse<POSTWatchlist201>>(
 /**
  * Get watchlist content by id
  */
+export const gETWatchlistContentId = <
+  TData = AxiosResponse<GETWatchlistContentId200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.get(`/watchlist/content/${id}`, options);
+};
+
+/**
+ * Get watchlist by id
+ */
 export const gETWatchlistId = <TData = AxiosResponse<GETWatchlistId200>>(
   id: string,
   options?: AxiosRequestConfig,
@@ -282,4 +295,6 @@ export type GETSeriesResult = AxiosResponse<GETSeries200>;
 export type GETSeriesIdResult = AxiosResponse<GETSeriesId200>;
 export type GETWatchlistResult = AxiosResponse<GETWatchlist200>;
 export type POSTWatchlistResult = AxiosResponse<POSTWatchlist201>;
+export type GETWatchlistContentIdResult =
+  AxiosResponse<GETWatchlistContentId200>;
 export type GETWatchlistIdResult = AxiosResponse<GETWatchlistId200>;
