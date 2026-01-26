@@ -18,6 +18,11 @@ import type {
   GETMovies200,
   GETMoviesId200,
   GETMoviesParams,
+  GETPeoples200,
+  GETPeoplesId200,
+  GETPeoplesParams,
+  GETPeoplesSearch200,
+  GETPeoplesSearchParams,
   GETSeries200,
   GETSeriesId200,
   GETSeriesParams,
@@ -43,8 +48,12 @@ import type {
   POSTAuthRefresh200,
   POSTAuthRegister201,
   POSTAuthRegisterBody,
+  POSTPeoples201,
+  POSTPeoplesBody,
   POSTWatchlist201,
   POSTWatchlistBody,
+  PUTPeoplesId200,
+  PUTPeoplesIdBody,
 } from "./schemas";
 
 /**
@@ -332,6 +341,73 @@ export const dELETEWatchlistId = <TData = AxiosResponse<DELETEWatchlistId204>>(
   return axios.delete(`/watchlist/${id}`, options);
 };
 
+/**
+ * List people with optional filters and pagination
+ */
+export const gETPeoples = <TData = AxiosResponse<GETPeoples200>>(
+  params?: GETPeoplesParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.get(`/peoples/`, {
+    ...options,
+    params: { ...params, ...options?.params },
+  });
+};
+
+/**
+ * Create a new person
+ */
+export const pOSTPeoples = <TData = AxiosResponse<POSTPeoples201>>(
+  pOSTPeoplesBody: POSTPeoplesBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.post(`/peoples/`, pOSTPeoplesBody, options);
+};
+
+/**
+ * Search people on TMDB and sync to database
+ */
+export const gETPeoplesSearch = <TData = AxiosResponse<GETPeoplesSearch200>>(
+  params: GETPeoplesSearchParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.get(`/peoples/search`, {
+    ...options,
+    params: { ...params, ...options?.params },
+  });
+};
+
+/**
+ * Get a person by ID
+ */
+export const gETPeoplesId = <TData = AxiosResponse<GETPeoplesId200>>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.get(`/peoples/${id}`, options);
+};
+
+/**
+ * Update a person
+ */
+export const pUTPeoplesId = <TData = AxiosResponse<PUTPeoplesId200>>(
+  id: string,
+  pUTPeoplesIdBody: PUTPeoplesIdBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.put(`/peoples/${id}`, pUTPeoplesIdBody, options);
+};
+
+/**
+ * Delete a person
+ */
+export const dELETEPeoplesId = <TData = AxiosResponse<void>>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.delete(`/peoples/${id}`, options);
+};
+
 export type GETUsersIdResult = AxiosResponse<GETUsersId200>;
 export type PATCHUsersIdResult = AxiosResponse<PATCHUsersId200>;
 export type DELETEUsersIdResult = AxiosResponse<void>;
@@ -360,3 +436,9 @@ export type DELETEWatchlistContentIdResult =
 export type GETWatchlistIdResult = AxiosResponse<GETWatchlistId200>;
 export type PATCHWatchlistIdResult = AxiosResponse<PATCHWatchlistId200>;
 export type DELETEWatchlistIdResult = AxiosResponse<DELETEWatchlistId204>;
+export type GETPeoplesResult = AxiosResponse<GETPeoples200>;
+export type POSTPeoplesResult = AxiosResponse<POSTPeoples201>;
+export type GETPeoplesSearchResult = AxiosResponse<GETPeoplesSearch200>;
+export type GETPeoplesIdResult = AxiosResponse<GETPeoplesId200>;
+export type PUTPeoplesIdResult = AxiosResponse<PUTPeoplesId200>;
+export type DELETEPeoplesIdResult = AxiosResponse<void>;
