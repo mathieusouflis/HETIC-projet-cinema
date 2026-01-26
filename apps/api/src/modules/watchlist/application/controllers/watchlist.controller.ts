@@ -14,10 +14,13 @@ import { QueryWatchlistResponse, queryWatchlistResponseValidator } from "../dto/
 import { ListWatchlistUseCase } from "../use-cases/list-watchlist.use-case.js";
 import { NotFoundError } from "../../../../shared/errors/NotFoundError.js";
 import { GetWatchlistByIdResponse, getWatchlistByIdResponseValidator } from "../dto/response/get-watchlist.response.validator.js";
-import { GetWatchlistContentUseCase } from "../use-cases/get-watchlist-content.use-case.js";
+import { GetWatchlistByContentIdUseCase } from "../use-cases/get-watchlist-content.use-case.js";
+import { GetWatchlistByContentIdParams, getWatchlistByContentIdParamsValidator } from "../dto/request/get-watchlist-content-id.params.validator.js";
+import { GetWatchlistByContentIdResponse, getWatchlistByContentIdResponseValidator } from "../dto/response/get-watchlist-content.response.validator.js";
+import { GetWatchlistByIdUseCase } from "../use-cases/get-watchlist.use-case.js";
+import { AddWatchlistContentUseCase } from "../use-cases/add-watchlist-content.use-case.js";
 import { AddContentToWatchlistBody, addContentToWatchlistBodyValidator } from "../dto/request/add-content-to-watchlist.body.validator.js";
 import { AddWatchlistContentResponse, addWatchlistContentResponseValidator } from "../dto/response/add-watchlist-content.response.validator.js";
-import { AddWatchlistContentUseCase } from "../use-cases/add-watchlist-content.use-case.js";
 
 @Controller({
   tag: "Watchlist",
@@ -28,8 +31,9 @@ import { AddWatchlistContentUseCase } from "../use-cases/add-watchlist-content.u
 export class WatchlistController extends BaseController {
   constructor(
     private readonly queryWatchlistUseCase: ListWatchlistUseCase,
-    private readonly getWatchlistContentUseCase: GetWatchlistContentUseCase,
     private readonly addWatchlistContentUseCase: AddWatchlistContentUseCase,
+    private readonly getWatchlistByIdUseCase: GetWatchlistByIdUseCase,
+    private readonly getWatchlistByContentIdUseCase: GetWatchlistByContentIdUseCase,
     // private readonly updateWatchlistContentUseCase: UpdateWatchlistContentUseCase,
     // private readonly deleteWatchlistContentUseCase: DeleteWatchlistContentUseCase
   ) {
@@ -64,23 +68,23 @@ export class WatchlistController extends BaseController {
 
 
   @Get({
-    path: "/:id",
+    path: "/content/:id",
     description: "Get watchlist content by id",
   })
   @Protected()
-  @ValidateParams(getWatchlistByIdParamsValidator)
+  @ValidateParams(getWatchlistByContentIdParamsValidator)
   @ApiResponse(404, "Content not found in watchlist", notFoundErrorResponseSchema)
   @ApiResponse(401, "You should be logged in to execute this action", unauthorizedErrorResponseSchema)
-  @ApiResponse(200, "Content retrieved successfully", getWatchlistByIdResponseValidator)
-  getMovieById = asyncHandler(async (req, res): Promise<GetWatchlistByIdResponse> => {
-    const { id } = req.params as GetWatchlistByIdParams;
+  @ApiResponse(200, "Content retrieved successfully", getWatchlistByContentIdResponseValidator)
+  getMovieById = asyncHandler(async (req, res): Promise<GetWatchlistByContentIdResponse> => {
+    const { id } = req.params as GetWatchlistByContentIdParams;
     const userId = req.user?.userId;
 
     if(!userId) {
       throw new UnauthorizedError("You should be logged in to execute this action");
     }
 
-    const movie = await this.getWatchlistContentUseCase.execute(userId, id);
+    const movie = await this.getWatchlistByContentIdUseCase.execute(userId, id);
 
     if (!movie) {
       throw new NotFoundError(`Content ${id} not found in watchlist`);
@@ -124,5 +128,48 @@ export class WatchlistController extends BaseController {
 
     return movie
   });
+
+  @Get({
+    path: "/:id",
+    description: "Get watchlist by id",
+  })
+  @Protected()
+  @ValidateParams(getWatchlistByIdParamsValidator)
+  @ApiResponse(404, "Watchlist not found", notFoundErrorResponseSchema)
+  @ApiResponse(401, "You should be logged in to execute this action", unauthorizedErrorResponseSchema)
+  @ApiResponse(401, "You are not authorized to access this watchlist", unauthorizedErrorResponseSchema)
+  @ApiResponse(200, "Watchlist retrieved successfully", getWatchlistByIdResponseValidator)
+  getWatchlistById = asyncHandler(async (req, res): Promise<GetWatchlistByIdResponse> => {
+    const { id } = req.params as GetWatchlistByIdParams;
+    const userId = req.user?.userId;
+
+    if(!userId) {
+      throw new UnauthorizedError("You should be logged in to execute this action");
+    }
+
+    const movie = await this.getWatchlistByIdUseCase.execute(userId, id);
+
+    if (!movie) {
+      throw new NotFoundError(`Watchlist ${id} not found`);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Watchlist retrieved successfully",
+      data: movie,
+    });
+
+    return movie;
+  });
+
+  // @Patch({
+  //   path: "/:id",
+  //   description: "Update watchlist content by id",
+  // })
+  // @Protected()
+  // @ValidateBody()
+  // @ApiResponse(404)
+  // @ApiResponse(401)
+  // @ApiResponse(200)
 
 }

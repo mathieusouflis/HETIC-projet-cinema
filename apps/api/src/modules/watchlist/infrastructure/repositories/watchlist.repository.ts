@@ -35,7 +35,7 @@ export class WatchlistRepository implements IWatchlistRepository {
 
       return content ? new Watchlist(content) : null;
     } catch (error) {
-      throw new ServerError(`Failed to create user watchlist: ${error}`)
+      throw new ServerError(`Failed to resolve watchlist ${id}: ${error}`)
     }
   }
 
@@ -50,7 +50,7 @@ export class WatchlistRepository implements IWatchlistRepository {
 
       return content ? new Watchlist(content) : null;
     } catch (error) {
-      throw new ServerError(`Failed to create user watchlist: ${error}`)
+      throw new ServerError(`Failed to resolve watchlist with content ${contentId}: ${error}`)
     }
   }
 
