@@ -9,6 +9,7 @@ import axios from "axios";
 import type { AxiosRequestConfig, AxiosResponse } from "axios";
 
 import type {
+  DELETEWatchlistContentId204,
   DELETEWatchlistId204,
   GETAuthMe200,
   GETContents200,
@@ -289,6 +290,18 @@ export const pATCHWatchlistContentId = <
 };
 
 /**
+ * Delete watchlist by content id
+ */
+export const dELETEWatchlistContentId = <
+  TData = AxiosResponse<DELETEWatchlistContentId204>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.delete(`/watchlist/content/${id}`, options);
+};
+
+/**
  * Get watchlist by id
  */
 export const gETWatchlistId = <TData = AxiosResponse<GETWatchlistId200>>(
@@ -342,6 +355,8 @@ export type GETWatchlistContentIdResult =
   AxiosResponse<GETWatchlistContentId200>;
 export type PATCHWatchlistContentIdResult =
   AxiosResponse<PATCHWatchlistContentId200>;
+export type DELETEWatchlistContentIdResult =
+  AxiosResponse<DELETEWatchlistContentId204>;
 export type GETWatchlistIdResult = AxiosResponse<GETWatchlistId200>;
 export type PATCHWatchlistIdResult = AxiosResponse<PATCHWatchlistId200>;
 export type DELETEWatchlistIdResult = AxiosResponse<DELETEWatchlistId204>;
