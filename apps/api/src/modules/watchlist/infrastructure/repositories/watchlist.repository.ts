@@ -19,8 +19,12 @@ export class WatchlistRepository implements IWatchlistRepository {
       }
 
       return new Watchlist(content);
+
     } catch (error) {
-      throw new ServerError(`Failed to create user watchlist: ${error}`);
+      if (error instanceof ServerError) {
+        throw error;
+      }
+      throw new ServerError(`Unexpected error creating watchlist: ${error}`);
     }
   }
 
@@ -30,12 +34,15 @@ export class WatchlistRepository implements IWatchlistRepository {
       const content = resolvedContent[0]
 
       if (!content) {
-        throw new NotFoundError(`Personal watchlist with id ${id} not found.`);
+        throw new NotFoundError(`Personal watchlist with id ${id}`);
       }
 
       return content ? new Watchlist(content) : null;
     } catch (error) {
-      throw new ServerError(`Failed to resolve watchlist ${id}: ${error}`)
+      if (error instanceof NotFoundError) {
+        throw error;
+      }
+      throw new ServerError(`Unexpected error resolving watchlist ${id}: ${error}`)
     }
   }
 
@@ -50,7 +57,13 @@ export class WatchlistRepository implements IWatchlistRepository {
 
       return content ? new Watchlist(content) : null;
     } catch (error) {
-      throw new ServerError(`Failed to resolve watchlist with content ${contentId}: ${error}`)
+      if (error instanceof NotFoundError) {
+        throw error;
+      }
+      if (error instanceof ServerError) {
+        throw error;
+      }
+      throw new ServerError(`Unexpected error resolving watchlist with content ${contentId}: ${error}`)
     }
   }
 
@@ -73,12 +86,15 @@ export class WatchlistRepository implements IWatchlistRepository {
         const content = updatedContent[0];
 
         if (!content) {
-          throw new NotFoundError(`Watchlist item with id ${id} not found.`);
+          throw new NotFoundError(`Watchlist item with id ${id}`);
         }
 
         return new Watchlist(content);
       } catch (error) {
-        throw new ServerError(`Failed to update user watchlist: ${error}`);
+        if (error instanceof NotFoundError) {
+          throw error;
+        }
+        throw new ServerError(`Unexpected error updating user watchlist: ${error}`);
       }
     }
 
@@ -89,10 +105,13 @@ export class WatchlistRepository implements IWatchlistRepository {
           .returning();
 
         if (deletedCount.length === 0) {
-          throw new NotFoundError(`Watchlist item with id ${id} not found.`);
+          throw new NotFoundError(`Watchlist item with id ${id}`);
         }
       } catch (error) {
-        throw new ServerError(`Failed to delete user watchlist: ${error}`);
+        if (error instanceof NotFoundError) {
+          throw error;
+        }
+        throw new ServerError(`Unexpected error deleting user watchlist: ${error}`);
       }
     }
 }
