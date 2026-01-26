@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
+export * from "./deletepeoples-id404";
 export * from "./deleteusers-id400-details-item";
 export * from "./deleteusers-id400";
 export * from "./deleteusers-id401";
@@ -35,6 +36,15 @@ export * from "./getmovies-params";
 export * from "./getmovies200-data-item-type";
 export * from "./getmovies200-data-item";
 export * from "./getmovies200";
+export * from "./getpeoples-id200-data";
+export * from "./getpeoples-id200";
+export * from "./getpeoples-id404";
+export * from "./getpeoples-params";
+export * from "./getpeoples-search-params";
+export * from "./getpeoples-search200-data-item";
+export * from "./getpeoples-search200";
+export * from "./getpeoples200-data-item";
+export * from "./getpeoples200";
 export * from "./getseries-id200-type";
 export * from "./getseries-id200";
 export * from "./getseries-id404";
@@ -122,6 +132,9 @@ export * from "./postauth-register400-details-item";
 export * from "./postauth-register400";
 export * from "./postauth-register409-details";
 export * from "./postauth-register409";
+export * from "./postpeoples-body";
+export * from "./postpeoples201-data";
+export * from "./postpeoples201";
 export * from "./postwatchlist-body-status";
 export * from "./postwatchlist-body";
 export * from "./postwatchlist201-data-status";
@@ -132,3 +145,7 @@ export * from "./postwatchlist400";
 export * from "./postwatchlist401";
 export * from "./postwatchlist409-details";
 export * from "./postwatchlist409";
+export * from "./putpeoples-id-body";
+export * from "./putpeoples-id200-data";
+export * from "./putpeoples-id200";
+export * from "./putpeoples-id404";
