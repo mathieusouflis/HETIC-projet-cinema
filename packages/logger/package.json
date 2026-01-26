@@ -27,10 +27,10 @@
     "@packages/eslint-config": "workspace:*",
     "@packages/vitest-presets": "workspace:*",
     "@packages/typescript-config": "workspace:*",
-    "@types/node": "^25.0.9",
-    "@vitest/coverage-v8": "^4.0.17",
+    "@types/node": "^25.0.10",
+    "@vitest/coverage-v8": "^4.0.18",
     "eslint": "^9.39.0",
     "typescript": "5.9.3",
-    "vitest": "4.0.17"
+    "vitest": "4.0.18"
   }
 }
