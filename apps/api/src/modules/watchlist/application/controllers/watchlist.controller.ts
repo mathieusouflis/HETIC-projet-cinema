@@ -4,12 +4,17 @@ import { Protected } from "../../../../shared/infrastructure/decorators/auth.dec
 import { Controller } from "../../../../shared/infrastructure/decorators/controller.decorator.js";
 import { ApiResponse } from "../../../../shared/infrastructure/decorators/response.decorator.js";
 import { Get } from "../../../../shared/infrastructure/decorators/route.decorators.js";
-import { ValidateQuery } from "../../../../shared/infrastructure/decorators/validation.decorators.js";
+import { ValidateParams, ValidateQuery } from "../../../../shared/infrastructure/decorators/validation.decorators.js";
+import { notFoundErrorResponseSchema } from "../../../../shared/schemas/base/error.schemas.js";
 import { createSuccessResponse } from "../../../../shared/schemas/base/response.schemas.js";
 import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
 import { QueryWatchlistRequest, queryWatchlistValidator } from "../dto/request/query-watchlist.query.validator.js";
+import { GetWatchlistByIdParams, getWatchlistByIdParamsValidator } from "../dto/request/get-watchlist.params.validator.js";
 import { QueryWatchlistResponse, queryWatchlistResponseValidator } from "../dto/response/query-watchlist.response.validator.js";
 import { ListWatchlistUseCase } from "../use-cases/list-watchlist.use-case.js";
+import { NotFoundError } from "../../../../shared/errors/NotFoundError.js";
+import { GetWatchlistByIdResponse, getWatchlistByIdResponseValidator } from "../dto/response/get-watchlist.response.validator.js";
+import { GetWatchlistContentUseCase } from "../use-cases/get-watchlist-content.use-case.js";
 
 @Controller({
   tag: "Watchlist",
@@ -20,7 +25,7 @@ import { ListWatchlistUseCase } from "../use-cases/list-watchlist.use-case.js";
 export class WatchlistController extends BaseController {
   constructor(
     private readonly queryWatchlistUseCase: ListWatchlistUseCase,
-    // private readonly getWatchlistContentUseCase: GetWatchlistContentUseCase,
+    private readonly getWatchlistContentUseCase: GetWatchlistContentUseCase,
     // private readonly updateWatchlistContentUseCase: UpdateWatchlistContentUseCase,
     // private readonly deleteWatchlistContentUseCase: DeleteWatchlistContentUseCase
   ) {
@@ -54,46 +59,29 @@ export class WatchlistController extends BaseController {
   })
 
 
-  // @Get({
-  //   path: "/",
-  //   description: "List movies by type",
-  // })
-  // @ValidateQuery(queryMovieRequestSchema)
-  // @ApiResponse(200, "Movies retrieved successfully", createSuccessResponse(queryMovieResponseSchema))
-  // queryMovies = asyncHandler(async (req, res): Promise<QueryMovieResponse> => {
-  //   const query = req.query as QueryMovieRequest;
+  @Get({
+    path: "/:id",
+    description: "Get watchlist content by id",
+  })
+  @ValidateParams(getWatchlistByIdParamsValidator)
+  @ApiResponse(404, "Content not found in watchlist", notFoundErrorResponseSchema)
+  @ApiResponse(200, "Content retrieved successfully", getWatchlistByIdResponseValidator)
+  getMovieById = asyncHandler(async (req, res): Promise<GetWatchlistByIdResponse> => {
+    const {id} = req.params as GetWatchlistByIdParams;
 
-  //   const movies = await this.queryMoviesUseCase.execute(query);
+    const movie = await this.getWatchlistContentUseCase.execute(id);
 
-  //   res.status(200).json({
-  //     success: true,
-  //     message: "Movies retrieved successfully",
-  //     data: movies,
-  //   });
+    if (!movie) {
+      throw new NotFoundError(`Content ${id} not found in watchlist`);
+    }
 
-  //   return movies;
-  // });
+    res.status(200).json({
+      success: true,
+      message: "Content in watchlist retrieved successfully",
+      data: movie,
+    });
 
-  // @Get({
-  //   path: "/:id",
-  //   description: "Get movie by id",
-  // })
-  // @ValidateParams(getMovieByIdValidatorParams)
-  // @ApiResponse(404, "Movie not found", notFoundErrorResponseSchema)
-  // @ApiResponse(200, "Movie retrieved successfully", getMovieByIdResponseSchema)
-  // getMovieById = asyncHandler(async (req, res): Promise<GetMovieByIdResponse> => {
-  //   logger.info(req.params)
-  //   const {id} = req.params as GetMovieByIdValidatorParams;
-
-  //   const movie = await this.getMovieByIdUseCase.execute(id);
-
-  //   res.status(200).json({
-  //     success: true,
-  //     message: "Movie retrieved successfully",
-  //     data: movie,
-  //   });
-
-  //   return movie;
-  // });
+    return movie;
+  });
 
 }
