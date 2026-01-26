@@ -26,9 +26,10 @@ import { PatchWatchlistByContentIdParams, patchWatchlistByContentIdParamsValidat
 import { PatchWatchlistByContentIdUseCase } from "../use-cases/patch-watchlist-by-content.use-case.js";
 import { DeleteWatchlistParams, deleteWatchlistParamsValidator } from "../dto/request/delete-watchlist.params.validator.js";
 import { DeleteWatchlistByIdUseCase } from "../use-cases/delete-watchlist.use-case.js";
+import { DeleteWatchlistByContentIdUseCase } from "../use-cases/delete-watchlist-by-content.use-case.js";
+import { AddWatchlistContentUseCase } from "../use-cases/add-watchlist-content.use-case.js";
 import { AddContentToWatchlistBody, addContentToWatchlistBodyValidator } from "../dto/request/add-content-to-watchlist.body.validator.js";
 import { AddWatchlistContentResponse, addWatchlistContentResponseValidator } from "../dto/response/add-watchlist-content.response.validator.js";
-import { AddWatchlistContentUseCase } from "../use-cases/add-watchlist-content.use-case.js";
 
 @Controller({
   tag: "Watchlist",
@@ -45,6 +46,7 @@ export class WatchlistController extends BaseController {
     private readonly patchWatchlistByIdUseCase: PatchWatchlistByIdUseCase,
     private readonly patchWatchlistByContentIdUseCase: PatchWatchlistByContentIdUseCase,
     private readonly deleteWatchlistByIdUseCase: DeleteWatchlistByIdUseCase,
+    private readonly deleteWatchlistByContentIdUseCase: DeleteWatchlistByContentIdUseCase,
   ) {
     super();
   }
@@ -65,11 +67,11 @@ export class WatchlistController extends BaseController {
 
     const watchlist = await this.queryWatchlistUseCase.execute(req.user.userId, query)
 
-     res.status(200).json({
+    res.status(200).json({
       success: true,
       message: "Watchlist retrieved successfully",
       data: watchlist
-     })
+    })
 
     return watchlist
 
@@ -89,7 +91,7 @@ export class WatchlistController extends BaseController {
     const { id } = req.params as GetWatchlistByContentIdParams;
     const userId = req.user?.userId;
 
-    if(!userId) {
+    if (!userId) {
       throw new UnauthorizedError("You should be logged in to execute this action");
     }
 
@@ -152,7 +154,7 @@ export class WatchlistController extends BaseController {
     const { id } = req.params as GetWatchlistByIdParams;
     const userId = req.user?.userId;
 
-    if(!userId) {
+    if (!userId) {
       throw new UnauthorizedError("You should be logged in to execute this action");
     }
 
@@ -187,7 +189,7 @@ export class WatchlistController extends BaseController {
     const body = req.body as PatchWatchlistBody
     const userId = req.user?.userId;
 
-    if(!userId) {
+    if (!userId) {
       throw new UnauthorizedError("You should be logged in to execute this action");
     }
 
@@ -219,7 +221,7 @@ export class WatchlistController extends BaseController {
     const body = req.body as PatchWatchlistBody
     const userId = req.user?.userId;
 
-    if(!userId) {
+    if (!userId) {
       throw new UnauthorizedError("You should be logged in to execute this action");
     }
 
@@ -248,7 +250,7 @@ export class WatchlistController extends BaseController {
     const { id } = req.params as DeleteWatchlistParams;
     const userId = req.user?.userId;
 
-    if(!userId) {
+    if (!userId) {
       throw new UnauthorizedError("You should be logged in to execute this action");
     }
 
@@ -258,6 +260,31 @@ export class WatchlistController extends BaseController {
       success: true,
       message: `Watchlist ${id} deleted successfully`,
     });
+  });
 
+  @Delete({
+    path: "/content/:id",
+    description: "Delete watchlist by content id",
+  })
+  @Protected()
+  @ValidateParams(deleteWatchlistParamsValidator)
+  @ApiResponse(404, "Content not found in watchlist", notFoundErrorResponseSchema)
+  @ApiResponse(401, "You should be logged in to execute this action", unauthorizedErrorResponseSchema)
+  @ApiResponse(401, "You are not authorized to access this watchlist", unauthorizedErrorResponseSchema)
+  @ApiResponse(204, "Watchlist deleted successfully", emptySuccessResponseSchema)
+  deleteWatchlistByContentId = asyncHandler(async (req, res): Promise<void> => {
+    const { id } = req.params as DeleteWatchlistParams;
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      throw new UnauthorizedError("You should be logged in to execute this action");
+    }
+
+    await this.deleteWatchlistByContentIdUseCase.execute(userId, id);
+
+    res.status(200).json({
+      success: true,
+      message: `Watchlist ${id} deleted successfully`,
+    });
   });
 }
