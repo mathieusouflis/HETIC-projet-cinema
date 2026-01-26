@@ -5,7 +5,7 @@ import { Controller } from "../../../../shared/infrastructure/decorators/control
 import { ApiResponse } from "../../../../shared/infrastructure/decorators/response.decorator.js";
 import { Get, Post } from "../../../../shared/infrastructure/decorators/route.decorators.js";
 import { ValidateBody, ValidateParams, ValidateQuery } from "../../../../shared/infrastructure/decorators/validation.decorators.js";
-import { commonErrorResponses, notFoundErrorResponseSchema } from "../../../../shared/schemas/base/error.schemas.js";
+import { commonErrorResponses, notFoundErrorResponseSchema, unauthorizedErrorResponseSchema } from "../../../../shared/schemas/base/error.schemas.js";
 import { createSuccessResponse } from "../../../../shared/schemas/base/response.schemas.js";
 import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
 import { QueryWatchlistRequest, queryWatchlistValidator } from "../dto/request/query-watchlist.query.validator.js";
@@ -67,13 +67,20 @@ export class WatchlistController extends BaseController {
     path: "/:id",
     description: "Get watchlist content by id",
   })
+  @Protected()
   @ValidateParams(getWatchlistByIdParamsValidator)
   @ApiResponse(404, "Content not found in watchlist", notFoundErrorResponseSchema)
+  @ApiResponse(401, "You should be logged in to execute this action", unauthorizedErrorResponseSchema)
   @ApiResponse(200, "Content retrieved successfully", getWatchlistByIdResponseValidator)
   getMovieById = asyncHandler(async (req, res): Promise<GetWatchlistByIdResponse> => {
-    const {id} = req.params as GetWatchlistByIdParams;
+    const { id } = req.params as GetWatchlistByIdParams;
+    const userId = req.user?.userId;
 
-    const movie = await this.getWatchlistContentUseCase.execute(id);
+    if(!userId) {
+      throw new UnauthorizedError("You should be logged in to execute this action");
+    }
+
+    const movie = await this.getWatchlistContentUseCase.execute(userId, id);
 
     if (!movie) {
       throw new NotFoundError(`Content ${id} not found in watchlist`);

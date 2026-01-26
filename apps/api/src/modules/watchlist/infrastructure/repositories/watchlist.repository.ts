@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "../../../../database";
 import { watchlist } from "../../../../database/schema";
 import { ServerError } from "../../../../shared/errors/ServerError";
@@ -30,7 +30,22 @@ export class WatchlistRepository implements IWatchlistRepository {
       const content = resolvedContent[0]
 
       if (!content) {
-        throw new NotFoundError(`Content with id ${id} not found in personal watchlist.`);
+        throw new NotFoundError(`Personal watchlist with id ${id} not found.`);
+      }
+
+      return content ? new Watchlist(content) : null;
+    } catch (error) {
+      throw new ServerError(`Failed to create user watchlist: ${error}`)
+    }
+  }
+
+  async findByContentId(userId: string, contentId: string): Promise<Watchlist | null> {
+    try {
+      const resolvedContent = await db.select().from(watchlist).where(and(eq(watchlist.userId, userId), eq(watchlist.contentId, contentId)));
+      const content = resolvedContent[0]
+
+      if (!content) {
+        throw new NotFoundError(`Content with id ${contentId} not found in personal watchlist.`);
       }
 
       return content ? new Watchlist(content) : null;
