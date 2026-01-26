@@ -3,6 +3,9 @@ import { createRoot } from "react-dom/client";
 // import { PostHogProvider } from "posthog-js/react";
 import App from "./app";
 import "./index.css";
+import ReactDOM from 'react-dom/client'
+import { RouterProvider } from '@tanstack/react-router'
+import { router } from './router'
 
 const el = document.getElementById("root");
 if (el) {
@@ -25,3 +28,9 @@ if (el) {
 } else {
   throw new Error("Could not find root element");
 }
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>,
+)

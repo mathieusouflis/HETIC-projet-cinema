@@ -8,16 +8,18 @@
   "files": [
     "dist"
   ],
-  "exports": {
-    "./counter-button": {
-      "types": "./dist/counter-button/index.d.ts",
-      "default": "./dist/counter-button/index.js"
-    },
-    "./link": {
-      "types": "./dist/link/index.d.ts",
-      "default": "./dist/link/index.js"
-    }
+"exports": {
+  "./counter-button": {
+    "development": "./src/counter-button/index.tsx",
+    "types": "./dist/counter-button/index.d.ts",
+    "default": "./dist/counter-button/index.js"
   },
+  "./link": {
+    "development": "./src/link/index.tsx",
+    "types": "./dist/link/index.d.ts",
+    "default": "./dist/link/index.js"
+  }
+},
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc -w",
