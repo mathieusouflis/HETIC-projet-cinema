@@ -7,8 +7,8 @@ export class GetWatchlistContentUseCase {
     this.watchlistRepository = watchlistRepository;
   }
 
-  async execute(id: string): Promise<Watchlist | null> {
-    const watchlist = await this.watchlistRepository.findById(id);
+  async execute(userId: string, id: string): Promise<Watchlist | null> {
+    const watchlist = await this.watchlistRepository.findByContentId(userId, id);
 
     if (!watchlist) {
       throw new NotFoundError(`Content ${id} not found in watchlist.`);
