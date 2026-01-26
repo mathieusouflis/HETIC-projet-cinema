@@ -5,9 +5,8 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { GETWatchlistId200Data } from "./getwatchlist-id200-data";
 
-export type GETWatchlistId200 = {
+export type DELETEWatchlistId401 = {
   success: boolean;
-  data: GETWatchlistId200Data;
+  error?: string;
 };
