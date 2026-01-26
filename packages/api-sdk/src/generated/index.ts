@@ -31,6 +31,10 @@ import type {
   PATCHUsersIdBody,
   PATCHUsersMe200,
   PATCHUsersMeBody,
+  PATCHWatchlistContentId200,
+  PATCHWatchlistContentIdBody,
+  PATCHWatchlistId200,
+  PATCHWatchlistIdBody,
   POSTAuthLogin200,
   POSTAuthLoginBody,
   POSTAuthLogout200,
@@ -267,6 +271,23 @@ export const gETWatchlistContentId = <
 };
 
 /**
+ * Update watchlist by content id
+ */
+export const pATCHWatchlistContentId = <
+  TData = AxiosResponse<PATCHWatchlistContentId200>,
+>(
+  id: string,
+  pATCHWatchlistContentIdBody: PATCHWatchlistContentIdBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.patch(
+    `/watchlist/content/${id}`,
+    pATCHWatchlistContentIdBody,
+    options,
+  );
+};
+
+/**
  * Get watchlist by id
  */
 export const gETWatchlistId = <TData = AxiosResponse<GETWatchlistId200>>(
@@ -274,6 +295,17 @@ export const gETWatchlistId = <TData = AxiosResponse<GETWatchlistId200>>(
   options?: AxiosRequestConfig,
 ): Promise<TData> => {
   return axios.get(`/watchlist/${id}`, options);
+};
+
+/**
+ * Update watchlist by id
+ */
+export const pATCHWatchlistId = <TData = AxiosResponse<PATCHWatchlistId200>>(
+  id: string,
+  pATCHWatchlistIdBody: PATCHWatchlistIdBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.patch(`/watchlist/${id}`, pATCHWatchlistIdBody, options);
 };
 
 export type GETUsersIdResult = AxiosResponse<GETUsersId200>;
@@ -297,4 +329,7 @@ export type GETWatchlistResult = AxiosResponse<GETWatchlist200>;
 export type POSTWatchlistResult = AxiosResponse<POSTWatchlist201>;
 export type GETWatchlistContentIdResult =
   AxiosResponse<GETWatchlistContentId200>;
+export type PATCHWatchlistContentIdResult =
+  AxiosResponse<PATCHWatchlistContentId200>;
 export type GETWatchlistIdResult = AxiosResponse<GETWatchlistId200>;
+export type PATCHWatchlistIdResult = AxiosResponse<PATCHWatchlistId200>;
