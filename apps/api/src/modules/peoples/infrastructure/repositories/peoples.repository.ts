@@ -1,100 +1,148 @@
-import { eq } from "drizzle-orm";
-import { db } from "../../../../database";
-import { people } from "../../../../database/schema";
-import { ServerError } from "../../../../shared/errors/ServerError";
-import { NotFoundError } from "../../../../shared/errors";
 import { IPeoplesRepository } from "../../domain/interfaces/IPeoplesRepository";
 import { CreatePeopleProps, People, UpdatePeopleProps } from "../../domain/entities/people.entity";
+import { PeoplesDrizzleRepository } from "./peoples.drizzle.repository";
+import { PeoplesTMDBRepository, CreatePersonFromTMDB } from "./peoples.tmdb.repository";
+import { logger } from "@packages/logger";
 
 export class PeoplesRepository implements IPeoplesRepository {
+  private readonly drizzleAdapter: PeoplesDrizzleRepository;
+  private readonly tmdbAdapter: PeoplesTMDBRepository;
 
+  constructor() {
+    this.drizzleAdapter = new PeoplesDrizzleRepository();
+    this.tmdbAdapter = new PeoplesTMDBRepository();
+  }
+
+  /**
+   * Process TMDB people and create them in database if they don't exist
+   */
+  private async processTMDBPeople(tmdbPeople: CreatePersonFromTMDB[]): Promise<People[]> {
+    const tmdbIds = tmdbPeople
+      .map((item) => item.tmdbId)
+      .filter((id) => id !== null && id !== undefined) as number[];
+
+    if (tmdbIds.length === 0) {
+      return [];
+    }
+
+    const existingPeopleStatus = await this.drizzleAdapter.checkExistsByTmdbIds(tmdbIds);
+    const peopleToCreate = tmdbPeople.filter(
+      (item) => item.tmdbId && !existingPeopleStatus[item.tmdbId]
+    );
+
+    if (peopleToCreate.length === 0) {
+      return await this.drizzleAdapter.list({ tmdbIds });
+    }
+
+    const created = await this.drizzleAdapter.bulkCreate(peopleToCreate);
+    const existing = await this.drizzleAdapter.list({
+      tmdbIds: tmdbIds.filter(id => existingPeopleStatus[id])
+    });
+
+    return [...created, ...existing];
+  }
+
+  /**
+   * Create a person
+   */
   async create(peopleContent: CreatePeopleProps): Promise<People> {
-    try {
-      const createdContent = await db.insert(people).values(peopleContent).returning();
-
-      const content = createdContent[0];
-
-      if (!content) {
-        throw new ServerError('Failed to create people');
-      }
-
-      return new People(content);
-
-    } catch (error) {
-      if (error instanceof ServerError) {
-        throw error;
-      }
-      throw new ServerError(`Unexpected error creating people: ${error}`);
-    }
+    return await this.drizzleAdapter.create(peopleContent);
   }
 
+  /**
+   * Get person by ID
+   */
   async getById(id: string): Promise<People | null> {
-    try {
-      const resolvedContent = await db.select().from(people).where(eq(people.id, id));
-      const content = resolvedContent[0]
-
-      if (!content) {
-        throw new NotFoundError(`People with id ${id}`);
-      }
-
-      return content ? new People(content) : null;
-    } catch (error) {
-      if (error instanceof NotFoundError) {
-        throw error;
-      }
-      throw new ServerError(`Unexpected error resolving people ${id}: ${error}`)
-    }
+    return await this.drizzleAdapter.getById(id);
   }
 
+  /**
+   * List people with filters
+   */
   async list(props: {
     nationality?: string;
+    name?: string;
+    limit?: number;
+    offset?: number;
   }): Promise<People[]> {
-      try {
-        const resolvedContent = props.nationality
-          ? await db.select().from(people).where(eq(people.nationality, props.nationality))
-          : await db.select().from(people);
-        return resolvedContent.map(content => new People(content));
-      } catch (error) {
-        throw new ServerError(`Failed to list user watchlist: ${error}`);
+    return await this.drizzleAdapter.list(props);
+  }
+
+  /**
+   * Update a person
+   */
+  async update(id: string, peopleContent: UpdatePeopleProps): Promise<People> {
+    return await this.drizzleAdapter.update(id, peopleContent);
+  }
+
+  /**
+   * Delete a person
+   */
+  async delete(id: string): Promise<void> {
+    await this.drizzleAdapter.delete(id);
+  }
+
+  /**
+   * Search people on TMDB and sync to database
+   */
+  async searchPeople(query: string, page: number = 1): Promise<People[]> {
+    const tmdbPeople = await this.tmdbAdapter.searchPeople(query, page);
+    return await this.processTMDBPeople(tmdbPeople);
+  }
+
+  /**
+   * Get person by TMDB ID (from database or fetch from TMDB)
+   */
+  async getByTmdbId(tmdbId: number): Promise<People | null> {
+    try {
+      const existingPerson = await this.drizzleAdapter.getByTmdbId(tmdbId);
+
+      if (existingPerson) {
+        return existingPerson;
       }
-    }
 
-    async update(id: string, peopleContent: UpdatePeopleProps): Promise<People> {
-      try {
-        const updatedContent = await db.update(people)
-          .set(peopleContent)
-          .where(eq(people.id, id))
-          .returning();
+      const tmdbPerson = await this.tmdbAdapter.getPersonById(tmdbId);
 
-        const content = updatedContent[0];
-
-        if (!content) {
-          throw new NotFoundError(`People with id ${id}`);
-        }
-
-        return new People(content);
-      } catch (error) {
-        if (error instanceof NotFoundError) {
-          throw error;
-        }
-        throw new ServerError(`Unexpected error updating people ${id}: ${error}`);
+      if (!tmdbPerson) {
+        return null;
       }
+
+      return await this.drizzleAdapter.create(tmdbPerson);
+    } catch (error) {
+      logger.error(`Error getting person by TMDB ID ${tmdbId}: ${error}`);
+      return null;
     }
+  }
 
-    async delete(id: string): Promise<void> {
-      try {
-        const deletedCount = await db.delete(people)
-          .where(eq(people.id, id))
-          .returning();
+  /**
+   * Get people by multiple TMDB IDs
+   */
+  async getPeopleByTmdbIds(tmdbIds: number[]): Promise<People[]> {
+    try {
+      const existingPeople = await this.drizzleAdapter.list({ tmdbIds });
+      const existingTmdbIds = existingPeople.map(p => p.tmdbId).filter((id): id is number => id !== null);
 
-        if (deletedCount.length === 0) {
-          throw new NotFoundError(`People item with id ${id}`);
-        }
-      } catch (error) {
-        if (error instanceof NotFoundError) {
-          throw error;
-        }
-        throw new ServerError(`Unexpected error deleting people ${id}: ${error}`);
+      const missingTmdbIds = tmdbIds.filter(id => !existingTmdbIds.includes(id));
+
+      if (missingTmdbIds.length === 0) {
+        return existingPeople;
       }
+
+      // Fetch missing people from TMDB
+      const tmdbPeople = await this.tmdbAdapter.getPeopleByIds(missingTmdbIds);
+      const newPeople = await this.drizzleAdapter.bulkCreate(tmdbPeople);
+
+      return [...existingPeople, ...newPeople];
+    } catch (error) {
+      logger.error(`Error getting people by TMDB IDs: ${error}`);
+      return [];
     }
+  }
+
+  /**
+   * Get count of people
+   */
+  async getCount(params?: { nationality?: string; name?: string }): Promise<number> {
+    return await this.drizzleAdapter.getCount(params);
+  }
 }
