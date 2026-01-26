@@ -34,6 +34,8 @@ import type {
   GETWatchlistContentId200,
   GETWatchlistId200,
   GETWatchlistParams,
+  PATCHPeoplesId200,
+  PATCHPeoplesIdBody,
   PATCHUsersId200,
   PATCHUsersIdBody,
   PATCHUsersMe200,
@@ -52,8 +54,6 @@ import type {
   POSTPeoplesBody,
   POSTWatchlist201,
   POSTWatchlistBody,
-  PUTPeoplesId200,
-  PUTPeoplesIdBody,
 } from "./schemas";
 
 /**
@@ -390,12 +390,12 @@ export const gETPeoplesId = <TData = AxiosResponse<GETPeoplesId200>>(
 /**
  * Update a person
  */
-export const pUTPeoplesId = <TData = AxiosResponse<PUTPeoplesId200>>(
+export const pATCHPeoplesId = <TData = AxiosResponse<PATCHPeoplesId200>>(
   id: string,
-  pUTPeoplesIdBody: PUTPeoplesIdBody,
+  pATCHPeoplesIdBody: PATCHPeoplesIdBody,
   options?: AxiosRequestConfig,
 ): Promise<TData> => {
-  return axios.put(`/peoples/${id}`, pUTPeoplesIdBody, options);
+  return axios.patch(`/peoples/${id}`, pATCHPeoplesIdBody, options);
 };
 
 /**
@@ -440,5 +440,5 @@ export type GETPeoplesResult = AxiosResponse<GETPeoples200>;
 export type POSTPeoplesResult = AxiosResponse<POSTPeoples201>;
 export type GETPeoplesSearchResult = AxiosResponse<GETPeoplesSearch200>;
 export type GETPeoplesIdResult = AxiosResponse<GETPeoplesId200>;
-export type PUTPeoplesIdResult = AxiosResponse<PUTPeoplesId200>;
+export type PATCHPeoplesIdResult = AxiosResponse<PATCHPeoplesId200>;
 export type DELETEPeoplesIdResult = AxiosResponse<void>;
