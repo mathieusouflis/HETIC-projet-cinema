@@ -4719,8 +4719,8 @@
           }
         }
       },
-      "put": {
-        "operationId": "PUT/peoples/{id}",
+      "patch": {
+        "operationId": "PATCH/peoples/{id}",
         "description": "Update a person",
         "tags": [
           "Peoples"

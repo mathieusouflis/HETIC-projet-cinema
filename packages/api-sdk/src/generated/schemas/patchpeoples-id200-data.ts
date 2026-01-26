@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type PUTPeoplesId200Data = {
+export type PATCHPeoplesId200Data = {
   /** @minLength 1 */
   id: string;
   /**
