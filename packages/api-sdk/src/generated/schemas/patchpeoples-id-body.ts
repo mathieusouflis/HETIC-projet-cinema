@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type PUTPeoplesIdBody = {
+export type PATCHPeoplesIdBody = {
   /** @minLength 1 */
   name?: string;
   /** @nullable */

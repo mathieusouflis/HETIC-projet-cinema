@@ -4,8 +4,8 @@ import {
   Controller,
   Delete,
   Get,
+  Patch,
   Post,
-  Put,
   ValidateBody,
   ValidateParams,
   ValidateQuery,
@@ -141,7 +141,7 @@ export class PeoplesController extends BaseController {
     return jsonPeople;
   });
 
-  @Put({
+  @Patch({
     path: "/:id",
     description: "Update a person",
   })
