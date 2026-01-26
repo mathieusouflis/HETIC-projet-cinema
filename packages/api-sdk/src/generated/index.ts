@@ -24,6 +24,7 @@ import type {
   GETUsersMe200,
   GETUsersParams,
   GETWatchlist200,
+  GETWatchlistId200,
   GETWatchlistParams,
   PATCHUsersId200,
   PATCHUsersIdBody,
@@ -240,6 +241,16 @@ export const gETWatchlist = <TData = AxiosResponse<GETWatchlist200>>(
   });
 };
 
+/**
+ * Get watchlist content by id
+ */
+export const gETWatchlistId = <TData = AxiosResponse<GETWatchlistId200>>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.get(`/watchlist/${id}`, options);
+};
+
 export type GETUsersIdResult = AxiosResponse<GETUsersId200>;
 export type PATCHUsersIdResult = AxiosResponse<PATCHUsersId200>;
 export type DELETEUsersIdResult = AxiosResponse<void>;
@@ -258,3 +269,4 @@ export type GETMoviesIdResult = AxiosResponse<GETMoviesId200>;
 export type GETSeriesResult = AxiosResponse<GETSeries200>;
 export type GETSeriesIdResult = AxiosResponse<GETSeriesId200>;
 export type GETWatchlistResult = AxiosResponse<GETWatchlist200>;
+export type GETWatchlistIdResult = AxiosResponse<GETWatchlistId200>;
