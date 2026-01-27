@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "../../../../../database";
 import { friendships } from "../../../../../database/schema";
 import { NotFoundError } from "../../../../../shared/errors";
@@ -39,6 +39,28 @@ export class FriendshipRepository implements IFriendshipsRepository {
       await db.delete(friendships).where(eq(friendships.id, friendshipId));
     } catch (error) {
       throw new ServerError(`Failed to delete friendship: ${error}`);
+    }
+  }
+
+  async findByUserAndFriend(
+    userId: string,
+    friendId: string
+  ): Promise<Friendship | null> {
+    try {
+      const friendship = await db.query.friendships.findFirst({
+        where: and(
+          eq(friendships.userId, userId),
+          eq(friendships.friendId, friendId)
+        ),
+      });
+
+      if (!friendship) {
+        return null;
+      }
+
+      return new Friendship(friendship);
+    } catch (error) {
+      throw new ServerError(`Failed to find friendship: ${error}`);
     }
   }
 
