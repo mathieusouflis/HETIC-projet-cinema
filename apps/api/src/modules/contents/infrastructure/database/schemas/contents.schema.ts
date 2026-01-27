@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   check,
   date,
@@ -12,6 +12,19 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+import {
+  content,
+  contentCategories,
+  contentCredits,
+  listItems,
+  notifications,
+  ratings,
+  reviews,
+  seasons,
+  userActivityLogs,
+  watchlist,
+  watchparties,
+} from "../../../../../database/schema";
 
 export const contentSchema = pgTable(
   "content",
@@ -73,6 +86,19 @@ export const contentSchema = pgTable(
     ),
   ]
 );
+
+export const contentRelationsSchema = relations(content, ({ many }) => ({
+  contentCredits: many(contentCredits),
+  seasons: many(seasons),
+  watchparties: many(watchparties),
+  ratings: many(ratings),
+  reviews: many(reviews),
+  watchlists: many(watchlist),
+  listItems: many(listItems),
+  userActivityLogs: many(userActivityLogs),
+  notifications: many(notifications),
+  contentCategories: many(contentCategories),
+}));
 
 export type ContentRow = typeof contentSchema.$inferSelect;
 export type NewContentRow = typeof contentSchema.$inferInsert;
