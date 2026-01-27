@@ -1,4 +1,4 @@
-import { type SQL, and, eq, or } from "drizzle-orm";
+import { and, eq, or, type SQL } from "drizzle-orm";
 import { db } from "../../../../database/index.js";
 import { watchparties } from "../../../../database/schema.js";
 import { NotFoundError } from "../../../../shared/errors/NotFoundError.js";

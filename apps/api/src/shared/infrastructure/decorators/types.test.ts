@@ -3,9 +3,9 @@ import { BaseController } from "../base/controllers/BaseController.js";
 import {
   AUTH_MIDDLEWARE_MARKER,
   type AuthMiddlewareMarker,
-  type RouteHandler,
   isController,
   isRouteHandler,
+  type RouteHandler,
 } from "./types.js";
 
 describe("Types tests", () => {

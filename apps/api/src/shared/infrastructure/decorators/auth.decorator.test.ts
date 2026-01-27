@@ -1,9 +1,9 @@
 import type { RequestHandler } from "express";
 import { describe, expect, it, vi } from "vitest";
 import {
+  getMiddlewaresMetadata,
   Middlewares,
   Protected,
-  getMiddlewaresMetadata,
 } from "./auth.decorator.js";
 import { AUTH_MIDDLEWARE_MARKER } from "./types.js";
 

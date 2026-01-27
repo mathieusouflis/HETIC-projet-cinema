@@ -2,9 +2,6 @@ import type { Router } from "express";
 import { RestModule } from "../../shared/infrastructure/base/modules/RestModule.js";
 import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-generator.js";
 import { PeoplesController } from "./application/controllers/peoples.controller.js";
-import type { IPeoplesRepository } from "./domain/interfaces/IPeoplesRepository.js";
-import { PeoplesRepository } from "./infrastructure/repositories/peoples.repository.js";
-
 import { CreatePeopleUseCase } from "./application/use-cases/create-people.use-case.js";
 import { DeletePeopleUseCase } from "./application/use-cases/delete-people.use-case.js";
 import { GetPeopleUseCase } from "./application/use-cases/get-people.use-case.js";
@@ -12,6 +9,8 @@ import { GetPeopleUseCase } from "./application/use-cases/get-people.use-case.js
 import { ListPeoplesUseCase } from "./application/use-cases/list-peoples.use-case.js";
 import { SearchPeopleUseCase } from "./application/use-cases/search-people.use-case.js";
 import { UpdatePeopleUseCase } from "./application/use-cases/update-people.use-case.js";
+import type { IPeoplesRepository } from "./domain/interfaces/IPeoplesRepository.js";
+import { PeoplesRepository } from "./infrastructure/repositories/peoples.repository.js";
 
 class PeoplesModule extends RestModule {
   // ============================================

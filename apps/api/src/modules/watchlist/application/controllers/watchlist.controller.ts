@@ -34,17 +34,13 @@ import {
   deleteWatchlistParamsValidator,
 } from "../dto/request/delete-watchlist.params.validator.js";
 import {
-  type GetWatchlistByContentIdParams,
-  getWatchlistByContentIdParamsValidator,
-} from "../dto/request/get-watchlist-content-id.params.validator.js";
-import {
   type GetWatchlistByIdParams,
   getWatchlistByIdParamsValidator,
 } from "../dto/request/get-watchlist.params.validator.js";
 import {
-  type PatchWatchlistByContentIdParams,
-  patchWatchlistByContentIdParamsValidator,
-} from "../dto/request/patch-watchlist-by-content-id.params.validator.js";
+  type GetWatchlistByContentIdParams,
+  getWatchlistByContentIdParamsValidator,
+} from "../dto/request/get-watchlist-content-id.params.validator.js";
 import {
   type PatchWatchlistBody,
   patchWatchlistBodyValidator,
@@ -54,6 +50,10 @@ import {
   patchWatchlistParamsValidator,
 } from "../dto/request/patch-watchlist.params.validator.js";
 import {
+  type PatchWatchlistByContentIdParams,
+  patchWatchlistByContentIdParamsValidator,
+} from "../dto/request/patch-watchlist-by-content-id.params.validator.js";
+import {
   type QueryWatchlistRequest,
   queryWatchlistValidator,
 } from "../dto/request/query-watchlist.query.validator.js";
@@ -62,13 +62,13 @@ import {
   addWatchlistContentResponseValidator,
 } from "../dto/response/add-watchlist-content.response.validator.js";
 import {
-  type GetWatchlistByContentIdResponse,
-  getWatchlistByContentIdResponseValidator,
-} from "../dto/response/get-watchlist-content.response.validator.js";
-import {
   type GetWatchlistByIdResponse,
   getWatchlistByIdResponseValidator,
 } from "../dto/response/get-watchlist.response.validator.js";
+import {
+  type GetWatchlistByContentIdResponse,
+  getWatchlistByContentIdResponseValidator,
+} from "../dto/response/get-watchlist-content.response.validator.js";
 import {
   type PatchWatchlistResponse,
   patchWatchlistResponseValidator,
@@ -78,13 +78,13 @@ import {
   queryWatchlistResponseValidator,
 } from "../dto/response/query-watchlist.response.validator.js";
 import type { AddWatchlistContentUseCase } from "../use-cases/add-watchlist-content.use-case.js";
-import type { DeleteWatchlistByContentIdUseCase } from "../use-cases/delete-watchlist-by-content.use-case.js";
 import type { DeleteWatchlistByIdUseCase } from "../use-cases/delete-watchlist.use-case.js";
-import type { GetWatchlistByContentIdUseCase } from "../use-cases/get-watchlist-content.use-case.js";
+import type { DeleteWatchlistByContentIdUseCase } from "../use-cases/delete-watchlist-by-content.use-case.js";
 import type { GetWatchlistByIdUseCase } from "../use-cases/get-watchlist.use-case.js";
+import type { GetWatchlistByContentIdUseCase } from "../use-cases/get-watchlist-content.use-case.js";
 import type { ListWatchlistUseCase } from "../use-cases/list-watchlist.use-case.js";
-import type { PatchWatchlistByContentIdUseCase } from "../use-cases/patch-watchlist-by-content.use-case.js";
 import type { PatchWatchlistByIdUseCase } from "../use-cases/patch-watchlist.use-case.js";
+import type { PatchWatchlistByContentIdUseCase } from "../use-cases/patch-watchlist-by-content.use-case.js";
 
 @Controller({
   tag: "Watchlist",

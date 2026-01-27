@@ -29,15 +29,15 @@ import {
   deleteFriendshipParamsValidator,
 } from "../dto/requests/delete-friendship.params.validator.js";
 import { deleteIdParamsSchema } from "../dto/requests/delete-id.validator.js";
+import {
+  type GetQueryDTO,
+  getQuerySchema,
+} from "../dto/requests/get.validator.js";
 import { getIdParamsSchema } from "../dto/requests/get-id.validatror.js";
 import {
   type GetUserFollowersParams,
   getUserFollowersParamsValidator,
 } from "../dto/requests/get-user-followers.params.validator.js";
-import {
-  type GetQueryDTO,
-  getQuerySchema,
-} from "../dto/requests/get.validator.js";
 import {
   type PatchIdRequestDTO,
   patchIdBodySchema,
@@ -70,16 +70,16 @@ import {
 } from "../dto/responses/patch-id-response.js";
 import { patchMeResponseSchema } from "../dto/responses/patch-me-response.js";
 import { toUserResponseDTO } from "../dto/utils/to-user-response.js";
+import type { CreateFriendshipUseCase } from "../use-cases/create-friendship.use-case.js";
 import type { DeleteUserUseCase } from "../use-cases/DeleteUser.usecase.js";
+import type { DeleteFriendshipUseCase } from "../use-cases/delete-friendship.use-case.js";
 import type { GetMeUseCase } from "../use-cases/GetMe.usecase.js";
 import type { GetUserByIdUseCase } from "../use-cases/GetUserById.usecase.js";
 import type { GetUsersUseCase } from "../use-cases/GetUsers.usecase.js";
-import type { UpdateUserUseCase } from "../use-cases/UpdateUser.usecase.js";
-import type { CreateFriendshipUseCase } from "../use-cases/create-friendship.use-case.js";
-import type { DeleteFriendshipUseCase } from "../use-cases/delete-friendship.use-case.js";
 import type { GetMyFollowingUseCase } from "../use-cases/get-my-following.use-case.js";
 import type { GetUserFollowersUseCase } from "../use-cases/get-user-followers.use-case.js";
 import type { GetUserFollowingUseCase } from "../use-cases/get-user-following.use-case.js";
+import type { UpdateUserUseCase } from "../use-cases/UpdateUser.usecase.js";
 
 @Controller({
   tag: "Users",
