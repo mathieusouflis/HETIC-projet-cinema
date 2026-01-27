@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.12/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -8,20 +8,21 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": [
-      "node_modules",
-      "dist",
-      "build",
-      "generated",
-      "api-documentation.json",
-      ".next",
-      ".turbo",
-      "coverage",
-      "*.config.js",
-      "*.config.ts",
-      "pnpm-lock.yaml",
-      ".devenv",
-      ".direnv"
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/dist",
+      "!**/build",
+      "!**/generated",
+      "!**/api-documentation.json",
+      "!**/.next",
+      "!**/.turbo",
+      "!**/coverage",
+      "!**/*.config.js",
+      "!**/*.config.ts",
+      "!**/pnpm-lock.yaml",
+      "!**/.devenv",
+      "!**/.direnv"
     ]
   },
   "formatter": {
@@ -33,9 +34,7 @@
     "lineWidth": 80,
     "attributePosition": "auto"
   },
-  "organizeImports": {
-    "enabled": true
-  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "linter": {
     "enabled": true,
     "rules": {
@@ -44,7 +43,6 @@
         "recommended": true,
         "noAccessKey": "error",
         "noAutofocus": "warn",
-        "noBlankTarget": "error",
         "noDistractingElements": "error",
         "noNoninteractiveTabindex": "error",
         "noPositiveTabindex": "error",
@@ -75,7 +73,10 @@
         "noUselessTernary": "error",
         "noVoid": "error",
         "useLiteralKeys": "error",
-        "useOptionalChain": "error"
+        "useOptionalChain": "error",
+        "noArguments": "error",
+        "noCommaOperator": "error",
+        "useNumericLiterals": "error"
       },
       "correctness": {
         "recommended": true,
@@ -86,7 +87,6 @@
         "noGlobalObjectCalls": "error",
         "noInnerDeclarations": "error",
         "noInvalidConstructorSuper": "error",
-        "noInvalidNewBuiltin": "error",
         "noPrecisionLoss": "error",
         "noSelfAssign": "error",
         "noSetterReturn": "error",
@@ -94,23 +94,23 @@
         "noUnreachable": "error",
         "noUnsafeOptionalChaining": "error",
         "noUnusedVariables": "error",
-        "useArrayLiterals": "error",
         "useExhaustiveDependencies": "warn",
         "useHookAtTopLevel": "error",
         "useIsNan": "error",
-        "useYield": "error"
+        "useYield": "error",
+        "noInvalidBuiltinInstantiation": "error",
+        "useValidTypeof": "error"
       },
       "security": {
         "recommended": true,
         "noDangerouslySetInnerHtml": "warn",
         "noDangerouslySetInnerHtmlWithChildren": "error",
-        "noGlobalEval": "error"
+        "noGlobalEval": "error",
+        "noBlankTarget": "error"
       },
       "style": {
         "recommended": true,
         "noUnusedTemplateLiteral": "warn",
-        "noArguments": "error",
-        "noCommaOperator": "error",
         "noDefaultExport": "off",
         "noImplicitBoolean": "off",
         "noInferrableTypes": "error",
@@ -119,7 +119,6 @@
         "noNonNullAssertion": "warn",
         "noParameterAssign": "warn",
         "noRestrictedGlobals": "error",
-        "noVar": "error",
         "useAsConstAssertion": "error",
         "useBlockStatements": "warn",
         "useCollapsedElseIf": "warn",
@@ -130,11 +129,11 @@
         "useForOf": "warn",
         "useFragmentSyntax": "error",
         "useImportType": "error",
-        "useNumericLiterals": "error",
         "useSelfClosingElements": "error",
         "useShorthandAssign": "error",
         "useSingleVarDeclarator": "error",
-        "useTemplate": "error"
+        "useTemplate": "error",
+        "useArrayLiterals": "error"
       },
       "suspicious": {
         "recommended": true,
@@ -145,7 +144,6 @@
         "noCatchAssign": "error",
         "noClassAssign": "error",
         "noCompareNegZero": "error",
-        "noConsoleLog": "warn",
         "noConstEnum": "warn",
         "noControlCharactersInRegex": "error",
         "noDebugger": "warn",
@@ -167,7 +165,8 @@
         "noSparseArray": "error",
         "noUnsafeNegation": "error",
         "useAwait": "warn",
-        "useValidTypeof": "error"
+        "noVar": "error",
+        "noConsole": { "level": "warn", "options": { "allow": ["log"] } }
       },
       "nursery": {
         "useSortedClasses": "off"
@@ -207,17 +206,22 @@
   },
   "overrides": [
     {
-      "include": ["**/logger/**"],
+      "includes": ["**/logger/**"],
       "linter": {
         "rules": {
           "suspicious": {
-            "noConsoleLog": "off"
+            "noConsole": { "level": "off", "options": { "allow": ["log"] } }
           }
         }
       }
     },
     {
-      "include": ["*.test.ts", "*.test.tsx", "*.spec.ts", "*.spec.tsx"],
+      "includes": [
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.spec.ts",
+        "**/*.spec.tsx"
+      ],
       "linter": {
         "rules": {
           "suspicious": {
@@ -228,7 +232,7 @@
       }
     },
     {
-      "include": ["*.config.js", "*.config.ts"],
+      "includes": ["**/*.config.js", "**/*.config.ts"],
       "linter": {
         "rules": {
           "style": {
