@@ -11,6 +11,8 @@ import {
 } from "drizzle-orm/pg-core";
 import { users } from "./users.schema";
 
+export type FriendshipStatus = "pending" | "accepted" | "rejected";
+
 export const friendshipsStatusEnum = pgEnum("friendship_status", [
   "pending",
   "accepted",
