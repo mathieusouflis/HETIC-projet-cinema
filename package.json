@@ -3,10 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm generate-sdk && phase run turbo run build",
+    "build": "pnpm generate-sdk && turbo run build",
     "build:watch": "pnpm generate-sdk && turbo run build:watch",
     "check-types": "pnpm generate-sdk && turbo run check-types",
-    "generate-sdk": "phase run turbo run generate-sdk",
+    "generate-sdk": "turbo run generate-sdk",
     "clean": "turbo run clean && rm -rf .turbo dist node_modules/.cache packages/*/.turbo packages/*/dist apps/*/.turbo apps/*/dist",
     "db:logs": "docker compose -f docker-compose.dev.yaml logs -f",
     "db:shell": "docker compose -f docker-compose.dev.yaml exec db psql -U ${DB_USER:-root} -d ${DB_DATABASE:-database}",
