@@ -8,17 +8,17 @@ export class Friendship {
   public readonly id: string;
   public readonly userId: string;
   public readonly friendId: string;
-  public readonly status: FriendshipStatus | null;
-  public readonly createdAt: string | null;
-  public readonly updatedAt: string | null;
+  public readonly status: FriendshipStatus;
+  public readonly createdAt: Date;
+  public readonly updatedAt: Date;
 
   constructor(props: FriendshipRow) {
     this.id = props.id;
     this.userId = props.userId;
     this.friendId = props.friendId;
-    this.status = props.status as FriendshipStatus | null;
-    this.createdAt = props.createdAt;
-    this.updatedAt = props.updatedAt;
+    this.status = props.status as FriendshipStatus;
+    this.createdAt = props.createdAt ? new Date(props.createdAt) : new Date();
+    this.updatedAt = props.updatedAt ? new Date(props.updatedAt) : new Date();
   }
 
   public isPending(): boolean {
