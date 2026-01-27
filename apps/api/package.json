@@ -12,7 +12,7 @@
     "check-types": "tsc --noEmit",
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
+    "db:migrate": "phase run drizzle-kit migrate",
     "clean": "rm -rf dist",
     "test": "vitest run"
   },
