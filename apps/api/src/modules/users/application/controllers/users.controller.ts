@@ -1,5 +1,8 @@
 import type { Request, Response } from "express";
-import { UnauthorizedError } from "../../../../shared/errors/index.js";
+import {
+  ForbiddenError,
+  UnauthorizedError,
+} from "../../../../shared/errors/index.js";
 import { Shared } from "../../../../shared/index.js";
 import { BaseController } from "../../../../shared/infrastructure/base/controllers/BaseController.js";
 import { Protected } from "../../../../shared/infrastructure/decorators/auth.decorator.js";
@@ -9,6 +12,7 @@ import {
   Delete,
   Get,
   Patch,
+  Post,
 } from "../../../../shared/infrastructure/decorators/route.decorators.js";
 import {
   ValidateBody,
@@ -16,6 +20,10 @@ import {
   ValidateQuery,
 } from "../../../../shared/infrastructure/decorators/validation.decorators.js";
 import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
+import {
+  type CreateFrienshipParams,
+  createFrienshipParamsValidator,
+} from "../dto/requests/create-friendship.params.validator.js";
 import { deleteIdParamsSchema } from "../dto/requests/delete-id.validator.js";
 import { getIdParamsSchema } from "../dto/requests/get-id.validatror.js";
 import {
@@ -28,6 +36,10 @@ import {
   patchIdParamsSchema,
 } from "../dto/requests/patch-id.validator.js";
 import { patchMeBodySchema } from "../dto/requests/patch-me.validator.js";
+import {
+  type CreateFriendshipResponse,
+  createFriendshipResponseValidator,
+} from "../dto/responses/create-friendship.response.validator.js";
 import {
   type GetIdResponseDTO,
   getIdResponseSchema,
@@ -50,6 +62,7 @@ import type { GetMeUseCase } from "../use-cases/GetMe.usecase.js";
 import type { GetUserByIdUseCase } from "../use-cases/GetUserById.usecase.js";
 import type { GetUsersUseCase } from "../use-cases/GetUsers.usecase.js";
 import type { UpdateUserUseCase } from "../use-cases/UpdateUser.usecase.js";
+import type { CreateFriendshipUseCase } from "../use-cases/create-friendship.use-case.js";
 
 @Controller({
   tag: "Users",
@@ -62,7 +75,14 @@ export class UsersController extends BaseController {
     private readonly getUsersUseCase: GetUsersUseCase,
     private readonly updateUserUseCase: UpdateUserUseCase,
     private readonly deleteUserUseCase: DeleteUserUseCase,
-    private readonly getMeUseCase: GetMeUseCase
+    private readonly getMeUseCase: GetMeUseCase,
+
+    /*
+     * ========================================
+     *           FOLLOWING FEATURE
+     * ========================================
+     */
+    private readonly createFriendshipUseCase: CreateFriendshipUseCase
   ) {
     super();
   }
@@ -308,4 +328,74 @@ export class UsersController extends BaseController {
       return updatedUser;
     }
   );
+
+  /*
+   * ========================================
+   *           FOLLOWING FEATURE
+   * ========================================
+   */
+  @Post({
+    path: "/me/friendships/:id",
+    description: "Follow a user",
+  })
+  @ValidateParams(createFrienshipParamsValidator)
+  @ApiResponse(
+    201,
+    "User followed successfully",
+    Shared.Schemas.Base.createSuccessResponse(createFriendshipResponseValidator)
+  )
+  @ApiResponse(
+    400,
+    "Invalid input data",
+    Shared.Schemas.Base.validationErrorResponseSchema
+  )
+  @ApiResponse(
+    401,
+    "Not authenticated",
+    Shared.Schemas.Base.unauthorizedErrorResponseSchema
+  )
+  @ApiResponse(
+    409,
+    "Cannot follow yourself",
+    Shared.Schemas.Base.forbiddenErrorResponseSchema
+  )
+  @ApiResponse(
+    409,
+    "User allready followed",
+    Shared.Schemas.Base.forbiddenErrorResponseSchema
+  )
+  @ApiResponse(
+    404,
+    "User not found",
+    Shared.Schemas.Base.notFoundErrorResponseSchema
+  )
+  createFriendship = asyncHandler(
+    async (req, res): Promise<CreateFriendshipResponse> => {
+      const params = req.params as CreateFrienshipParams;
+      const userId = req.user?.userId;
+      if (!userId) {
+        throw new UnauthorizedError("User not authenticated");
+      }
+
+      if (userId === params.id) {
+        throw new ForbiddenError("Cannot follow yourself");
+      }
+
+      const friendship = await this.createFriendshipUseCase.execute(
+        userId,
+        params
+      );
+
+      res.status(201).json({
+        success: true,
+        data: friendship.toJSON(),
+      });
+
+      return friendship.toJSON();
+    }
+  );
+  // @Delete("/me/following/:id")
+  // @Get("/me/following")
+  // @Get("/:id/following")
+  // @Get("/:id/followers")
 }

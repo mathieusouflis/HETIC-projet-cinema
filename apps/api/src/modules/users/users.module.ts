@@ -7,6 +7,9 @@ import { GetMeUseCase } from "./application/use-cases/GetMe.usecase.js";
 import { GetUserByIdUseCase } from "./application/use-cases/GetUserById.usecase.js";
 import { GetUsersUseCase } from "./application/use-cases/GetUsers.usecase.js";
 import { UpdateUserUseCase } from "./application/use-cases/UpdateUser.usecase.js";
+import { CreateFriendshipUseCase } from "./application/use-cases/create-friendship.use-case.js";
+import type { IFriendshipsRepository } from "./domain/interfaces/IFriendshipsRepository.js";
+import { FriendshipRepository } from "./infrastructure/database/repositories/friendship.repository.js";
 import { UserRepository } from "./infrastructure/database/repositories/user.repository.js";
 
 class UsersModule extends RestModule {
@@ -15,6 +18,8 @@ class UsersModule extends RestModule {
   // ============================================
 
   private readonly userRepository: UserRepository;
+
+  private readonly friendshipRepository: IFriendshipsRepository;
 
   // ============================================
   // Application Layer (Use Cases)
@@ -29,6 +34,8 @@ class UsersModule extends RestModule {
   private readonly updateUserUseCase: UpdateUserUseCase;
 
   private readonly deleteUserUseCase: DeleteUserUseCase;
+
+  private readonly createFriendshipUseCase: CreateFriendshipUseCase;
 
   // ============================================
   // Presentation Layer (Controller & Router)
@@ -46,19 +53,25 @@ class UsersModule extends RestModule {
       description: "Module for managing users",
     });
     this.userRepository = new UserRepository();
+    this.friendshipRepository = new FriendshipRepository();
 
     this.getUserByIdUseCase = new GetUserByIdUseCase(this.userRepository);
     this.getMeUseCase = new GetMeUseCase(this.userRepository);
     this.getUsersUseCase = new GetUsersUseCase(this.userRepository);
     this.updateUserUseCase = new UpdateUserUseCase(this.userRepository);
     this.deleteUserUseCase = new DeleteUserUseCase(this.userRepository);
+    this.createFriendshipUseCase = new CreateFriendshipUseCase(
+      this.userRepository,
+      this.friendshipRepository
+    );
 
     this.controller = new UsersController(
       this.getUserByIdUseCase,
       this.getUsersUseCase,
       this.updateUserUseCase,
       this.deleteUserUseCase,
-      this.getMeUseCase
+      this.getMeUseCase,
+      this.createFriendshipUseCase
     );
 
     this.decoratorRouter = new DecoratorRouter();
