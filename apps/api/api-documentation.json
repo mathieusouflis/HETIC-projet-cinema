@@ -4725,6 +4725,11 @@
         "tags": [
           "Peoples"
         ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "schema": {
@@ -4855,6 +4860,31 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "string",
+                      "default": "Not authenticated"
+                    }
+                  },
+                  "required": [
+                    "success"
+                  ]
+                }
+              }
+            }
+          },
           "404": {
             "description": "Person not found",
             "content": {
@@ -4888,6 +4918,11 @@
         "tags": [
           "Peoples"
         ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "schema": {
@@ -4903,6 +4938,31 @@
         "responses": {
           "200": {
             "description": "Person deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "string",
+                      "default": "Not authenticated"
+                    }
+                  },
+                  "required": [
+                    "success"
+                  ]
+                }
+              }
+            }
           },
           "404": {
             "description": "Person not found",

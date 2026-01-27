@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
+export * from "./deletepeoples-id401";
 export * from "./deletepeoples-id404";
 export * from "./deleteusers-id400-details-item";
 export * from "./deleteusers-id400";
@@ -86,6 +87,7 @@ export * from "./getwatchlist200";
 export * from "./patchpeoples-id-body";
 export * from "./patchpeoples-id200-data";
 export * from "./patchpeoples-id200";
+export * from "./patchpeoples-id401";
 export * from "./patchpeoples-id404";
 export * from "./patchusers-id-body";
 export * from "./patchusers-id200-data";

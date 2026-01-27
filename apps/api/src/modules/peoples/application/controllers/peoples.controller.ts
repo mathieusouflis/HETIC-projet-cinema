@@ -6,12 +6,13 @@ import {
   Get,
   Patch,
   Post,
+  Protected,
   ValidateBody,
   ValidateParams,
   ValidateQuery,
 } from "../../../../shared/infrastructure/decorators";
 import { asyncHandler } from "../../../../shared/utils";
-import { notFoundErrorResponseSchema } from "../../../../shared/schemas/base/error.schemas";
+import { notFoundErrorResponseSchema, unauthorizedErrorResponseSchema } from "../../../../shared/schemas/base/error.schemas";
 import { createSuccessResponse } from "../../../../shared/schemas/base/response.schemas";
 
 // Request validators
@@ -19,7 +20,7 @@ import { ListPeoplesParams, listPeoplesParamsValidator } from "../dto/request/li
 import { SearchPeopleParams, searchPeopleParamsValidator } from "../dto/request/search-people.params.validator";
 import { GetPeopleByIdParams, getPeopleByIdParamsValidator } from "../dto/request/get-people-by-id.params.validator";
 import { CreatePeopleBody, createPeopleBodyValidator } from "../dto/request/create-people.body.validator";
-import { UpdatePeopleBody, updatePeopleBodyValidator } from "../dto/request/update-people.body.validator";
+import { updatePeopleBodyValidator } from "../dto/request/update-people.body.validator";
 
 // Response validators
 import { ListPeoplesResponse, ListPeoplesResponseValidator } from "../dto/response/list-peoples.response.validator";
@@ -35,6 +36,7 @@ import { GetPeopleUseCase } from "../use-cases/get-people.use-case";
 import { CreatePeopleUseCase } from "../use-cases/create-people.use-case";
 import { UpdatePeopleUseCase } from "../use-cases/update-people.use-case";
 import { DeletePeopleUseCase } from "../use-cases/delete-people.use-case";
+import { UnauthorizedError } from "../../../../shared/errors";
 
 @Controller({
   tag: "Peoples",
@@ -47,7 +49,9 @@ export class PeoplesController extends BaseController {
     private readonly searchPeopleUseCase: SearchPeopleUseCase,
     private readonly getPeopleUseCase: GetPeopleUseCase,
     private readonly createPeopleUseCase: CreatePeopleUseCase,
+    // @ts-ignore
     private readonly updatePeopleUseCase: UpdatePeopleUseCase,
+    // @ts-ignore
     private readonly deletePeopleUseCase: DeletePeopleUseCase
   ) {
     super();
@@ -145,45 +149,54 @@ export class PeoplesController extends BaseController {
     path: "/:id",
     description: "Update a person",
   })
+  @Protected()
   @ValidateParams(getPeopleByIdParamsValidator)
   @ValidateBody(updatePeopleBodyValidator)
   @ApiResponse(404, "Person not found", notFoundErrorResponseSchema)
+  @ApiResponse(401, "Unauthorized", unauthorizedErrorResponseSchema)
   @ApiResponse(200, "Person updated successfully", createSuccessResponse(updatePeopleResponseValidator))
-  updatePeople = asyncHandler(async (req, res): Promise<UpdatePeopleResponse> => {
-    const { id } = req.params as GetPeopleByIdParams;
-    const body = req.body as UpdatePeopleBody;
+  updatePeople = asyncHandler(async (_req, _res): Promise<UpdatePeopleResponse> => {
+    throw new UnauthorizedError("Authorisation not implemented for this route.")
 
-    const people = await this.updatePeopleUseCase.execute(id, {
-        ...body,
-        birthDate: body.birthDate ? new Date(body.birthDate).toISOString() : undefined
-    });
-    const jsonPeople = people.toJSON();
+    // const { id } = req.params as GetPeopleByIdParams;
+    // const body = req.body as UpdatePeopleBody;
 
-    res.status(200).json({
-      success: true,
-      message: "Person updated successfully",
-      data: jsonPeople,
-    });
 
-    return jsonPeople;
+    // const people = await this.updatePeopleUseCase.execute(id, {
+    //     ...body,
+    //     birthDate: body.birthDate ? new Date(body.birthDate).toISOString() : undefined
+    // });
+    // const jsonPeople = people.toJSON();
+
+    // res.status(200).json({
+    //   success: true,
+    //   message: "Person updated successfully",
+    //   data: jsonPeople,
+    // });
+
+    // return jsonPeople;
   });
 
   @Delete({
     path: "/:id",
     description: "Delete a person",
   })
+  @Protected()
   @ValidateParams(getPeopleByIdParamsValidator)
   @ApiResponse(404, "Person not found", notFoundErrorResponseSchema)
+  @ApiResponse(401, "Unauthorized", unauthorizedErrorResponseSchema)
   @ApiResponse(200, "Person deleted successfully")
-  deletePeople = asyncHandler(async (req, res): Promise<void> => {
-    const { id } = req.params as GetPeopleByIdParams;
+  deletePeople = asyncHandler(async (_req, _res): Promise<void> => {
+    throw new UnauthorizedError("Authorisation not implemented for this route.")
 
-    await this.deletePeopleUseCase.execute(id);
+  //   const { id } = req.params as GetPeopleByIdParams;
 
-    res.status(200).json({
-      success: true,
-      message: "Person deleted successfully",
-      data: null,
-    });
+  //   await this.deletePeopleUseCase.execute(id);
+
+  //   res.status(200).json({
+  //     success: true,
+  //     message: "Person deleted successfully",
+  //     data: null,
+  //   });
   });
 }
