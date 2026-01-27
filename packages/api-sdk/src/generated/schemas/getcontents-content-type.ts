@@ -6,10 +6,10 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GETContentsContentType =
-  (typeof GETContentsContentType)[keyof typeof GETContentsContentType];
+export type GETContentsContentType = typeof GETContentsContentType[keyof typeof GETContentsContentType];
+
 
 export const GETContentsContentType = {
-  movie: "movie",
-  serie: "serie",
+  movie: 'movie',
+  serie: 'serie',
 } as const;

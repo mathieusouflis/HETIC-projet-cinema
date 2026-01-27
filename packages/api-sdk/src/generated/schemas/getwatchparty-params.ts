@@ -5,16 +5,16 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { GETWatchpartyStatus } from "./getwatchparty-status";
+import type { GETWatchpartyStatus } from './getwatchparty-status';
 
 export type GETWatchpartyParams = {
-  status?: GETWatchpartyStatus;
-  /**
-   * @nullable
-   */
-  isPublic?: boolean | null;
-  /**
-   * @minLength 1
-   */
-  contentId?: string;
+status?: GETWatchpartyStatus;
+/**
+ * @nullable
+ */
+isPublic?: boolean | null;
+/**
+ * @minLength 1
+ */
+contentId?: string;
 };

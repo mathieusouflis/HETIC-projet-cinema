@@ -7,27 +7,27 @@
  */
 
 export type GETSeriesParams = {
-  title?: string;
-  synopsis?: string;
-  releaseDate?: string;
-  year?: number;
-  /**
-   * @minimum 0
-   * @maximum 10
-   */
-  averageRating?: number;
-  /**
-   * @minimum 1
-   */
-  page?: number;
-  /**
-   * @minimum 0
-   * @nullable
-   */
-  offset?: number | null;
-  /**
-   * @minimum 1
-   * @maximum 100
-   */
-  limit?: number;
+title?: string;
+synopsis?: string;
+releaseDate?: string;
+year?: number;
+/**
+ * @minimum 0
+ * @maximum 10
+ */
+averageRating?: number;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 0
+ * @nullable
+ */
+offset?: number | null;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: number;
 };

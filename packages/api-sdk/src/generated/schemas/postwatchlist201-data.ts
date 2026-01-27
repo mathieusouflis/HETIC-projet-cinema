@@ -5,7 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { POSTWatchlist201DataStatus } from "./postwatchlist201-data-status";
+import type { POSTWatchlist201DataStatus } from './postwatchlist201-data-status';
 
 export type POSTWatchlist201Data = {
   /** @minLength 1 */

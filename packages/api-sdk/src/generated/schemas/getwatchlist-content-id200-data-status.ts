@@ -6,14 +6,14 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GETWatchlistContentId200DataStatus =
-  (typeof GETWatchlistContentId200DataStatus)[keyof typeof GETWatchlistContentId200DataStatus];
+export type GETWatchlistContentId200DataStatus = typeof GETWatchlistContentId200DataStatus[keyof typeof GETWatchlistContentId200DataStatus];
+
 
 export const GETWatchlistContentId200DataStatus = {
-  completed: "completed",
-  dropped: "dropped",
-  not_interested: "not_interested",
-  plan_to_watch: "plan_to_watch",
-  undecided: "undecided",
-  watching: "watching",
+  completed: 'completed',
+  dropped: 'dropped',
+  not_interested: 'not_interested',
+  plan_to_watch: 'plan_to_watch',
+  undecided: 'undecided',
+  watching: 'watching',
 } as const;

@@ -6,14 +6,14 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type POSTWatchlist201DataStatus =
-  (typeof POSTWatchlist201DataStatus)[keyof typeof POSTWatchlist201DataStatus];
+export type POSTWatchlist201DataStatus = typeof POSTWatchlist201DataStatus[keyof typeof POSTWatchlist201DataStatus];
+
 
 export const POSTWatchlist201DataStatus = {
-  completed: "completed",
-  dropped: "dropped",
-  not_interested: "not_interested",
-  plan_to_watch: "plan_to_watch",
-  undecided: "undecided",
-  watching: "watching",
+  completed: 'completed',
+  dropped: 'dropped',
+  not_interested: 'not_interested',
+  plan_to_watch: 'plan_to_watch',
+  undecided: 'undecided',
+  watching: 'watching',
 } as const;

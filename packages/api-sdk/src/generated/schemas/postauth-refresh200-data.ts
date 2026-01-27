@@ -5,7 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { POSTAuthRefresh200DataUser } from "./postauth-refresh200-data-user";
+import type { POSTAuthRefresh200DataUser } from './postauth-refresh200-data-user';
 
 export type POSTAuthRefresh200Data = {
   user: POSTAuthRefresh200DataUser;

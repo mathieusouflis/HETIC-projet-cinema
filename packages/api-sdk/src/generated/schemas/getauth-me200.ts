@@ -5,7 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { GETAuthMe200Data } from "./getauth-me200-data";
+import type { GETAuthMe200Data } from './getauth-me200-data';
 
 export type GETAuthMe200 = {
   success: boolean;

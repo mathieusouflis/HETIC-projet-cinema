@@ -5,7 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { POSTWatchlistBodyStatus } from "./postwatchlist-body-status";
+import type { POSTWatchlistBodyStatus } from './postwatchlist-body-status';
 
 export type POSTWatchlistBody = {
   /** @minLength 1 */

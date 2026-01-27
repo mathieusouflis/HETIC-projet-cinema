@@ -5,7 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { DELETEUsersId400DetailsItem } from "./deleteusers-id400-details-item";
+import type { DELETEUsersId400DetailsItem } from './deleteusers-id400-details-item';
 
 export type DELETEUsersId400 = {
   success: boolean;

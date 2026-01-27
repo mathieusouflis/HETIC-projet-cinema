@@ -6,14 +6,14 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type PATCHWatchlistId200DataStatus =
-  (typeof PATCHWatchlistId200DataStatus)[keyof typeof PATCHWatchlistId200DataStatus];
+export type PATCHWatchlistId200DataStatus = typeof PATCHWatchlistId200DataStatus[keyof typeof PATCHWatchlistId200DataStatus];
+
 
 export const PATCHWatchlistId200DataStatus = {
-  completed: "completed",
-  dropped: "dropped",
-  not_interested: "not_interested",
-  plan_to_watch: "plan_to_watch",
-  undecided: "undecided",
-  watching: "watching",
+  completed: 'completed',
+  dropped: 'dropped',
+  not_interested: 'not_interested',
+  plan_to_watch: 'plan_to_watch',
+  undecided: 'undecided',
+  watching: 'watching',
 } as const;

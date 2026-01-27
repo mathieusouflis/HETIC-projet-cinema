@@ -5,7 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { GETWatchlist200DataItemStatus } from "./getwatchlist200-data-item-status";
+import type { GETWatchlist200DataItemStatus } from './getwatchlist200-data-item-status';
 
 export type GETWatchlist200DataItem = {
   /** @minLength 1 */

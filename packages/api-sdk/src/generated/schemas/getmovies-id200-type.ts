@@ -6,9 +6,9 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GETMoviesId200Type =
-  (typeof GETMoviesId200Type)[keyof typeof GETMoviesId200Type];
+export type GETMoviesId200Type = typeof GETMoviesId200Type[keyof typeof GETMoviesId200Type];
+
 
 export const GETMoviesId200Type = {
-  movie: "movie",
+  movie: 'movie',
 } as const;
