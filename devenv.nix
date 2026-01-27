@@ -37,7 +37,7 @@ in
 
   # https://devenv.sh/basics/
   enterShell = ''
-    phase shell
+    clear
     echo
     echo "$(tput bold)░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░$(tput sgr0)"
     echo -e "$(tput bold)░░█▀░░░${azure}█${reset}░${azure}█${reset}░${azure}▀█${reset}░░${azure}█${reset}░${azure}█${reset}░░░${green}█▀▀${reset}░${green}█${reset}░${green}█${reset}░${green}█▀▀${reset}░${green}█${reset}░░░${green}█${reset}░░░░░▀█░░$(tput sgr0)"
