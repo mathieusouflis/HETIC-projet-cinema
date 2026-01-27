@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   foreignKey,
   index,
@@ -8,7 +9,7 @@ import {
   unique,
   uuid,
 } from "drizzle-orm/pg-core";
-import { content, users } from "../../../../database/schema";
+import { content, users, watchlist } from "../../../../database/schema";
 
 export const watchlistStatusEnum = pgEnum("watchlistStatus", [
   "plan_to_watch",
@@ -61,6 +62,17 @@ export const watchlistSchema = pgTable(
     unique("unique_watchlist_entry").on(table.userId, table.contentId),
   ]
 );
+
+export const watchlistRelationsSchema = relations(watchlist, ({ one }) => ({
+  user: one(users, {
+    fields: [watchlist.userId],
+    references: [users.id],
+  }),
+  content: one(content, {
+    fields: [watchlist.contentId],
+    references: [content.id],
+  }),
+}));
 
 export type WatchlistRow = typeof watchlistSchema.$inferSelect;
 export type NewWatchlistRow = typeof watchlistSchema.$inferInsert;

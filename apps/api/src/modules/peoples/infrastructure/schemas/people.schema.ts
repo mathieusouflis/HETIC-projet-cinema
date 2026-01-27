@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   date,
   index,
@@ -9,6 +10,11 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+import {
+  contentCredits,
+  people,
+  peopleLikes,
+} from "../../../../database/schema";
 
 export const peopleSchema = pgTable(
   "people",
@@ -35,6 +41,11 @@ export const peopleSchema = pgTable(
     unique("people_tmdb_id_key").on(table.tmdbId),
   ]
 );
+
+export const peopleRelationSchema = relations(people, ({ many }) => ({
+  contentCredits: many(contentCredits),
+  peopleLikes: many(peopleLikes),
+}));
 
 export type PeopleRow = typeof peopleSchema.$inferSelect;
 export type NewPeopleRow = typeof peopleSchema.$inferInsert;

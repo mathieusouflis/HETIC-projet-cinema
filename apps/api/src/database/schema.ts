@@ -19,17 +19,27 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
-import { contentSchema } from "../modules/contents/infrastructure/database/schemas/contents.schema";
+import {
+  contentRelationsSchema,
+  contentSchema,
+} from "../modules/contents/infrastructure/database/schemas/contents.schema";
 import { tmdbFetchStatusSchema } from "../modules/contents/infrastructure/database/schemas/tmdb-fetch-status.schema";
-import { peopleSchema } from "../modules/peoples/infrastructure/schemas/people.schema";
+import {
+  peopleRelationSchema,
+  peopleSchema,
+} from "../modules/peoples/infrastructure/schemas/people.schema";
 import {
   friendshipsRelationsSchema,
   friendshipsSchema,
   friendshipsStatusEnum,
 } from "../modules/users/infrastructure/database/schemas/friendships.schema";
-import { users as usersSchema } from "../modules/users/infrastructure/database/schemas/users.schema";
+import {
+  usersRelationSchema,
+  users as usersSchema,
+} from "../modules/users/infrastructure/database/schemas/users.schema";
 import {
   watchlistStatusEnum as watchlistCustomEnumImported,
+  watchlistRelationsSchema,
   watchlistSchema,
 } from "../modules/watchlist/infrastructure/schemas/watchlist.schema";
 import { watchpartySchema } from "../modules/watchparty/infrastructure/schemas/watchparty.schema";
@@ -866,46 +876,7 @@ export const refreshTokensRelations = relations(refreshTokens, ({ one }) => ({
   }),
 }));
 
-export const usersRelations = relations(users, ({ many }) => ({
-  refreshTokens: many(refreshTokens),
-  friendships_userId: many(friendships, {
-    relationName: "friendships_userId_users_id",
-  }),
-  friendships_friendId: many(friendships, {
-    relationName: "friendships_friendId_users_id",
-  }),
-  conversations: many(conversations),
-  conversationParticipants: many(conversationParticipants),
-  watchparties_createdBy: many(watchparties, {
-    relationName: "watchparties_createdBy_users_id",
-  }),
-  watchparties_leaderUserId: many(watchparties, {
-    relationName: "watchparties_leaderUserId_users_id",
-  }),
-  messages: many(messages),
-  ratings: many(ratings),
-  reviews: many(reviews),
-  watchlists: many(watchlist),
-  lists: many(lists),
-  watchpartyParticipants: many(watchpartyParticipants),
-  watchpartyInvitations_inviterId: many(watchpartyInvitations, {
-    relationName: "watchpartyInvitations_inviterId_users_id",
-  }),
-  watchpartyInvitations_inviteeId: many(watchpartyInvitations, {
-    relationName: "watchpartyInvitations_inviteeId_users_id",
-  }),
-  userActivityLogs: many(userActivityLogs),
-  userStats: many(userStats),
-  notifications_userId: many(notifications, {
-    relationName: "notifications_userId_users_id",
-  }),
-  notifications_relatedUserId: many(notifications, {
-    relationName: "notifications_relatedUserId_users_id",
-  }),
-  reviewLikes: many(reviewLikes),
-  listLikes: many(listLikes),
-  peopleLikes: many(peopleLikes),
-}));
+export const usersRelations = usersRelationSchema;
 
 export const friendshipsRelations = friendshipsRelationsSchema;
 
@@ -920,23 +891,9 @@ export const contentCreditsRelations = relations(contentCredits, ({ one }) => ({
   }),
 }));
 
-export const contentRelations = relations(content, ({ many }) => ({
-  contentCredits: many(contentCredits),
-  seasons: many(seasons),
-  watchparties: many(watchparties),
-  ratings: many(ratings),
-  reviews: many(reviews),
-  watchlists: many(watchlist),
-  listItems: many(listItems),
-  userActivityLogs: many(userActivityLogs),
-  notifications: many(notifications),
-  contentCategories: many(contentCategories),
-}));
+export const contentRelations = contentRelationsSchema;
 
-export const peopleRelations = relations(people, ({ many }) => ({
-  contentCredits: many(contentCredits),
-  peopleLikes: many(peopleLikes),
-}));
+export const peopleRelations = peopleRelationSchema;
 
 export const seasonsRelations = relations(seasons, ({ one, many }) => ({
   content: one(content, {
@@ -1071,16 +1028,7 @@ export const reviewsRelations = relations(reviews, ({ one, many }) => ({
   reviewLikes: many(reviewLikes),
 }));
 
-export const watchlistRelations = relations(watchlist, ({ one }) => ({
-  user: one(users, {
-    fields: [watchlist.userId],
-    references: [users.id],
-  }),
-  content: one(content, {
-    fields: [watchlist.contentId],
-    references: [content.id],
-  }),
-}));
+export const watchlistRelations = watchlistRelationsSchema;
 
 export const listsRelations = relations(lists, ({ one, many }) => ({
   user: one(users, {
