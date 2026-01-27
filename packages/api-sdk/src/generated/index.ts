@@ -11,6 +11,7 @@ import type { AxiosRequestConfig, AxiosResponse } from "axios";
 import type {
   DELETEWatchlistContentId204,
   DELETEWatchlistId204,
+  DELETEWatchpartyId200,
   GETAuthMe200,
   GETContents200,
   GETContentsId200,
@@ -34,6 +35,9 @@ import type {
   GETWatchlistContentId200,
   GETWatchlistId200,
   GETWatchlistParams,
+  GETWatchparty200,
+  GETWatchpartyId200,
+  GETWatchpartyParams,
   PATCHPeoplesId200,
   PATCHPeoplesIdBody,
   PATCHUsersId200,
@@ -44,6 +48,8 @@ import type {
   PATCHWatchlistContentIdBody,
   PATCHWatchlistId200,
   PATCHWatchlistIdBody,
+  PATCHWatchpartyId200,
+  PATCHWatchpartyIdBody,
   POSTAuthLogin200,
   POSTAuthLoginBody,
   POSTAuthLogout200,
@@ -54,6 +60,8 @@ import type {
   POSTPeoplesBody,
   POSTWatchlist201,
   POSTWatchlistBody,
+  POSTWatchparty201,
+  POSTWatchpartyBody,
 } from "./schemas";
 
 /**
@@ -408,6 +416,62 @@ export const dELETEPeoplesId = <TData = AxiosResponse<void>>(
   return axios.delete(`/peoples/${id}`, options);
 };
 
+/**
+ * Query watchparties
+ */
+export const gETWatchparty = <TData = AxiosResponse<GETWatchparty200>>(
+  params?: GETWatchpartyParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.get(`/watchparty/`, {
+    ...options,
+    params: { ...params, ...options?.params },
+  });
+};
+
+/**
+ * Create a new watchparty
+ */
+export const pOSTWatchparty = <TData = AxiosResponse<POSTWatchparty201>>(
+  pOSTWatchpartyBody: POSTWatchpartyBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.post(`/watchparty/`, pOSTWatchpartyBody, options);
+};
+
+/**
+ * Get watchparty by id
+ */
+export const gETWatchpartyId = <TData = AxiosResponse<GETWatchpartyId200>>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.get(`/watchparty/${id}`, options);
+};
+
+/**
+ * Update watchparty by id
+ */
+export const pATCHWatchpartyId = <TData = AxiosResponse<PATCHWatchpartyId200>>(
+  id: string,
+  pATCHWatchpartyIdBody: PATCHWatchpartyIdBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.patch(`/watchparty/${id}`, pATCHWatchpartyIdBody, options);
+};
+
+/**
+ * Delete watchparty by id
+ */
+export const dELETEWatchpartyId = <
+  TData = AxiosResponse<DELETEWatchpartyId200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.delete(`/watchparty/${id}`, options);
+};
+
 export type GETUsersIdResult = AxiosResponse<GETUsersId200>;
 export type PATCHUsersIdResult = AxiosResponse<PATCHUsersId200>;
 export type DELETEUsersIdResult = AxiosResponse<void>;
@@ -442,3 +506,8 @@ export type GETPeoplesSearchResult = AxiosResponse<GETPeoplesSearch200>;
 export type GETPeoplesIdResult = AxiosResponse<GETPeoplesId200>;
 export type PATCHPeoplesIdResult = AxiosResponse<PATCHPeoplesId200>;
 export type DELETEPeoplesIdResult = AxiosResponse<void>;
+export type GETWatchpartyResult = AxiosResponse<GETWatchparty200>;
+export type POSTWatchpartyResult = AxiosResponse<POSTWatchparty201>;
+export type GETWatchpartyIdResult = AxiosResponse<GETWatchpartyId200>;
+export type PATCHWatchpartyIdResult = AxiosResponse<PATCHWatchpartyId200>;
+export type DELETEWatchpartyIdResult = AxiosResponse<DELETEWatchpartyId200>;
