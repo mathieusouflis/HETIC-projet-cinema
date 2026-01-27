@@ -1,8 +1,8 @@
 import type {
   CreateWatchlistProps,
   UpdateWatchlistProps,
-  WatchStatus,
   Watchlist,
+  WatchStatus,
 } from "../entities/watchlist.entity";
 
 export interface IWatchlistRepository {

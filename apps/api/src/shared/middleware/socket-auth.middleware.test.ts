@@ -1,11 +1,11 @@
 import type { Socket } from "socket.io";
 import {
-  type Mock,
   afterEach,
   beforeEach,
   describe,
   expect,
   it,
+  type Mock,
   vi,
 } from "vitest";
 
