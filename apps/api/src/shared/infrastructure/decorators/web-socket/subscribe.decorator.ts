@@ -1,4 +1,7 @@
-import { EventListenerMetadata, WebSocketMetadataStorage } from "./websocket.metadata";
+import {
+  type EventListenerMetadata,
+  WebSocketMetadataStorage,
+} from "./websocket.metadata";
 
 /**
  * Listen to a WebSocket event (client -> server)
@@ -17,32 +20,24 @@ export function Subscribe(
         description?: string;
         acknowledgment?: boolean;
         deprecated?: boolean;
-      },
+      }
 ) {
-  return function (
-    target: any,
-    propertyKey: string,
-    descriptor: PropertyDescriptor,
-  ) {
+  return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     const isEventNameString = typeof eventNameOrOptions === "string";
     const eventMetadata: EventListenerMetadata = {
-      eventName:
-        isEventNameString
-          ? eventNameOrOptions
-          : eventNameOrOptions.event,
+      eventName: isEventNameString
+        ? eventNameOrOptions
+        : eventNameOrOptions.event,
       methodName: propertyKey,
-      description:
-        isEventNameString
-          ? undefined
-          : eventNameOrOptions.description,
-      acknowledgment:
-        isEventNameString
-          ? false
-          : eventNameOrOptions.acknowledgment ?? false,
-      deprecated:
-        isEventNameString
-          ? false
-          : eventNameOrOptions.deprecated ?? false,
+      description: isEventNameString
+        ? undefined
+        : eventNameOrOptions.description,
+      acknowledgment: isEventNameString
+        ? false
+        : (eventNameOrOptions.acknowledgment ?? false),
+      deprecated: isEventNameString
+        ? false
+        : (eventNameOrOptions.deprecated ?? false),
     };
 
     WebSocketMetadataStorage.addEvent(target, eventMetadata);

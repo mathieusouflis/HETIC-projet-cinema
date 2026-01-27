@@ -1,9 +1,9 @@
 import { vi } from "vitest";
-import type { IUserRepository } from "./IUserRepository";
 import { User } from "../entities/user.entity";
+import type { IUserRepository } from "./IUserRepository";
 
 export function createMockedUserRepository(
-  overrides: Partial<IUserRepository> = {},
+  overrides: Partial<IUserRepository> = {}
 ): IUserRepository {
   const mockUser1: User = new User({
     id: "52dfbd95-b2ba-4b76-8aa5-9fe818bda2a2",
@@ -77,12 +77,12 @@ export function createMockedUserRepository(
     findByOAuth: (provider: string, oauthId: string) =>
       Promise.resolve(
         usersMocked.find(
-          (user) => user.oauthId === oauthId && user.oauthProvider === provider,
-        ) ?? null,
+          (user) => user.oauthId === oauthId && user.oauthProvider === provider
+        ) ?? null
       ),
     findByUsername: (username: string) =>
       Promise.resolve(
-        usersMocked.find((user) => user.username === username) ?? null,
+        usersMocked.find((user) => user.username === username) ?? null
       ),
   };
 

@@ -1,5 +1,7 @@
-
-import { RoomMetadata, WebSocketMetadataStorage } from "./websocket.metadata";
+import {
+  type RoomMetadata,
+  WebSocketMetadataStorage,
+} from "./websocket.metadata";
 
 /**
  * Mark a method as broadcasting to a specific room
@@ -9,17 +11,12 @@ import { RoomMetadata, WebSocketMetadataStorage } from "./websocket.metadata";
  * async broadcastMessage(data: Message) {}
  */
 export function BroadcastTo(
-  roomNameOrGetter: string | ((data: any) => string),
+  roomNameOrGetter: string | ((data: any) => string)
 ) {
-  return function (
-    target: any,
-    propertyKey: string,
-    descriptor: PropertyDescriptor,
-  ) {
+  return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     const isRoomNameOrGetterString = typeof roomNameOrGetter === "string";
     const roomMetadata: RoomMetadata = {
-      roomName:
-        isRoomNameOrGetterString ? roomNameOrGetter : "dynamic",
+      roomName: isRoomNameOrGetterString ? roomNameOrGetter : "dynamic",
       methodName: propertyKey,
       action: "broadcast",
       description: `Broadcasts to room: ${isRoomNameOrGetterString ? roomNameOrGetter : "computed from data"}`,

@@ -32,14 +32,14 @@ export const sortFieldSchema = z
   .max(50, "Sort field must be less than 50 characters")
   .regex(
     /^[a-zA-Z][a-zA-Z0-9_]*$/,
-    "Sort field must start with a letter and contain only letters, numbers, and underscores",
+    "Sort field must start with a letter and contain only letters, numbers, and underscores"
   );
 
 export const sortSchema = z
   .string()
   .regex(
     /^[a-zA-Z][a-zA-Z0-9_]*(:(?:asc|desc|ASC|DESC))?$/,
-    "Invalid sort format. Use 'field' or 'field:asc|desc'",
+    "Invalid sort format. Use 'field' or 'field:asc|desc'"
   )
   .transform((val) => {
     const [field, direction = "desc"] = val.split(":");

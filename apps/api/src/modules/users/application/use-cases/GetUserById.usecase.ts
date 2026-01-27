@@ -1,7 +1,7 @@
-import type { IUserRepository } from "../../domain/interfaces/IUserRepository.js";
 import { UserNotFoundError } from "../../domain/errors/UserNotFoundError.js";
+import type { IUserRepository } from "../../domain/interfaces/IUserRepository.js";
+import type { GetIdResponseDTO } from "../dto/responses/get-id-response.js";
 import { toUserResponseDTO } from "../dto/utils/to-user-response.js";
-import { GetIdResponseDTO } from "../dto/responses/get-id-response.js";
 
 export class GetUserByIdUseCase {
   constructor(private readonly userRepository: IUserRepository) {}

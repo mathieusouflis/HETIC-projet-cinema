@@ -1,4 +1,8 @@
-import { CreatePeopleProps, People, UpdatePeopleProps } from "../entities/people.entity";
+import type {
+  CreatePeopleProps,
+  People,
+  UpdatePeopleProps,
+} from "../entities/people.entity";
 
 export interface IPeoplesRepository {
   create(people: CreatePeopleProps): Promise<People>;

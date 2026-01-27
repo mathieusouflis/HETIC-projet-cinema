@@ -1,5 +1,5 @@
-import type { IUserRepository } from "../../domain/interfaces/IUserRepository.js";
 import { UserNotFoundError } from "../../domain/errors/UserNotFoundError.js";
+import type { IUserRepository } from "../../domain/interfaces/IUserRepository.js";
 
 export class DeleteUserUseCase {
   constructor(private readonly userRepository: IUserRepository) {}

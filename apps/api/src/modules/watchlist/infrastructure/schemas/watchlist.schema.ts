@@ -1,8 +1,23 @@
-import { index, unique, foreignKey, integer, pgTable, timestamp, uuid, pgEnum } from "drizzle-orm/pg-core";
+import {
+  foreignKey,
+  index,
+  integer,
+  pgEnum,
+  pgTable,
+  timestamp,
+  unique,
+  uuid,
+} from "drizzle-orm/pg-core";
 import { content, users } from "../../../../database/schema";
 
-
-export const watchlistStatusEnum = pgEnum("watchlistStatus", ["plan_to_watch", "watching", "completed", "dropped", "undecided", "not_interested"])
+export const watchlistStatusEnum = pgEnum("watchlistStatus", [
+  "plan_to_watch",
+  "watching",
+  "completed",
+  "dropped",
+  "undecided",
+  "not_interested",
+]);
 
 export const watchlistSchema = pgTable(
   "watchlists",
@@ -26,12 +41,12 @@ export const watchlistSchema = pgTable(
   (table) => [
     index("idx_watchlist_content").using(
       "btree",
-      table.contentId.asc().nullsLast(),
+      table.contentId.asc().nullsLast()
     ),
     index("idx_watchlist_user").using(
       "btree",
       table.userId.asc().nullsLast(),
-      table.status.asc().nullsLast(),
+      table.status.asc().nullsLast()
     ),
     foreignKey({
       columns: [table.userId],
@@ -44,7 +59,7 @@ export const watchlistSchema = pgTable(
       name: "user_watchlist_content_id_fkey",
     }).onDelete("cascade"),
     unique("unique_watchlist_entry").on(table.userId, table.contentId),
-  ],
+  ]
 );
 
 export type WatchlistRow = typeof watchlistSchema.$inferSelect;

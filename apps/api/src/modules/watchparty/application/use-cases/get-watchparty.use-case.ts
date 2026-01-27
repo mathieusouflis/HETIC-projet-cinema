@@ -1,9 +1,8 @@
 import { NotFoundError } from "../../../../shared/errors/NotFoundError.js";
-import { Watchparty } from "../../domain/entities/watchparty.entity.js";
-import { IWatchpartyRepository } from "../../domain/interfaces/IWatchpartyRepository.js";
+import type { Watchparty } from "../../domain/entities/watchparty.entity.js";
+import type { IWatchpartyRepository } from "../../domain/interfaces/IWatchpartyRepository.js";
 
 export class GetWatchpartyUseCase {
-
   private repository: IWatchpartyRepository;
 
   constructor(repository: IWatchpartyRepository) {

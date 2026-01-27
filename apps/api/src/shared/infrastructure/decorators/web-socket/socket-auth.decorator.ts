@@ -1,5 +1,8 @@
 import { socketAuthNamespaceMiddleware } from "../../../middleware";
-import { NamespaceMetadata, WebSocketMetadataStorage } from "./websocket.metadata";
+import {
+  type NamespaceMetadata,
+  WebSocketMetadataStorage,
+} from "./websocket.metadata";
 
 /**
  * Require socket authentication at namespace connection level
@@ -38,15 +41,15 @@ import { NamespaceMetadata, WebSocketMetadataStorage } from "./websocket.metadat
  * ```
  */
 export function RequireSocketAuth<T extends new (...args: any[]) => any>(
-  constructor: T,
+  controllerConstructor: T
 ) {
   const existingMetadata = WebSocketMetadataStorage.getNamespace(
-    constructor.prototype,
+    controllerConstructor.prototype
   );
 
   if (!existingMetadata) {
     throw new Error(
-      `@RequireSocketAuth must be used before @Namespace decorator on ${constructor.name}`,
+      `@RequireSocketAuth must be used before @Namespace decorator on ${controllerConstructor.name}`
     );
   }
 
@@ -57,7 +60,10 @@ export function RequireSocketAuth<T extends new (...args: any[]) => any>(
     requireAuth: true,
   };
 
-  WebSocketMetadataStorage.setNamespace(constructor.prototype, updatedMetadata);
+  WebSocketMetadataStorage.setNamespace(
+    controllerConstructor.prototype,
+    updatedMetadata
+  );
 
-  return constructor;
+  return controllerConstructor;
 }

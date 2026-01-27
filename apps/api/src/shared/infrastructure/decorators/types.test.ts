@@ -1,12 +1,12 @@
-import { describe, it, expect } from "vitest";
-import {
-  isRouteHandler,
-  isController,
-  AUTH_MIDDLEWARE_MARKER,
-  type RouteHandler,
-  type AuthMiddlewareMarker,
-} from "./types.js";
+import { describe, expect, it } from "vitest";
 import { BaseController } from "../base/controllers/BaseController.js";
+import {
+  AUTH_MIDDLEWARE_MARKER,
+  type AuthMiddlewareMarker,
+  type RouteHandler,
+  isController,
+  isRouteHandler,
+} from "./types.js";
 
 describe("Types tests", () => {
   describe("isRouteHandler", () => {
@@ -28,7 +28,9 @@ describe("Types tests", () => {
 
     it("should return true for route handler with next parameter", () => {
       const handler: RouteHandler = (_req, _res, next) => {
-        if (next) next();
+        if (next) {
+          next();
+        }
       };
 
       expect(isRouteHandler(handler)).toBe(true);

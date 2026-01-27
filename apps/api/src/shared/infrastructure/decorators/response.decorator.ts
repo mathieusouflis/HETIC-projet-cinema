@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { z } from "zod";
+import type { z } from "zod";
 import { METADATA_KEYS, type ResponseMetadata } from "./metadata.js";
 
 /**
@@ -16,13 +16,13 @@ import { METADATA_KEYS, type ResponseMetadata } from "./metadata.js";
 export function ApiResponse(
   statusCode: number,
   description: string,
-  schema?: z.ZodSchema,
+  schema?: z.ZodSchema
 ) {
-  return function (
+  return (
     target: object,
     propertyKey: string,
-    _descriptor?: PropertyDescriptor,
-  ): void {
+    _descriptor?: PropertyDescriptor
+  ): void => {
     const key = `${METADATA_KEYS.OPENAPI_RESPONSES.toString()}_${propertyKey}`;
 
     const responses: ResponseMetadata[] =

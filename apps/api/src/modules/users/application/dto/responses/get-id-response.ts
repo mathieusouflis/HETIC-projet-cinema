@@ -1,4 +1,4 @@
-import z from "zod";
+import type z from "zod";
 import { publicUserSchema } from "../../schema/user.schema";
 
 export const getIdResponseSchema = publicUserSchema;

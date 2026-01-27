@@ -8,4 +8,6 @@ export const queryWatchpartiesValidator = z.object({
   contentId: uuidSchema.optional(),
 });
 
-export type QueryWatchpartiesRequest = z.infer<typeof queryWatchpartiesValidator>;
+export type QueryWatchpartiesRequest = z.infer<
+  typeof queryWatchpartiesValidator
+>;

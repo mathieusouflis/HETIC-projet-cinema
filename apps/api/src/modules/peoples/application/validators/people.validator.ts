@@ -10,5 +10,5 @@ export const peopleValidator = z.object({
   birthDate: z.date().nullable(),
   tmdbId: z.number().int().nullable(),
   createdAt: z.date(),
-  updatedAt: z.date()
-})
+  updatedAt: z.date(),
+});

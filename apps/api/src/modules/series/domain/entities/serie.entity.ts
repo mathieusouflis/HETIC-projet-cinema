@@ -1,9 +1,10 @@
 import { Content } from "../../../contents/domain/entities/content.entity.js";
-import { ContentRow, NewContentRow } from "../../../contents/infrastructure/database/schemas/contents.schema.js";
-
+import type {
+  ContentRow,
+  NewContentRow,
+} from "../../../contents/infrastructure/database/schemas/contents.schema.js";
 
 export class Serie extends Content {
-
   public readonly type = "serie";
 
   constructor(props: ContentRow) {
@@ -14,7 +15,7 @@ export class Serie extends Content {
    * @returns false
    */
   public isMovie(): boolean {
-    return false
+    return false;
   }
 
   /**
@@ -25,13 +26,12 @@ export class Serie extends Content {
   }
 
   public toJSON() {
-    const response = super.toJSON()
+    const response = super.toJSON();
     return {
       ...response,
       type: "serie",
-    } as const
+    } as const;
   }
-
 }
 
 export type SerieProps = ContentRow & {

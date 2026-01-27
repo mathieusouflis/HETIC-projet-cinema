@@ -1,17 +1,19 @@
 import { NotFoundError } from "../../../../shared/errors/NotFoundError.js";
-import { IContentRepository } from "../../../contents/domain/interfaces/IContentRepository.js";
-import { Watchparty } from "../../domain/entities/watchparty.entity.js";
-import { IWatchpartyRepository } from "../../domain/interfaces/IWatchpartyRepository.js";
-import { CreateWatchpartyBody } from "../dto/request/create-watchparty.body.validator.js";
+import type { IContentRepository } from "../../../contents/domain/interfaces/IContentRepository.js";
+import type { Watchparty } from "../../domain/entities/watchparty.entity.js";
+import type { IWatchpartyRepository } from "../../domain/interfaces/IWatchpartyRepository.js";
+import type { CreateWatchpartyBody } from "../dto/request/create-watchparty.body.validator.js";
 
 export class CreateWatchpartyUseCase {
-
   constructor(
     private readonly watchpartyRepository: IWatchpartyRepository,
     private readonly contentRepository: IContentRepository
-  ) { }
+  ) {}
 
-  async execute(userId: string, body: CreateWatchpartyBody): Promise<Watchparty> {
+  async execute(
+    userId: string,
+    body: CreateWatchpartyBody
+  ): Promise<Watchparty> {
     const content = await this.contentRepository.getContentById(body.contentId);
     if (!content) {
       throw new NotFoundError(`Content ${body.contentId} not found`);

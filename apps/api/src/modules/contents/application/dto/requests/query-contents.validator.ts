@@ -1,5 +1,5 @@
-import z from "zod"
-import { optionalOffsetAndPagePaginationQuerySchema } from "../../../../../shared/schemas/base/pagination.schema"
+import z from "zod";
+import { optionalOffsetAndPagePaginationQuerySchema } from "../../../../../shared/schemas/base/pagination.schema";
 
 export const queryContentRequestSchema = z.object({
   title: z.string().optional(),
@@ -9,6 +9,6 @@ export const queryContentRequestSchema = z.object({
   year: z.number().optional(),
   averageRating: z.number().min(0).max(10).optional(),
   ...optionalOffsetAndPagePaginationQuerySchema.shape,
-})
+});
 
 export type QueryContentRequest = z.infer<typeof queryContentRequestSchema>;

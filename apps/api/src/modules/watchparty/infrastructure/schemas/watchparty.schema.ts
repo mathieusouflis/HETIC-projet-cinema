@@ -1,5 +1,20 @@
-import { boolean, foreignKey, index, integer, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
-import { content, episodes, seasons, streamingPlatforms } from "../../../../database/schema.js";
+import {
+  boolean,
+  foreignKey,
+  index,
+  integer,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
+import {
+  content,
+  episodes,
+  seasons,
+  streamingPlatforms,
+} from "../../../../database/schema.js";
 import { users } from "../../../users/infrastructure/database/schemas/users.schema.js";
 
 export const watchpartySchema = pgTable(
@@ -38,34 +53,34 @@ export const watchpartySchema = pgTable(
   (table) => [
     index("idx_watchparties_content").using(
       "btree",
-      table.contentId.asc().nullsLast(),
+      table.contentId.asc().nullsLast()
     ),
     index("idx_watchparties_content_related").using(
       "btree",
       table.contentId.asc().nullsLast(),
       table.seasonId.asc().nullsLast(),
-      table.episodeId.asc().nullsLast(),
+      table.episodeId.asc().nullsLast()
     ),
     index("idx_watchparties_creator").using(
       "btree",
-      table.createdBy.asc().nullsLast(),
+      table.createdBy.asc().nullsLast()
     ),
     index("idx_watchparties_episode").using(
       "btree",
-      table.episodeId.asc().nullsLast(),
+      table.episodeId.asc().nullsLast()
     ),
     index("idx_watchparties_scheduled").using(
       "btree",
       table.scheduledAt.asc().nullsLast(),
-      table.status.asc().nullsLast(),
+      table.status.asc().nullsLast()
     ),
     index("idx_watchparties_season").using(
       "btree",
-      table.seasonId.asc().nullsLast(),
+      table.seasonId.asc().nullsLast()
     ),
     index("idx_watchparties_status").using(
       "btree",
-      table.status.asc().nullsLast(),
+      table.status.asc().nullsLast()
     ),
     foreignKey({
       columns: [table.createdBy],
@@ -97,8 +112,8 @@ export const watchpartySchema = pgTable(
       foreignColumns: [users.id],
       name: "watchparties_leader_user_id_fkey",
     }),
-  ],
-);;
+  ]
+);
 
 export type WatchpartyRow = typeof watchpartySchema.$inferSelect;
 export type NewWatchpartyRow = typeof watchpartySchema.$inferInsert;

@@ -48,16 +48,12 @@
         "categories_name_key": {
           "name": "categories_name_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
+          "columns": ["name"]
         },
         "categories_slug_key": {
           "name": "categories_slug_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -271,16 +267,12 @@
         "content_slug_key": {
           "name": "content_slug_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         },
         "content_tmdb_id_key": {
           "name": "content_tmdb_id_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "tmdb_id"
-          ]
+          "columns": ["tmdb_id"]
         }
       },
       "policies": {},
@@ -331,12 +323,8 @@
           "name": "content_categories_content_id_fkey",
           "tableFrom": "content_categories",
           "tableTo": "content",
-          "columnsFrom": [
-            "content_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["content_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -344,12 +332,8 @@
           "name": "content_categories_category_id_fkey",
           "tableFrom": "content_categories",
           "tableTo": "categories",
-          "columnsFrom": [
-            "category_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["category_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -357,10 +341,7 @@
       "compositePrimaryKeys": {
         "content_categories_pkey": {
           "name": "content_categories_pkey",
-          "columns": [
-            "content_id",
-            "category_id"
-          ]
+          "columns": ["content_id", "category_id"]
         }
       },
       "uniqueConstraints": {},
@@ -453,12 +434,8 @@
           "name": "content_credits_content_id_fkey",
           "tableFrom": "content_credits",
           "tableTo": "content",
-          "columnsFrom": [
-            "content_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["content_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -466,12 +443,8 @@
           "name": "content_credits_person_id_fkey",
           "tableFrom": "content_credits",
           "tableTo": "people",
-          "columnsFrom": [
-            "person_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["person_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -481,11 +454,7 @@
         "unique_credit": {
           "name": "unique_credit",
           "nullsNotDistinct": false,
-          "columns": [
-            "role",
-            "person_id",
-            "content_id"
-          ]
+          "columns": ["role", "person_id", "content_id"]
         }
       },
       "policies": {},
@@ -573,12 +542,8 @@
           "name": "conversation_participants_conversation_id_fkey",
           "tableFrom": "conversation_participants",
           "tableTo": "conversations",
-          "columnsFrom": [
-            "conversation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["conversation_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -586,12 +551,8 @@
           "name": "conversation_participants_user_id_fkey",
           "tableFrom": "conversation_participants",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -601,10 +562,7 @@
         "unique_participant": {
           "name": "unique_participant",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id",
-            "conversation_id"
-          ]
+          "columns": ["user_id", "conversation_id"]
         }
       },
       "policies": {},
@@ -667,12 +625,8 @@
           "name": "conversations_created_by_fkey",
           "tableFrom": "conversations",
           "tableTo": "users",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -765,12 +719,8 @@
           "name": "episodes_season_id_fkey",
           "tableFrom": "episodes",
           "tableTo": "seasons",
-          "columnsFrom": [
-            "season_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["season_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -780,10 +730,7 @@
         "unique_episode": {
           "name": "unique_episode",
           "nullsNotDistinct": false,
-          "columns": [
-            "season_id",
-            "episode_number"
-          ]
+          "columns": ["season_id", "episode_number"]
         }
       },
       "policies": {},
@@ -889,12 +836,8 @@
           "name": "friendships_user_id_fkey",
           "tableFrom": "friendships",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -902,12 +845,8 @@
           "name": "friendships_friend_id_fkey",
           "tableFrom": "friendships",
           "tableTo": "users",
-          "columnsFrom": [
-            "friend_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["friend_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -917,10 +856,7 @@
         "unique_friendship": {
           "name": "unique_friendship",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id",
-            "friend_id"
-          ]
+          "columns": ["user_id", "friend_id"]
         }
       },
       "policies": {},
@@ -1003,12 +939,8 @@
           "name": "list_items_list_id_fkey",
           "tableFrom": "list_items",
           "tableTo": "lists",
-          "columnsFrom": [
-            "list_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["list_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1016,12 +948,8 @@
           "name": "list_items_content_id_fkey",
           "tableFrom": "list_items",
           "tableTo": "content",
-          "columnsFrom": [
-            "content_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["content_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1031,10 +959,7 @@
         "unique_list_item": {
           "name": "unique_list_item",
           "nullsNotDistinct": false,
-          "columns": [
-            "list_id",
-            "content_id"
-          ]
+          "columns": ["list_id", "content_id"]
         }
       },
       "policies": {},
@@ -1071,12 +996,8 @@
           "name": "list_likes_user_id_fkey",
           "tableFrom": "list_likes",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1084,12 +1005,8 @@
           "name": "list_likes_list_id_fkey",
           "tableFrom": "list_likes",
           "tableTo": "lists",
-          "columnsFrom": [
-            "list_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["list_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1097,10 +1014,7 @@
       "compositePrimaryKeys": {
         "list_likes_pkey": {
           "name": "list_likes_pkey",
-          "columns": [
-            "user_id",
-            "list_id"
-          ]
+          "columns": ["user_id", "list_id"]
         }
       },
       "uniqueConstraints": {},
@@ -1222,12 +1136,8 @@
           "name": "lists_user_id_fkey",
           "tableFrom": "lists",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1349,12 +1259,8 @@
           "name": "messages_conversation_id_fkey",
           "tableFrom": "messages",
           "tableTo": "conversations",
-          "columnsFrom": [
-            "conversation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["conversation_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1362,12 +1268,8 @@
           "name": "messages_user_id_fkey",
           "tableFrom": "messages",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -1375,12 +1277,8 @@
           "name": "messages_watchparty_id_fkey",
           "tableFrom": "messages",
           "tableTo": "watchparties",
-          "columnsFrom": [
-            "watchparty_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["watchparty_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1493,12 +1391,8 @@
           "name": "notifications_user_id_fkey",
           "tableFrom": "notifications",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1506,12 +1400,8 @@
           "name": "notifications_related_user_id_fkey",
           "tableFrom": "notifications",
           "tableTo": "users",
-          "columnsFrom": [
-            "related_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["related_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1519,12 +1409,8 @@
           "name": "notifications_related_content_id_fkey",
           "tableFrom": "notifications",
           "tableTo": "content",
-          "columnsFrom": [
-            "related_content_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["related_content_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1532,12 +1418,8 @@
           "name": "notifications_related_watchparty_id_fkey",
           "tableFrom": "notifications",
           "tableTo": "watchparties",
-          "columnsFrom": [
-            "related_watchparty_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["related_watchparty_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1648,9 +1530,7 @@
         "people_tmdb_id_key": {
           "name": "people_tmdb_id_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "tmdb_id"
-          ]
+          "columns": ["tmdb_id"]
         }
       },
       "policies": {},
@@ -1687,12 +1567,8 @@
           "name": "people_likes_user_id_fkey",
           "tableFrom": "people_likes",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1700,12 +1576,8 @@
           "name": "people_likes_person_id_fkey",
           "tableFrom": "people_likes",
           "tableTo": "people",
-          "columnsFrom": [
-            "person_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["person_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1713,10 +1585,7 @@
       "compositePrimaryKeys": {
         "people_likes_pkey": {
           "name": "people_likes_pkey",
-          "columns": [
-            "user_id",
-            "person_id"
-          ]
+          "columns": ["user_id", "person_id"]
         }
       },
       "uniqueConstraints": {},
@@ -1805,12 +1674,8 @@
           "name": "ratings_user_id_fkey",
           "tableFrom": "ratings",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1818,12 +1683,8 @@
           "name": "ratings_content_id_fkey",
           "tableFrom": "ratings",
           "tableTo": "content",
-          "columnsFrom": [
-            "content_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["content_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1833,10 +1694,7 @@
         "unique_rating": {
           "name": "unique_rating",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id",
-            "content_id"
-          ]
+          "columns": ["user_id", "content_id"]
         }
       },
       "policies": {},
@@ -1961,12 +1819,8 @@
           "name": "refresh_tokens_user_id_fkey",
           "tableFrom": "refresh_tokens",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2007,12 +1861,8 @@
           "name": "review_likes_user_id_fkey",
           "tableFrom": "review_likes",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2020,12 +1870,8 @@
           "name": "review_likes_review_id_fkey",
           "tableFrom": "review_likes",
           "tableTo": "reviews",
-          "columnsFrom": [
-            "review_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["review_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2033,10 +1879,7 @@
       "compositePrimaryKeys": {
         "review_likes_pkey": {
           "name": "review_likes_pkey",
-          "columns": [
-            "user_id",
-            "review_id"
-          ]
+          "columns": ["user_id", "review_id"]
         }
       },
       "uniqueConstraints": {},
@@ -2178,12 +2021,8 @@
           "name": "reviews_user_id_fkey",
           "tableFrom": "reviews",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2191,12 +2030,8 @@
           "name": "reviews_content_id_fkey",
           "tableFrom": "reviews",
           "tableTo": "content",
-          "columnsFrom": [
-            "content_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["content_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2204,12 +2039,8 @@
           "name": "reviews_parent_review_id_fkey",
           "tableFrom": "reviews",
           "tableTo": "reviews",
-          "columnsFrom": [
-            "parent_review_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["parent_review_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2303,12 +2134,8 @@
           "name": "seasons_series_id_fkey",
           "tableFrom": "seasons",
           "tableTo": "content",
-          "columnsFrom": [
-            "series_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["series_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2318,10 +2145,7 @@
         "unique_season": {
           "name": "unique_season",
           "nullsNotDistinct": false,
-          "columns": [
-            "series_id",
-            "season_number"
-          ]
+          "columns": ["series_id", "season_number"]
         }
       },
       "policies": {},
@@ -2390,16 +2214,12 @@
         "streaming_platforms_name_key": {
           "name": "streaming_platforms_name_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
+          "columns": ["name"]
         },
         "streaming_platforms_slug_key": {
           "name": "streaming_platforms_slug_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -2480,9 +2300,7 @@
         "tmdb_fetch_status_path_unique": {
           "name": "tmdb_fetch_status_path_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "path"
-          ]
+          "columns": ["path"]
         }
       },
       "policies": {},
@@ -2605,12 +2423,8 @@
           "name": "user_activity_logs_user_id_fkey",
           "tableFrom": "user_activity_logs",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2618,12 +2432,8 @@
           "name": "user_activity_logs_content_id_fkey",
           "tableFrom": "user_activity_logs",
           "tableTo": "content",
-          "columnsFrom": [
-            "content_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["content_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -2631,12 +2441,8 @@
           "name": "user_activity_logs_watchparty_id_fkey",
           "tableFrom": "user_activity_logs",
           "tableTo": "watchparties",
-          "columnsFrom": [
-            "watchparty_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["watchparty_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2739,12 +2545,8 @@
           "name": "user_stats_user_id_fkey",
           "tableFrom": "user_stats",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2752,12 +2554,8 @@
           "name": "user_stats_favorite_genre_id_fkey",
           "tableFrom": "user_stats",
           "tableTo": "categories",
-          "columnsFrom": [
-            "favorite_genre_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["favorite_genre_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -2873,12 +2671,8 @@
           "name": "user_watchlist_user_id_fkey",
           "tableFrom": "user_watchlist",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2886,12 +2680,8 @@
           "name": "user_watchlist_content_id_fkey",
           "tableFrom": "user_watchlist",
           "tableTo": "content",
-          "columnsFrom": [
-            "content_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["content_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2901,10 +2691,7 @@
         "unique_watchlist_entry": {
           "name": "unique_watchlist_entry",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id",
-            "content_id"
-          ]
+          "columns": ["user_id", "content_id"]
         }
       },
       "policies": {},
@@ -3059,16 +2846,12 @@
         "users_email_key": {
           "name": "users_email_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         },
         "users_username_key": {
           "name": "users_username_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "username"
-          ]
+          "columns": ["username"]
         }
       },
       "policies": {},
@@ -3342,12 +3125,8 @@
           "name": "watchparties_created_by_fkey",
           "tableFrom": "watchparties",
           "tableTo": "users",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3355,12 +3134,8 @@
           "name": "watchparties_content_id_fkey",
           "tableFrom": "watchparties",
           "tableTo": "content",
-          "columnsFrom": [
-            "content_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["content_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3368,12 +3143,8 @@
           "name": "watchparties_season_id_fkey",
           "tableFrom": "watchparties",
           "tableTo": "seasons",
-          "columnsFrom": [
-            "season_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["season_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3381,12 +3152,8 @@
           "name": "watchparties_episode_id_fkey",
           "tableFrom": "watchparties",
           "tableTo": "episodes",
-          "columnsFrom": [
-            "episode_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["episode_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3394,12 +3161,8 @@
           "name": "watchparties_platform_id_fkey",
           "tableFrom": "watchparties",
           "tableTo": "streaming_platforms",
-          "columnsFrom": [
-            "platform_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["platform_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -3407,12 +3170,8 @@
           "name": "watchparties_leader_user_id_fkey",
           "tableFrom": "watchparties",
           "tableTo": "users",
-          "columnsFrom": [
-            "leader_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["leader_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -3515,12 +3274,8 @@
           "name": "watchparty_invitations_watchparty_id_fkey",
           "tableFrom": "watchparty_invitations",
           "tableTo": "watchparties",
-          "columnsFrom": [
-            "watchparty_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["watchparty_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3528,12 +3283,8 @@
           "name": "watchparty_invitations_inviter_id_fkey",
           "tableFrom": "watchparty_invitations",
           "tableTo": "users",
-          "columnsFrom": [
-            "inviter_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["inviter_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3541,12 +3292,8 @@
           "name": "watchparty_invitations_invitee_id_fkey",
           "tableFrom": "watchparty_invitations",
           "tableTo": "users",
-          "columnsFrom": [
-            "invitee_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["invitee_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3556,17 +3303,12 @@
         "watchparty_invitations_invite_token_key": {
           "name": "watchparty_invitations_invite_token_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "invite_token"
-          ]
+          "columns": ["invite_token"]
         },
         "unique_invitation": {
           "name": "unique_invitation",
           "nullsNotDistinct": false,
-          "columns": [
-            "watchparty_id",
-            "invitee_id"
-          ]
+          "columns": ["watchparty_id", "invitee_id"]
         }
       },
       "policies": {},
@@ -3666,12 +3408,8 @@
           "name": "watchparty_participants_watchparty_id_fkey",
           "tableFrom": "watchparty_participants",
           "tableTo": "watchparties",
-          "columnsFrom": [
-            "watchparty_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["watchparty_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3679,12 +3417,8 @@
           "name": "watchparty_participants_user_id_fkey",
           "tableFrom": "watchparty_participants",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3694,10 +3428,7 @@
         "unique_watchparty_participant": {
           "name": "unique_watchparty_participant",
           "nullsNotDistinct": false,
-          "columns": [
-            "watchparty_id",
-            "user_id"
-          ]
+          "columns": ["watchparty_id", "user_id"]
         }
       },
       "policies": {},

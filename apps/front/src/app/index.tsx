@@ -7,9 +7,7 @@ function App() {
         Admin <br />
         <span>Kitchen Sink</span>
       </h1>
-      <p className="description">
-        Built With ❤️
-      </p>
+      <p className="description">Built With ❤️</p>
     </div>
   );
 }

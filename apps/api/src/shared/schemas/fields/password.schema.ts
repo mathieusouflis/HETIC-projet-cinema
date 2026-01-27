@@ -32,7 +32,7 @@ export const passwordSchema = z
   .regex(/[0-9]/, "Password must contain at least one number")
   .regex(
     /[^A-Za-z0-9]/,
-    "Password must contain at least one special character",
+    "Password must contain at least one special character"
   );
 
 export const passwordSchemaOptional = passwordSchema.optional();

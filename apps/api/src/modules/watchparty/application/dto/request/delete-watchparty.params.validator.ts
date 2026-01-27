@@ -5,4 +5,6 @@ export const deleteWatchpartyParamsValidator = z.object({
   id: uuidSchema,
 });
 
-export type DeleteWatchpartyParams = z.infer<typeof deleteWatchpartyParamsValidator>;
+export type DeleteWatchpartyParams = z.infer<
+  typeof deleteWatchpartyParamsValidator
+>;

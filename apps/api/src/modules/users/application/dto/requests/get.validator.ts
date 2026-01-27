@@ -1,4 +1,4 @@
-import z from "zod";
+import type z from "zod";
 import { optionalOffsetAndPagePaginationQuerySchema } from "../../../../../shared/schemas/base/pagination.schema";
 
 export const getQuerySchema = optionalOffsetAndPagePaginationQuerySchema;

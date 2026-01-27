@@ -1,16 +1,16 @@
-import { Router } from "express";
+import type { Router } from "express";
 import { RestModule } from "../../shared/infrastructure/base/modules/RestModule.js";
 import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-generator.js";
-import { IWatchpartyRepository } from "./domain/interfaces/IWatchpartyRepository.js";
-import { WatchpartyController } from "./application/controllers/watchparty.controller.js";
-import { WatchpartyRepository } from "./infrastructure/repositories/watchparty.repository.js";
-import { ListWatchpartiesUseCase } from "./application/use-cases/list-watchparties.use-case.js";
-import { GetWatchpartyUseCase } from "./application/use-cases/get-watchparty.use-case.js";
-import { CreateWatchpartyUseCase } from "./application/use-cases/create-watchparty.use-case.js";
-import { UpdateWatchpartyUseCase } from "./application/use-cases/update-watchparty.use-case.js";
-import { DeleteWatchpartyUseCase } from "./application/use-cases/delete-watchparty.use-case.js";
-import { IContentRepository } from "../contents/domain/interfaces/IContentRepository.js";
+import type { IContentRepository } from "../contents/domain/interfaces/IContentRepository.js";
 import { ContentsRepository } from "../contents/infrastructure/database/repositories/content/contents.repository.js";
+import { WatchpartyController } from "./application/controllers/watchparty.controller.js";
+import { CreateWatchpartyUseCase } from "./application/use-cases/create-watchparty.use-case.js";
+import { DeleteWatchpartyUseCase } from "./application/use-cases/delete-watchparty.use-case.js";
+import { GetWatchpartyUseCase } from "./application/use-cases/get-watchparty.use-case.js";
+import { ListWatchpartiesUseCase } from "./application/use-cases/list-watchparties.use-case.js";
+import { UpdateWatchpartyUseCase } from "./application/use-cases/update-watchparty.use-case.js";
+import type { IWatchpartyRepository } from "./domain/interfaces/IWatchpartyRepository.js";
+import { WatchpartyRepository } from "./infrastructure/repositories/watchparty.repository.js";
 
 class WatchpartyModule extends RestModule {
   // ============================================
@@ -41,7 +41,7 @@ class WatchpartyModule extends RestModule {
   constructor() {
     super({
       name: "Watchparty Module",
-      description: "Module for managing watchparties"
+      description: "Module for managing watchparties",
     });
 
     this.repository = new WatchpartyRepository();
@@ -49,7 +49,10 @@ class WatchpartyModule extends RestModule {
 
     this.listWatchpartiesUseCase = new ListWatchpartiesUseCase(this.repository);
     this.getWatchpartyUseCase = new GetWatchpartyUseCase(this.repository);
-    this.createWatchpartyUseCase = new CreateWatchpartyUseCase(this.repository, this.contentRepository);
+    this.createWatchpartyUseCase = new CreateWatchpartyUseCase(
+      this.repository,
+      this.contentRepository
+    );
     this.updateWatchpartyUseCase = new UpdateWatchpartyUseCase(this.repository);
     this.deleteWatchpartyUseCase = new DeleteWatchpartyUseCase(this.repository);
 

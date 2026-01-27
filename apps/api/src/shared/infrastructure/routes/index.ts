@@ -1,1 +1,1 @@
-export * from "./asyncapi.routes"
+export * from "./asyncapi.routes";

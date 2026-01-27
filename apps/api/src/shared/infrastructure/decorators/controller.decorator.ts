@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { METADATA_KEYS, type ControllerMetadata } from "./metadata.js";
+import { type ControllerMetadata, METADATA_KEYS } from "./metadata.js";
 import type { ControllerConstructor } from "./types.js";
 
 interface ControllerOptions {
@@ -12,7 +12,7 @@ interface ControllerOptions {
  * Controller decorator to set OpenAPI tags and route prefix
  */
 export function Controller(options: ControllerOptions) {
-  return function <T extends ControllerConstructor>(constructor: T): T {
+  return <T extends ControllerConstructor>(controllerConstructor: T): T => {
     const metadata: ControllerMetadata = {
       tag: options.tag,
       prefix: options.prefix,
@@ -22,9 +22,9 @@ export function Controller(options: ControllerOptions) {
     Reflect.defineMetadata(
       METADATA_KEYS.CONTROLLER_TAG,
       metadata,
-      constructor.prototype,
+      controllerConstructor.prototype
     );
 
-    return constructor;
+    return controllerConstructor;
   };
 }

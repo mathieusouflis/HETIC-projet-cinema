@@ -14,7 +14,7 @@ import type { IPasswordService } from "./IPasswordService.js";
 export class PasswordService implements IPasswordService {
   private readonly saltRounds: number;
 
-  constructor(saltRounds: number = 10) {
+  constructor(saltRounds = 10) {
     this.saltRounds = saltRounds;
   }
 

@@ -1,5 +1,5 @@
 import { NotFoundError } from "../../../../shared/errors";
-import { People } from "../../domain/entities/people.entity";
+import type { People } from "../../domain/entities/people.entity";
 import type { IPeoplesRepository } from "../../domain/interfaces/IPeoplesRepository";
 
 export class GetPeopleUseCase {

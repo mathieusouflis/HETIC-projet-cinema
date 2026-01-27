@@ -16,4 +16,6 @@ export const createWatchpartyBodyValidator = z.object({
   status: watchpartyStatusSchema.optional(),
 });
 
-export type CreateWatchpartyBody = z.infer<typeof createWatchpartyBodyValidator>;
+export type CreateWatchpartyBody = z.infer<
+  typeof createWatchpartyBodyValidator
+>;

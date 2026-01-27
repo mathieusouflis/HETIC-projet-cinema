@@ -1,16 +1,16 @@
 import { sql } from "drizzle-orm";
 import {
-  pgTable,
-  index,
-  unique,
   check,
-  uuid,
-  varchar,
-  text,
-  timestamp,
   date,
+  index,
   integer,
   numeric,
+  pgTable,
+  text,
+  timestamp,
+  unique,
+  uuid,
+  varchar,
 } from "drizzle-orm/pg-core";
 
 export const contentSchema = pgTable(
@@ -47,31 +47,31 @@ export const contentSchema = pgTable(
   (table) => [
     index("idx_content_rating").using(
       "btree",
-      table.averageRating.desc().nullsFirst().op("numeric_ops"),
+      table.averageRating.desc().nullsFirst().op("numeric_ops")
     ),
     index("idx_content_slug").using(
       "btree",
-      table.slug.asc().nullsLast().op("text_ops"),
+      table.slug.asc().nullsLast().op("text_ops")
     ),
     index("idx_content_tmdb").using(
       "btree",
-      table.tmdbId.asc().nullsLast().op("int4_ops"),
+      table.tmdbId.asc().nullsLast().op("int4_ops")
     ),
     index("idx_content_type").using(
       "btree",
-      table.type.asc().nullsLast().op("text_ops"),
+      table.type.asc().nullsLast().op("text_ops")
     ),
     index("idx_content_year").using(
       "btree",
-      table.year.asc().nullsLast().op("int4_ops"),
+      table.year.asc().nullsLast().op("int4_ops")
     ),
     unique("content_slug_key").on(table.slug),
     unique("content_tmdb_id_key").on(table.tmdbId),
     check(
       "valid_type",
-      sql`(type)::text = ANY ((ARRAY['movie'::character varying, 'serie'::character varying])::text[])`,
+      sql`(type)::text = ANY ((ARRAY['movie'::character varying, 'serie'::character varying])::text[])`
     ),
-  ],
+  ]
 );
 
 export type ContentRow = typeof contentSchema.$inferSelect;

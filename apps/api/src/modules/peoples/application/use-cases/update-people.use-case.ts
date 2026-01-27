@@ -1,5 +1,8 @@
 import { NotFoundError } from "../../../../shared/errors";
-import { People, UpdatePeopleProps } from "../../domain/entities/people.entity";
+import type {
+  People,
+  UpdatePeopleProps,
+} from "../../domain/entities/people.entity";
 import type { IPeoplesRepository } from "../../domain/interfaces/IPeoplesRepository";
 
 export class UpdatePeopleUseCase {

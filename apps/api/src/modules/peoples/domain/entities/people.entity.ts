@@ -1,4 +1,7 @@
-import type { PeopleRow, NewPeopleRow } from "../../infrastructure/schemas/people.schema.js";
+import type {
+  NewPeopleRow,
+  PeopleRow,
+} from "../../infrastructure/schemas/people.schema.js";
 
 /**
  * Domain entity representing a person (actor, director, etc.)
@@ -31,7 +34,9 @@ export class People {
    * Returns the person's age in years if birth date is known, otherwise null.
    */
   public getAge(referenceDate: Date = new Date()): number | null {
-    if (!this.birthDate) return null;
+    if (!this.birthDate) {
+      return null;
+    }
     const diff = referenceDate.getTime() - this.birthDate.getTime();
     const ageDate = new Date(diff);
     return Math.abs(ageDate.getUTCFullYear() - 1970);
@@ -77,6 +82,12 @@ export type CreatePeopleProps = NewPeopleRow;
 export type UpdatePeopleProps = Partial<
   Pick<
     PeopleRow,
-    "name" | "bio" | "photoUrl" | "birthDate" | "nationality" | "tmdbId" | "updatedAt"
+    | "name"
+    | "bio"
+    | "photoUrl"
+    | "birthDate"
+    | "nationality"
+    | "tmdbId"
+    | "updatedAt"
   >
 >;

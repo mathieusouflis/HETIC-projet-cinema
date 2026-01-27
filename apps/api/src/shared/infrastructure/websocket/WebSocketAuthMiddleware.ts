@@ -1,5 +1,5 @@
-import type { Socket } from "socket.io";
 import { logger } from "@packages/logger";
+import type { Socket } from "socket.io";
 import { WebSocketAuthError } from "../../errors/websocket";
 
 /**
@@ -11,15 +11,13 @@ import { WebSocketAuthError } from "../../errors/websocket";
  */
 export async function globalAuthEventMiddleware(
   socket: Socket,
-  _data: any,
-): Promise<boolean | void> {
+  _data: any
+): Promise<boolean | undefined> {
   if (!(socket as any).user) {
     logger.warn(
-      `Event blocked: Socket ${socket.id} not authenticated (user missing)`,
+      `Event blocked: Socket ${socket.id} not authenticated (user missing)`
     );
-    throw new WebSocketAuthError(
-      "Authentication required for this event",
-    );
+    throw new WebSocketAuthError("Authentication required for this event");
   }
 
   return true;
@@ -30,14 +28,14 @@ export async function globalAuthEventMiddleware(
  */
 export function isSocketAuthenticated(socket: Socket): boolean {
   const user = (socket as any).user;
-  return !!(user && user.userId && user.email);
+  return !!(user?.userId && user.email);
 }
 
 /**
  * Get user from socket (with type safety)
  */
 export function getSocketUser(
-  socket: Socket,
+  socket: Socket
 ): { userId: string; email: string } | undefined {
   return (socket as any).user;
 }
@@ -49,7 +47,7 @@ export function getSocketUser(
 export function requireSocketAuth(socket: Socket): void {
   if (!isSocketAuthenticated(socket)) {
     throw new WebSocketAuthError(
-      "User must be authenticated to access this resource",
+      "User must be authenticated to access this resource"
     );
   }
 }
