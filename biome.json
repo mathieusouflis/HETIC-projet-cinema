@@ -13,6 +13,7 @@
       "dist",
       "build",
       "generated",
+      "api-documentation.json",
       ".next",
       ".turbo",
       "coverage",
