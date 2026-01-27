@@ -30,9 +30,7 @@
         "operationId": "POST/auth/register",
         "summary": "Register a new user",
         "description": "Create a new user account with email, username, and password",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -58,11 +56,7 @@
                     "pattern": "[A-Z]"
                   }
                 },
-                "required": [
-                  "email",
-                  "username",
-                  "password"
-                ]
+                "required": ["email", "username", "password"]
               }
             }
           }
@@ -85,9 +79,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -124,27 +116,17 @@
                               ]
                             }
                           },
-                          "required": [
-                            "id",
-                            "username",
-                            "createdAt"
-                          ]
+                          "required": ["id", "username", "createdAt"]
                         },
                         "accessToken": {
                           "type": "string",
                           "description": "JWT access token for API authentication"
                         }
                       },
-                      "required": [
-                        "user",
-                        "accessToken"
-                      ]
+                      "required": ["user", "accessToken"]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -166,9 +148,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
@@ -188,18 +168,11 @@
                             "type": "string"
                           }
                         },
-                        "required": [
-                          "field",
-                          "message"
-                        ]
+                        "required": ["field", "message"]
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "error",
-                    "details"
-                  ]
+                  "required": ["success", "error", "details"]
                 }
               }
             }
@@ -221,9 +194,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
@@ -240,10 +211,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -256,9 +224,7 @@
         "operationId": "POST/auth/login",
         "summary": "Login user",
         "description": "Authenticate user with email and password, receive access tokens",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -275,10 +241,7 @@
                     "type": "string"
                   }
                 },
-                "required": [
-                  "email",
-                  "password"
-                ]
+                "required": ["email", "password"]
               }
             }
           }
@@ -301,9 +264,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -340,27 +301,17 @@
                               ]
                             }
                           },
-                          "required": [
-                            "id",
-                            "username",
-                            "createdAt"
-                          ]
+                          "required": ["id", "username", "createdAt"]
                         },
                         "accessToken": {
                           "type": "string",
                           "description": "JWT access token for API authentication"
                         }
                       },
-                      "required": [
-                        "user",
-                        "accessToken"
-                      ]
+                      "required": ["user", "accessToken"]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -382,9 +333,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
@@ -404,18 +353,11 @@
                             "type": "string"
                           }
                         },
-                        "required": [
-                          "field",
-                          "message"
-                        ]
+                        "required": ["field", "message"]
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "error",
-                    "details"
-                  ]
+                  "required": ["success", "error", "details"]
                 }
               }
             }
@@ -437,18 +379,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -461,9 +399,7 @@
         "operationId": "POST/auth/refresh",
         "summary": "Refresh access token",
         "description": "Get new access and refresh tokens using a valid refresh token",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "parameters": [
           {
             "name": "cookie",
@@ -493,9 +429,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -532,27 +466,17 @@
                               ]
                             }
                           },
-                          "required": [
-                            "id",
-                            "username",
-                            "createdAt"
-                          ]
+                          "required": ["id", "username", "createdAt"]
                         },
                         "accessToken": {
                           "type": "string",
                           "description": "JWT access token for API authentication"
                         }
                       },
-                      "required": [
-                        "user",
-                        "accessToken"
-                      ]
+                      "required": ["user", "accessToken"]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -574,18 +498,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -598,9 +518,7 @@
         "operationId": "POST/auth/logout",
         "summary": "Logout user",
         "description": "Logout the current authenticated user (invalidate session)",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "security": [
           {
             "BearerAuth": []
@@ -616,17 +534,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "message": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -640,18 +554,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -664,9 +574,7 @@
         "operationId": "GET/auth/me",
         "summary": "Get current user profile",
         "description": "Get the authenticated user information from JWT token",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "security": [
           {
             "BearerAuth": []
@@ -682,9 +590,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -701,16 +607,10 @@
                           "type": "string"
                         }
                       },
-                      "required": [
-                        "userId",
-                        "email"
-                      ]
+                      "required": ["userId", "email"]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -724,18 +624,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -747,9 +643,7 @@
       "get": {
         "operationId": "GET/contents/",
         "description": "List contents by type",
-        "tags": [
-          "Contents"
-        ],
+        "tags": ["Contents"],
         "parameters": [
           {
             "schema": {
@@ -762,10 +656,7 @@
           {
             "schema": {
               "type": "string",
-              "enum": [
-                "movie",
-                "serie"
-              ]
+              "enum": ["movie", "serie"]
             },
             "required": false,
             "name": "contentType",
@@ -849,9 +740,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "array",
@@ -864,10 +753,7 @@
                           },
                           "type": {
                             "type": "string",
-                            "enum": [
-                              "movie",
-                              "serie"
-                            ]
+                            "enum": ["movie", "serie"]
                           },
                           "title": {
                             "type": "string"
@@ -961,10 +847,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -976,9 +859,7 @@
       "get": {
         "operationId": "GET/contents/{id}",
         "description": "Get content by id",
-        "tags": [
-          "Contents"
-        ],
+        "tags": ["Contents"],
         "parameters": [
           {
             "schema": {
@@ -1005,10 +886,7 @@
                     },
                     "type": {
                       "type": "string",
-                      "enum": [
-                        "movie",
-                        "serie"
-                      ]
+                      "enum": ["movie", "serie"]
                     },
                     "title": {
                       "type": "string"
@@ -1112,18 +990,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -1135,9 +1008,7 @@
       "get": {
         "operationId": "GET/movies/",
         "description": "List movies by type",
-        "tags": [
-          "Movies"
-        ],
+        "tags": ["Movies"],
         "parameters": [
           {
             "schema": {
@@ -1225,9 +1096,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "array",
@@ -1240,9 +1109,7 @@
                           },
                           "type": {
                             "type": "string",
-                            "enum": [
-                              "movie"
-                            ]
+                            "enum": ["movie"]
                           },
                           "title": {
                             "type": "string"
@@ -1336,10 +1203,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -1351,9 +1215,7 @@
       "get": {
         "operationId": "GET/movies/{id}",
         "description": "Get movie by id",
-        "tags": [
-          "Movies"
-        ],
+        "tags": ["Movies"],
         "parameters": [
           {
             "schema": {
@@ -1380,9 +1242,7 @@
                     },
                     "type": {
                       "type": "string",
-                      "enum": [
-                        "movie"
-                      ]
+                      "enum": ["movie"]
                     },
                     "title": {
                       "type": "string"
@@ -1486,18 +1346,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -1509,9 +1364,7 @@
       "get": {
         "operationId": "GET/peoples/",
         "description": "List people with optional filters and pagination",
-        "tags": [
-          "Peoples"
-        ],
+        "tags": ["Peoples"],
         "parameters": [
           {
             "schema": {
@@ -1572,9 +1425,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "array",
@@ -1636,10 +1487,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -1649,9 +1497,7 @@
       "post": {
         "operationId": "POST/peoples/",
         "description": "Create a new person",
-        "tags": [
-          "Peoples"
-        ],
+        "tags": ["Peoples"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1687,9 +1533,7 @@
                     "exclusiveMinimum": true
                   }
                 },
-                "required": [
-                  "name"
-                ]
+                "required": ["name"]
               }
             }
           }
@@ -1704,9 +1548,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -1765,10 +1607,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -1780,9 +1619,7 @@
       "get": {
         "operationId": "GET/peoples/search",
         "description": "Search people on TMDB and sync to database",
-        "tags": [
-          "Peoples"
-        ],
+        "tags": ["Peoples"],
         "parameters": [
           {
             "schema": {
@@ -1815,9 +1652,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "array",
@@ -1879,10 +1714,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -1894,9 +1726,7 @@
       "get": {
         "operationId": "GET/peoples/{id}",
         "description": "Get a person by ID",
-        "tags": [
-          "Peoples"
-        ],
+        "tags": ["Peoples"],
         "parameters": [
           {
             "schema": {
@@ -1919,9 +1749,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -1980,10 +1808,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -1997,18 +1822,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -2018,9 +1838,7 @@
       "patch": {
         "operationId": "PATCH/peoples/{id}",
         "description": "Update a person",
-        "tags": [
-          "Peoples"
-        ],
+        "tags": ["Peoples"],
         "security": [
           {
             "BearerAuth": []
@@ -2087,9 +1905,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -2148,10 +1964,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -2165,18 +1978,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -2190,18 +1999,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -2211,9 +2015,7 @@
       "delete": {
         "operationId": "DELETE/peoples/{id}",
         "description": "Delete a person",
-        "tags": [
-          "Peoples"
-        ],
+        "tags": ["Peoples"],
         "security": [
           {
             "BearerAuth": []
@@ -2244,18 +2046,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -2269,18 +2067,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -2292,9 +2085,7 @@
       "get": {
         "operationId": "GET/series/",
         "description": "List series by type",
-        "tags": [
-          "Series"
-        ],
+        "tags": ["Series"],
         "parameters": [
           {
             "schema": {
@@ -2382,9 +2173,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "array",
@@ -2397,9 +2186,7 @@
                           },
                           "type": {
                             "type": "string",
-                            "enum": [
-                              "serie"
-                            ]
+                            "enum": ["serie"]
                           },
                           "title": {
                             "type": "string"
@@ -2493,10 +2280,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -2508,9 +2292,7 @@
       "get": {
         "operationId": "GET/series/{id}",
         "description": "Get serie by id",
-        "tags": [
-          "Series"
-        ],
+        "tags": ["Series"],
         "parameters": [
           {
             "schema": {
@@ -2537,9 +2319,7 @@
                     },
                     "type": {
                       "type": "string",
-                      "enum": [
-                        "serie"
-                      ]
+                      "enum": ["serie"]
                     },
                     "title": {
                       "type": "string"
@@ -2643,18 +2423,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -2667,9 +2442,7 @@
         "operationId": "GET/users/{id}",
         "summary": "Get user by ID",
         "description": "Retrieve a user profile by their unique identifier",
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "parameters": [
           {
             "schema": {
@@ -2692,9 +2465,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -2728,17 +2499,10 @@
                           ]
                         }
                       },
-                      "required": [
-                        "id",
-                        "username",
-                        "createdAt"
-                      ]
+                      "required": ["id", "username", "createdAt"]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -2752,9 +2516,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
@@ -2774,18 +2536,11 @@
                             "type": "string"
                           }
                         },
-                        "required": [
-                          "field",
-                          "message"
-                        ]
+                        "required": ["field", "message"]
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "error",
-                    "details"
-                  ]
+                  "required": ["success", "error", "details"]
                 }
               }
             }
@@ -2799,18 +2554,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -2821,9 +2571,7 @@
         "operationId": "PATCH/users/{id}",
         "summary": "Update user profile",
         "description": "Update a user profile (admin only or own profile)",
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "security": [
           {
             "BearerAuth": []
@@ -2874,9 +2622,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -2910,17 +2656,10 @@
                           ]
                         }
                       },
-                      "required": [
-                        "id",
-                        "username",
-                        "createdAt"
-                      ]
+                      "required": ["id", "username", "createdAt"]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -2934,9 +2673,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
@@ -2956,18 +2693,11 @@
                             "type": "string"
                           }
                         },
-                        "required": [
-                          "field",
-                          "message"
-                        ]
+                        "required": ["field", "message"]
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "error",
-                    "details"
-                  ]
+                  "required": ["success", "error", "details"]
                 }
               }
             }
@@ -2981,18 +2711,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -3006,18 +2732,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Forbidden - insufficient permissions"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -3031,18 +2753,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -3053,9 +2770,7 @@
         "operationId": "DELETE/users/{id}",
         "summary": "Delete user",
         "description": "Delete a user account (admin only or own account)",
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "security": [
           {
             "BearerAuth": []
@@ -3086,9 +2801,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
@@ -3108,18 +2821,11 @@
                             "type": "string"
                           }
                         },
-                        "required": [
-                          "field",
-                          "message"
-                        ]
+                        "required": ["field", "message"]
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "error",
-                    "details"
-                  ]
+                  "required": ["success", "error", "details"]
                 }
               }
             }
@@ -3133,18 +2839,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -3158,18 +2860,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Forbidden - insufficient permissions"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -3183,18 +2881,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -3207,9 +2900,7 @@
         "operationId": "GET/users/",
         "summary": "Get all users",
         "description": "Retrieve a paginated list of all users",
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "security": [
           {
             "BearerAuth": []
@@ -3259,9 +2950,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -3300,11 +2989,7 @@
                                 ]
                               }
                             },
-                            "required": [
-                              "id",
-                              "username",
-                              "createdAt"
-                            ]
+                            "required": ["id", "username", "createdAt"]
                           }
                         },
                         "pagination": {
@@ -3324,22 +3009,13 @@
                               "minimum": 0
                             }
                           },
-                          "required": [
-                            "total",
-                            "totalPages"
-                          ]
+                          "required": ["total", "totalPages"]
                         }
                       },
-                      "required": [
-                        "users",
-                        "pagination"
-                      ]
+                      "required": ["users", "pagination"]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -3353,9 +3029,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
@@ -3375,18 +3049,11 @@
                             "type": "string"
                           }
                         },
-                        "required": [
-                          "field",
-                          "message"
-                        ]
+                        "required": ["field", "message"]
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "error",
-                    "details"
-                  ]
+                  "required": ["success", "error", "details"]
                 }
               }
             }
@@ -3400,18 +3067,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -3424,9 +3087,7 @@
         "operationId": "GET/users/me",
         "summary": "Get current user profile",
         "description": "Retrieve the authenticated user own profile",
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "security": [
           {
             "BearerAuth": []
@@ -3442,9 +3103,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -3467,17 +3126,10 @@
                           "pattern": "^[a-zA-Z0-9_-]+$"
                         }
                       },
-                      "required": [
-                        "userId",
-                        "email",
-                        "username"
-                      ]
+                      "required": ["userId", "email", "username"]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -3491,18 +3143,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -3513,9 +3161,7 @@
         "operationId": "PATCH/users/me",
         "summary": "Update current user profile",
         "description": "Update the authenticated user own profile",
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "security": [
           {
             "BearerAuth": []
@@ -3554,9 +3200,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -3579,17 +3223,10 @@
                           "pattern": "^[a-zA-Z0-9_-]+$"
                         }
                       },
-                      "required": [
-                        "userId",
-                        "email",
-                        "username"
-                      ]
+                      "required": ["userId", "email", "username"]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -3603,9 +3240,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
@@ -3625,18 +3260,11 @@
                             "type": "string"
                           }
                         },
-                        "required": [
-                          "field",
-                          "message"
-                        ]
+                        "required": ["field", "message"]
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "error",
-                    "details"
-                  ]
+                  "required": ["success", "error", "details"]
                 }
               }
             }
@@ -3650,18 +3278,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -3673,9 +3297,7 @@
       "post": {
         "operationId": "POST/users/me/friendships/{id}",
         "description": "Follow a user",
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "parameters": [
           {
             "schema": {
@@ -3698,9 +3320,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -3722,11 +3342,7 @@
                         },
                         "status": {
                           "type": "string",
-                          "enum": [
-                            "pending",
-                            "accepted",
-                            "rejected"
-                          ]
+                          "enum": ["pending", "accepted", "rejected"]
                         },
                         "createdAt": {
                           "type": "string",
@@ -3747,10 +3363,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -3764,9 +3377,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
@@ -3786,18 +3397,11 @@
                             "type": "string"
                           }
                         },
-                        "required": [
-                          "field",
-                          "message"
-                        ]
+                        "required": ["field", "message"]
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "error",
-                    "details"
-                  ]
+                  "required": ["success", "error", "details"]
                 }
               }
             }
@@ -3811,18 +3415,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -3836,18 +3436,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -3861,18 +3456,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Forbidden - insufficient permissions"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -3884,9 +3475,7 @@
       "get": {
         "operationId": "GET/watchlist/",
         "description": "Query watchlist",
-        "tags": [
-          "Watchlist"
-        ],
+        "tags": ["Watchlist"],
         "security": [
           {
             "BearerAuth": []
@@ -3920,9 +3509,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "array",
@@ -3994,10 +3581,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -4007,9 +3591,7 @@
       "post": {
         "operationId": "POST/watchlist/",
         "description": "Add content to personal watchlist",
-        "tags": [
-          "Watchlist"
-        ],
+        "tags": ["Watchlist"],
         "security": [
           {
             "BearerAuth": []
@@ -4054,9 +3636,7 @@
                     "format": "date-time"
                   }
                 },
-                "required": [
-                  "contentId"
-                ]
+                "required": ["contentId"]
               }
             }
           }
@@ -4071,9 +3651,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -4142,10 +3720,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -4159,9 +3734,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
@@ -4181,18 +3754,11 @@
                             "type": "string"
                           }
                         },
-                        "required": [
-                          "field",
-                          "message"
-                        ]
+                        "required": ["field", "message"]
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "error",
-                    "details"
-                  ]
+                  "required": ["success", "error", "details"]
                 }
               }
             }
@@ -4206,18 +3772,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -4231,9 +3793,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
@@ -4250,10 +3810,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -4265,9 +3822,7 @@
       "get": {
         "operationId": "GET/watchlist/content/{id}",
         "description": "Get watchlist content by id",
-        "tags": [
-          "Watchlist"
-        ],
+        "tags": ["Watchlist"],
         "security": [
           {
             "BearerAuth": []
@@ -4295,9 +3850,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -4366,10 +3919,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -4383,18 +3933,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -4408,18 +3954,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -4429,9 +3970,7 @@
       "patch": {
         "operationId": "PATCH/watchlist/content/{id}",
         "description": "Update watchlist by content id",
-        "tags": [
-          "Watchlist"
-        ],
+        "tags": ["Watchlist"],
         "security": [
           {
             "BearerAuth": []
@@ -4483,9 +4022,7 @@
                     "format": "date-time"
                   }
                 },
-                "required": [
-                  "status"
-                ]
+                "required": ["status"]
               }
             }
           }
@@ -4500,9 +4037,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -4571,10 +4106,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -4588,18 +4120,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -4613,18 +4141,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -4634,9 +4157,7 @@
       "delete": {
         "operationId": "DELETE/watchlist/content/{id}",
         "description": "Delete watchlist by content id",
-        "tags": [
-          "Watchlist"
-        ],
+        "tags": ["Watchlist"],
         "security": [
           {
             "BearerAuth": []
@@ -4664,17 +4185,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "message": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -4688,18 +4205,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -4713,18 +4226,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -4736,9 +4244,7 @@
       "get": {
         "operationId": "GET/watchlist/{id}",
         "description": "Get watchlist by id",
-        "tags": [
-          "Watchlist"
-        ],
+        "tags": ["Watchlist"],
         "security": [
           {
             "BearerAuth": []
@@ -4766,9 +4272,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -4837,10 +4341,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -4854,18 +4355,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -4879,18 +4376,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -4900,9 +4392,7 @@
       "patch": {
         "operationId": "PATCH/watchlist/{id}",
         "description": "Update watchlist by id",
-        "tags": [
-          "Watchlist"
-        ],
+        "tags": ["Watchlist"],
         "security": [
           {
             "BearerAuth": []
@@ -4954,9 +4444,7 @@
                     "format": "date-time"
                   }
                 },
-                "required": [
-                  "status"
-                ]
+                "required": ["status"]
               }
             }
           }
@@ -4971,9 +4459,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -5042,10 +4528,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -5059,18 +4542,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -5084,18 +4563,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -5105,9 +4579,7 @@
       "delete": {
         "operationId": "DELETE/watchlist/{id}",
         "description": "Delete watchlist by id",
-        "tags": [
-          "Watchlist"
-        ],
+        "tags": ["Watchlist"],
         "security": [
           {
             "BearerAuth": []
@@ -5135,17 +4607,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "message": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -5159,18 +4627,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -5184,18 +4648,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -5207,9 +4666,7 @@
       "get": {
         "operationId": "GET/watchparty/",
         "description": "Query watchparties",
-        "tags": [
-          "Watchparty"
-        ],
+        "tags": ["Watchparty"],
         "security": [
           {
             "BearerAuth": []
@@ -5219,12 +4676,7 @@
           {
             "schema": {
               "type": "string",
-              "enum": [
-                "scheduled",
-                "active",
-                "ended",
-                "cancelled"
-              ]
+              "enum": ["scheduled", "active", "ended", "cancelled"]
             },
             "required": false,
             "name": "status",
@@ -5260,9 +4712,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "array",
@@ -5397,10 +4847,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -5410,9 +4857,7 @@
       "post": {
         "operationId": "POST/watchparty/",
         "description": "Create a new watchparty",
-        "tags": [
-          "Watchparty"
-        ],
+        "tags": ["Watchparty"],
         "security": [
           {
             "BearerAuth": []
@@ -5472,12 +4917,7 @@
                   },
                   "status": {
                     "type": "string",
-                    "enum": [
-                      "scheduled",
-                      "active",
-                      "ended",
-                      "cancelled"
-                    ]
+                    "enum": ["scheduled", "active", "ended", "cancelled"]
                   }
                 },
                 "required": [
@@ -5501,9 +4941,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -5581,12 +5019,7 @@
                         },
                         "status": {
                           "type": "string",
-                          "enum": [
-                            "scheduled",
-                            "active",
-                            "ended",
-                            "cancelled"
-                          ]
+                          "enum": ["scheduled", "active", "ended", "cancelled"]
                         },
                         "currentPositionTimestamp": {
                           "type": "integer",
@@ -5635,10 +5068,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -5652,9 +5082,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
@@ -5674,18 +5102,11 @@
                             "type": "string"
                           }
                         },
-                        "required": [
-                          "field",
-                          "message"
-                        ]
+                        "required": ["field", "message"]
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "error",
-                    "details"
-                  ]
+                  "required": ["success", "error", "details"]
                 }
               }
             }
@@ -5699,18 +5120,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -5724,18 +5141,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -5747,9 +5159,7 @@
       "get": {
         "operationId": "GET/watchparty/{id}",
         "description": "Get watchparty by id",
-        "tags": [
-          "Watchparty"
-        ],
+        "tags": ["Watchparty"],
         "security": [
           {
             "BearerAuth": []
@@ -5777,9 +5187,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -5857,12 +5265,7 @@
                         },
                         "status": {
                           "type": "string",
-                          "enum": [
-                            "scheduled",
-                            "active",
-                            "ended",
-                            "cancelled"
-                          ]
+                          "enum": ["scheduled", "active", "ended", "cancelled"]
                         },
                         "currentPositionTimestamp": {
                           "type": "integer",
@@ -5911,10 +5314,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -5928,18 +5328,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -5953,18 +5349,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -5974,9 +5365,7 @@
       "patch": {
         "operationId": "PATCH/watchparty/{id}",
         "description": "Update watchparty by id",
-        "tags": [
-          "Watchparty"
-        ],
+        "tags": ["Watchparty"],
         "security": [
           {
             "BearerAuth": []
@@ -6042,12 +5431,7 @@
                   },
                   "status": {
                     "type": "string",
-                    "enum": [
-                      "scheduled",
-                      "active",
-                      "ended",
-                      "cancelled"
-                    ]
+                    "enum": ["scheduled", "active", "ended", "cancelled"]
                   },
                   "currentPositionTimestamp": {
                     "type": "number",
@@ -6076,9 +5460,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -6156,12 +5538,7 @@
                         },
                         "status": {
                           "type": "string",
-                          "enum": [
-                            "scheduled",
-                            "active",
-                            "ended",
-                            "cancelled"
-                          ]
+                          "enum": ["scheduled", "active", "ended", "cancelled"]
                         },
                         "currentPositionTimestamp": {
                           "type": "integer",
@@ -6210,10 +5587,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -6227,18 +5601,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -6252,18 +5622,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -6273,9 +5638,7 @@
       "delete": {
         "operationId": "DELETE/watchparty/{id}",
         "description": "Delete watchparty by id",
-        "tags": [
-          "Watchparty"
-        ],
+        "tags": ["Watchparty"],
         "security": [
           {
             "BearerAuth": []
@@ -6303,17 +5666,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "message": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -6327,18 +5686,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -6352,18 +5707,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
