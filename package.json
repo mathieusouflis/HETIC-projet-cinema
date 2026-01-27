@@ -3,19 +3,19 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm generate-sdk && turbo run build",
+    "build": "pnpm generate-sdk && phase run turbo run build",
     "build:watch": "pnpm generate-sdk && turbo run build:watch",
     "check-types": "pnpm generate-sdk && turbo run check-types",
-    "generate-sdk": "turbo run generate-sdk",
+    "generate-sdk": "phase run turbo run generate-sdk",
     "clean": "turbo run clean && rm -rf .turbo dist node_modules/.cache packages/*/.turbo packages/*/dist apps/*/.turbo apps/*/dist",
     "db:logs": "docker compose -f docker-compose.dev.yaml logs -f",
     "db:shell": "docker compose -f docker-compose.dev.yaml exec db psql -U ${DB_USER:-root} -d ${DB_DATABASE:-database}",
     "db:start": "docker-compose -f docker-compose.dev.yaml up -d",
     "db:stop": "docker compose -f docker-compose.dev.yaml down",
-    "dev": "pnpm db:start && turbo run dev",
+    "dev": "pnpm db:start && phase run turbo run dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
-    "start": "turbo run start",
+    "start": "phase run turbo run start",
     "test": "turbo run test -- --coverage"
   },
   "devDependencies": {
