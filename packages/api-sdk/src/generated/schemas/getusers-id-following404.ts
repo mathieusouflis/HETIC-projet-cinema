@@ -5,10 +5,8 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { POSTUsersMeFriendshipsId409Details } from './postusers-me-friendships-id409-details';
 
-export type POSTUsersMeFriendshipsId409 = {
+export type GETUsersIdFollowing404 = {
   success: boolean;
   error: string;
-  details?: POSTUsersMeFriendshipsId409Details;
 };

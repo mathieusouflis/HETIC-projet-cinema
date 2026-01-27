@@ -32,7 +32,10 @@ import type {
   GETSeriesParams,
   GETUsers200,
   GETUsersId200,
+  GETUsersIdFollowers200,
+  GETUsersIdFollowing200,
   GETUsersMe200,
+  GETUsersMeFriendships200,
   GETUsersParams,
   GETWatchlist200,
   GETWatchlistContentId200,
@@ -357,12 +360,61 @@ export const pATCHUsersMe = <TData = AxiosResponse<PATCHUsersMe200>>(
 
 /**
  * Follow a user
+ * @summary Follow a user
  */
 export const pOSTUsersMeFriendshipsId = <TData = AxiosResponse<POSTUsersMeFriendshipsId201>>(
     id: string, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.post(
       `/users/me/friendships/${id}`,undefined,options
+    );
+  }
+
+/**
+ * Unfollow a user (delete friendship)
+ * @summary Unfollow a user
+ */
+export const dELETEUsersMeFriendshipsId = <TData = AxiosResponse<void>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.delete(
+      `/users/me/friendships/${id}`,options
+    );
+  }
+
+/**
+ * Get the list of users that the authenticated user is following
+ * @summary Get my following list
+ */
+export const gETUsersMeFriendships = <TData = AxiosResponse<GETUsersMeFriendships200>>(
+     options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/users/me/friendships`,options
+    );
+  }
+
+/**
+ * Get the list of users that a specific user is following
+ * @summary Get user's following list
+ */
+export const gETUsersIdFollowing = <TData = AxiosResponse<GETUsersIdFollowing200>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/users/${id}/following`,options
+    );
+  }
+
+/**
+ * Get the list of users following a specific user
+ * @summary Get user's followers list
+ */
+export const gETUsersIdFollowers = <TData = AxiosResponse<GETUsersIdFollowers200>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/users/${id}/followers`,options
     );
   }
 
@@ -545,6 +597,10 @@ export type GETUsersResult = AxiosResponse<GETUsers200>
 export type GETUsersMeResult = AxiosResponse<GETUsersMe200>
 export type PATCHUsersMeResult = AxiosResponse<PATCHUsersMe200>
 export type POSTUsersMeFriendshipsIdResult = AxiosResponse<POSTUsersMeFriendshipsId201>
+export type DELETEUsersMeFriendshipsIdResult = AxiosResponse<void>
+export type GETUsersMeFriendshipsResult = AxiosResponse<GETUsersMeFriendships200>
+export type GETUsersIdFollowingResult = AxiosResponse<GETUsersIdFollowing200>
+export type GETUsersIdFollowersResult = AxiosResponse<GETUsersIdFollowers200>
 export type GETWatchlistResult = AxiosResponse<GETWatchlist200>
 export type POSTWatchlistResult = AxiosResponse<POSTWatchlist201>
 export type GETWatchlistContentIdResult = AxiosResponse<GETWatchlistContentId200>
