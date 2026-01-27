@@ -5,7 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { GETMoviesId200Type } from "./getmovies-id200-type";
+import type { GETMoviesId200Type } from './getmovies-id200-type';
 
 export type GETMoviesId200 = {
   id: string;

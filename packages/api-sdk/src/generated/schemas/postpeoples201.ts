@@ -5,7 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { POSTPeoples201Data } from "./postpeoples201-data";
+import type { POSTPeoples201Data } from './postpeoples201-data';
 
 export type POSTPeoples201 = {
   success: boolean;

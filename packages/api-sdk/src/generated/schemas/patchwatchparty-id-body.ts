@@ -5,7 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { PATCHWatchpartyIdBodyStatus } from "./patchwatchparty-id-body-status";
+import type { PATCHWatchpartyIdBodyStatus } from './patchwatchparty-id-body-status';
 
 export type PATCHWatchpartyIdBody = {
   /**

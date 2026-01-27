@@ -5,7 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { POSTAuthRegister409Details } from "./postauth-register409-details";
+import type { POSTAuthRegister409Details } from './postauth-register409-details';
 
 export type POSTAuthRegister409 = {
   success: boolean;

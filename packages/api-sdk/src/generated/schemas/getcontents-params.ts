@@ -5,31 +5,31 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { GETContentsContentType } from "./getcontents-content-type";
+import type { GETContentsContentType } from './getcontents-content-type';
 
 export type GETContentsParams = {
-  title?: string;
-  contentType?: GETContentsContentType;
-  synopsis?: string;
-  releaseDate?: string;
-  year?: number;
-  /**
-   * @minimum 0
-   * @maximum 10
-   */
-  averageRating?: number;
-  /**
-   * @minimum 1
-   */
-  page?: number;
-  /**
-   * @minimum 0
-   * @nullable
-   */
-  offset?: number | null;
-  /**
-   * @minimum 1
-   * @maximum 100
-   */
-  limit?: number;
+title?: string;
+contentType?: GETContentsContentType;
+synopsis?: string;
+releaseDate?: string;
+year?: number;
+/**
+ * @minimum 0
+ * @maximum 10
+ */
+averageRating?: number;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 0
+ * @nullable
+ */
+offset?: number | null;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: number;
 };

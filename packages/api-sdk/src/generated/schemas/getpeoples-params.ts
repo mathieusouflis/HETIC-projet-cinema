@@ -7,20 +7,20 @@
  */
 
 export type GETPeoplesParams = {
-  nationality?: string;
-  name?: string;
-  /**
-   * @minimum 1
-   */
-  page?: number;
-  /**
-   * @minimum 0
-   * @nullable
-   */
-  offset?: number | null;
-  /**
-   * @minimum 1
-   * @maximum 100
-   */
-  limit?: number;
+nationality?: string;
+name?: string;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 0
+ * @nullable
+ */
+offset?: number | null;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: number;
 };

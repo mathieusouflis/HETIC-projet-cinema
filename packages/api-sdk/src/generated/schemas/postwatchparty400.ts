@@ -5,7 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { POSTWatchparty400DetailsItem } from "./postwatchparty400-details-item";
+import type { POSTWatchparty400DetailsItem } from './postwatchparty400-details-item';
 
 export type POSTWatchparty400 = {
   success: boolean;

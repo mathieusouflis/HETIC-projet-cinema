@@ -5,7 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { POSTAuthRefresh200Data } from "./postauth-refresh200-data";
+import type { POSTAuthRefresh200Data } from './postauth-refresh200-data';
 
 export type POSTAuthRefresh200 = {
   success: boolean;

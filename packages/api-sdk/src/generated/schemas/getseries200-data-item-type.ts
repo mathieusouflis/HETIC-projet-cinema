@@ -6,9 +6,9 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GETSeries200DataItemType =
-  (typeof GETSeries200DataItemType)[keyof typeof GETSeries200DataItemType];
+export type GETSeries200DataItemType = typeof GETSeries200DataItemType[keyof typeof GETSeries200DataItemType];
+
 
 export const GETSeries200DataItemType = {
-  serie: "serie",
+  serie: 'serie',
 } as const;

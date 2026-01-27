@@ -5,7 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { POSTWatchlist201Data } from "./postwatchlist201-data";
+import type { POSTWatchlist201Data } from './postwatchlist201-data';
 
 export type POSTWatchlist201 = {
   success: boolean;

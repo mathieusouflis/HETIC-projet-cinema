@@ -5,8 +5,11 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import axios from "axios";
-import type { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios from 'axios';
+import type {
+  AxiosRequestConfig,
+  AxiosResponse
+} from 'axios';
 
 import type {
   DELETEWatchlistContentId204,
@@ -61,453 +64,484 @@ import type {
   POSTWatchlist201,
   POSTWatchlistBody,
   POSTWatchparty201,
-  POSTWatchpartyBody,
-} from "./schemas";
+  POSTWatchpartyBody
+} from './schemas';
 
-/**
+
+
+
+  /**
  * Create a new user account with email, username, and password
  * @summary Register a new user
  */
 export const pOSTAuthRegister = <TData = AxiosResponse<POSTAuthRegister201>>(
-  pOSTAuthRegisterBody: POSTAuthRegisterBody,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.post(`/auth/register`, pOSTAuthRegisterBody, options);
-};
+    pOSTAuthRegisterBody: POSTAuthRegisterBody, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/auth/register`,
+      pOSTAuthRegisterBody,options
+    );
+  }
 
 /**
  * Authenticate user with email and password, receive access tokens
  * @summary Login user
  */
 export const pOSTAuthLogin = <TData = AxiosResponse<POSTAuthLogin200>>(
-  pOSTAuthLoginBody: POSTAuthLoginBody,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.post(`/auth/login`, pOSTAuthLoginBody, options);
-};
+    pOSTAuthLoginBody: POSTAuthLoginBody, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/auth/login`,
+      pOSTAuthLoginBody,options
+    );
+  }
 
 /**
  * Get new access and refresh tokens using a valid refresh token
  * @summary Refresh access token
  */
 export const pOSTAuthRefresh = <TData = AxiosResponse<POSTAuthRefresh200>>(
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.post(`/auth/refresh`, undefined, options);
-};
+     options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/auth/refresh`,undefined,options
+    );
+  }
 
 /**
  * Logout the current authenticated user (invalidate session)
  * @summary Logout user
  */
 export const pOSTAuthLogout = <TData = AxiosResponse<POSTAuthLogout200>>(
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.post(`/auth/logout`, undefined, options);
-};
+     options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/auth/logout`,undefined,options
+    );
+  }
 
 /**
  * Get the authenticated user information from JWT token
  * @summary Get current user profile
  */
 export const gETAuthMe = <TData = AxiosResponse<GETAuthMe200>>(
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.get(`/auth/me`, options);
-};
+     options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/auth/me`,options
+    );
+  }
 
 /**
  * List contents by type
  */
 export const gETContents = <TData = AxiosResponse<GETContents200>>(
-  params?: GETContentsParams,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.get(`/contents/`, {
+    params?: GETContentsParams, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/contents/`,{
     ...options,
-    params: { ...params, ...options?.params },
-  });
-};
+        params: {...params, ...options?.params},}
+    );
+  }
 
 /**
  * Get content by id
  */
 export const gETContentsId = <TData = AxiosResponse<GETContentsId200>>(
-  id: string,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.get(`/contents/${id}`, options);
-};
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/contents/${id}`,options
+    );
+  }
 
 /**
  * List movies by type
  */
 export const gETMovies = <TData = AxiosResponse<GETMovies200>>(
-  params?: GETMoviesParams,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.get(`/movies/`, {
+    params?: GETMoviesParams, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/movies/`,{
     ...options,
-    params: { ...params, ...options?.params },
-  });
-};
+        params: {...params, ...options?.params},}
+    );
+  }
 
 /**
  * Get movie by id
  */
 export const gETMoviesId = <TData = AxiosResponse<GETMoviesId200>>(
-  id: string,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.get(`/movies/${id}`, options);
-};
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/movies/${id}`,options
+    );
+  }
 
 /**
  * List people with optional filters and pagination
  */
 export const gETPeoples = <TData = AxiosResponse<GETPeoples200>>(
-  params?: GETPeoplesParams,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.get(`/peoples/`, {
+    params?: GETPeoplesParams, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/peoples/`,{
     ...options,
-    params: { ...params, ...options?.params },
-  });
-};
+        params: {...params, ...options?.params},}
+    );
+  }
 
 /**
  * Create a new person
  */
 export const pOSTPeoples = <TData = AxiosResponse<POSTPeoples201>>(
-  pOSTPeoplesBody: POSTPeoplesBody,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.post(`/peoples/`, pOSTPeoplesBody, options);
-};
+    pOSTPeoplesBody: POSTPeoplesBody, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/peoples/`,
+      pOSTPeoplesBody,options
+    );
+  }
 
 /**
  * Search people on TMDB and sync to database
  */
 export const gETPeoplesSearch = <TData = AxiosResponse<GETPeoplesSearch200>>(
-  params: GETPeoplesSearchParams,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.get(`/peoples/search`, {
+    params: GETPeoplesSearchParams, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/peoples/search`,{
     ...options,
-    params: { ...params, ...options?.params },
-  });
-};
+        params: {...params, ...options?.params},}
+    );
+  }
 
 /**
  * Get a person by ID
  */
 export const gETPeoplesId = <TData = AxiosResponse<GETPeoplesId200>>(
-  id: string,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.get(`/peoples/${id}`, options);
-};
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/peoples/${id}`,options
+    );
+  }
 
 /**
  * Update a person
  */
 export const pATCHPeoplesId = <TData = AxiosResponse<PATCHPeoplesId200>>(
-  id: string,
-  pATCHPeoplesIdBody: PATCHPeoplesIdBody,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.patch(`/peoples/${id}`, pATCHPeoplesIdBody, options);
-};
+    id: string,
+    pATCHPeoplesIdBody: PATCHPeoplesIdBody, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.patch(
+      `/peoples/${id}`,
+      pATCHPeoplesIdBody,options
+    );
+  }
 
 /**
  * Delete a person
  */
 export const dELETEPeoplesId = <TData = AxiosResponse<void>>(
-  id: string,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.delete(`/peoples/${id}`, options);
-};
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.delete(
+      `/peoples/${id}`,options
+    );
+  }
 
 /**
  * List series by type
  */
 export const gETSeries = <TData = AxiosResponse<GETSeries200>>(
-  params?: GETSeriesParams,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.get(`/series/`, {
+    params?: GETSeriesParams, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/series/`,{
     ...options,
-    params: { ...params, ...options?.params },
-  });
-};
+        params: {...params, ...options?.params},}
+    );
+  }
 
 /**
  * Get serie by id
  */
 export const gETSeriesId = <TData = AxiosResponse<GETSeriesId200>>(
-  id: string,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.get(`/series/${id}`, options);
-};
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/series/${id}`,options
+    );
+  }
 
 /**
  * Retrieve a user profile by their unique identifier
  * @summary Get user by ID
  */
 export const gETUsersId = <TData = AxiosResponse<GETUsersId200>>(
-  id: string,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.get(`/users/${id}`, options);
-};
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/users/${id}`,options
+    );
+  }
 
 /**
  * Update a user profile (admin only or own profile)
  * @summary Update user profile
  */
 export const pATCHUsersId = <TData = AxiosResponse<PATCHUsersId200>>(
-  id: string,
-  pATCHUsersIdBody: PATCHUsersIdBody,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.patch(`/users/${id}`, pATCHUsersIdBody, options);
-};
+    id: string,
+    pATCHUsersIdBody: PATCHUsersIdBody, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.patch(
+      `/users/${id}`,
+      pATCHUsersIdBody,options
+    );
+  }
 
 /**
  * Delete a user account (admin only or own account)
  * @summary Delete user
  */
 export const dELETEUsersId = <TData = AxiosResponse<void>>(
-  id: string,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.delete(`/users/${id}`, options);
-};
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.delete(
+      `/users/${id}`,options
+    );
+  }
 
 /**
  * Retrieve a paginated list of all users
  * @summary Get all users
  */
 export const gETUsers = <TData = AxiosResponse<GETUsers200>>(
-  params?: GETUsersParams,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.get(`/users/`, {
+    params?: GETUsersParams, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/users/`,{
     ...options,
-    params: { ...params, ...options?.params },
-  });
-};
+        params: {...params, ...options?.params},}
+    );
+  }
 
 /**
  * Retrieve the authenticated user own profile
  * @summary Get current user profile
  */
 export const gETUsersMe = <TData = AxiosResponse<GETUsersMe200>>(
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.get(`/users/me`, options);
-};
+     options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/users/me`,options
+    );
+  }
 
 /**
  * Update the authenticated user own profile
  * @summary Update current user profile
  */
 export const pATCHUsersMe = <TData = AxiosResponse<PATCHUsersMe200>>(
-  pATCHUsersMeBody: PATCHUsersMeBody,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.patch(`/users/me`, pATCHUsersMeBody, options);
-};
+    pATCHUsersMeBody: PATCHUsersMeBody, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.patch(
+      `/users/me`,
+      pATCHUsersMeBody,options
+    );
+  }
 
 /**
  * Query watchlist
  */
 export const gETWatchlist = <TData = AxiosResponse<GETWatchlist200>>(
-  params?: GETWatchlistParams,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.get(`/watchlist/`, {
+    params?: GETWatchlistParams, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/watchlist/`,{
     ...options,
-    params: { ...params, ...options?.params },
-  });
-};
+        params: {...params, ...options?.params},}
+    );
+  }
 
 /**
  * Add content to personal watchlist
  */
 export const pOSTWatchlist = <TData = AxiosResponse<POSTWatchlist201>>(
-  pOSTWatchlistBody: POSTWatchlistBody,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.post(`/watchlist/`, pOSTWatchlistBody, options);
-};
+    pOSTWatchlistBody: POSTWatchlistBody, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/watchlist/`,
+      pOSTWatchlistBody,options
+    );
+  }
 
 /**
  * Get watchlist content by id
  */
-export const gETWatchlistContentId = <
-  TData = AxiosResponse<GETWatchlistContentId200>,
->(
-  id: string,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.get(`/watchlist/content/${id}`, options);
-};
+export const gETWatchlistContentId = <TData = AxiosResponse<GETWatchlistContentId200>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/watchlist/content/${id}`,options
+    );
+  }
 
 /**
  * Update watchlist by content id
  */
-export const pATCHWatchlistContentId = <
-  TData = AxiosResponse<PATCHWatchlistContentId200>,
->(
-  id: string,
-  pATCHWatchlistContentIdBody: PATCHWatchlistContentIdBody,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.patch(
-    `/watchlist/content/${id}`,
-    pATCHWatchlistContentIdBody,
-    options
-  );
-};
+export const pATCHWatchlistContentId = <TData = AxiosResponse<PATCHWatchlistContentId200>>(
+    id: string,
+    pATCHWatchlistContentIdBody: PATCHWatchlistContentIdBody, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.patch(
+      `/watchlist/content/${id}`,
+      pATCHWatchlistContentIdBody,options
+    );
+  }
 
 /**
  * Delete watchlist by content id
  */
-export const dELETEWatchlistContentId = <
-  TData = AxiosResponse<DELETEWatchlistContentId204>,
->(
-  id: string,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.delete(`/watchlist/content/${id}`, options);
-};
+export const dELETEWatchlistContentId = <TData = AxiosResponse<DELETEWatchlistContentId204>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.delete(
+      `/watchlist/content/${id}`,options
+    );
+  }
 
 /**
  * Get watchlist by id
  */
 export const gETWatchlistId = <TData = AxiosResponse<GETWatchlistId200>>(
-  id: string,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.get(`/watchlist/${id}`, options);
-};
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/watchlist/${id}`,options
+    );
+  }
 
 /**
  * Update watchlist by id
  */
 export const pATCHWatchlistId = <TData = AxiosResponse<PATCHWatchlistId200>>(
-  id: string,
-  pATCHWatchlistIdBody: PATCHWatchlistIdBody,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.patch(`/watchlist/${id}`, pATCHWatchlistIdBody, options);
-};
+    id: string,
+    pATCHWatchlistIdBody: PATCHWatchlistIdBody, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.patch(
+      `/watchlist/${id}`,
+      pATCHWatchlistIdBody,options
+    );
+  }
 
 /**
  * Delete watchlist by id
  */
 export const dELETEWatchlistId = <TData = AxiosResponse<DELETEWatchlistId204>>(
-  id: string,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.delete(`/watchlist/${id}`, options);
-};
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.delete(
+      `/watchlist/${id}`,options
+    );
+  }
 
 /**
  * Query watchparties
  */
 export const gETWatchparty = <TData = AxiosResponse<GETWatchparty200>>(
-  params?: GETWatchpartyParams,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.get(`/watchparty/`, {
+    params?: GETWatchpartyParams, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/watchparty/`,{
     ...options,
-    params: { ...params, ...options?.params },
-  });
-};
+        params: {...params, ...options?.params},}
+    );
+  }
 
 /**
  * Create a new watchparty
  */
 export const pOSTWatchparty = <TData = AxiosResponse<POSTWatchparty201>>(
-  pOSTWatchpartyBody: POSTWatchpartyBody,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.post(`/watchparty/`, pOSTWatchpartyBody, options);
-};
+    pOSTWatchpartyBody: POSTWatchpartyBody, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/watchparty/`,
+      pOSTWatchpartyBody,options
+    );
+  }
 
 /**
  * Get watchparty by id
  */
 export const gETWatchpartyId = <TData = AxiosResponse<GETWatchpartyId200>>(
-  id: string,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.get(`/watchparty/${id}`, options);
-};
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/watchparty/${id}`,options
+    );
+  }
 
 /**
  * Update watchparty by id
  */
 export const pATCHWatchpartyId = <TData = AxiosResponse<PATCHWatchpartyId200>>(
-  id: string,
-  pATCHWatchpartyIdBody: PATCHWatchpartyIdBody,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.patch(`/watchparty/${id}`, pATCHWatchpartyIdBody, options);
-};
+    id: string,
+    pATCHWatchpartyIdBody: PATCHWatchpartyIdBody, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.patch(
+      `/watchparty/${id}`,
+      pATCHWatchpartyIdBody,options
+    );
+  }
 
 /**
  * Delete watchparty by id
  */
-export const dELETEWatchpartyId = <
-  TData = AxiosResponse<DELETEWatchpartyId200>,
->(
-  id: string,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.delete(`/watchparty/${id}`, options);
-};
+export const dELETEWatchpartyId = <TData = AxiosResponse<DELETEWatchpartyId200>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.delete(
+      `/watchparty/${id}`,options
+    );
+  }
 
-export type POSTAuthRegisterResult = AxiosResponse<POSTAuthRegister201>;
-export type POSTAuthLoginResult = AxiosResponse<POSTAuthLogin200>;
-export type POSTAuthRefreshResult = AxiosResponse<POSTAuthRefresh200>;
-export type POSTAuthLogoutResult = AxiosResponse<POSTAuthLogout200>;
-export type GETAuthMeResult = AxiosResponse<GETAuthMe200>;
-export type GETContentsResult = AxiosResponse<GETContents200>;
-export type GETContentsIdResult = AxiosResponse<GETContentsId200>;
-export type GETMoviesResult = AxiosResponse<GETMovies200>;
-export type GETMoviesIdResult = AxiosResponse<GETMoviesId200>;
-export type GETPeoplesResult = AxiosResponse<GETPeoples200>;
-export type POSTPeoplesResult = AxiosResponse<POSTPeoples201>;
-export type GETPeoplesSearchResult = AxiosResponse<GETPeoplesSearch200>;
-export type GETPeoplesIdResult = AxiosResponse<GETPeoplesId200>;
-export type PATCHPeoplesIdResult = AxiosResponse<PATCHPeoplesId200>;
-export type DELETEPeoplesIdResult = AxiosResponse<void>;
-export type GETSeriesResult = AxiosResponse<GETSeries200>;
-export type GETSeriesIdResult = AxiosResponse<GETSeriesId200>;
-export type GETUsersIdResult = AxiosResponse<GETUsersId200>;
-export type PATCHUsersIdResult = AxiosResponse<PATCHUsersId200>;
-export type DELETEUsersIdResult = AxiosResponse<void>;
-export type GETUsersResult = AxiosResponse<GETUsers200>;
-export type GETUsersMeResult = AxiosResponse<GETUsersMe200>;
-export type PATCHUsersMeResult = AxiosResponse<PATCHUsersMe200>;
-export type GETWatchlistResult = AxiosResponse<GETWatchlist200>;
-export type POSTWatchlistResult = AxiosResponse<POSTWatchlist201>;
-export type GETWatchlistContentIdResult =
-  AxiosResponse<GETWatchlistContentId200>;
-export type PATCHWatchlistContentIdResult =
-  AxiosResponse<PATCHWatchlistContentId200>;
-export type DELETEWatchlistContentIdResult =
-  AxiosResponse<DELETEWatchlistContentId204>;
-export type GETWatchlistIdResult = AxiosResponse<GETWatchlistId200>;
-export type PATCHWatchlistIdResult = AxiosResponse<PATCHWatchlistId200>;
-export type DELETEWatchlistIdResult = AxiosResponse<DELETEWatchlistId204>;
-export type GETWatchpartyResult = AxiosResponse<GETWatchparty200>;
-export type POSTWatchpartyResult = AxiosResponse<POSTWatchparty201>;
-export type GETWatchpartyIdResult = AxiosResponse<GETWatchpartyId200>;
-export type PATCHWatchpartyIdResult = AxiosResponse<PATCHWatchpartyId200>;
-export type DELETEWatchpartyIdResult = AxiosResponse<DELETEWatchpartyId200>;
+export type POSTAuthRegisterResult = AxiosResponse<POSTAuthRegister201>
+export type POSTAuthLoginResult = AxiosResponse<POSTAuthLogin200>
+export type POSTAuthRefreshResult = AxiosResponse<POSTAuthRefresh200>
+export type POSTAuthLogoutResult = AxiosResponse<POSTAuthLogout200>
+export type GETAuthMeResult = AxiosResponse<GETAuthMe200>
+export type GETContentsResult = AxiosResponse<GETContents200>
+export type GETContentsIdResult = AxiosResponse<GETContentsId200>
+export type GETMoviesResult = AxiosResponse<GETMovies200>
+export type GETMoviesIdResult = AxiosResponse<GETMoviesId200>
+export type GETPeoplesResult = AxiosResponse<GETPeoples200>
+export type POSTPeoplesResult = AxiosResponse<POSTPeoples201>
+export type GETPeoplesSearchResult = AxiosResponse<GETPeoplesSearch200>
+export type GETPeoplesIdResult = AxiosResponse<GETPeoplesId200>
+export type PATCHPeoplesIdResult = AxiosResponse<PATCHPeoplesId200>
+export type DELETEPeoplesIdResult = AxiosResponse<void>
+export type GETSeriesResult = AxiosResponse<GETSeries200>
+export type GETSeriesIdResult = AxiosResponse<GETSeriesId200>
+export type GETUsersIdResult = AxiosResponse<GETUsersId200>
+export type PATCHUsersIdResult = AxiosResponse<PATCHUsersId200>
+export type DELETEUsersIdResult = AxiosResponse<void>
+export type GETUsersResult = AxiosResponse<GETUsers200>
+export type GETUsersMeResult = AxiosResponse<GETUsersMe200>
+export type PATCHUsersMeResult = AxiosResponse<PATCHUsersMe200>
+export type GETWatchlistResult = AxiosResponse<GETWatchlist200>
+export type POSTWatchlistResult = AxiosResponse<POSTWatchlist201>
+export type GETWatchlistContentIdResult = AxiosResponse<GETWatchlistContentId200>
+export type PATCHWatchlistContentIdResult = AxiosResponse<PATCHWatchlistContentId200>
+export type DELETEWatchlistContentIdResult = AxiosResponse<DELETEWatchlistContentId204>
+export type GETWatchlistIdResult = AxiosResponse<GETWatchlistId200>
+export type PATCHWatchlistIdResult = AxiosResponse<PATCHWatchlistId200>
+export type DELETEWatchlistIdResult = AxiosResponse<DELETEWatchlistId204>
+export type GETWatchpartyResult = AxiosResponse<GETWatchparty200>
+export type POSTWatchpartyResult = AxiosResponse<POSTWatchparty201>
+export type GETWatchpartyIdResult = AxiosResponse<GETWatchpartyId200>
+export type PATCHWatchpartyIdResult = AxiosResponse<PATCHWatchpartyId200>
+export type DELETEWatchpartyIdResult = AxiosResponse<DELETEWatchpartyId200>

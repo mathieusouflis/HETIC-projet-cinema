@@ -7,18 +7,18 @@
  */
 
 export type GETUsersParams = {
-  /**
-   * @minimum 1
-   */
-  page?: number;
-  /**
-   * @minimum 0
-   * @nullable
-   */
-  offset?: number | null;
-  /**
-   * @minimum 1
-   * @maximum 100
-   */
-  limit?: number;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 0
+ * @nullable
+ */
+offset?: number | null;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: number;
 };

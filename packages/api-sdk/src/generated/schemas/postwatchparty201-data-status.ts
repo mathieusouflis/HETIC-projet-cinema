@@ -6,12 +6,12 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type POSTWatchparty201DataStatus =
-  (typeof POSTWatchparty201DataStatus)[keyof typeof POSTWatchparty201DataStatus];
+export type POSTWatchparty201DataStatus = typeof POSTWatchparty201DataStatus[keyof typeof POSTWatchparty201DataStatus];
+
 
 export const POSTWatchparty201DataStatus = {
-  scheduled: "scheduled",
-  active: "active",
-  ended: "ended",
-  cancelled: "cancelled",
+  scheduled: 'scheduled',
+  active: 'active',
+  ended: 'ended',
+  cancelled: 'cancelled',
 } as const;

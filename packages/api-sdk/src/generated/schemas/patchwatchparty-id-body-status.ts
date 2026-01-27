@@ -6,12 +6,12 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type PATCHWatchpartyIdBodyStatus =
-  (typeof PATCHWatchpartyIdBodyStatus)[keyof typeof PATCHWatchpartyIdBodyStatus];
+export type PATCHWatchpartyIdBodyStatus = typeof PATCHWatchpartyIdBodyStatus[keyof typeof PATCHWatchpartyIdBodyStatus];
+
 
 export const PATCHWatchpartyIdBodyStatus = {
-  scheduled: "scheduled",
-  active: "active",
-  ended: "ended",
-  cancelled: "cancelled",
+  scheduled: 'scheduled',
+  active: 'active',
+  ended: 'ended',
+  cancelled: 'cancelled',
 } as const;

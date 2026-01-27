@@ -5,7 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { GETContents200DataItemType } from "./getcontents200-data-item-type";
+import type { GETContents200DataItemType } from './getcontents200-data-item-type';
 
 export type GETContents200DataItem = {
   id: string;

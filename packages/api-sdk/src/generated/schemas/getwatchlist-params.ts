@@ -5,8 +5,8 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { GETWatchlistStatus } from "./getwatchlist-status";
+import type { GETWatchlistStatus } from './getwatchlist-status';
 
 export type GETWatchlistParams = {
-  status?: GETWatchlistStatus;
+status?: GETWatchlistStatus;
 };

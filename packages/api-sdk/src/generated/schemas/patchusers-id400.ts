@@ -5,7 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { PATCHUsersId400DetailsItem } from "./patchusers-id400-details-item";
+import type { PATCHUsersId400DetailsItem } from './patchusers-id400-details-item';
 
 export type PATCHUsersId400 = {
   success: boolean;

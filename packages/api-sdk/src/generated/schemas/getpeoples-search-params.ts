@@ -7,12 +7,12 @@
  */
 
 export type GETPeoplesSearchParams = {
-  /**
-   * @minLength 1
-   */
-  query: string;
-  /**
-   * @exclusiveMinimum 0
-   */
-  page?: number;
+/**
+ * @minLength 1
+ */
+query: string;
+/**
+ * @exclusiveMinimum 0
+ */
+page?: number;
 };

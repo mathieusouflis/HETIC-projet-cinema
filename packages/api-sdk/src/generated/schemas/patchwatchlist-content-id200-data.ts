@@ -5,7 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { PATCHWatchlistContentId200DataStatus } from "./patchwatchlist-content-id200-data-status";
+import type { PATCHWatchlistContentId200DataStatus } from './patchwatchlist-content-id200-data-status';
 
 export type PATCHWatchlistContentId200Data = {
   /** @minLength 1 */

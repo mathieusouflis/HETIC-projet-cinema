@@ -5,7 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { POSTWatchpartyBodyStatus } from "./postwatchparty-body-status";
+import type { POSTWatchpartyBodyStatus } from './postwatchparty-body-status';
 
 export type POSTWatchpartyBody = {
   /** @minLength 1 */
