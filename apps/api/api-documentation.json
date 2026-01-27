@@ -4991,6 +4991,1174 @@
           }
         }
       }
+    },
+    "/watchparty/": {
+      "get": {
+        "operationId": "GET/watchparty/",
+        "description": "Query watchparties",
+        "tags": [
+          "Watchparty"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "scheduled",
+                "active",
+                "ended",
+                "cancelled"
+              ]
+            },
+            "required": false,
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "required": false,
+            "name": "isPublic",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "format": "uuid"
+            },
+            "required": false,
+            "name": "contentId",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Watchparties retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "format": "uuid"
+                          },
+                          "createdBy": {
+                            "type": "string",
+                            "minLength": 1,
+                            "format": "uuid"
+                          },
+                          "contentId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "format": "uuid"
+                          },
+                          "seasonId": {
+                            "type": "string",
+                            "nullable": true,
+                            "minLength": 1,
+                            "format": "uuid"
+                          },
+                          "episodeId": {
+                            "type": "string",
+                            "nullable": true,
+                            "minLength": 1,
+                            "format": "uuid"
+                          },
+                          "name": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 255
+                          },
+                          "description": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "isPublic": {
+                            "type": "boolean"
+                          },
+                          "maxParticipants": {
+                            "type": "integer",
+                            "nullable": true,
+                            "minimum": 0,
+                            "exclusiveMinimum": true
+                          },
+                          "platformId": {
+                            "type": "string",
+                            "nullable": true,
+                            "minLength": 1,
+                            "format": "uuid"
+                          },
+                          "platformUrl": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "uri"
+                          },
+                          "scheduledAt": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "date-time"
+                          },
+                          "startedAt": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "date-time"
+                          },
+                          "endedAt": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "date-time"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "scheduled",
+                              "active",
+                              "ended",
+                              "cancelled"
+                            ]
+                          },
+                          "currentPositionTimestamp": {
+                            "type": "integer",
+                            "nullable": true,
+                            "minimum": 0
+                          },
+                          "isPlaying": {
+                            "type": "boolean"
+                          },
+                          "leaderUserId": {
+                            "type": "string",
+                            "nullable": true,
+                            "minLength": 1,
+                            "format": "uuid"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "createdBy",
+                          "contentId",
+                          "seasonId",
+                          "episodeId",
+                          "name",
+                          "description",
+                          "isPublic",
+                          "maxParticipants",
+                          "platformId",
+                          "platformUrl",
+                          "scheduledAt",
+                          "startedAt",
+                          "endedAt",
+                          "status",
+                          "currentPositionTimestamp",
+                          "isPlaying",
+                          "leaderUserId",
+                          "createdAt",
+                          "updatedAt"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "POST/watchparty/",
+        "description": "Create a new watchparty",
+        "tags": [
+          "Watchparty"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "contentId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "uuid"
+                  },
+                  "seasonId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "uuid"
+                  },
+                  "episodeId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "uuid"
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "isPublic": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "maxParticipants": {
+                    "type": "number",
+                    "minimum": 0,
+                    "exclusiveMinimum": true
+                  },
+                  "platformId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "uuid"
+                  },
+                  "platformUrl": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "scheduledAt": {
+                    "type": "string",
+                    "nullable": true,
+                    "format": "date-time"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "scheduled",
+                      "active",
+                      "ended",
+                      "cancelled"
+                    ]
+                  }
+                },
+                "required": [
+                  "contentId",
+                  "name",
+                  "platformId",
+                  "platformUrl",
+                  "scheduledAt"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Watchparty created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "createdBy": {
+                          "type": "string",
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "contentId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "seasonId": {
+                          "type": "string",
+                          "nullable": true,
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "episodeId": {
+                          "type": "string",
+                          "nullable": true,
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 255
+                        },
+                        "description": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "isPublic": {
+                          "type": "boolean"
+                        },
+                        "maxParticipants": {
+                          "type": "integer",
+                          "nullable": true,
+                          "minimum": 0,
+                          "exclusiveMinimum": true
+                        },
+                        "platformId": {
+                          "type": "string",
+                          "nullable": true,
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "platformUrl": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "uri"
+                        },
+                        "scheduledAt": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "date-time"
+                        },
+                        "startedAt": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "date-time"
+                        },
+                        "endedAt": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "date-time"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "scheduled",
+                            "active",
+                            "ended",
+                            "cancelled"
+                          ]
+                        },
+                        "currentPositionTimestamp": {
+                          "type": "integer",
+                          "nullable": true,
+                          "minimum": 0
+                        },
+                        "isPlaying": {
+                          "type": "boolean"
+                        },
+                        "leaderUserId": {
+                          "type": "string",
+                          "nullable": true,
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "createdBy",
+                        "contentId",
+                        "seasonId",
+                        "episodeId",
+                        "name",
+                        "description",
+                        "isPublic",
+                        "maxParticipants",
+                        "platformId",
+                        "platformUrl",
+                        "scheduledAt",
+                        "startedAt",
+                        "endedAt",
+                        "status",
+                        "currentPositionTimestamp",
+                        "isPlaying",
+                        "leaderUserId",
+                        "createdAt",
+                        "updatedAt"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "field",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "error",
+                    "details"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User not connected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "string",
+                      "default": "Not authenticated"
+                    }
+                  },
+                  "required": [
+                    "success"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Content not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/watchparty/{id}": {
+      "get": {
+        "operationId": "GET/watchparty/{id}",
+        "description": "Get watchparty by id",
+        "tags": [
+          "Watchparty"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Watchparty retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "createdBy": {
+                          "type": "string",
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "contentId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "seasonId": {
+                          "type": "string",
+                          "nullable": true,
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "episodeId": {
+                          "type": "string",
+                          "nullable": true,
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 255
+                        },
+                        "description": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "isPublic": {
+                          "type": "boolean"
+                        },
+                        "maxParticipants": {
+                          "type": "integer",
+                          "nullable": true,
+                          "minimum": 0,
+                          "exclusiveMinimum": true
+                        },
+                        "platformId": {
+                          "type": "string",
+                          "nullable": true,
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "platformUrl": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "uri"
+                        },
+                        "scheduledAt": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "date-time"
+                        },
+                        "startedAt": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "date-time"
+                        },
+                        "endedAt": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "date-time"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "scheduled",
+                            "active",
+                            "ended",
+                            "cancelled"
+                          ]
+                        },
+                        "currentPositionTimestamp": {
+                          "type": "integer",
+                          "nullable": true,
+                          "minimum": 0
+                        },
+                        "isPlaying": {
+                          "type": "boolean"
+                        },
+                        "leaderUserId": {
+                          "type": "string",
+                          "nullable": true,
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "createdBy",
+                        "contentId",
+                        "seasonId",
+                        "episodeId",
+                        "name",
+                        "description",
+                        "isPublic",
+                        "maxParticipants",
+                        "platformId",
+                        "platformUrl",
+                        "scheduledAt",
+                        "startedAt",
+                        "endedAt",
+                        "status",
+                        "currentPositionTimestamp",
+                        "isPlaying",
+                        "leaderUserId",
+                        "createdAt",
+                        "updatedAt"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "You should be logged in to execute this action",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "string",
+                      "default": "Not authenticated"
+                    }
+                  },
+                  "required": [
+                    "success"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Watchparty not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "PATCH/watchparty/{id}",
+        "description": "Update watchparty by id",
+        "tags": [
+          "Watchparty"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "isPublic": {
+                    "type": "boolean"
+                  },
+                  "maxParticipants": {
+                    "type": "number",
+                    "minimum": 0,
+                    "exclusiveMinimum": true
+                  },
+                  "platformId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "uuid"
+                  },
+                  "platformUrl": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "scheduledAt": {
+                    "type": "string",
+                    "nullable": true,
+                    "format": "date-time"
+                  },
+                  "startedAt": {
+                    "type": "string",
+                    "nullable": true,
+                    "format": "date-time"
+                  },
+                  "endedAt": {
+                    "type": "string",
+                    "nullable": true,
+                    "format": "date-time"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "scheduled",
+                      "active",
+                      "ended",
+                      "cancelled"
+                    ]
+                  },
+                  "currentPositionTimestamp": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "isPlaying": {
+                    "type": "boolean"
+                  },
+                  "leaderUserId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "uuid"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Watchparty updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "createdBy": {
+                          "type": "string",
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "contentId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "seasonId": {
+                          "type": "string",
+                          "nullable": true,
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "episodeId": {
+                          "type": "string",
+                          "nullable": true,
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 255
+                        },
+                        "description": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "isPublic": {
+                          "type": "boolean"
+                        },
+                        "maxParticipants": {
+                          "type": "integer",
+                          "nullable": true,
+                          "minimum": 0,
+                          "exclusiveMinimum": true
+                        },
+                        "platformId": {
+                          "type": "string",
+                          "nullable": true,
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "platformUrl": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "uri"
+                        },
+                        "scheduledAt": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "date-time"
+                        },
+                        "startedAt": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "date-time"
+                        },
+                        "endedAt": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "date-time"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "scheduled",
+                            "active",
+                            "ended",
+                            "cancelled"
+                          ]
+                        },
+                        "currentPositionTimestamp": {
+                          "type": "integer",
+                          "nullable": true,
+                          "minimum": 0
+                        },
+                        "isPlaying": {
+                          "type": "boolean"
+                        },
+                        "leaderUserId": {
+                          "type": "string",
+                          "nullable": true,
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "createdBy",
+                        "contentId",
+                        "seasonId",
+                        "episodeId",
+                        "name",
+                        "description",
+                        "isPublic",
+                        "maxParticipants",
+                        "platformId",
+                        "platformUrl",
+                        "scheduledAt",
+                        "startedAt",
+                        "endedAt",
+                        "status",
+                        "currentPositionTimestamp",
+                        "isPlaying",
+                        "leaderUserId",
+                        "createdAt",
+                        "updatedAt"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "You should be logged in to execute this action",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "string",
+                      "default": "Not authenticated"
+                    }
+                  },
+                  "required": [
+                    "success"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Watchparty not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "DELETE/watchparty/{id}",
+        "description": "Delete watchparty by id",
+        "tags": [
+          "Watchparty"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Watchparty deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "You should be logged in to execute this action",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "string",
+                      "default": "Not authenticated"
+                    }
+                  },
+                  "required": [
+                    "success"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Watchparty not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

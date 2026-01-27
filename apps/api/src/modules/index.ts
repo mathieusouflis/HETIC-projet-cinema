@@ -18,6 +18,7 @@ import { moviesModule } from "./movies/movie.module.js";
 import { seriesModule } from "./series/serie.module.js";
 import { watchlistModule } from "./watchlist/watchlist.module.js";
 import { peoplesModule } from "./peoples/peoples.module.js";
+import { watchpartyModule } from "./watchparty/watchparty.module.js";
 
 function registerModules(): void {
   moduleRegistry.register("auth", authModule);
@@ -27,6 +28,7 @@ function registerModules(): void {
   moduleRegistry.register("series", seriesModule);
   moduleRegistry.register("watchlist", watchlistModule)
   moduleRegistry.register("peoples", peoplesModule)
+  moduleRegistry.register("watchparties", watchpartyModule)
 }
 
 function generateOpenAPISpec() {
