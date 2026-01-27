@@ -12,6 +12,7 @@
       "node_modules",
       "dist",
       "build",
+      "generated",
       ".next",
       ".turbo",
       "coverage",
