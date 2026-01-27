@@ -1,6 +1,6 @@
 import type {
-  WatchpartyRow,
   NewWatchpartyRow,
+  WatchpartyRow,
 } from "../../infrastructure/schemas/watchparty.schema.js";
 
 export type WatchpartyStatus = "scheduled" | "active" | "ended" | "cancelled";

@@ -1,6 +1,8 @@
-import z from "zod";
+import type z from "zod";
 import { peopleValidator } from "../../validators/people.validator";
 
 export const getPeopleByIdResponseValidator = peopleValidator;
 
-export type GetPeopleByIdResponse = z.infer<typeof getPeopleByIdResponseValidator>;
+export type GetPeopleByIdResponse = z.infer<
+  typeof getPeopleByIdResponseValidator
+>;

@@ -8,11 +8,7 @@ import { WebSocketMetadataStorage } from "./websocket.metadata";
  * async handleMessage(socket: Socket, data: Message) {}
  */
 export function UseEventMiddleware(...middlewares: any[]) {
-  return function (
-    target: any,
-    propertyKey: string,
-    descriptor: PropertyDescriptor,
-  ) {
+  return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     WebSocketMetadataStorage.setMiddlewares(target, propertyKey, middlewares);
     return descriptor;
   };

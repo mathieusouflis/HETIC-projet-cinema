@@ -8,7 +8,7 @@ export class WebSocketHandlerNotFoundError extends WebSocketError {
     super(
       `Handler method '${handler}' not found`,
       "WS_HANDLER_NOT_FOUND",
-      event,
+      event
     );
   }
 }

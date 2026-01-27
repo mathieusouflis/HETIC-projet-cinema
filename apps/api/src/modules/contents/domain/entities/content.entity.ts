@@ -39,7 +39,9 @@ export class Content {
     this.year = props.year ?? null;
     this.durationMinutes = props.durationMinutes ?? null;
     this.tmdbId = props.tmdbId ?? null;
-    this.averageRating = parseFloat(props.averageRating?.toString() ?? "0");
+    this.averageRating = Number.parseFloat(
+      props.averageRating?.toString() ?? "0"
+    );
     this.totalRatings = props.totalRatings ?? 0;
     this.totalViews = props.totalViews ?? 0;
     this.createdAt = props.createdAt ? new Date(props.createdAt) : new Date();
@@ -176,7 +178,7 @@ export class Content {
    * @param threshold - Minimum rating threshold (default: 7.0)
    * @returns true if rating meets threshold
    */
-  public isHighlyRated(threshold: number = 7.0): boolean {
+  public isHighlyRated(threshold = 7.0): boolean {
     return this.averageRating >= threshold;
   }
 
@@ -185,7 +187,7 @@ export class Content {
    * @param threshold - Minimum view count threshold (default: 1000)
    * @returns true if views exceed threshold
    */
-  public isPopular(threshold: number = 1000): boolean {
+  public isPopular(threshold = 1000): boolean {
     return this.totalViews >= threshold;
   }
 

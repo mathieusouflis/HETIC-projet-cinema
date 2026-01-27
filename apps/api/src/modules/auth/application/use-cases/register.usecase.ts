@@ -1,12 +1,12 @@
-import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";
 import type { IPasswordService } from "../../../../shared/services/password/IPasswordService.js";
 import type { ITokenService } from "../../../../shared/services/token/ITokenService.js";
+import { toUserResponseDTO } from "../../../users/application/dto/utils/to-user-response.js";
 import { EmailAlreadyExistsError } from "../../../users/domain/errors/EmailAlreadyExistsError.js";
 import { UsernameAlreadyExistsError } from "../../../users/domain/errors/UsernameAlreadyExistsError.js";
+import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";
+import type { RegisterDTO } from "../dto/request/register.dto.js";
+import type { AuthResponseDTO } from "../dto/response/auth-response.dto.js";
 import { toAuthResponseDTO } from "../dto/utils/to-auth-response-dto.js";
-import { toUserResponseDTO } from "../../../users/application/dto/utils/to-user-response.js";
-import { AuthResponseDTO } from "../dto/response/auth-response.dto.js";
-import { RegisterDTO } from "../dto/request/register.dto.js";
 
 /**
  * Register Use Case
@@ -17,7 +17,7 @@ export class RegisterUseCase {
   constructor(
     private readonly userRepository: IUserRepository,
     private readonly passwordService: IPasswordService,
-    private readonly tokenService: ITokenService,
+    private readonly tokenService: ITokenService
   ) {}
 
   /**
@@ -34,7 +34,7 @@ export class RegisterUseCase {
     }
 
     const usernameExists = await this.userRepository.existsByUsername(
-      data.username,
+      data.username
     );
 
     if (usernameExists) {
@@ -51,7 +51,7 @@ export class RegisterUseCase {
 
     const { accessToken, refreshToken } = this.tokenService.generateTokenPair(
       user.id,
-      user.email,
+      user.email
     );
 
     const userResponse = toUserResponseDTO(user);

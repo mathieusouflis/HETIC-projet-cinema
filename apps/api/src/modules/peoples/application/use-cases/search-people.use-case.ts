@@ -1,4 +1,4 @@
-import { People } from "../../domain/entities/people.entity";
+import type { People } from "../../domain/entities/people.entity";
 import type { IPeoplesRepository } from "../../domain/interfaces/IPeoplesRepository";
 
 export type SearchPeopleParams = {

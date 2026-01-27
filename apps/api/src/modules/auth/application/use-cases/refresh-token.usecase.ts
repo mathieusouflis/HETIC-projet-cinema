@@ -1,18 +1,18 @@
-import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";
+import { UnauthorizedError } from "../../../../shared/errors/UnauthorizedError.js";
 import type {
   ITokenService,
   RefreshTokenPayload,
 } from "../../../../shared/services/token/ITokenService.js";
-import { UnauthorizedError } from "../../../../shared/errors/UnauthorizedError.js";
+import type { RefreshToken } from "../../../../shared/services/token/schemas/tokens.schema.js";
 import { UserNotFoundError } from "../../../users/domain/errors/UserNotFoundError.js";
-import { RefreshTokenDTO } from "../dto/request/refresh-token.dto.js";
-import { RefreshTokenResponseDTO } from "../dto/response/refresh-token-response.dto.js";
-import { RefreshToken } from "../../../../shared/services/token/schemas/tokens.schema.js";
+import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";
+import type { RefreshTokenDTO } from "../dto/request/refresh-token.dto.js";
+import type { RefreshTokenResponseDTO } from "../dto/response/refresh-token-response.dto.js";
 
 export class RefreshTokenUseCase {
   constructor(
     private readonly userRepository: IUserRepository,
-    private readonly tokenService: ITokenService,
+    private readonly tokenService: ITokenService
   ) {}
 
   /**
@@ -22,7 +22,7 @@ export class RefreshTokenUseCase {
    * @throws UserNotFoundError if user no longer exists
    */
   async execute(
-    data: RefreshTokenDTO,
+    data: RefreshTokenDTO
   ): Promise<[RefreshTokenResponseDTO, RefreshToken]> {
     let payload: RefreshTokenPayload;
 
@@ -40,7 +40,7 @@ export class RefreshTokenUseCase {
 
     const { accessToken, refreshToken } = this.tokenService.generateTokenPair(
       user.id,
-      user.email,
+      user.email
     );
 
     return [accessToken, refreshToken];

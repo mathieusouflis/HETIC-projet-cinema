@@ -1,5 +1,8 @@
-import { BaseTMDBAdapter, DiscoverType } from "../../../../contents/infrastructure/database/repositories/base/base-tmdb.adapter";
-import { CreateSerieProps } from "../../../domain/entities/serie.entity";
+import {
+  BaseTMDBAdapter,
+  type DiscoverType,
+} from "../../../../contents/infrastructure/database/repositories/base/base-tmdb.adapter";
+import type { CreateSerieProps } from "../../../domain/entities/serie.entity";
 
 type TMDBSerie = {
   backdrop_path: string | null;
@@ -21,7 +24,10 @@ type TMDBSerie = {
  * TMDB Series Adapter
  * Handles fetching TV series data from TMDB API
  */
-export class TMDBSeriesAdapter extends BaseTMDBAdapter<TMDBSerie, CreateSerieProps> {
+export class TMDBSeriesAdapter extends BaseTMDBAdapter<
+  TMDBSerie,
+  CreateSerieProps
+> {
   protected discoverType: DiscoverType = "tv";
   protected searchEndpoint = "search/tv";
   protected discoverEndpoint = "discover/tv";
@@ -45,11 +51,15 @@ export class TMDBSeriesAdapter extends BaseTMDBAdapter<TMDBSerie, CreateSeriePro
   }
 
   // Convenience method aliases for backward compatibility
-  async searchSeries(query: string, page: number = 1): Promise<CreateSerieProps[]> {
+  async searchSeries(query: string, page = 1): Promise<CreateSerieProps[]> {
     return this.searchContent(query, page);
   }
 
-  async listSeries(country?: string, categories?: string[], page: number = 1): Promise<CreateSerieProps[]> {
+  async listSeries(
+    country?: string,
+    categories?: string[],
+    page = 1
+  ): Promise<CreateSerieProps[]> {
     return this.listContent(country, categories, page);
   }
 }

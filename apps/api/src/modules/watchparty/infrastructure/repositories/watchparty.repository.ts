@@ -1,25 +1,31 @@
-import { and, eq, or, SQL } from "drizzle-orm";
+import { type SQL, and, eq, or } from "drizzle-orm";
 import { db } from "../../../../database/index.js";
 import { watchparties } from "../../../../database/schema.js";
-import { ServerError } from "../../../../shared/errors/ServerError.js";
 import { NotFoundError } from "../../../../shared/errors/NotFoundError.js";
-import { CreateWatchpartyProps, UpdateWatchpartyProps, Watchparty, WatchpartyStatus } from "../../domain/entities/watchparty.entity.js";
-import { IWatchpartyRepository } from "../../domain/interfaces/IWatchpartyRepository.js";
+import { ServerError } from "../../../../shared/errors/ServerError.js";
+import {
+  type CreateWatchpartyProps,
+  type UpdateWatchpartyProps,
+  Watchparty,
+  type WatchpartyStatus,
+} from "../../domain/entities/watchparty.entity.js";
+import type { IWatchpartyRepository } from "../../domain/interfaces/IWatchpartyRepository.js";
 
 export class WatchpartyRepository implements IWatchpartyRepository {
-
   async create(watchpartyData: CreateWatchpartyProps): Promise<Watchparty> {
     try {
-      const createdWatchparty = await db.insert(watchparties).values(watchpartyData).returning();
+      const createdWatchparty = await db
+        .insert(watchparties)
+        .values(watchpartyData)
+        .returning();
 
       const watchparty = createdWatchparty[0];
 
       if (!watchparty) {
-        throw new ServerError('Failed to create watchparty');
+        throw new ServerError("Failed to create watchparty");
       }
 
       return new Watchparty(watchparty);
-
     } catch (error) {
       if (error instanceof ServerError) {
         throw error;
@@ -30,7 +36,10 @@ export class WatchpartyRepository implements IWatchpartyRepository {
 
   async findById(id: string): Promise<Watchparty | null> {
     try {
-      const resolvedWatchparty = await db.select().from(watchparties).where(eq(watchparties.id, id));
+      const resolvedWatchparty = await db
+        .select()
+        .from(watchparties)
+        .where(eq(watchparties.id, id));
       const watchparty = resolvedWatchparty[0];
 
       if (!watchparty) {
@@ -39,7 +48,9 @@ export class WatchpartyRepository implements IWatchpartyRepository {
 
       return new Watchparty(watchparty);
     } catch (error) {
-      throw new ServerError(`Unexpected error resolving watchparty ${id}: ${error}`);
+      throw new ServerError(
+        `Unexpected error resolving watchparty ${id}: ${error}`
+      );
     }
   }
 
@@ -55,7 +66,9 @@ export class WatchpartyRepository implements IWatchpartyRepository {
           )
         );
 
-      return resolvedWatchparties.map(watchparty => new Watchparty(watchparty));
+      return resolvedWatchparties.map(
+        (watchparty) => new Watchparty(watchparty)
+      );
     } catch (error) {
       throw new ServerError(`Failed to list user watchparties: ${error}`);
     }
@@ -81,21 +94,31 @@ export class WatchpartyRepository implements IWatchpartyRepository {
         conditions.push(eq(watchparties.contentId, params.contentId));
       }
 
-      const query = conditions.length > 0
-        ? db.select().from(watchparties).where(and(...conditions))
-        : db.select().from(watchparties);
+      const query =
+        conditions.length > 0
+          ? db
+              .select()
+              .from(watchparties)
+              .where(and(...conditions))
+          : db.select().from(watchparties);
 
       const resolvedWatchparties = await query;
 
-      return resolvedWatchparties.map(watchparty => new Watchparty(watchparty));
+      return resolvedWatchparties.map(
+        (watchparty) => new Watchparty(watchparty)
+      );
     } catch (error) {
       throw new ServerError(`Failed to list watchparties: ${error}`);
     }
   }
 
-  async update(id: string, watchpartyData: UpdateWatchpartyProps): Promise<Watchparty> {
+  async update(
+    id: string,
+    watchpartyData: UpdateWatchpartyProps
+  ): Promise<Watchparty> {
     try {
-      const updatedWatchparty = await db.update(watchparties)
+      const updatedWatchparty = await db
+        .update(watchparties)
         .set({
           ...watchpartyData,
           updatedAt: new Date().toISOString(),
@@ -120,7 +143,8 @@ export class WatchpartyRepository implements IWatchpartyRepository {
 
   async delete(id: string): Promise<void> {
     try {
-      const deletedCount = await db.delete(watchparties)
+      const deletedCount = await db
+        .delete(watchparties)
         .where(eq(watchparties.id, id))
         .returning();
 

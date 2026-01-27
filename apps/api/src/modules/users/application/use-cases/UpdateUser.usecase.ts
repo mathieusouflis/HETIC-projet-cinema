@@ -1,9 +1,9 @@
-import type { IUserRepository } from "../../domain/interfaces/IUserRepository.js";
 import { UserNotFoundError } from "../../domain/errors/UserNotFoundError.js";
 import { UsernameAlreadyExistsError } from "../../domain/errors/UsernameAlreadyExistsError.js";
+import type { IUserRepository } from "../../domain/interfaces/IUserRepository.js";
+import type { PatchIdRequestDTO } from "../dto/requests/patch-id.validator.js";
+import type { PatchIdResponseDTO } from "../dto/responses/patch-id-response.js";
 import { toUserResponseDTO } from "../dto/utils/to-user-response.js";
-import { PatchIdRequestDTO } from "../dto/requests/patch-id.validator.js";
-import { PatchIdResponseDTO } from "../dto/responses/patch-id-response.js";
 
 export class UpdateUserUseCase {
   constructor(private readonly userRepository: IUserRepository) {}
@@ -17,7 +17,7 @@ export class UpdateUserUseCase {
    */
   async execute(
     id: string,
-    data: PatchIdRequestDTO,
+    data: PatchIdRequestDTO
   ): Promise<PatchIdResponseDTO> {
     const existingUser = await this.userRepository.findById(id);
 
@@ -27,7 +27,7 @@ export class UpdateUserUseCase {
 
     if (data.username && data.username !== existingUser.username) {
       const usernameExists = await this.userRepository.existsByUsername(
-        data.username,
+        data.username
       );
 
       if (usernameExists) {

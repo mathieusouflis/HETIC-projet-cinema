@@ -1,6 +1,6 @@
 import type { IUserRepository } from "../../domain/interfaces/IUserRepository.js";
-import { GetQueryDTO } from "../dto/requests/get.validator.js";
-import { GetResponseDTO } from "../dto/responses/get-response.js";
+import type { GetQueryDTO } from "../dto/requests/get.validator.js";
+import type { GetResponseDTO } from "../dto/responses/get-response.js";
 import { toUserListResponseDTO } from "../dto/utils/to-user-list-response.js";
 
 export class GetUsersUseCase {

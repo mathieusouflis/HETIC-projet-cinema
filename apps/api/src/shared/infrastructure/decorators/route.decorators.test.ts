@@ -1,14 +1,14 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { MetadataStorage } from "./metadata.js";
 import {
+  Delete,
+  Description,
   Get,
+  Patch,
   Post,
   Put,
-  Patch,
-  Delete,
   Summary,
-  Description,
 } from "./route.decorators.js";
-import { MetadataStorage } from "./metadata.js";
 
 describe("Route Decorators tests", () => {
   beforeEach(() => {
@@ -360,7 +360,7 @@ describe("Route Decorators tests", () => {
       const routes = MetadataStorage.getRoutes(TestController.prototype);
 
       expect(routes[0]?.description).toBe(
-        "Retrieves all users from the database",
+        "Retrieves all users from the database"
       );
     });
 

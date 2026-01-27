@@ -1,9 +1,8 @@
 import { NotFoundError, UnauthorizedError } from "../../../../shared/errors";
-import { Watchlist } from "../../domain/entities/watchlist.entity";
-import { IWatchlistRepository } from "../../domain/interfaces/IWatchlistRepository";
+import type { Watchlist } from "../../domain/entities/watchlist.entity";
+import type { IWatchlistRepository } from "../../domain/interfaces/IWatchlistRepository";
 
 export class GetWatchlistByIdUseCase {
-
   constructor(private readonly watchlistRepository: IWatchlistRepository) {
     this.watchlistRepository = watchlistRepository;
   }
@@ -15,8 +14,10 @@ export class GetWatchlistByIdUseCase {
       throw new NotFoundError(`Watchlist ${id} not found in watchlist.`);
     }
 
-    if(watchlist.userId !== userId) {
-      throw new UnauthorizedError(`You are not authorized to access this watchlist.`);
+    if (watchlist.userId !== userId) {
+      throw new UnauthorizedError(
+        "You are not authorized to access this watchlist."
+      );
     }
 
     return watchlist;

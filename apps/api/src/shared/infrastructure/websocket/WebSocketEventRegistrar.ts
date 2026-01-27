@@ -1,7 +1,7 @@
+import { logger } from "@packages/logger";
 import type { Socket } from "socket.io";
 import type { EventListenerMetadata } from "../decorators/web-socket/websocket.metadata.js";
 import { webSocketEventHandler } from "./WebSocketEventHandler.js";
-import { logger } from "@packages/logger";
 
 /**
  * Service responsible for registering WebSocket events
@@ -21,20 +21,18 @@ export class WebSocketEventRegistrar {
     socket: Socket,
     events: EventListenerMetadata[],
     controller: any,
-    requireAuth: boolean = false,
+    requireAuth = false
   ): void {
     if (!events || events.length === 0) {
       logger.warn(`No events to register for socket ${socket.id}`);
       return;
     }
 
-    events.forEach((event) => {
+    for (const event of events) {
       this.registerSingleEvent(socket, event, controller, requireAuth);
-    });
+    }
 
-    logger.info(
-      `Registered ${events.length} event(s) for socket ${socket.id}`,
-    );
+    logger.info(`Registered ${events.length} event(s) for socket ${socket.id}`);
   }
 
   /**
@@ -49,10 +47,16 @@ export class WebSocketEventRegistrar {
     socket: Socket,
     event: EventListenerMetadata,
     controller: any,
-    requireAuth: boolean,
+    requireAuth: boolean
   ): void {
     socket.on(event.eventName, async (...args: any[]) => {
-      await webSocketEventHandler.handle(controller, event, socket, args, requireAuth);
+      await webSocketEventHandler.handle(
+        controller,
+        event,
+        socket,
+        args,
+        requireAuth
+      );
     });
   }
 

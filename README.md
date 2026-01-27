@@ -22,7 +22,6 @@ This Turborepo includes the following packages and apps:
 - `storefront`: a [Next.js](https://nextjs.org/) app
 - `admin`: a [Vite](https://vitejs.dev/) single page app
 - `blog`: a [Remix](https://remix.run/) blog
-- `@packages/eslint-config`: ESLint configurations used throughout the monorepo
 - `@packages/vitest-presets`: Vitest configurations
 - `@packages/logger`: isomorphic logger (a small wrapper around console.log)
 - `@packages/ui`: a dummy React UI library (which contains `<CounterButton>` and `<Link>` components)
@@ -35,6 +34,5 @@ Each package and app is 100% [TypeScript](https://www.typescriptlang.org/).
 This Turborepo has some additional tools already setup for you:
 
 - [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
+- [Biome](https://biomejs.dev/) for code linting and formatting
 - [Vitest](https://vitest.dev) test runner for all things JavaScript
-- [Prettier](https://prettier.io) for code formatting

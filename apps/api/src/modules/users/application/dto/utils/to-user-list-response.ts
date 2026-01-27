@@ -1,5 +1,5 @@
-import { User } from "../../../domain";
-import { GetResponseDTO } from "../responses/get-response";
+import type { User } from "../../../domain";
+import type { GetResponseDTO } from "../responses/get-response";
 import { toUserResponseDTO } from "./to-user-response";
 
 /**
@@ -15,7 +15,7 @@ export function toUserListResponseDTO(
   users: User[],
   total: number,
   page: number,
-  limit: number,
+  limit: number
 ): GetResponseDTO {
   return {
     users: users.map((user) => toUserResponseDTO(user)),

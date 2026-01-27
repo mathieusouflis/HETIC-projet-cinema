@@ -1,4 +1,4 @@
-import { People } from "../../domain/entities/people.entity";
+import type { People } from "../../domain/entities/people.entity";
 import type { IPeoplesRepository } from "../../domain/interfaces/IPeoplesRepository";
 
 export type ListPeoplesParams = {
@@ -16,7 +16,9 @@ export class ListPeoplesUseCase {
     return peoples;
   }
 
-  async executeWithCount(params: ListPeoplesParams): Promise<{ peoples: People[]; total: number }> {
+  async executeWithCount(
+    params: ListPeoplesParams
+  ): Promise<{ peoples: People[]; total: number }> {
     const [peoples, total] = await Promise.all([
       this.peoplesRepository.list(params),
       this.peoplesRepository.getCount({

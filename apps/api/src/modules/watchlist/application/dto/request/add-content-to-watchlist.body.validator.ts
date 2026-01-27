@@ -9,7 +9,8 @@ export const addContentToWatchlistBodyValidator = z.object({
   currentSeason: z.number().min(1).optional(),
   startedAt: z.date().optional(),
   completedAt: z.date().optional(),
+});
 
-})
-
-export type AddContentToWatchlistBody = z.infer<typeof addContentToWatchlistBodyValidator>;
+export type AddContentToWatchlistBody = z.infer<
+  typeof addContentToWatchlistBodyValidator
+>;

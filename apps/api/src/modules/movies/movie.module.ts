@@ -1,16 +1,15 @@
-import { Router } from "express";
+import type { Router } from "express";
 import { RestModule } from "../../shared/infrastructure/base/modules/RestModule.js";
 import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-generator.js";
-import { MoviesRepository } from "./infrastructure/database/repositories/movie.repository.js";
-import { QueryMovieUseCase } from "./application/use-cases/query-movie.use-case.js";
-import { GetMovieByIdUseCase } from "./application/use-cases/get-movie-by-id.use-case.js";
 import { MoviesController } from "./application/controllers/movie.controller.js";
+import { GetMovieByIdUseCase } from "./application/use-cases/get-movie-by-id.use-case.js";
+import { QueryMovieUseCase } from "./application/use-cases/query-movie.use-case.js";
+import { MoviesRepository } from "./infrastructure/database/repositories/movie.repository.js";
 
 class MoviesModule extends RestModule {
   // ============================================
   // Infrastructure Layer (Data Access)
   // ============================================
-
 
   private readonly repository: MoviesRepository;
 
@@ -34,16 +33,17 @@ class MoviesModule extends RestModule {
   constructor() {
     super({
       name: "Users Module",
-      description: "Module for managing users"
-    })
+      description: "Module for managing users",
+    });
 
+    this.repository = new MoviesRepository();
 
-    this.repository = new MoviesRepository()
-
-    this.queryMoviesUseCase = new QueryMovieUseCase(this.repository)
-    this.getMovieByIdUseCase = new GetMovieByIdUseCase(this.repository)
-    this.controller = new MoviesController(this.queryMoviesUseCase, this.getMovieByIdUseCase);
-
+    this.queryMoviesUseCase = new QueryMovieUseCase(this.repository);
+    this.getMovieByIdUseCase = new GetMovieByIdUseCase(this.repository);
+    this.controller = new MoviesController(
+      this.queryMoviesUseCase,
+      this.getMovieByIdUseCase
+    );
 
     this.decoratorRouter = new DecoratorRouter();
     this.router = this.decoratorRouter.generateRouter(this.controller);
@@ -53,11 +53,9 @@ class MoviesModule extends RestModule {
     return this.router;
   }
 
-
   public getMoviesRepository(): MoviesRepository {
     return this.repository;
   }
-
 
   public getController(): MoviesController {
     return this.controller;

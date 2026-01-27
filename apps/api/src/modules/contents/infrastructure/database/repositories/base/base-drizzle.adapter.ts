@@ -1,8 +1,11 @@
-import { eq, or, and, SQL } from "drizzle-orm";
+import { type SQL, and, eq, or } from "drizzle-orm";
 import { db } from "../../../../../../database";
+import type { PaginationQuery } from "../../../../../../shared/schemas/base/pagination.schema";
+import type {
+  Content,
+  CreateContentProps,
+} from "../../../../domain/entities/content.entity";
 import { contentSchema } from "../../schemas/contents.schema";
-import { Content, CreateContentProps } from "../../../../domain/entities/content.entity";
-import { PaginationQuery } from "../../../../../../shared/schemas/base/pagination.schema";
 
 export type ContentType = "movie" | "serie";
 
@@ -10,7 +13,10 @@ export type ContentType = "movie" | "serie";
  * Base Drizzle Adapter
  * Provides shared database operations for content (movies and series)
  */
-export abstract class BaseDrizzleAdapter<TEntity extends Content, TCreateProps extends CreateContentProps> {
+export abstract class BaseDrizzleAdapter<
+  TEntity extends Content,
+  TCreateProps extends CreateContentProps,
+> {
   protected abstract contentType: ContentType;
   protected abstract createEntity(row: unknown): TEntity;
 
@@ -49,13 +55,18 @@ export abstract class BaseDrizzleAdapter<TEntity extends Content, TCreateProps e
     }
 
     if (tmdbIds && tmdbIds.length > 0) {
-      conditions.push(or(...tmdbIds.map((id) => eq(contentSchema.tmdbId, id)))!);
+      conditions.push(
+        or(...tmdbIds.map((id) => eq(contentSchema.tmdbId, id)))!
+      );
     }
 
     // Note: country and categories filtering require joins with related tables
     // For now, they are accepted but not used in the query
 
-    const query = db.select().from(contentSchema).where(and(...conditions));
+    const query = db
+      .select()
+      .from(contentSchema)
+      .where(and(...conditions));
 
     // Apply pagination
     if (options?.limit) {
@@ -75,13 +86,23 @@ export abstract class BaseDrizzleAdapter<TEntity extends Content, TCreateProps e
   /**
    * Check which content items exist in the database by TMDB IDs
    */
-  async checkContentExistsInDb<Id extends number>(tmdbIds: Id[]): Promise<Record<Id, boolean>> {
-    const result = await this.listContent(undefined, undefined, undefined, tmdbIds);
+  async checkContentExistsInDb<Id extends number>(
+    tmdbIds: Id[]
+  ): Promise<Record<Id, boolean>> {
+    const result = await this.listContent(
+      undefined,
+      undefined,
+      undefined,
+      tmdbIds
+    );
 
-    const contentStatusInDatabase: Record<Id, boolean> = tmdbIds.reduce((acc, id) => {
-      acc[id] = result.some((content) => content.tmdbId === id);
-      return acc;
-    }, {} as Record<Id, boolean>);
+    const contentStatusInDatabase: Record<Id, boolean> = tmdbIds.reduce(
+      (acc, id) => {
+        acc[id] = result.some((content) => content.tmdbId === id);
+        return acc;
+      },
+      {} as Record<Id, boolean>
+    );
 
     return contentStatusInDatabase;
   }
@@ -99,7 +120,9 @@ export abstract class BaseDrizzleAdapter<TEntity extends Content, TCreateProps e
     const createdContent = result[0];
 
     if (!createdContent) {
-      throw new Error(`Unexpected error: Created ${this.contentType} is undefined`);
+      throw new Error(
+        `Unexpected error: Created ${this.contentType} is undefined`
+      );
     }
 
     return this.createEntity(createdContent);
@@ -108,14 +131,16 @@ export abstract class BaseDrizzleAdapter<TEntity extends Content, TCreateProps e
   /**
    * Update content in the database
    */
-  async updateContent(id: string, props: Partial<TCreateProps>): Promise<TEntity> {
+  async updateContent(
+    id: string,
+    props: Partial<TCreateProps>
+  ): Promise<TEntity> {
     const result = await db
       .update(contentSchema)
       .set(props)
-      .where(and(
-        eq(contentSchema.id, id),
-        eq(contentSchema.type, this.contentType)
-      ))
+      .where(
+        and(eq(contentSchema.id, id), eq(contentSchema.type, this.contentType))
+      )
       .returning();
 
     if (!result || result.length === 0) {
@@ -125,7 +150,9 @@ export abstract class BaseDrizzleAdapter<TEntity extends Content, TCreateProps e
     const updatedContent = result[0];
 
     if (!updatedContent) {
-      throw new Error(`Unexpected error: Updated ${this.contentType} is undefined`);
+      throw new Error(
+        `Unexpected error: Updated ${this.contentType} is undefined`
+      );
     }
 
     return this.createEntity(updatedContent);
@@ -137,16 +164,19 @@ export abstract class BaseDrizzleAdapter<TEntity extends Content, TCreateProps e
   async deleteContent(id: string): Promise<void> {
     await db
       .delete(contentSchema)
-      .where(and(
-        eq(contentSchema.id, id),
-        eq(contentSchema.type, this.contentType)
-      ));
+      .where(
+        and(eq(contentSchema.id, id), eq(contentSchema.type, this.contentType))
+      );
   }
 
   /**
    * Get total count of content items
    */
-  async getContentCount(title?: string, _country?: string, _categories?: string[]): Promise<number> {
+  async getContentCount(
+    title?: string,
+    _country?: string,
+    _categories?: string[]
+  ): Promise<number> {
     const conditions: SQL[] = [eq(contentSchema.type, this.contentType)];
 
     if (title) {

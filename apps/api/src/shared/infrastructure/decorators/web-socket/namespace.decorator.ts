@@ -1,4 +1,7 @@
-import { NamespaceMetadata, WebSocketMetadataStorage } from "./websocket.metadata";
+import {
+  type NamespaceMetadata,
+  WebSocketMetadataStorage,
+} from "./websocket.metadata";
 
 /**
  * Define WebSocket namespace for a controller
@@ -11,14 +14,17 @@ export function Namespace(options: {
   description?: string;
   middlewares?: any[];
 }) {
-  return function <T extends new (...args: any[]) => any>(constructor: T) {
+  return <T extends new (...args: any[]) => any>(controllerConstructor: T) => {
     const metadata: NamespaceMetadata = {
       path: options.path,
       description: options.description,
       middlewares: options.middlewares,
     };
 
-    WebSocketMetadataStorage.setNamespace(constructor.prototype, metadata);
-    return constructor;
+    WebSocketMetadataStorage.setNamespace(
+      controllerConstructor.prototype,
+      metadata
+    );
+    return controllerConstructor;
   };
 }

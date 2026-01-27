@@ -1,4 +1,7 @@
-import { EventEmitterMetadata, WebSocketMetadataStorage } from "./websocket.metadata";
+import {
+  type EventEmitterMetadata,
+  WebSocketMetadataStorage,
+} from "./websocket.metadata";
 
 /**
  * Document an event that this controller emits (server -> client)
@@ -12,11 +15,7 @@ export function Publish(options: {
   room?: string;
   broadcast?: boolean;
 }) {
-  return function (
-    target: any,
-    propertyKey: string,
-    descriptor: PropertyDescriptor,
-  ) {
+  return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     const emitMetadata: EventEmitterMetadata = {
       eventName: options.event,
       description: options.description,

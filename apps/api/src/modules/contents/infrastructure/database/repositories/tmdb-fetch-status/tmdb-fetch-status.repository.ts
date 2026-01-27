@@ -50,7 +50,9 @@ export class TMDBFetchStatusRepository {
    * @param discoverType - The type of content to discover (movie or tv)
    * @returns The discover metadata
    */
-  async getDiscoverMetadata(discoverType: ContentType): Promise<DiscoverMetadata> {
+  async getDiscoverMetadata(
+    discoverType: ContentType
+  ): Promise<DiscoverMetadata> {
     const path = this.buildDiscoverPath(discoverType);
 
     const result = await db.query.tmdbFetchStatus.findFirst({
@@ -82,9 +84,14 @@ export class TMDBFetchStatusRepository {
    * @param query - The search query string
    * @param metadata - Pagination metadata
    */
-  async setSearchMetadata(query: string, metadata: SearchMetadata): Promise<void> {
+  async setSearchMetadata(
+    query: string,
+    metadata: SearchMetadata
+  ): Promise<void> {
     const path = this.buildSearchPath(query);
-    const expiresAt = new Date(Date.now() + SEARCH_CACHE_DURATION_MS).toISOString();
+    const expiresAt = new Date(
+      Date.now() + SEARCH_CACHE_DURATION_MS
+    ).toISOString();
 
     await db
       .insert(tmdbFetchStatusSchema)
@@ -159,7 +166,9 @@ export class TMDBFetchStatusRepository {
    */
   async deleteDiscoverMetadata(discoverType: ContentType): Promise<void> {
     const path = this.buildDiscoverPath(discoverType);
-    await db.delete(tmdbFetchStatusSchema).where(eq(tmdbFetchStatusSchema.path, path));
+    await db
+      .delete(tmdbFetchStatusSchema)
+      .where(eq(tmdbFetchStatusSchema.path, path));
   }
 
   /**
@@ -167,6 +176,8 @@ export class TMDBFetchStatusRepository {
    */
   async deleteSearchMetadata(query: string): Promise<void> {
     const path = this.buildSearchPath(query);
-    await db.delete(tmdbFetchStatusSchema).where(eq(tmdbFetchStatusSchema.path, path));
+    await db
+      .delete(tmdbFetchStatusSchema)
+      .where(eq(tmdbFetchStatusSchema.path, path));
   }
 }

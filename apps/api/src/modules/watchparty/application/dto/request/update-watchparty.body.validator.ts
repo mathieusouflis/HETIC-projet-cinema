@@ -18,4 +18,6 @@ export const updateWatchpartyBodyValidator = z.object({
   leaderUserId: uuidSchema.optional(),
 });
 
-export type UpdateWatchpartyBody = z.infer<typeof updateWatchpartyBodyValidator>;
+export type UpdateWatchpartyBody = z.infer<
+  typeof updateWatchpartyBodyValidator
+>;

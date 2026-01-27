@@ -1,33 +1,33 @@
 import { relations } from "drizzle-orm/relations";
 import {
-  users,
-  refreshTokens,
-  friendships,
+  categories,
   content,
+  contentCategories,
   contentCredits,
-  people,
-  seasons,
-  episodes,
-  conversations,
   conversationParticipants,
-  watchparties,
-  streamingPlatforms,
-  messages,
-  ratings,
-  reviews,
-  watchlist,
-  lists,
+  conversations,
+  episodes,
+  friendships,
   listItems,
-  watchpartyParticipants,
-  watchpartyInvitations,
+  listLikes,
+  lists,
+  messages,
+  notifications,
+  people,
+  peopleLikes,
+  ratings,
+  refreshTokens,
+  reviewLikes,
+  reviews,
+  seasons,
+  streamingPlatforms,
   userActivityLogs,
   userStats,
-  categories,
-  notifications,
-  contentCategories,
-  reviewLikes,
-  listLikes,
-  peopleLikes,
+  users,
+  watchlist,
+  watchparties,
+  watchpartyInvitations,
+  watchpartyParticipants,
 } from "./schema";
 
 export const refreshTokensRelations = relations(refreshTokens, ({ one }) => ({
@@ -146,7 +146,7 @@ export const conversationsRelations = relations(
     }),
     conversationParticipants: many(conversationParticipants),
     messages: many(messages),
-  }),
+  })
 );
 
 export const conversationParticipantsRelations = relations(
@@ -160,7 +160,7 @@ export const conversationParticipantsRelations = relations(
       fields: [conversationParticipants.userId],
       references: [users.id],
     }),
-  }),
+  })
 );
 
 export const watchpartiesRelations = relations(
@@ -197,14 +197,14 @@ export const watchpartiesRelations = relations(
     watchpartyInvitations: many(watchpartyInvitations),
     userActivityLogs: many(userActivityLogs),
     notifications: many(notifications),
-  }),
+  })
 );
 
 export const streamingPlatformsRelations = relations(
   streamingPlatforms,
   ({ many }) => ({
     watchparties: many(watchparties),
-  }),
+  })
 );
 
 export const messagesRelations = relations(messages, ({ one }) => ({
@@ -295,7 +295,7 @@ export const watchpartyParticipantsRelations = relations(
       fields: [watchpartyParticipants.userId],
       references: [users.id],
     }),
-  }),
+  })
 );
 
 export const watchpartyInvitationsRelations = relations(
@@ -315,7 +315,7 @@ export const watchpartyInvitationsRelations = relations(
       references: [users.id],
       relationName: "watchpartyInvitations_inviteeId_users_id",
     }),
-  }),
+  })
 );
 
 export const userActivityLogsRelations = relations(
@@ -333,7 +333,7 @@ export const userActivityLogsRelations = relations(
       fields: [userActivityLogs.watchpartyId],
       references: [watchparties.id],
     }),
-  }),
+  })
 );
 
 export const userStatsRelations = relations(userStats, ({ one }) => ({
@@ -384,7 +384,7 @@ export const contentCategoriesRelations = relations(
       fields: [contentCategories.categoryId],
       references: [categories.id],
     }),
-  }),
+  })
 );
 
 export const reviewLikesRelations = relations(reviewLikes, ({ one }) => ({

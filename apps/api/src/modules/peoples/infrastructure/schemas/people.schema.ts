@@ -1,4 +1,14 @@
-import { index, unique, integer, pgTable, timestamp, uuid, varchar, date, text } from "drizzle-orm/pg-core";
+import {
+  date,
+  index,
+  integer,
+  pgTable,
+  text,
+  timestamp,
+  unique,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 export const peopleSchema = pgTable(
   "people",
@@ -20,16 +30,10 @@ export const peopleSchema = pgTable(
     }).defaultNow(),
   },
   (table) => [
-    index("idx_people_name").using(
-      "btree",
-      table.name.asc().nullsLast(),
-    ),
-    index("idx_people_tmdb").using(
-      "btree",
-      table.tmdbId.asc().nullsLast(),
-    ),
+    index("idx_people_name").using("btree", table.name.asc().nullsLast()),
+    index("idx_people_tmdb").using("btree", table.tmdbId.asc().nullsLast()),
     unique("people_tmdb_id_key").on(table.tmdbId),
-  ],
+  ]
 );
 
 export type PeopleRow = typeof peopleSchema.$inferSelect;

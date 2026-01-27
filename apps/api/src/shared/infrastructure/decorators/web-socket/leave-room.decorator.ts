@@ -1,4 +1,7 @@
-import { RoomMetadata, WebSocketMetadataStorage } from "./websocket.metadata";
+import {
+  type RoomMetadata,
+  WebSocketMetadataStorage,
+} from "./websocket.metadata";
 
 /**
  * Automatically leave a room when this event is triggered
@@ -8,11 +11,7 @@ import { RoomMetadata, WebSocketMetadataStorage } from "./websocket.metadata";
  * async handleLeaveChat(socket: Socket, data: { roomId: string }) {}
  */
 export function LeaveRoom(roomNameOrGetter: string | ((data: any) => string)) {
-  return function (
-    target: any,
-    propertyKey: string,
-    descriptor: PropertyDescriptor,
-  ) {
+  return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     const isRoomNameOrGetterString = typeof roomNameOrGetter === "string";
     const originalMethod = descriptor.value;
 
@@ -22,18 +21,16 @@ export function LeaveRoom(roomNameOrGetter: string | ((data: any) => string)) {
       data: any,
       ...args: any[]
     ) {
-      const roomName =
-        isRoomNameOrGetterString
-          ? roomNameOrGetter
-          : roomNameOrGetter(data);
+      const roomName = isRoomNameOrGetterString
+        ? roomNameOrGetter
+        : roomNameOrGetter(data);
 
       await socket.leave(roomName);
       return originalMethod.apply(this, [socket, data, ...args]);
     };
 
     const roomMetadata: RoomMetadata = {
-      roomName:
-        isRoomNameOrGetterString ? roomNameOrGetter : "dynamic",
+      roomName: isRoomNameOrGetterString ? roomNameOrGetter : "dynamic",
       methodName: propertyKey,
       action: "leave",
       description: `Leaves room: ${isRoomNameOrGetterString ? roomNameOrGetter : "computed from data"}`,

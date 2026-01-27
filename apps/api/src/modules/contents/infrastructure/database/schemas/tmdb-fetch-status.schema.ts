@@ -1,12 +1,12 @@
 import { sql } from "drizzle-orm";
 import {
-  pgTable,
-  index,
   check,
+  index,
+  jsonb,
+  pgTable,
+  timestamp,
   uuid,
   varchar,
-  timestamp,
-  jsonb,
 } from "drizzle-orm/pg-core";
 
 export const tmdbFetchStatusSchema = pgTable(
@@ -24,26 +24,28 @@ export const tmdbFetchStatusSchema = pgTable(
     createdAt: timestamp("created_at", {
       withTimezone: true,
       mode: "string",
-    }).defaultNow().notNull(),
+    })
+      .defaultNow()
+      .notNull(),
     updatedAt: timestamp("updated_at", {
       withTimezone: true,
       mode: "string",
-    }).defaultNow().$onUpdate(() => sql`now()`).notNull(),
+    })
+      .defaultNow()
+      .$onUpdate(() => sql`now()`)
+      .notNull(),
   },
   (table) => [
     index("idx_fetch_status_type").using(
       "btree",
-      table.type.asc().nullsLast().op("text_ops"),
+      table.type.asc().nullsLast().op("text_ops")
     ),
     check(
       "valid_type",
-      sql`(type)::text = ANY ((ARRAY['discover'::character varying, 'search'::character varying])::text[])`,
+      sql`(type)::text = ANY ((ARRAY['discover'::character varying, 'search'::character varying])::text[])`
     ),
-    check(
-      "remove_expired",
-      sql`expires_at > now()`,
-    ),
-  ],
+    check("remove_expired", sql`expires_at > now()`),
+  ]
 );
 
 export type TMDBFetchStatusRow = typeof tmdbFetchStatusSchema.$inferSelect;

@@ -1,4 +1,5 @@
 import { describe, it } from "vitest";
+import z from "zod";
 import {
   baseDataWithMessageResponseSchema,
   baseListResponseSchema,
@@ -7,7 +8,6 @@ import {
   createPaginatedResponse,
   createSuccessWithMessage,
 } from "./response.schemas";
-import z from "zod";
 
 describe("ResponseSchema", () => {
   it("Should create a baseDataWithMessageResponseSchema", () => {
@@ -18,7 +18,7 @@ describe("ResponseSchema", () => {
         success: true,
         message: "Success",
         data: "Data",
-      }),
+      })
     ).not.toThrow();
   });
 
@@ -36,7 +36,7 @@ describe("ResponseSchema", () => {
             totalPages: 0,
           },
         },
-      }),
+      })
     ).not.toThrow();
   });
 
@@ -47,7 +47,7 @@ describe("ResponseSchema", () => {
       schema.parse({
         success: true,
         data: ["Data"],
-      }),
+      })
     ).not.toThrow();
   });
 
@@ -59,7 +59,7 @@ describe("ResponseSchema", () => {
         success: true,
         message: "Success",
         data: "Data",
-      }),
+      })
     ).not.toThrow();
   });
 
@@ -70,7 +70,7 @@ describe("ResponseSchema", () => {
       schema.parse({
         success: true,
         data: ["Data"],
-      }),
+      })
     ).not.toThrow();
   });
 
@@ -88,7 +88,7 @@ describe("ResponseSchema", () => {
             totalPages: 1,
           },
         },
-      }),
+      })
     ).not.toThrow();
   });
 });

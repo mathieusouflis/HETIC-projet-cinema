@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { Router } from "express";
-import { ModuleRegistry, type IApiModule } from "./module-registry.js";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { type IApiModule, ModuleRegistry } from "./module-registry.js";
 
 describe("ModuleRegistry tests", () => {
   let registry: ModuleRegistry;
@@ -349,10 +349,10 @@ describe("ModuleRegistry tests", () => {
         "module@version",
       ];
 
-      specialNames.forEach((name) => {
+      for (const name of specialNames) {
         registry.register(name, mockModule);
         expect(registry.hasModule(name)).toBe(true);
-      });
+      }
 
       expect(registry.getModuleCount()).toBe(specialNames.length);
     });

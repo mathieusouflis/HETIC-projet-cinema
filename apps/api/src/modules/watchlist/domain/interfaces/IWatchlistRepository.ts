@@ -1,12 +1,20 @@
-import { CreateWatchlistProps, UpdateWatchlistProps, Watchlist, WatchStatus } from "../entities/watchlist.entity";
+import type {
+  CreateWatchlistProps,
+  UpdateWatchlistProps,
+  WatchStatus,
+  Watchlist,
+} from "../entities/watchlist.entity";
 
 export interface IWatchlistRepository {
   create(watchlist: CreateWatchlistProps): Promise<Watchlist>;
   findById(id: string): Promise<Watchlist | null>;
-  findByContentId(userId:string, contentId: string): Promise<Watchlist | null>;
-  list(userId: string, params: {
-    status?: WatchStatus;
-  }): Promise<Watchlist[]>;
+  findByContentId(userId: string, contentId: string): Promise<Watchlist | null>;
+  list(
+    userId: string,
+    params: {
+      status?: WatchStatus;
+    }
+  ): Promise<Watchlist[]>;
   update(id: string, watchlist: UpdateWatchlistProps): Promise<Watchlist>;
   delete(id: string): Promise<void>;
 }

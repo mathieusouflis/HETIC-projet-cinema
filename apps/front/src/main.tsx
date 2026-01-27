@@ -18,9 +18,9 @@ if (el) {
           debug: import.meta.env.NODE_ENV === "development",
         }}
       >*/}
-        <App />
+      <App />
       {/*</PostHogProvider>*/}
-    </React.StrictMode>,
+    </React.StrictMode>
   );
 } else {
   throw new Error("Could not find root element");

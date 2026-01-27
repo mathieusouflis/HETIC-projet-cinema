@@ -1,5 +1,8 @@
-import z from "zod";
-import { WebSocketMetadataStorage, WebSocketValidationMetadata } from "./websocket.metadata";
+import type z from "zod";
+import {
+  WebSocketMetadataStorage,
+  type WebSocketValidationMetadata,
+} from "./websocket.metadata";
 
 /**
  * Combined validation decorator for event data and acknowledgment
@@ -15,11 +18,7 @@ export function Validate(validationOptions: {
   data?: z.ZodSchema;
   ack?: z.ZodSchema;
 }) {
-  return function (
-    target: any,
-    propertyKey: string,
-    descriptor: PropertyDescriptor,
-  ) {
+  return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     const metadata: WebSocketValidationMetadata = {
       data: validationOptions.data,
       ack: validationOptions.ack,

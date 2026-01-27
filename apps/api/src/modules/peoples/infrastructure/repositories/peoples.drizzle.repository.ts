@@ -1,7 +1,11 @@
-import { eq, and, or, SQL, ilike } from "drizzle-orm";
+import { type SQL, and, eq, ilike, or } from "drizzle-orm";
 import { db } from "../../../../database";
+import {
+  type CreatePeopleProps,
+  People,
+  type UpdatePeopleProps,
+} from "../../domain/entities/people.entity";
 import { peopleSchema } from "../schemas/people.schema";
-import { People, CreatePeopleProps, UpdatePeopleProps } from "../../domain/entities/people.entity";
 
 export class PeoplesDrizzleRepository {
   /**
@@ -66,7 +70,9 @@ export class PeoplesDrizzleRepository {
     const conditions: SQL[] = [];
 
     if (params.nationality) {
-      conditions.push(ilike(peopleSchema.nationality, `%${params.nationality}%`));
+      conditions.push(
+        ilike(peopleSchema.nationality, `%${params.nationality}%`)
+      );
     }
 
     if (params.name) {
@@ -74,7 +80,9 @@ export class PeoplesDrizzleRepository {
     }
 
     if (params.tmdbIds && params.tmdbIds.length > 0) {
-      conditions.push(or(...params.tmdbIds.map((id) => eq(peopleSchema.tmdbId, id)))!);
+      conditions.push(
+        or(...params.tmdbIds.map((id) => eq(peopleSchema.tmdbId, id)))!
+      );
     }
 
     const query = db.select().from(peopleSchema);
@@ -99,13 +107,18 @@ export class PeoplesDrizzleRepository {
   /**
    * Check which people exist in the database by TMDB IDs
    */
-  async checkExistsByTmdbIds<Id extends number>(tmdbIds: Id[]): Promise<Record<Id, boolean>> {
+  async checkExistsByTmdbIds<Id extends number>(
+    tmdbIds: Id[]
+  ): Promise<Record<Id, boolean>> {
     const result = await this.list({ tmdbIds });
 
-    const peopleStatusInDatabase: Record<Id, boolean> = tmdbIds.reduce((acc, id) => {
-      acc[id] = result.some((person) => person.tmdbId === id);
-      return acc;
-    }, {} as Record<Id, boolean>);
+    const peopleStatusInDatabase: Record<Id, boolean> = tmdbIds.reduce(
+      (acc, id) => {
+        acc[id] = result.some((person) => person.tmdbId === id);
+        return acc;
+      },
+      {} as Record<Id, boolean>
+    );
 
     return peopleStatusInDatabase;
   }
@@ -146,11 +159,16 @@ export class PeoplesDrizzleRepository {
   /**
    * Get total count of people
    */
-  async getCount(params?: { nationality?: string; name?: string }): Promise<number> {
+  async getCount(params?: {
+    nationality?: string;
+    name?: string;
+  }): Promise<number> {
     const conditions: SQL[] = [];
 
     if (params?.nationality) {
-      conditions.push(ilike(peopleSchema.nationality, `%${params.nationality}%`));
+      conditions.push(
+        ilike(peopleSchema.nationality, `%${params.nationality}%`)
+      );
     }
 
     if (params?.name) {

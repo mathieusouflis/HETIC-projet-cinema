@@ -1,8 +1,8 @@
 import { logger } from "@packages/logger";
 import { TmdbService } from "../../../../../../shared/services/tmdb";
-import { TMDBFetchStatusRepository } from "../tmdb-fetch-status/tmdb-fetch-status.repository";
+import type { CreateContentProps } from "../../../../domain/entities/content.entity";
 import { MetadataNotFoundError } from "../tmdb-fetch-status/errors/metadata-not-found";
-import { CreateContentProps } from "../../../../domain/entities/content.entity";
+import { TMDBFetchStatusRepository } from "../tmdb-fetch-status/tmdb-fetch-status.repository";
 
 export type DiscoverType = "movie" | "tv";
 
@@ -21,19 +21,22 @@ type Video = {
 
 type GetTrailersResult = {
   id: number;
-  results: Array<Video>;
+  results: Video[];
 };
 
 export type DiscoverResult<T> = {
   page: number;
-  results: Array<T>;
+  results: T[];
 };
 
 /**
  * Base TMDB Adapter
  * Provides shared functionality for fetching content from TMDB API
  */
-export abstract class BaseTMDBAdapter<TResult, TProps extends CreateContentProps> {
+export abstract class BaseTMDBAdapter<
+  TResult,
+  TProps extends CreateContentProps,
+> {
   protected tmdbService: TmdbService;
   protected tmdbFetchStatusRepository: TMDBFetchStatusRepository;
   protected abstract discoverType: DiscoverType;
@@ -65,7 +68,9 @@ export abstract class BaseTMDBAdapter<TResult, TProps extends CreateContentProps
       const trailer = result.results.find((video) => video.type === "Trailer");
       return trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : null;
     } catch (error) {
-      logger.error(`Error fetching trailer for ${this.discoverType} ${contentId}: ${error}`);
+      logger.error(
+        `Error fetching trailer for ${this.discoverType} ${contentId}: ${error}`
+      );
       return null;
     }
   }
@@ -76,7 +81,10 @@ export abstract class BaseTMDBAdapter<TResult, TProps extends CreateContentProps
   async getContentById(id: string): Promise<TProps | null> {
     try {
       const endpoint = `${this.discoverType}/${id}`;
-      const result = (await this.tmdbService.request("GET", endpoint)) as TResult;
+      const result = (await this.tmdbService.request(
+        "GET",
+        endpoint
+      )) as TResult;
       return await this.parseResult(result);
     } catch (error) {
       logger.error(`Error fetching ${this.discoverType} by ID ${id}: ${error}`);
@@ -90,7 +98,7 @@ export abstract class BaseTMDBAdapter<TResult, TProps extends CreateContentProps
   protected async fetchAndParseContent(
     country?: string,
     categories?: string[],
-    page: number = 1
+    page = 1
   ): Promise<TProps[]> {
     const params: Record<string, string> = {
       page: page.toString(),
@@ -114,7 +122,10 @@ export abstract class BaseTMDBAdapter<TResult, TProps extends CreateContentProps
       result.results.map(async (item) => await this.parseResult(item))
     );
 
-    await this.tmdbFetchStatusRepository.setDiscoverMetadata(this.discoverType, { page });
+    await this.tmdbFetchStatusRepository.setDiscoverMetadata(
+      this.discoverType,
+      { page }
+    );
 
     return content;
   }
@@ -122,12 +133,16 @@ export abstract class BaseTMDBAdapter<TResult, TProps extends CreateContentProps
   /**
    * Search content on TMDB
    */
-  async searchContent(query: string, page: number = 1): Promise<TProps[]> {
+  async searchContent(query: string, page = 1): Promise<TProps[]> {
     try {
-      const result = (await this.tmdbService.request("GET", this.searchEndpoint, {
-        query,
-        page: page.toString(),
-      })) as DiscoverResult<TResult>;
+      const result = (await this.tmdbService.request(
+        "GET",
+        this.searchEndpoint,
+        {
+          query,
+          page: page.toString(),
+        }
+      )) as DiscoverResult<TResult>;
 
       const content = await Promise.all(
         result.results.map(async (item) => await this.parseResult(item))
@@ -137,7 +152,9 @@ export abstract class BaseTMDBAdapter<TResult, TProps extends CreateContentProps
 
       return content;
     } catch (error) {
-      logger.error(`Error searching ${this.discoverType} with query "${query}": ${error}`);
+      logger.error(
+        `Error searching ${this.discoverType} with query "${query}": ${error}`
+      );
       return [];
     }
   }
@@ -148,7 +165,7 @@ export abstract class BaseTMDBAdapter<TResult, TProps extends CreateContentProps
   async listContent(
     country?: string,
     categories?: string[],
-    page: number = 1
+    page = 1
   ): Promise<TProps[]> {
     try {
       const metadata = await this.tmdbFetchStatusRepository.getDiscoverMetadata(

@@ -1,12 +1,19 @@
-import { PaginationQuery } from "../../../../../shared/schemas/base/pagination.schema";
+import type { PaginationQuery } from "../../../../../shared/schemas/base/pagination.schema";
 import { BaseDrizzleAdapter } from "../../../../contents/infrastructure/database/repositories/base/base-drizzle.adapter";
-import { CreateSerieProps, Serie, SerieProps } from "../../../domain/entities/serie.entity";
+import {
+  type CreateSerieProps,
+  Serie,
+  type SerieProps,
+} from "../../../domain/entities/serie.entity";
 
 /**
  * Drizzle Serie Adapter
  * Handles database operations for TV series
  */
-export class DrizzleSerieAdapter extends BaseDrizzleAdapter<Serie, CreateSerieProps> {
+export class DrizzleSerieAdapter extends BaseDrizzleAdapter<
+  Serie,
+  CreateSerieProps
+> {
   protected contentType = "serie" as const;
 
   /**
@@ -31,7 +38,9 @@ export class DrizzleSerieAdapter extends BaseDrizzleAdapter<Serie, CreateSeriePr
     return this.listContent(title, country, categories, tmdbIds, options);
   }
 
-  async checkSerieExistsInDb<Id extends number>(tmdbIds: Id[]): Promise<Record<Id, boolean>> {
+  async checkSerieExistsInDb<Id extends number>(
+    tmdbIds: Id[]
+  ): Promise<Record<Id, boolean>> {
     return this.checkContentExistsInDb(tmdbIds);
   }
 }

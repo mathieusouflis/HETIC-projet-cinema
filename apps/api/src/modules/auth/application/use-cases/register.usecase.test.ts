@@ -1,7 +1,7 @@
 import { describe, it } from "vitest";
-import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock";
-import { JWTService } from "../../../../shared/services/token";
 import { PasswordService } from "../../../../shared/services/password";
+import { JWTService } from "../../../../shared/services/token";
+import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock";
 import { RegisterUseCase } from "./register.usecase";
 
 describe("LoginUseCase", () => {
@@ -12,7 +12,7 @@ describe("LoginUseCase", () => {
   const useCase = new RegisterUseCase(
     mockedUserRepository,
     passwordService,
-    tokenService,
+    tokenService
   );
 
   it("should throw an error when email allready exist", async () => {
@@ -20,7 +20,7 @@ describe("LoginUseCase", () => {
     const username = "fakeUsername";
     const password = "fakePassword";
     await expect(
-      useCase.execute({ email, username, password }),
+      useCase.execute({ email, username, password })
     ).rejects.toThrow();
   });
   it("should throw an error when username allready exist", async () => {
@@ -28,7 +28,7 @@ describe("LoginUseCase", () => {
     const username = "john_doe";
     const password = "fakePassword";
     await expect(
-      useCase.execute({ email, username, password }),
+      useCase.execute({ email, username, password })
     ).rejects.toThrow();
   });
   it("create and return a user with token pair", async () => {

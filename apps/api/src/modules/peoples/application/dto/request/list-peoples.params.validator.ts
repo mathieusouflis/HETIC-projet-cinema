@@ -4,7 +4,7 @@ import { optionalOffsetAndPagePaginationQuerySchema } from "../../../../../share
 export const listPeoplesParamsValidator = z.object({
   nationality: z.string().optional(),
   name: z.string().optional(),
-  ...optionalOffsetAndPagePaginationQuerySchema.shape
+  ...optionalOffsetAndPagePaginationQuerySchema.shape,
 });
 
 export type ListPeoplesParams = z.infer<typeof listPeoplesParamsValidator>;

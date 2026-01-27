@@ -3,9 +3,7 @@
   "version": "0.0.0",
   "type": "module",
   "private": true,
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -19,14 +17,11 @@
     "build": "tsc",
     "build:watch": "tsc -w",
     "check-types": "tsc --noEmit",
-    "clean": "rm -rf dist",
-    "lint": "eslint src/"
+    "clean": "rm -rf dist"
   },
   "devDependencies": {
-    "@packages/eslint-config": "workspace:*",
     "@packages/typescript-config": "workspace:*",
     "@types/node": "^25.0.10",
-    "eslint": "^9.39.0",
     "typescript": "5.9.3"
   },
   "dependencies": {

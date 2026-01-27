@@ -1,10 +1,10 @@
 import type { Request, Response } from "express";
-import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
-import type { GetUserByIdUseCase } from "../use-cases/GetUserById.usecase.js";
-import type { GetUsersUseCase } from "../use-cases/GetUsers.usecase.js";
-import type { UpdateUserUseCase } from "../use-cases/UpdateUser.usecase.js";
-import type { DeleteUserUseCase } from "../use-cases/DeleteUser.usecase.js";
+import { UnauthorizedError } from "../../../../shared/errors/index.js";
+import { Shared } from "../../../../shared/index.js";
+import { BaseController } from "../../../../shared/infrastructure/base/controllers/BaseController.js";
+import { Protected } from "../../../../shared/infrastructure/decorators/auth.decorator.js";
 import { Controller } from "../../../../shared/infrastructure/decorators/controller.decorator.js";
+import { ApiResponse } from "../../../../shared/infrastructure/decorators/response.decorator.js";
 import {
   Delete,
   Get,
@@ -15,26 +15,41 @@ import {
   ValidateParams,
   ValidateQuery,
 } from "../../../../shared/infrastructure/decorators/validation.decorators.js";
-import { ApiResponse } from "../../../../shared/infrastructure/decorators/response.decorator.js";
-import { Protected } from "../../../../shared/infrastructure/decorators/auth.decorator.js";
+import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
+import { deleteIdParamsSchema } from "../dto/requests/delete-id.validator.js";
 import { getIdParamsSchema } from "../dto/requests/get-id.validatror.js";
-import { GetIdResponseDTO, getIdResponseSchema } from "../dto/responses/get-id-response.js";
-import { GetResponseDTO, getResponseSchema } from "../dto/responses/get-response.js";
 import {
+  type GetQueryDTO,
+  getQuerySchema,
+} from "../dto/requests/get.validator.js";
+import {
+  type PatchIdRequestDTO,
   patchIdBodySchema,
   patchIdParamsSchema,
-  PatchIdRequestDTO,
 } from "../dto/requests/patch-id.validator.js";
-import { PatchIdResponseDTO, patchIdResponseSchema } from "../dto/responses/patch-id-response.js";
-import { deleteIdParamsSchema } from "../dto/requests/delete-id.validator.js";
-import { GetMeDTO, getMeResponseSchema } from "../dto/responses/get-me-response.js";
-import { patchMeResponseSchema } from "../dto/responses/patch-me-response.js";
 import { patchMeBodySchema } from "../dto/requests/patch-me.validator.js";
-import { GetQueryDTO, getQuerySchema } from "../dto/requests/get.validator.js";
-import { Shared } from "../../../../shared/index.js";
-import { BaseController } from "../../../../shared/infrastructure/base/controllers/BaseController.js";
-import { UnauthorizedError } from "../../../../shared/errors/index.js";
-import { GetMeUseCase } from "../use-cases/GetMe.usecase.js";
+import {
+  type GetIdResponseDTO,
+  getIdResponseSchema,
+} from "../dto/responses/get-id-response.js";
+import {
+  type GetMeDTO,
+  getMeResponseSchema,
+} from "../dto/responses/get-me-response.js";
+import {
+  type GetResponseDTO,
+  getResponseSchema,
+} from "../dto/responses/get-response.js";
+import {
+  type PatchIdResponseDTO,
+  patchIdResponseSchema,
+} from "../dto/responses/patch-id-response.js";
+import { patchMeResponseSchema } from "../dto/responses/patch-me-response.js";
+import type { DeleteUserUseCase } from "../use-cases/DeleteUser.usecase.js";
+import type { GetMeUseCase } from "../use-cases/GetMe.usecase.js";
+import type { GetUserByIdUseCase } from "../use-cases/GetUserById.usecase.js";
+import type { GetUsersUseCase } from "../use-cases/GetUsers.usecase.js";
+import type { UpdateUserUseCase } from "../use-cases/UpdateUser.usecase.js";
 
 @Controller({
   tag: "Users",
@@ -61,22 +76,32 @@ export class UsersController extends BaseController {
   @ApiResponse(
     200,
     "User retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponse(getIdResponseSchema),
+    Shared.Schemas.Base.createSuccessResponse(getIdResponseSchema)
   )
-  @ApiResponse(400, "Invalid user ID", Shared.Schemas.Base.validationErrorResponseSchema)
-  @ApiResponse(404, "User not found", Shared.Schemas.Base.notFoundErrorResponseSchema)
-  getById = asyncHandler(async (req: Request, res: Response): Promise<GetIdResponseDTO> => {
-    const id = req.params.id!;
+  @ApiResponse(
+    400,
+    "Invalid user ID",
+    Shared.Schemas.Base.validationErrorResponseSchema
+  )
+  @ApiResponse(
+    404,
+    "User not found",
+    Shared.Schemas.Base.notFoundErrorResponseSchema
+  )
+  getById = asyncHandler(
+    async (req: Request, res: Response): Promise<GetIdResponseDTO> => {
+      const id = req.params.id!;
 
-    const user = await this.getUserByIdUseCase.execute(id);
+      const user = await this.getUserByIdUseCase.execute(id);
 
-    res.status(200).json({
-      success: true,
-      data: user,
-    });
+      res.status(200).json({
+        success: true,
+        data: user,
+      });
 
-    return user
-  });
+      return user;
+    }
+  );
 
   @Get({
     path: "/",
@@ -88,30 +113,36 @@ export class UsersController extends BaseController {
   @ApiResponse(
     200,
     "Users retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponse(getResponseSchema),
+    Shared.Schemas.Base.createSuccessResponse(getResponseSchema)
   )
   @ApiResponse(
     400,
     "Invalid pagination parameters",
-    Shared.Schemas.Base.validationErrorResponseSchema,
+    Shared.Schemas.Base.validationErrorResponseSchema
   )
-  @ApiResponse(401, "Not authenticated", Shared.Schemas.Base.unauthorizedErrorResponseSchema)
-  getAll = asyncHandler(async (req: Request, res: Response): Promise<GetResponseDTO> => {
-    const { page, limit, offset } = req.query as GetQueryDTO;
+  @ApiResponse(
+    401,
+    "Not authenticated",
+    Shared.Schemas.Base.unauthorizedErrorResponseSchema
+  )
+  getAll = asyncHandler(
+    async (req: Request, res: Response): Promise<GetResponseDTO> => {
+      const { page, limit, offset } = req.query as GetQueryDTO;
 
-    const result = await this.getUsersUseCase.execute({
-      page,
-      limit,
-      offset,
-    });
+      const result = await this.getUsersUseCase.execute({
+        page,
+        limit,
+        offset,
+      });
 
-    res.status(200).json({
-      success: true,
-      data: result,
-    });
+      res.status(200).json({
+        success: true,
+        data: result,
+      });
 
-    return result;
-  });
+      return result;
+    }
+  );
 
   @Patch({
     path: "/:id",
@@ -124,29 +155,43 @@ export class UsersController extends BaseController {
   @ApiResponse(
     200,
     "User updated successfully",
-    Shared.Schemas.Base.createSuccessResponse(patchIdResponseSchema),
+    Shared.Schemas.Base.createSuccessResponse(patchIdResponseSchema)
   )
-  @ApiResponse(400, "Invalid input data", Shared.Schemas.Base.validationErrorResponseSchema)
-  @ApiResponse(401, "Not authenticated", Shared.Schemas.Base.unauthorizedErrorResponseSchema)
+  @ApiResponse(
+    400,
+    "Invalid input data",
+    Shared.Schemas.Base.validationErrorResponseSchema
+  )
+  @ApiResponse(
+    401,
+    "Not authenticated",
+    Shared.Schemas.Base.unauthorizedErrorResponseSchema
+  )
   @ApiResponse(
     403,
     "Forbidden - cannot update other users",
-    Shared.Schemas.Base.forbiddenErrorResponseSchema,
+    Shared.Schemas.Base.forbiddenErrorResponseSchema
   )
-  @ApiResponse(404, "User not found", Shared.Schemas.Base.notFoundErrorResponseSchema)
-  update = asyncHandler(async (req: Request, res: Response): Promise<PatchIdRequestDTO> => {
-    const id = req.params.id!;
-    const updateData = req.body;
+  @ApiResponse(
+    404,
+    "User not found",
+    Shared.Schemas.Base.notFoundErrorResponseSchema
+  )
+  update = asyncHandler(
+    async (req: Request, res: Response): Promise<PatchIdRequestDTO> => {
+      const id = req.params.id!;
+      const updateData = req.body;
 
-    const updatedUser = await this.updateUserUseCase.execute(id, updateData);
+      const updatedUser = await this.updateUserUseCase.execute(id, updateData);
 
-    res.status(200).json({
-      success: true,
-      data: updatedUser,
-    });
+      res.status(200).json({
+        success: true,
+        data: updatedUser,
+      });
 
-    return updatedUser;
-  });
+      return updatedUser;
+    }
+  );
 
   @Delete({
     path: "/:id",
@@ -156,14 +201,26 @@ export class UsersController extends BaseController {
   @Protected()
   @ValidateParams(deleteIdParamsSchema)
   @ApiResponse(204, "User deleted successfully")
-  @ApiResponse(400, "Invalid user ID", Shared.Schemas.Base.validationErrorResponseSchema)
-  @ApiResponse(401, "Not authenticated", Shared.Schemas.Base.unauthorizedErrorResponseSchema)
+  @ApiResponse(
+    400,
+    "Invalid user ID",
+    Shared.Schemas.Base.validationErrorResponseSchema
+  )
+  @ApiResponse(
+    401,
+    "Not authenticated",
+    Shared.Schemas.Base.unauthorizedErrorResponseSchema
+  )
   @ApiResponse(
     403,
     "Forbidden - cannot delete other users",
-    Shared.Schemas.Base.forbiddenErrorResponseSchema,
+    Shared.Schemas.Base.forbiddenErrorResponseSchema
   )
-  @ApiResponse(404, "User not found", Shared.Schemas.Base.notFoundErrorResponseSchema)
+  @ApiResponse(
+    404,
+    "User not found",
+    Shared.Schemas.Base.notFoundErrorResponseSchema
+  )
   delete = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id!;
 
@@ -181,25 +238,31 @@ export class UsersController extends BaseController {
   @ApiResponse(
     200,
     "User profile retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponse(getMeResponseSchema),
+    Shared.Schemas.Base.createSuccessResponse(getMeResponseSchema)
   )
-  @ApiResponse(401, "Not authenticated", Shared.Schemas.Base.unauthorizedErrorResponseSchema)
-  getMe = asyncHandler(async (req: Request, res: Response): Promise<GetMeDTO> => {
-    const userId = req.user?.userId;
+  @ApiResponse(
+    401,
+    "Not authenticated",
+    Shared.Schemas.Base.unauthorizedErrorResponseSchema
+  )
+  getMe = asyncHandler(
+    async (req: Request, res: Response): Promise<GetMeDTO> => {
+      const userId = req.user?.userId;
 
-    if (!userId) {
-      throw new UnauthorizedError("User not authenticated");
+      if (!userId) {
+        throw new UnauthorizedError("User not authenticated");
+      }
+
+      const user = await this.getMeUseCase.execute(userId);
+
+      res.status(200).json({
+        success: true,
+        data: user,
+      });
+
+      return user;
     }
-
-    const user = await this.getMeUseCase.execute(userId);
-
-    res.status(200).json({
-      success: true,
-      data: user,
-    });
-
-    return user;
-  });
+  );
 
   @Patch({
     path: "/me",
@@ -211,28 +274,38 @@ export class UsersController extends BaseController {
   @ApiResponse(
     200,
     "User profile updated successfully",
-    Shared.Schemas.Base.createSuccessResponse(patchMeResponseSchema),
+    Shared.Schemas.Base.createSuccessResponse(patchMeResponseSchema)
   )
-  @ApiResponse(400, "Invalid input data", Shared.Schemas.Base.validationErrorResponseSchema)
-  @ApiResponse(401, "Not authenticated", Shared.Schemas.Base.unauthorizedErrorResponseSchema)
-  updateMe = asyncHandler(async (req: Request, res: Response): Promise<PatchIdResponseDTO> => {
-    const userId = req.user?.userId;
+  @ApiResponse(
+    400,
+    "Invalid input data",
+    Shared.Schemas.Base.validationErrorResponseSchema
+  )
+  @ApiResponse(
+    401,
+    "Not authenticated",
+    Shared.Schemas.Base.unauthorizedErrorResponseSchema
+  )
+  updateMe = asyncHandler(
+    async (req: Request, res: Response): Promise<PatchIdResponseDTO> => {
+      const userId = req.user?.userId;
 
-    if (!userId) {
-      throw new UnauthorizedError("User not authenticated");
+      if (!userId) {
+        throw new UnauthorizedError("User not authenticated");
+      }
+
+      const updateData = req.body;
+      const updatedUser = await this.updateUserUseCase.execute(
+        userId,
+        updateData
+      );
+
+      res.status(200).json({
+        success: true,
+        data: updatedUser,
+      });
+
+      return updatedUser;
     }
-
-    const updateData = req.body;
-    const updatedUser = await this.updateUserUseCase.execute(
-      userId,
-      updateData,
-    );
-
-    res.status(200).json({
-      success: true,
-      data: updatedUser,
-    });
-
-    return updatedUser;
-  });
+  );
 }
