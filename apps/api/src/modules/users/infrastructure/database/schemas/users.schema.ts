@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   boolean,
   check,
@@ -10,6 +10,26 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+import {
+  conversationParticipants,
+  conversations,
+  friendships,
+  listLikes,
+  lists,
+  messages,
+  notifications,
+  peopleLikes,
+  ratings,
+  refreshTokens,
+  reviewLikes,
+  reviews,
+  userActivityLogs,
+  userStats,
+  watchlist,
+  watchparties,
+  watchpartyInvitations,
+  watchpartyParticipants,
+} from "../../../../../database/schema";
 
 export const users = pgTable(
   "users",
@@ -57,6 +77,47 @@ export const users = pgTable(
     ),
   ]
 );
+
+export const usersRelationSchema = relations(users, ({ many }) => ({
+  refreshTokens: many(refreshTokens),
+  friendships_userId: many(friendships, {
+    relationName: "friendships_userId_users_id",
+  }),
+  friendships_friendId: many(friendships, {
+    relationName: "friendships_friendId_users_id",
+  }),
+  conversations: many(conversations),
+  conversationParticipants: many(conversationParticipants),
+  watchparties_createdBy: many(watchparties, {
+    relationName: "watchparties_createdBy_users_id",
+  }),
+  watchparties_leaderUserId: many(watchparties, {
+    relationName: "watchparties_leaderUserId_users_id",
+  }),
+  messages: many(messages),
+  ratings: many(ratings),
+  reviews: many(reviews),
+  watchlists: many(watchlist),
+  lists: many(lists),
+  watchpartyParticipants: many(watchpartyParticipants),
+  watchpartyInvitations_inviterId: many(watchpartyInvitations, {
+    relationName: "watchpartyInvitations_inviterId_users_id",
+  }),
+  watchpartyInvitations_inviteeId: many(watchpartyInvitations, {
+    relationName: "watchpartyInvitations_inviteeId_users_id",
+  }),
+  userActivityLogs: many(userActivityLogs),
+  userStats: many(userStats),
+  notifications_userId: many(notifications, {
+    relationName: "notifications_userId_users_id",
+  }),
+  notifications_relatedUserId: many(notifications, {
+    relationName: "notifications_relatedUserId_users_id",
+  }),
+  reviewLikes: many(reviewLikes),
+  listLikes: many(listLikes),
+  peopleLikes: many(peopleLikes),
+}));
 
 export type UserRow = typeof users.$inferSelect;
 export type NewUserRow = typeof users.$inferInsert;
