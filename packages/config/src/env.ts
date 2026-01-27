@@ -1,7 +1,3 @@
-import dotenv from "dotenv";
-
-dotenv.config({ path: "../../.env", debug: true });
-
 export const env = {
   // Application Mode
   NODE_ENV: process.env.NODE_ENV || "development",

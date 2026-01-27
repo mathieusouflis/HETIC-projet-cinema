@@ -4,27 +4,31 @@
   "tasks": {
     "generate-sdk": {
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "env": ["*"],
       "dependsOn": ["^generate-sdk"]
     },
     "build": {
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "env": ["*"],
       "dependsOn": ["^build"],
       "outputs": ["build/**", "dist/**"]
     },
     "build:watch": {
       "dependsOn": ["^build"],
+      "env": ["*"],
       "persistent": true,
       "cache": false
     },
     "check-types": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "env": ["*"]
     },
     "clean": {
       "cache": false
     },
     "dev": {
       "dependsOn": ["^build"],
-      "env": ["FRONTEND_PORT", "FRONTEND_HOST", "FRONTEND_URL", "VITE_PUBLIC_POSTHOG_KEY", "VITE_PUBLIC_POSTHOG_HOST", "NODE_ENV" ],
+      "env": ["*"],
       "cache": false,
       "persistent": true
     },
@@ -33,11 +37,13 @@
     },
     "start": {
       "dependsOn": ["build"],
+      "env": ["*"],
       "cache": false,
       "persistent": true
     },
     "test": {
       "outputs": ["coverage/**"],
+      "env": ["*"],
       "dependsOn": ["^build"]
     }
   }
