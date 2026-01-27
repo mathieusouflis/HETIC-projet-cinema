@@ -1,3 +1,4 @@
+import { UnauthorizedError } from "../../../../shared/errors";
 import { BaseController } from "../../../../shared/infrastructure/base/controllers";
 import {
   ApiResponse,
@@ -17,7 +18,6 @@ import {
 } from "../../../../shared/schemas/base/error.schemas";
 import { createSuccessResponse } from "../../../../shared/schemas/base/response.schemas";
 import { asyncHandler } from "../../../../shared/utils";
-
 import {
   type CreatePeopleBody,
   createPeopleBodyValidator,
@@ -36,7 +36,6 @@ import {
   searchPeopleParamsValidator,
 } from "../dto/request/search-people.params.validator";
 import { updatePeopleBodyValidator } from "../dto/request/update-people.body.validator";
-
 import {
   type CreatePeopleResponse,
   createPeopleResponseValidator,
@@ -58,8 +57,6 @@ import {
   type UpdatePeopleResponse,
   updatePeopleResponseValidator,
 } from "../dto/response/update-people.response.validator";
-
-import { UnauthorizedError } from "../../../../shared/errors";
 import type { CreatePeopleUseCase } from "../use-cases/create-people.use-case";
 import type { DeletePeopleUseCase } from "../use-cases/delete-people.use-case";
 import type { GetPeopleUseCase } from "../use-cases/get-people.use-case";
@@ -80,9 +77,9 @@ export class PeoplesController extends BaseController {
     private readonly searchPeopleUseCase: SearchPeopleUseCase,
     private readonly getPeopleUseCase: GetPeopleUseCase,
     private readonly createPeopleUseCase: CreatePeopleUseCase,
-    // @ts-ignore
+    // @ts-expect-error
     private readonly updatePeopleUseCase: UpdatePeopleUseCase,
-    // @ts-ignore
+    // @ts-expect-error
     private readonly deletePeopleUseCase: DeletePeopleUseCase
   ) {
     super();

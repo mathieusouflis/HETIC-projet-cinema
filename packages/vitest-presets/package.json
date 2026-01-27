@@ -4,7 +4,10 @@
   "type": "module",
   "private": true,
   "license": "MIT",
-  "files": ["browser/vitest-preset.ts", "node/vitest-preset.ts"],
+  "files": [
+    "browser/vitest-preset.ts",
+    "node/vitest-preset.ts"
+  ],
   "dependencies": {
     "@vitest/coverage-v8": "^4.0.18",
     "@vitest/ui": "^4.0.18",

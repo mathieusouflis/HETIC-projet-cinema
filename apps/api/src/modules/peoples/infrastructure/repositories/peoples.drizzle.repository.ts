@@ -1,4 +1,4 @@
-import { type SQL, and, eq, ilike, or } from "drizzle-orm";
+import { and, eq, ilike, or, type SQL } from "drizzle-orm";
 import { db } from "../../../../database";
 import {
   type CreatePeopleProps,

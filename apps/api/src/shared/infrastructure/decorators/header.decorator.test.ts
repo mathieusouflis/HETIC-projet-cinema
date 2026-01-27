@@ -1,11 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
-  RefreshTokenCookie,
-  RequiredCookie,
-  RequiredHeaders,
-  SetCookie,
-  SetHeaders,
   createRequiredCookieMiddleware,
   createRequiredHeadersMiddleware,
   createSetHeadersMiddleware,
@@ -13,6 +8,11 @@ import {
   getRequiredHeadersMetadata,
   getSetCookieMetadata,
   getSetHeadersMetadata,
+  RefreshTokenCookie,
+  RequiredCookie,
+  RequiredHeaders,
+  SetCookie,
+  SetHeaders,
 } from "./header.decorator.js";
 
 describe("Header Decorator tests", () => {

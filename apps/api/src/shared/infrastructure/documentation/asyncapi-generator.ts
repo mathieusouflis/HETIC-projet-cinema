@@ -158,7 +158,7 @@ export class AsyncAPIGenerator {
   } {
     try {
       // Handle ws:// or wss:// URLs
-      const match = url.match(/^(wss?):\/\/([^\/]+)(\/.*)?$/);
+      const match = url.match(/^(wss?):\/\/([^/]+)(\/.*)?$/);
       if (match?.[1] && match[2]) {
         return {
           protocol: match[1],

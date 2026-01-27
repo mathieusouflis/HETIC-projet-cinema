@@ -1,4 +1,3 @@
-export * as Metadata from "./websocket.metadata";
 export * from "./broadcast-to.decorator";
 export * from "./join-room.decorator";
 export * from "./leave-room.decorator";
@@ -6,7 +5,8 @@ export * from "./namespace.decorator";
 export * from "./publish.decorator";
 export * from "./subscribe.decorator";
 export * from "./use-event-middleware.decorator";
+export * from "./validate.decorator";
 export * from "./validate-ack.decorator";
 export * from "./validate-emit.decorator";
 export * from "./validate-event.decorator";
-export * from "./validate.decorator";
+export * as Metadata from "./websocket.metadata";
