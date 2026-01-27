@@ -14,8 +14,8 @@ import {
   episodes,
   seasons,
   streamingPlatforms,
-} from "../../../../database/schema.js";
-import { users } from "../../../users/infrastructure/database/schemas/users.schema.js";
+  users,
+} from "../../../../database/schema";
 
 export const watchpartySchema = pgTable(
   "watchparties",
