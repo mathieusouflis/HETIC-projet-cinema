@@ -61,6 +61,7 @@ import type {
   POSTAuthRegisterBody,
   POSTPeoples201,
   POSTPeoplesBody,
+  POSTUsersMeFriendshipsId201,
   POSTWatchlist201,
   POSTWatchlistBody,
   POSTWatchparty201,
@@ -355,6 +356,17 @@ export const pATCHUsersMe = <TData = AxiosResponse<PATCHUsersMe200>>(
   }
 
 /**
+ * Follow a user
+ */
+export const pOSTUsersMeFriendshipsId = <TData = AxiosResponse<POSTUsersMeFriendshipsId201>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/users/me/friendships/${id}`,undefined,options
+    );
+  }
+
+/**
  * Query watchlist
  */
 export const gETWatchlist = <TData = AxiosResponse<GETWatchlist200>>(
@@ -532,6 +544,7 @@ export type DELETEUsersIdResult = AxiosResponse<void>
 export type GETUsersResult = AxiosResponse<GETUsers200>
 export type GETUsersMeResult = AxiosResponse<GETUsersMe200>
 export type PATCHUsersMeResult = AxiosResponse<PATCHUsersMe200>
+export type POSTUsersMeFriendshipsIdResult = AxiosResponse<POSTUsersMeFriendshipsId201>
 export type GETWatchlistResult = AxiosResponse<GETWatchlist200>
 export type POSTWatchlistResult = AxiosResponse<POSTWatchlist201>
 export type GETWatchlistContentIdResult = AxiosResponse<GETWatchlistContentId200>
