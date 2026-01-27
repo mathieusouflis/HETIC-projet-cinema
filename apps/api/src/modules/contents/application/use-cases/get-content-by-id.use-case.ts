@@ -1,6 +1,6 @@
 import { NotFoundError } from "../../../../shared/errors/NotFoundError.js";
-import { IContentRepository } from "../../domain/interfaces/IContentRepository.js";
-import { GetContentByIdResponse } from "../dto/response/get-content-by-id-response.validator.js";
+import type { IContentRepository } from "../../domain/interfaces/IContentRepository.js";
+import type { GetContentByIdResponse } from "../dto/response/get-content-by-id-response.validator.js";
 
 export class GetContentByIdUseCase {
   constructor(private readonly contentRepository: IContentRepository) {}

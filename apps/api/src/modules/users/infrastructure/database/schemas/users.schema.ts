@@ -1,15 +1,15 @@
+import { sql } from "drizzle-orm";
 import {
-  pgTable,
-  index,
-  unique,
+  boolean,
   check,
+  index,
+  pgTable,
+  text,
+  timestamp,
+  unique,
   uuid,
   varchar,
-  text,
-  boolean,
-  timestamp,
 } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
 
 export const users = pgTable(
   "users",
@@ -42,20 +42,20 @@ export const users = pgTable(
   (table) => [
     index("idx_users_email").using(
       "btree",
-      table.email.asc().nullsLast().op("text_ops"),
+      table.email.asc().nullsLast().op("text_ops")
     ),
     index("idx_users_oauth").using(
       "btree",
       table.oauthProvider.asc().nullsLast().op("text_ops"),
-      table.oauthId.asc().nullsLast().op("text_ops"),
+      table.oauthId.asc().nullsLast().op("text_ops")
     ),
     unique("users_email_key").on(table.email),
     unique("users_username_key").on(table.username),
     check(
       "oauth_or_email",
-      sql`((oauth_provider IS NOT NULL) AND (oauth_id IS NOT NULL)) OR ((email IS NOT NULL) AND (password_hash IS NOT NULL))`,
+      sql`((oauth_provider IS NOT NULL) AND (oauth_id IS NOT NULL)) OR ((email IS NOT NULL) AND (password_hash IS NOT NULL))`
     ),
-  ],
+  ]
 );
 
 export type UserRow = typeof users.$inferSelect;

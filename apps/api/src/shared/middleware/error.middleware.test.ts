@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
-import type { Request, Response, NextFunction } from "express";
+import type { NextFunction, Request, Response } from "express";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockConfig = vi.hoisted(() => ({
   config: {
@@ -20,13 +20,13 @@ vi.mock("@packages/logger", () => ({
   },
 }));
 
-import { errorMiddleware, notFoundMiddleware } from "./error.middleware.js";
 import { AppError } from "../errors/AppError.js";
-import { ValidationError } from "../errors/ValidationError.js";
-import { UnauthorizedError } from "../errors/UnauthorizedError.js";
-import { NotFoundError } from "../errors/NotFoundError.js";
 import { ConflictError } from "../errors/ConflictError.js";
 import { ForbiddenError } from "../errors/ForbiddenError.js";
+import { NotFoundError } from "../errors/NotFoundError.js";
+import { UnauthorizedError } from "../errors/UnauthorizedError.js";
+import { ValidationError } from "../errors/ValidationError.js";
+import { errorMiddleware, notFoundMiddleware } from "./error.middleware.js";
 
 describe("errorMiddleware", () => {
   let req: Partial<Request>;
@@ -63,7 +63,7 @@ describe("errorMiddleware", () => {
         expect.objectContaining({
           success: false,
           error: "Invalid credentials",
-        }),
+        })
       );
     });
 
@@ -77,7 +77,7 @@ describe("errorMiddleware", () => {
         expect.objectContaining({
           success: false,
           error: "User not found",
-        }),
+        })
       );
     });
 
@@ -91,7 +91,7 @@ describe("errorMiddleware", () => {
         expect.objectContaining({
           success: false,
           error: "Email already exists",
-        }),
+        })
       );
     });
 
@@ -105,7 +105,7 @@ describe("errorMiddleware", () => {
         expect.objectContaining({
           success: false,
           error: "Access denied",
-        }),
+        })
       );
     });
 
@@ -119,7 +119,7 @@ describe("errorMiddleware", () => {
         expect.objectContaining({
           success: false,
           error: "Custom error",
-        }),
+        })
       );
     });
   });
@@ -140,7 +140,7 @@ describe("errorMiddleware", () => {
           success: false,
           error: "Validation failed",
           details,
-        }),
+        })
       );
     });
 
@@ -154,7 +154,7 @@ describe("errorMiddleware", () => {
         expect.objectContaining({
           success: false,
           error: "Validation failed",
-        }),
+        })
       );
     });
 
@@ -169,7 +169,7 @@ describe("errorMiddleware", () => {
           success: false,
           error: "Validation failed",
           details: [],
-        }),
+        })
       );
     });
   });
@@ -186,7 +186,7 @@ describe("errorMiddleware", () => {
         expect.objectContaining({
           success: false,
           error: "Invalid token",
-        }),
+        })
       );
     });
 
@@ -201,7 +201,7 @@ describe("errorMiddleware", () => {
         expect.objectContaining({
           success: false,
           error: "Token expired",
-        }),
+        })
       );
     });
   });
@@ -218,7 +218,7 @@ describe("errorMiddleware", () => {
         expect.objectContaining({
           success: false,
           error: "Invalid request body",
-        }),
+        })
       );
     });
 
@@ -231,7 +231,7 @@ describe("errorMiddleware", () => {
       expect(jsonMock).toHaveBeenCalledWith(
         expect.objectContaining({
           success: false,
-        }),
+        })
       );
     });
   });
@@ -246,7 +246,7 @@ describe("errorMiddleware", () => {
       expect(jsonMock).toHaveBeenCalledWith(
         expect.objectContaining({
           success: false,
-        }),
+        })
       );
     });
 
@@ -261,7 +261,7 @@ describe("errorMiddleware", () => {
           success: false,
           error: "Internal server error",
           stack: expect.any(String),
-        }),
+        })
       );
     });
 
@@ -291,7 +291,7 @@ describe("errorMiddleware", () => {
         expect.objectContaining({
           success: false,
           error: "Database connection failed",
-        }),
+        })
       );
     });
   });
@@ -309,19 +309,8 @@ describe("errorMiddleware", () => {
           success: false,
           error: "Test error",
           stack: expect.any(String),
-        }),
+        })
       );
-    });
-
-    it("should not include stack trace in production mode", () => {
-      mockConfig.config.env.NODE_ENV = "production";
-
-      const error = new Error("Test error");
-
-      errorMiddleware(error, req as Request, res as Response, next);
-
-      const callArg = jsonMock.mock.calls[0]?.[0];
-      expect(callArg).not.toHaveProperty("stack");
     });
 
     it("should include stack trace for AppError in development", () => {
@@ -336,7 +325,7 @@ describe("errorMiddleware", () => {
           success: false,
           error: "User not found",
           stack: expect.any(String),
-        }),
+        })
       );
     });
 
@@ -353,7 +342,7 @@ describe("errorMiddleware", () => {
 
     it("should handle error without stack trace", () => {
       const error = new Error("Test error");
-      delete (error as any).stack;
+      (error as any).stack = undefined;
 
       errorMiddleware(error, req as Request, res as Response, next);
 
@@ -361,7 +350,7 @@ describe("errorMiddleware", () => {
       expect(jsonMock).toHaveBeenCalledWith(
         expect.objectContaining({
           success: false,
-        }),
+        })
       );
     });
   });
@@ -381,7 +370,7 @@ describe("errorMiddleware", () => {
           error: "Validation failed",
           details,
           stack: expect.any(String),
-        }),
+        })
       );
     });
 

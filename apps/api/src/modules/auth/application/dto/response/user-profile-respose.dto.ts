@@ -1,4 +1,4 @@
-import z from "zod";
+import type z from "zod";
 import { publicUserSchema } from "../../../../users/application/schema/user.schema";
 
 export const userProfileResponseValidator = publicUserSchema;

@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { publicUserSchema } from "../../../../users/application/schema/user.schema";
 import { Shared } from "../../../../../shared";
+import { publicUserSchema } from "../../../../users/application/schema/user.schema";
 
 export const authResponseDataValidator = z.object({
   user: publicUserSchema,

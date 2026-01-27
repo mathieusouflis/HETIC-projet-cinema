@@ -1,9 +1,8 @@
 import type {
-  WatchlistRow,
   NewWatchlistRow,
-  watchlistStatusEnum
+  WatchlistRow,
+  watchlistStatusEnum,
 } from "../../infrastructure/schemas/watchlist.schema.js";
-
 
 export type WatchStatus = (typeof watchlistStatusEnum)["enumValues"][number];
 

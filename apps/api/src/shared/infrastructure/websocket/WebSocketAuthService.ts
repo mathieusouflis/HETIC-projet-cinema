@@ -1,7 +1,7 @@
-import type { Socket } from "socket.io";
-import { socketAuthMiddleware } from "../../middleware/socket-auth.middleware.js";
 import { logger } from "@packages/logger";
+import type { Socket } from "socket.io";
 import { WebSocketAuthError } from "../../errors/websocket/websocket-auth-error.js";
+import { socketAuthMiddleware } from "../../middleware/socket-auth.middleware.js";
 
 /**
  * Service responsible for WebSocket authentication
@@ -19,15 +19,13 @@ export class WebSocketAuthService {
   public authenticate(socket: Socket): void {
     try {
       socketAuthMiddleware(socket);
-
-
     } catch (error) {
       logger.warn(
-        `Socket ${socket.id} authentication failed: ${error instanceof Error ? error.message : String(error)}`,
+        `Socket ${socket.id} authentication failed: ${error instanceof Error ? error.message : String(error)}`
       );
 
       throw new WebSocketAuthError(
-        error instanceof Error ? error.message : "Authentication failed",
+        error instanceof Error ? error.message : "Authentication failed"
       );
     }
   }
@@ -46,7 +44,9 @@ export class WebSocketAuthService {
    * @param socket - Socket connection
    * @returns User info or undefined if not authenticated
    */
-  public getUser(socket: Socket): { userId: string; email: string } | undefined {
+  public getUser(
+    socket: Socket
+  ): { userId: string; email: string } | undefined {
     return socket.user;
   }
 

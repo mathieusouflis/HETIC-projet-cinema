@@ -1,8 +1,15 @@
-import { IPeoplesRepository } from "../../domain/interfaces/IPeoplesRepository";
-import { CreatePeopleProps, People, UpdatePeopleProps } from "../../domain/entities/people.entity";
-import { PeoplesDrizzleRepository } from "./peoples.drizzle.repository";
-import { PeoplesTMDBRepository, CreatePersonFromTMDB } from "./peoples.tmdb.repository";
 import { logger } from "@packages/logger";
+import type {
+  CreatePeopleProps,
+  People,
+  UpdatePeopleProps,
+} from "../../domain/entities/people.entity";
+import type { IPeoplesRepository } from "../../domain/interfaces/IPeoplesRepository";
+import { PeoplesDrizzleRepository } from "./peoples.drizzle.repository";
+import {
+  type CreatePersonFromTMDB,
+  PeoplesTMDBRepository,
+} from "./peoples.tmdb.repository";
 
 export class PeoplesRepository implements IPeoplesRepository {
   private readonly drizzleAdapter: PeoplesDrizzleRepository;
@@ -16,7 +23,9 @@ export class PeoplesRepository implements IPeoplesRepository {
   /**
    * Process TMDB people and create them in database if they don't exist
    */
-  private async processTMDBPeople(tmdbPeople: CreatePersonFromTMDB[]): Promise<People[]> {
+  private async processTMDBPeople(
+    tmdbPeople: CreatePersonFromTMDB[]
+  ): Promise<People[]> {
     const tmdbIds = tmdbPeople
       .map((item) => item.tmdbId)
       .filter((id) => id !== null && id !== undefined) as number[];
@@ -25,7 +34,8 @@ export class PeoplesRepository implements IPeoplesRepository {
       return [];
     }
 
-    const existingPeopleStatus = await this.drizzleAdapter.checkExistsByTmdbIds(tmdbIds);
+    const existingPeopleStatus =
+      await this.drizzleAdapter.checkExistsByTmdbIds(tmdbIds);
     const peopleToCreate = tmdbPeople.filter(
       (item) => item.tmdbId && !existingPeopleStatus[item.tmdbId]
     );
@@ -36,7 +46,7 @@ export class PeoplesRepository implements IPeoplesRepository {
 
     const created = await this.drizzleAdapter.bulkCreate(peopleToCreate);
     const existing = await this.drizzleAdapter.list({
-      tmdbIds: tmdbIds.filter(id => existingPeopleStatus[id])
+      tmdbIds: tmdbIds.filter((id) => existingPeopleStatus[id]),
     });
 
     return [...created, ...existing];
@@ -85,7 +95,7 @@ export class PeoplesRepository implements IPeoplesRepository {
   /**
    * Search people on TMDB and sync to database
    */
-  async searchPeople(query: string, page: number = 1): Promise<People[]> {
+  async searchPeople(query: string, page = 1): Promise<People[]> {
     const tmdbPeople = await this.tmdbAdapter.searchPeople(query, page);
     return await this.processTMDBPeople(tmdbPeople);
   }
@@ -120,9 +130,13 @@ export class PeoplesRepository implements IPeoplesRepository {
   async getPeopleByTmdbIds(tmdbIds: number[]): Promise<People[]> {
     try {
       const existingPeople = await this.drizzleAdapter.list({ tmdbIds });
-      const existingTmdbIds = existingPeople.map(p => p.tmdbId).filter((id): id is number => id !== null);
+      const existingTmdbIds = existingPeople
+        .map((p) => p.tmdbId)
+        .filter((id): id is number => id !== null);
 
-      const missingTmdbIds = tmdbIds.filter(id => !existingTmdbIds.includes(id));
+      const missingTmdbIds = tmdbIds.filter(
+        (id) => !existingTmdbIds.includes(id)
+      );
 
       if (missingTmdbIds.length === 0) {
         return existingPeople;
@@ -142,7 +156,10 @@ export class PeoplesRepository implements IPeoplesRepository {
   /**
    * Get count of people
    */
-  async getCount(params?: { nationality?: string; name?: string }): Promise<number> {
+  async getCount(params?: {
+    nationality?: string;
+    name?: string;
+  }): Promise<number> {
     return await this.drizzleAdapter.getCount(params);
   }
 }

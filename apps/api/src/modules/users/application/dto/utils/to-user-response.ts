@@ -1,5 +1,5 @@
-import { User } from "../../../domain";
-import { GetIdResponseDTO } from "../responses/get-id-response";
+import type { User } from "../../../domain";
+import type { GetIdResponseDTO } from "../responses/get-id-response";
 
 /**
  * Transform a User entity to a UserResponseDTO

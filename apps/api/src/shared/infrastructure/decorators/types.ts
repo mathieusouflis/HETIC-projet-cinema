@@ -1,15 +1,17 @@
-import type { Request, Response, NextFunction, RequestHandler } from "express";
+import type { NextFunction, Request, RequestHandler, Response } from "express";
 import { BaseController } from "../base/controllers";
 
 export type RouteHandler = (
   req: Request,
   res: Response,
-  next?: NextFunction,
+  next?: NextFunction
 ) => Promise<void> | void;
 
 export type ControllerConstructor<T extends BaseController = BaseController> =
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Required for decorator flexibility with different controller constructors
-  new (...args: any[]) => T;
+  new (
+    ...args: any[]
+  ) => T;
 
 export function isRouteHandler(value: unknown): value is RouteHandler {
   return typeof value === "function";

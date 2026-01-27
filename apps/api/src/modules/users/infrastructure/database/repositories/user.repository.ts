@@ -1,12 +1,12 @@
-import { eq, count, and } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
 import { db } from "../../../../../database/index.js";
-import { users, type UserRow } from "../schemas/users.schema.js";
-import type { IUserRepository } from "../../../domain/interfaces/IUserRepository.js";
 import {
-  User,
   type CreateUserProps,
   type UpdateUserProps,
+  User,
 } from "../../../domain/entities/user.entity.js";
+import type { IUserRepository } from "../../../domain/interfaces/IUserRepository.js";
+import { type UserRow, users } from "../schemas/users.schema.js";
 
 export class UserRepository implements IUserRepository {
   private mapToDomain(row: UserRow): User {

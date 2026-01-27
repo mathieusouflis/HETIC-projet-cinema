@@ -1,9 +1,8 @@
 import { NotFoundError } from "../../../../shared/errors/NotFoundError.js";
 import { UnauthorizedError } from "../../../../shared/errors/UnauthorizedError.js";
-import { IWatchpartyRepository } from "../../domain/interfaces/IWatchpartyRepository.js";
+import type { IWatchpartyRepository } from "../../domain/interfaces/IWatchpartyRepository.js";
 
 export class DeleteWatchpartyUseCase {
-
   private repository: IWatchpartyRepository;
 
   constructor(repository: IWatchpartyRepository) {
@@ -18,7 +17,9 @@ export class DeleteWatchpartyUseCase {
     }
 
     if (!watchparty.isCreator(userId)) {
-      throw new UnauthorizedError("You are not authorized to delete this watchparty");
+      throw new UnauthorizedError(
+        "You are not authorized to delete this watchparty"
+      );
     }
 
     await this.repository.delete(id);

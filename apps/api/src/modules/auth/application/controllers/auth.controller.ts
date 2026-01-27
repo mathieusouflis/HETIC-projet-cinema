@@ -1,38 +1,39 @@
+import { config } from "@packages/config";
 import type { Request, Response } from "express";
-import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
-import type { RefreshTokenUseCase } from "../use-cases/refresh-token.usecase.js";
-import { RegisterUseCase } from "../use-cases/register.usecase.js";
-import { LoginUseCase } from "../use-cases/login.usecase.js";
-import { registerValidator } from "../dto/request/register.dto.js";
-import { loginValidator } from "../dto/request/login.dto.js";
-import {
-  authResponseDataValidator,
-} from "../dto/response/auth-response.dto.js";
-import { Controller } from "../../../../shared/infrastructure/decorators/controller.decorator.js";
+import { UnauthorizedError } from "../../../../shared/errors/index.js";
 import { BaseController } from "../../../../shared/infrastructure/base/controllers/BaseController.js";
+import { Protected } from "../../../../shared/infrastructure/decorators/auth.decorator.js";
+import { Controller } from "../../../../shared/infrastructure/decorators/controller.decorator.js";
+import {
+  RefreshTokenCookie,
+  SetCookie,
+} from "../../../../shared/infrastructure/decorators/header.decorator.js";
+import { ApiResponse } from "../../../../shared/infrastructure/decorators/response.decorator.js";
 import {
   Get,
   Post,
 } from "../../../../shared/infrastructure/decorators/route.decorators.js";
 import { ValidateBody } from "../../../../shared/infrastructure/decorators/validation.decorators.js";
-import { ApiResponse } from "../../../../shared/infrastructure/decorators/response.decorator.js";
-import { Protected } from "../../../../shared/infrastructure/decorators/auth.decorator.js";
-import {
-  RefreshTokenCookie,
-  SetCookie,
-} from "../../../../shared/infrastructure/decorators/header.decorator.js";
-import {
-  UserProfile,
-  userProfileSchema,
-} from "../../../users/application/schema/user.schema.js";
-import { config } from "@packages/config";
-import { createSuccessResponse, successResponseSchema } from "../../../../shared/schemas/base/response.schemas.js";
 import {
   conflictErrorResponseSchema,
   unauthorizedErrorResponseSchema,
-  validationErrorResponseSchema
+  validationErrorResponseSchema,
 } from "../../../../shared/schemas/base/error.schemas.js";
-import { UnauthorizedError } from "../../../../shared/errors/index.js";
+import {
+  createSuccessResponse,
+  successResponseSchema,
+} from "../../../../shared/schemas/base/response.schemas.js";
+import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
+import {
+  type UserProfile,
+  userProfileSchema,
+} from "../../../users/application/schema/user.schema.js";
+import { loginValidator } from "../dto/request/login.dto.js";
+import { registerValidator } from "../dto/request/register.dto.js";
+import { authResponseDataValidator } from "../dto/response/auth-response.dto.js";
+import type { LoginUseCase } from "../use-cases/login.usecase.js";
+import type { RefreshTokenUseCase } from "../use-cases/refresh-token.usecase.js";
+import type { RegisterUseCase } from "../use-cases/register.usecase.js";
 
 const REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
 const REFRESH_TOKEN_COOKIE_OPTIONS = {
@@ -51,7 +52,7 @@ export class AuthController extends BaseController {
   constructor(
     private readonly registerUseCase: RegisterUseCase,
     private readonly loginUseCase: LoginUseCase,
-    private readonly refreshTokenUseCase: RefreshTokenUseCase,
+    private readonly refreshTokenUseCase: RefreshTokenUseCase
   ) {
     super();
   }
@@ -65,32 +66,38 @@ export class AuthController extends BaseController {
   @ApiResponse(
     201,
     "User registered successfully",
-    createSuccessResponse(authResponseDataValidator),
+    createSuccessResponse(authResponseDataValidator)
   )
   @ApiResponse(400, "Invalid input data", validationErrorResponseSchema)
   @ApiResponse(
     409,
     "Email or username already exists",
-    conflictErrorResponseSchema,
+    conflictErrorResponseSchema
   )
   @SetCookie(REFRESH_TOKEN_COOKIE_NAME, REFRESH_TOKEN_COOKIE_OPTIONS)
-  register = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const { email, username, password } = req.body;
+  register = asyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const { email, username, password } = req.body;
 
-    const [result, refreshToken] = await this.registerUseCase.execute({
-      email,
-      username,
-      password,
-    });
+      const [result, refreshToken] = await this.registerUseCase.execute({
+        email,
+        username,
+        password,
+      });
 
-    res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, REFRESH_TOKEN_COOKIE_OPTIONS);
+      res.cookie(
+        REFRESH_TOKEN_COOKIE_NAME,
+        refreshToken,
+        REFRESH_TOKEN_COOKIE_OPTIONS
+      );
 
-    res.status(201).json({
-      success: true,
-      message: "User registered successfully",
-      data: result,
-    });
-  });
+      res.status(201).json({
+        success: true,
+        message: "User registered successfully",
+        data: result,
+      });
+    }
+  );
 
   @Post({
     path: "/login",
@@ -102,13 +109,13 @@ export class AuthController extends BaseController {
   @ApiResponse(
     200,
     "Login successful",
-    createSuccessResponse(authResponseDataValidator),
+    createSuccessResponse(authResponseDataValidator)
   )
   @ApiResponse(400, "Invalid credentials", validationErrorResponseSchema)
   @ApiResponse(
     401,
     "Unauthorized - wrong email or password",
-    unauthorizedErrorResponseSchema,
+    unauthorizedErrorResponseSchema
   )
   @SetCookie(REFRESH_TOKEN_COOKIE_NAME, REFRESH_TOKEN_COOKIE_OPTIONS)
   login = asyncHandler(async (req: Request, res: Response): Promise<void> => {
@@ -119,7 +126,11 @@ export class AuthController extends BaseController {
       password,
     });
 
-    res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, REFRESH_TOKEN_COOKIE_OPTIONS);
+    res.cookie(
+      REFRESH_TOKEN_COOKIE_NAME,
+      refreshToken,
+      REFRESH_TOKEN_COOKIE_OPTIONS
+    );
 
     res.status(200).json({
       success: true,
@@ -138,23 +149,26 @@ export class AuthController extends BaseController {
   @ApiResponse(
     200,
     "Tokens refreshed successfully",
-    createSuccessResponse(authResponseDataValidator),
+    createSuccessResponse(authResponseDataValidator)
   )
   @ApiResponse(
     401,
     "Invalid or expired refresh token",
-    unauthorizedErrorResponseSchema,
+    unauthorizedErrorResponseSchema
   )
   @SetCookie(REFRESH_TOKEN_COOKIE_NAME, REFRESH_TOKEN_COOKIE_OPTIONS)
   refresh = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { refreshToken: _refreshToken } = req.cookies;
 
-    const [accessToken, refreshToken] =
-      await this.refreshTokenUseCase.execute({
-        refreshToken: _refreshToken,
-      });
+    const [accessToken, refreshToken] = await this.refreshTokenUseCase.execute({
+      refreshToken: _refreshToken,
+    });
 
-    res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, REFRESH_TOKEN_COOKIE_OPTIONS);
+    res.cookie(
+      REFRESH_TOKEN_COOKIE_NAME,
+      refreshToken,
+      REFRESH_TOKEN_COOKIE_OPTIONS
+    );
 
     res.status(200).json({
       success: true,
@@ -188,12 +202,12 @@ export class AuthController extends BaseController {
   @ApiResponse(
     200,
     "User profile retrieved successfully",
-    createSuccessResponse(userProfileSchema),
+    createSuccessResponse(userProfileSchema)
   )
   @ApiResponse(
     401,
     "Not authenticated - missing or invalid token",
-    unauthorizedErrorResponseSchema,
+    unauthorizedErrorResponseSchema
   )
   getMe = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const user = req.user;

@@ -1,8 +1,11 @@
 import { logger } from "@packages/logger";
-import { PaginationQuery } from "../../../../../../shared/schemas/base/pagination.schema";
-import { Content, CreateContentProps } from "../../../../domain/entities/content.entity";
-import { BaseTMDBAdapter } from "./base-tmdb.adapter";
-import { BaseDrizzleAdapter } from "./base-drizzle.adapter";
+import type { PaginationQuery } from "../../../../../../shared/schemas/base/pagination.schema";
+import type {
+  Content,
+  CreateContentProps,
+} from "../../../../domain/entities/content.entity";
+import type { BaseDrizzleAdapter } from "./base-drizzle.adapter";
+import type { BaseTMDBAdapter } from "./base-tmdb.adapter";
 
 /**
  * Base Content Repository
@@ -13,7 +16,7 @@ export abstract class BaseContentRepository<
   TCreateProps extends CreateContentProps,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TTMDBAdapter extends BaseTMDBAdapter<any, TCreateProps>,
-  TDrizzleAdapter extends BaseDrizzleAdapter<TEntity, TCreateProps>
+  TDrizzleAdapter extends BaseDrizzleAdapter<TEntity, TCreateProps>,
 > {
   protected tmdbAdapter: TTMDBAdapter;
   protected drizzleAdapter: TDrizzleAdapter;
@@ -41,7 +44,9 @@ export abstract class BaseContentRepository<
   /**
    * Process TMDB content: check if exists and create missing ones
    */
-  protected async processContent(tmdbContent: TCreateProps[]): Promise<TEntity[]> {
+  protected async processContent(
+    tmdbContent: TCreateProps[]
+  ): Promise<TEntity[]> {
     const tmdbIds = tmdbContent
       .map((item) => item.tmdbId)
       .filter((id) => id !== null && id !== undefined) as number[];
@@ -50,7 +55,8 @@ export abstract class BaseContentRepository<
       return [];
     }
 
-    const existingContentStatus = await this.drizzleAdapter.checkContentExistsInDb(tmdbIds);
+    const existingContentStatus =
+      await this.drizzleAdapter.checkContentExistsInDb(tmdbIds);
     const contentToCreate = tmdbContent.filter(
       (item) => item.tmdbId && !existingContentStatus[item.tmdbId]
     );
@@ -83,7 +89,10 @@ export abstract class BaseContentRepository<
       tmdbContent = await this.tmdbAdapter.searchContent(title, options?.page);
     } else if (title && (country || categories)) {
       logger.info(`Searching ${this.contentTypeName} by title and filters`);
-      const searchResults = await this.tmdbAdapter.searchContent(title, options?.page);
+      const searchResults = await this.tmdbAdapter.searchContent(
+        title,
+        options?.page
+      );
       const discoverResults = await this.tmdbAdapter.listContent(
         country,
         categories,
@@ -92,7 +101,11 @@ export abstract class BaseContentRepository<
       tmdbContent = [...searchResults, ...discoverResults];
     } else {
       logger.info(`Listing ${this.contentTypeName} by filters`);
-      tmdbContent = await this.tmdbAdapter.listContent(country, categories, options?.page);
+      tmdbContent = await this.tmdbAdapter.listContent(
+        country,
+        categories,
+        options?.page
+      );
     }
 
     // Process TMDB results (create missing items in DB)
@@ -116,7 +129,10 @@ export abstract class BaseContentRepository<
   async search(query: string, options?: PaginationQuery): Promise<TEntity[]> {
     logger.info(`Searching ${this.contentTypeName} with query: "${query}"`);
 
-    const tmdbContent = await this.tmdbAdapter.searchContent(query, options?.page);
+    const tmdbContent = await this.tmdbAdapter.searchContent(
+      query,
+      options?.page
+    );
     const createdContent = await this.processContent(tmdbContent);
 
     // Note: We can also search in local database if needed
@@ -143,7 +159,15 @@ export abstract class BaseContentRepository<
   /**
    * Get total count
    */
-  async getCount(title?: string, country?: string, categories?: string[]): Promise<number> {
-    return await this.drizzleAdapter.getContentCount(title, country, categories);
+  async getCount(
+    title?: string,
+    country?: string,
+    categories?: string[]
+  ): Promise<number> {
+    return await this.drizzleAdapter.getContentCount(
+      title,
+      country,
+      categories
+    );
   }
 }

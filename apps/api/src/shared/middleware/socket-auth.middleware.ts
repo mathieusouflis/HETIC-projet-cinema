@@ -1,7 +1,7 @@
-import type { Socket } from "socket.io";
-import { JWTService } from "../services/token/JWTService.js";
-import type { AccessTokenPayload } from "../services/token/ITokenService.js";
 import { logger as log } from "@packages/logger";
+import type { Socket } from "socket.io";
+import type { AccessTokenPayload } from "../services/token/ITokenService.js";
+import { JWTService } from "../services/token/JWTService.js";
 
 declare module "socket.io" {
   interface Socket {
@@ -61,7 +61,7 @@ export const socketAuthMiddleware = (socket: Socket): void => {
   const token = extractSocketToken(socket);
 
   if (!token) {
-    log.warn(`WebSocket auth failed: No token provided`);
+    log.warn("WebSocket auth failed: No token provided");
     throw new Error("No authentication token provided");
   }
 
@@ -77,11 +77,11 @@ export const socketAuthMiddleware = (socket: Socket): void => {
   } catch (error) {
     if (error instanceof Error) {
       if (error.message === "Access token expired") {
-        log.warn(`WebSocket auth failed: Token expired`);
+        log.warn("WebSocket auth failed: Token expired");
         throw new Error("Token expired");
       }
       if (error.message === "Invalid access token") {
-        log.warn(`WebSocket auth failed: Invalid token`);
+        log.warn("WebSocket auth failed: Invalid token");
         throw new Error("Invalid token");
       }
     }
@@ -97,7 +97,7 @@ export const socketAuthMiddleware = (socket: Socket): void => {
  */
 export const socketAuthNamespaceMiddleware = (
   socket: Socket,
-  next: (err?: Error) => void,
+  next: (err?: Error) => void
 ): void => {
   try {
     socketAuthMiddleware(socket);

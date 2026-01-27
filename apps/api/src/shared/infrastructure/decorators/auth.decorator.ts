@@ -17,11 +17,11 @@ export interface MiddlewaresMetadata {
  * @param middlewares - One or more Express middleware functions
  */
 export function Middlewares(...middlewares: RequestHandler[]) {
-  return function (
+  return (
     target: object,
     propertyKey: string,
-    _descriptor?: PropertyDescriptor,
-  ): void {
+    _descriptor?: PropertyDescriptor
+  ): void => {
     const key = `${MIDDLEWARES_METADATA_KEY.toString()}_${propertyKey}`;
 
     const metadata: MiddlewaresMetadata = {
@@ -39,11 +39,11 @@ export function Middlewares(...middlewares: RequestHandler[]) {
  * It's equivalent to @Middlewares(authMiddleware) but more expressive.
  */
 export function Protected() {
-  return function (
+  return (
     target: object,
     propertyKey: string,
-    _descriptor?: PropertyDescriptor,
-  ): void {
+    _descriptor?: PropertyDescriptor
+  ): void => {
     const key = `${MIDDLEWARES_METADATA_KEY.toString()}_${propertyKey}`;
 
     const metadata: MiddlewaresMetadata = {
@@ -56,7 +56,7 @@ export function Protected() {
 
 export function getMiddlewaresMetadata(
   target: object,
-  methodName: string,
+  methodName: string
 ): MiddlewaresMetadata | undefined {
   const key = `${MIDDLEWARES_METADATA_KEY.toString()}_${methodName}`;
   return Reflect.getMetadata(key, target);

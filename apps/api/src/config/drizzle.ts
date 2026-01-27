@@ -12,7 +12,7 @@ export const drizzleConfig = defineConfig({
     host: databaseConfig.host,
     port:
       typeof databaseConfig.port === "string"
-        ? parseInt(databaseConfig.port, 10)
+        ? Number.parseInt(databaseConfig.port, 10)
         : databaseConfig.port,
     ssl: databaseConfig.ssl,
   },

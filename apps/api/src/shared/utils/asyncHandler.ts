@@ -1,9 +1,9 @@
-import type { Request, Response, NextFunction } from "express";
+import type { NextFunction, Request, Response } from "express";
 
 type AsyncRequestHandler = (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Required for controller routes response validation
 ) => Promise<any>;
 

@@ -25,1021 +25,12 @@
     "parameters": {}
   },
   "paths": {
-    "/users/{id}": {
-      "get": {
-        "operationId": "GET/users/{id}",
-        "summary": "Get user by ID",
-        "description": "Retrieve a user profile by their unique identifier",
-        "tags": [
-          "Users"
-        ],
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "format": "uuid"
-            },
-            "required": true,
-            "name": "id",
-            "in": "path"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "User retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "format": "uuid"
-                        },
-                        "username": {
-                          "type": "string"
-                        },
-                        "avatarUrl": {
-                          "type": "string",
-                          "nullable": true,
-                          "format": "uri"
-                        },
-                        "createdAt": {
-                          "anyOf": [
-                            {
-                              "type": "string",
-                              "nullable": true,
-                              "format": "date-time"
-                            },
-                            {
-                              "type": "string",
-                              "format": "date-time"
-                            },
-                            {
-                              "nullable": true
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "id",
-                        "username",
-                        "createdAt"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid user ID",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string"
-                    },
-                    "details": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "field": {
-                            "type": "string"
-                          },
-                          "message": {
-                            "type": "string"
-                          },
-                          "code": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "field",
-                          "message"
-                        ]
-                      }
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "error",
-                    "details"
-                  ]
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "User not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "operationId": "PATCH/users/{id}",
-        "summary": "Update user profile",
-        "description": "Update a user profile (admin only or own profile)",
-        "tags": [
-          "Users"
-        ],
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "format": "uuid"
-            },
-            "required": true,
-            "name": "id",
-            "in": "path"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "username": {
-                    "type": "string",
-                    "minLength": 3,
-                    "maxLength": 30,
-                    "pattern": "^[a-zA-Z0-9_-]+$"
-                  },
-                  "avatarUrl": {
-                    "type": "string",
-                    "nullable": true,
-                    "maxLength": 500,
-                    "format": "uri"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "User updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "format": "uuid"
-                        },
-                        "username": {
-                          "type": "string"
-                        },
-                        "avatarUrl": {
-                          "type": "string",
-                          "nullable": true,
-                          "format": "uri"
-                        },
-                        "createdAt": {
-                          "anyOf": [
-                            {
-                              "type": "string",
-                              "nullable": true,
-                              "format": "date-time"
-                            },
-                            {
-                              "type": "string",
-                              "format": "date-time"
-                            },
-                            {
-                              "nullable": true
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "id",
-                        "username",
-                        "createdAt"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string"
-                    },
-                    "details": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "field": {
-                            "type": "string"
-                          },
-                          "message": {
-                            "type": "string"
-                          },
-                          "code": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "field",
-                          "message"
-                        ]
-                      }
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "error",
-                    "details"
-                  ]
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not authenticated",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string",
-                      "default": "Not authenticated"
-                    }
-                  },
-                  "required": [
-                    "success"
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden - cannot update other users",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string",
-                      "default": "Forbidden - insufficient permissions"
-                    }
-                  },
-                  "required": [
-                    "success"
-                  ]
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "User not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "operationId": "DELETE/users/{id}",
-        "summary": "Delete user",
-        "description": "Delete a user account (admin only or own account)",
-        "tags": [
-          "Users"
-        ],
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "format": "uuid"
-            },
-            "required": true,
-            "name": "id",
-            "in": "path"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "User deleted successfully"
-          },
-          "400": {
-            "description": "Invalid user ID",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string"
-                    },
-                    "details": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "field": {
-                            "type": "string"
-                          },
-                          "message": {
-                            "type": "string"
-                          },
-                          "code": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "field",
-                          "message"
-                        ]
-                      }
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "error",
-                    "details"
-                  ]
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not authenticated",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string",
-                      "default": "Not authenticated"
-                    }
-                  },
-                  "required": [
-                    "success"
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden - cannot delete other users",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string",
-                      "default": "Forbidden - insufficient permissions"
-                    }
-                  },
-                  "required": [
-                    "success"
-                  ]
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "User not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/users/": {
-      "get": {
-        "operationId": "GET/users/",
-        "summary": "Get all users",
-        "description": "Retrieve a paginated list of all users",
-        "tags": [
-          "Users"
-        ],
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 1
-            },
-            "required": false,
-            "name": "page",
-            "in": "query"
-          },
-          {
-            "schema": {
-              "type": "integer",
-              "nullable": true,
-              "minimum": 0,
-              "default": 0
-            },
-            "required": false,
-            "name": "offset",
-            "in": "query"
-          },
-          {
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 25
-            },
-            "required": false,
-            "name": "limit",
-            "in": "query"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Users retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "users": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "string",
-                                "format": "uuid"
-                              },
-                              "username": {
-                                "type": "string"
-                              },
-                              "avatarUrl": {
-                                "type": "string",
-                                "nullable": true,
-                                "format": "uri"
-                              },
-                              "createdAt": {
-                                "anyOf": [
-                                  {
-                                    "type": "string",
-                                    "nullable": true,
-                                    "format": "date-time"
-                                  },
-                                  {
-                                    "type": "string",
-                                    "format": "date-time"
-                                  },
-                                  {
-                                    "nullable": true
-                                  }
-                                ]
-                              }
-                            },
-                            "required": [
-                              "id",
-                              "username",
-                              "createdAt"
-                            ]
-                          }
-                        },
-                        "pagination": {
-                          "type": "object",
-                          "properties": {
-                            "page": {
-                              "type": "integer",
-                              "minimum": 1,
-                              "default": 1
-                            },
-                            "total": {
-                              "type": "number",
-                              "minimum": 0
-                            },
-                            "totalPages": {
-                              "type": "number",
-                              "minimum": 0
-                            }
-                          },
-                          "required": [
-                            "total",
-                            "totalPages"
-                          ]
-                        }
-                      },
-                      "required": [
-                        "users",
-                        "pagination"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid pagination parameters",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string"
-                    },
-                    "details": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "field": {
-                            "type": "string"
-                          },
-                          "message": {
-                            "type": "string"
-                          },
-                          "code": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "field",
-                          "message"
-                        ]
-                      }
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "error",
-                    "details"
-                  ]
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not authenticated",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string",
-                      "default": "Not authenticated"
-                    }
-                  },
-                  "required": [
-                    "success"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/users/me": {
-      "get": {
-        "operationId": "GET/users/me",
-        "summary": "Get current user profile",
-        "description": "Retrieve the authenticated user own profile",
-        "tags": [
-          "Users"
-        ],
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "User profile retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "userId": {
-                          "type": "string",
-                          "minLength": 1,
-                          "format": "uuid"
-                        },
-                        "email": {
-                          "type": "string",
-                          "minLength": 1,
-                          "maxLength": 255,
-                          "format": "email"
-                        },
-                        "username": {
-                          "type": "string",
-                          "minLength": 3,
-                          "maxLength": 30,
-                          "pattern": "^[a-zA-Z0-9_-]+$"
-                        }
-                      },
-                      "required": [
-                        "userId",
-                        "email",
-                        "username"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not authenticated",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string",
-                      "default": "Not authenticated"
-                    }
-                  },
-                  "required": [
-                    "success"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "operationId": "PATCH/users/me",
-        "summary": "Update current user profile",
-        "description": "Update the authenticated user own profile",
-        "tags": [
-          "Users"
-        ],
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "username": {
-                    "type": "string",
-                    "minLength": 3,
-                    "maxLength": 30,
-                    "pattern": "^[a-zA-Z0-9_-]+$"
-                  },
-                  "avatarUrl": {
-                    "type": "string",
-                    "nullable": true,
-                    "maxLength": 500,
-                    "format": "uri"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "User profile updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "userId": {
-                          "type": "string",
-                          "minLength": 1,
-                          "format": "uuid"
-                        },
-                        "email": {
-                          "type": "string",
-                          "minLength": 1,
-                          "maxLength": 255,
-                          "format": "email"
-                        },
-                        "username": {
-                          "type": "string",
-                          "minLength": 3,
-                          "maxLength": 30,
-                          "pattern": "^[a-zA-Z0-9_-]+$"
-                        }
-                      },
-                      "required": [
-                        "userId",
-                        "email",
-                        "username"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string"
-                    },
-                    "details": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "field": {
-                            "type": "string"
-                          },
-                          "message": {
-                            "type": "string"
-                          },
-                          "code": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "field",
-                          "message"
-                        ]
-                      }
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "error",
-                    "details"
-                  ]
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not authenticated",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string",
-                      "default": "Not authenticated"
-                    }
-                  },
-                  "required": [
-                    "success"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/auth/register": {
       "post": {
         "operationId": "POST/auth/register",
         "summary": "Register a new user",
         "description": "Create a new user account with email, username, and password",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1065,11 +56,7 @@
                     "pattern": "[A-Z]"
                   }
                 },
-                "required": [
-                  "email",
-                  "username",
-                  "password"
-                ]
+                "required": ["email", "username", "password"]
               }
             }
           }
@@ -1092,9 +79,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -1131,27 +116,17 @@
                               ]
                             }
                           },
-                          "required": [
-                            "id",
-                            "username",
-                            "createdAt"
-                          ]
+                          "required": ["id", "username", "createdAt"]
                         },
                         "accessToken": {
                           "type": "string",
                           "description": "JWT access token for API authentication"
                         }
                       },
-                      "required": [
-                        "user",
-                        "accessToken"
-                      ]
+                      "required": ["user", "accessToken"]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -1173,9 +148,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
@@ -1195,18 +168,11 @@
                             "type": "string"
                           }
                         },
-                        "required": [
-                          "field",
-                          "message"
-                        ]
+                        "required": ["field", "message"]
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "error",
-                    "details"
-                  ]
+                  "required": ["success", "error", "details"]
                 }
               }
             }
@@ -1228,9 +194,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
@@ -1247,10 +211,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -1263,9 +224,7 @@
         "operationId": "POST/auth/login",
         "summary": "Login user",
         "description": "Authenticate user with email and password, receive access tokens",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1282,10 +241,7 @@
                     "type": "string"
                   }
                 },
-                "required": [
-                  "email",
-                  "password"
-                ]
+                "required": ["email", "password"]
               }
             }
           }
@@ -1308,9 +264,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -1347,27 +301,17 @@
                               ]
                             }
                           },
-                          "required": [
-                            "id",
-                            "username",
-                            "createdAt"
-                          ]
+                          "required": ["id", "username", "createdAt"]
                         },
                         "accessToken": {
                           "type": "string",
                           "description": "JWT access token for API authentication"
                         }
                       },
-                      "required": [
-                        "user",
-                        "accessToken"
-                      ]
+                      "required": ["user", "accessToken"]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -1389,9 +333,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
@@ -1411,18 +353,11 @@
                             "type": "string"
                           }
                         },
-                        "required": [
-                          "field",
-                          "message"
-                        ]
+                        "required": ["field", "message"]
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "error",
-                    "details"
-                  ]
+                  "required": ["success", "error", "details"]
                 }
               }
             }
@@ -1444,18 +379,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -1468,9 +399,7 @@
         "operationId": "POST/auth/refresh",
         "summary": "Refresh access token",
         "description": "Get new access and refresh tokens using a valid refresh token",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "parameters": [
           {
             "name": "cookie",
@@ -1500,9 +429,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -1539,27 +466,17 @@
                               ]
                             }
                           },
-                          "required": [
-                            "id",
-                            "username",
-                            "createdAt"
-                          ]
+                          "required": ["id", "username", "createdAt"]
                         },
                         "accessToken": {
                           "type": "string",
                           "description": "JWT access token for API authentication"
                         }
                       },
-                      "required": [
-                        "user",
-                        "accessToken"
-                      ]
+                      "required": ["user", "accessToken"]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -1581,18 +498,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -1605,9 +518,7 @@
         "operationId": "POST/auth/logout",
         "summary": "Logout user",
         "description": "Logout the current authenticated user (invalidate session)",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "security": [
           {
             "BearerAuth": []
@@ -1623,17 +534,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "message": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -1647,18 +554,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -1671,9 +574,7 @@
         "operationId": "GET/auth/me",
         "summary": "Get current user profile",
         "description": "Get the authenticated user information from JWT token",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "security": [
           {
             "BearerAuth": []
@@ -1689,9 +590,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -1708,16 +607,10 @@
                           "type": "string"
                         }
                       },
-                      "required": [
-                        "userId",
-                        "email"
-                      ]
+                      "required": ["userId", "email"]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -1731,18 +624,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -1754,9 +643,7 @@
       "get": {
         "operationId": "GET/contents/",
         "description": "List contents by type",
-        "tags": [
-          "Contents"
-        ],
+        "tags": ["Contents"],
         "parameters": [
           {
             "schema": {
@@ -1769,10 +656,7 @@
           {
             "schema": {
               "type": "string",
-              "enum": [
-                "movie",
-                "serie"
-              ]
+              "enum": ["movie", "serie"]
             },
             "required": false,
             "name": "contentType",
@@ -1856,9 +740,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "array",
@@ -1871,10 +753,7 @@
                           },
                           "type": {
                             "type": "string",
-                            "enum": [
-                              "movie",
-                              "serie"
-                            ]
+                            "enum": ["movie", "serie"]
                           },
                           "title": {
                             "type": "string"
@@ -1968,10 +847,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -1983,9 +859,7 @@
       "get": {
         "operationId": "GET/contents/{id}",
         "description": "Get content by id",
-        "tags": [
-          "Contents"
-        ],
+        "tags": ["Contents"],
         "parameters": [
           {
             "schema": {
@@ -2012,10 +886,7 @@
                     },
                     "type": {
                       "type": "string",
-                      "enum": [
-                        "movie",
-                        "serie"
-                      ]
+                      "enum": ["movie", "serie"]
                     },
                     "title": {
                       "type": "string"
@@ -2119,18 +990,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -2142,9 +1008,7 @@
       "get": {
         "operationId": "GET/movies/",
         "description": "List movies by type",
-        "tags": [
-          "Movies"
-        ],
+        "tags": ["Movies"],
         "parameters": [
           {
             "schema": {
@@ -2232,9 +1096,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "array",
@@ -2247,9 +1109,7 @@
                           },
                           "type": {
                             "type": "string",
-                            "enum": [
-                              "movie"
-                            ]
+                            "enum": ["movie"]
                           },
                           "title": {
                             "type": "string"
@@ -2343,10 +1203,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -2358,9 +1215,7 @@
       "get": {
         "operationId": "GET/movies/{id}",
         "description": "Get movie by id",
-        "tags": [
-          "Movies"
-        ],
+        "tags": ["Movies"],
         "parameters": [
           {
             "schema": {
@@ -2387,9 +1242,7 @@
                     },
                     "type": {
                       "type": "string",
-                      "enum": [
-                        "movie"
-                      ]
+                      "enum": ["movie"]
                     },
                     "title": {
                       "type": "string"
@@ -2493,18 +1346,734 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/peoples/": {
+      "get": {
+        "operationId": "GET/peoples/",
+        "description": "List people with optional filters and pagination",
+        "tags": ["Peoples"],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "nationality",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "name",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": false,
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "minimum": 0,
+              "default": 0
+            },
+            "required": false,
+            "name": "offset",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "People retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [true]
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "format": "uuid"
+                          },
+                          "name": {
+                            "type": "string",
+                            "minLength": 2,
+                            "maxLength": 100
+                          },
+                          "bio": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "photoUrl": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "uri"
+                          },
+                          "nationality": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "birthDate": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "date-time"
+                          },
+                          "tmdbId": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "bio",
+                          "photoUrl",
+                          "nationality",
+                          "birthDate",
+                          "tmdbId",
+                          "createdAt",
+                          "updatedAt"
+                        ]
+                      }
+                    }
+                  },
+                  "required": ["success", "data"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "POST/peoples/",
+        "description": "Create a new person",
+        "tags": ["Peoples"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "bio": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "photoUrl": {
+                    "type": "string",
+                    "nullable": true,
+                    "format": "uri"
+                  },
+                  "birthDate": {
+                    "type": "string",
+                    "nullable": true,
+                    "format": "date-time"
+                  },
+                  "nationality": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "tmdbId": {
+                    "type": "integer",
+                    "nullable": true,
+                    "minimum": 0,
+                    "exclusiveMinimum": true
+                  }
+                },
+                "required": ["name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Person created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [true]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 2,
+                          "maxLength": 100
+                        },
+                        "bio": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "photoUrl": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "uri"
+                        },
+                        "nationality": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "birthDate": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "date-time"
+                        },
+                        "tmdbId": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "bio",
+                        "photoUrl",
+                        "nationality",
+                        "birthDate",
+                        "tmdbId",
+                        "createdAt",
+                        "updatedAt"
+                      ]
+                    }
+                  },
+                  "required": ["success", "data"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/peoples/search": {
+      "get": {
+        "operationId": "GET/peoples/search",
+        "description": "Search people on TMDB and sync to database",
+        "tags": ["Peoples"],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "required": true,
+            "name": "query",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "exclusiveMinimum": true,
+              "default": 1
+            },
+            "required": false,
+            "name": "page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "People search completed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [true]
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "format": "uuid"
+                          },
+                          "name": {
+                            "type": "string",
+                            "minLength": 2,
+                            "maxLength": 100
+                          },
+                          "bio": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "photoUrl": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "uri"
+                          },
+                          "nationality": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "birthDate": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "date-time"
+                          },
+                          "tmdbId": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "bio",
+                          "photoUrl",
+                          "nationality",
+                          "birthDate",
+                          "tmdbId",
+                          "createdAt",
+                          "updatedAt"
+                        ]
+                      }
+                    }
+                  },
+                  "required": ["success", "data"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/peoples/{id}": {
+      "get": {
+        "operationId": "GET/peoples/{id}",
+        "description": "Get a person by ID",
+        "tags": ["Peoples"],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Person retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [true]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 2,
+                          "maxLength": 100
+                        },
+                        "bio": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "photoUrl": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "uri"
+                        },
+                        "nationality": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "birthDate": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "date-time"
+                        },
+                        "tmdbId": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "bio",
+                        "photoUrl",
+                        "nationality",
+                        "birthDate",
+                        "tmdbId",
+                        "createdAt",
+                        "updatedAt"
+                      ]
+                    }
+                  },
+                  "required": ["success", "data"]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Person not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [false]
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["success", "error"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "PATCH/peoples/{id}",
+        "description": "Update a person",
+        "tags": ["Peoples"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "bio": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "photoUrl": {
+                    "type": "string",
+                    "nullable": true,
+                    "format": "uri"
+                  },
+                  "birthDate": {
+                    "type": "string",
+                    "nullable": true,
+                    "format": "date-time"
+                  },
+                  "nationality": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "tmdbId": {
+                    "type": "integer",
+                    "nullable": true,
+                    "minimum": 0,
+                    "exclusiveMinimum": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Person updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [true]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 2,
+                          "maxLength": 100
+                        },
+                        "bio": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "photoUrl": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "uri"
+                        },
+                        "nationality": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "birthDate": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "date-time"
+                        },
+                        "tmdbId": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "bio",
+                        "photoUrl",
+                        "nationality",
+                        "birthDate",
+                        "tmdbId",
+                        "createdAt",
+                        "updatedAt"
+                      ]
+                    }
+                  },
+                  "required": ["success", "data"]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [false]
+                    },
+                    "error": {
+                      "type": "string",
+                      "default": "Not authenticated"
+                    }
+                  },
+                  "required": ["success"]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Person not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [false]
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["success", "error"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "DELETE/peoples/{id}",
+        "description": "Delete a person",
+        "tags": ["Peoples"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Person deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [false]
+                    },
+                    "error": {
+                      "type": "string",
+                      "default": "Not authenticated"
+                    }
+                  },
+                  "required": ["success"]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Person not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [false]
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -2516,9 +2085,7 @@
       "get": {
         "operationId": "GET/series/",
         "description": "List series by type",
-        "tags": [
-          "Series"
-        ],
+        "tags": ["Series"],
         "parameters": [
           {
             "schema": {
@@ -2606,9 +2173,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "array",
@@ -2621,9 +2186,7 @@
                           },
                           "type": {
                             "type": "string",
-                            "enum": [
-                              "serie"
-                            ]
+                            "enum": ["serie"]
                           },
                           "title": {
                             "type": "string"
@@ -2717,10 +2280,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -2732,9 +2292,7 @@
       "get": {
         "operationId": "GET/series/{id}",
         "description": "Get serie by id",
-        "tags": [
-          "Series"
-        ],
+        "tags": ["Series"],
         "parameters": [
           {
             "schema": {
@@ -2761,9 +2319,7 @@
                     },
                     "type": {
                       "type": "string",
-                      "enum": [
-                        "serie"
-                      ]
+                      "enum": ["serie"]
                     },
                     "title": {
                       "type": "string"
@@ -2867,18 +2423,869 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "operationId": "GET/users/{id}",
+        "summary": "Get user by ID",
+        "description": "Retrieve a user profile by their unique identifier",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [true]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "avatarUrl": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "uri"
+                        },
+                        "createdAt": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "nullable": true,
+                              "format": "date-time"
+                            },
+                            {
+                              "type": "string",
+                              "format": "date-time"
+                            },
+                            {
+                              "nullable": true
+                            }
+                          ]
+                        }
+                      },
+                      "required": ["id", "username", "createdAt"]
+                    }
+                  },
+                  "required": ["success", "data"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid user ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [false]
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        },
+                        "required": ["field", "message"]
+                      }
+                    }
+                  },
+                  "required": ["success", "error", "details"]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [false]
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["success", "error"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "PATCH/users/{id}",
+        "summary": "Update user profile",
+        "description": "Update a user profile (admin only or own profile)",
+        "tags": ["Users"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 30,
+                    "pattern": "^[a-zA-Z0-9_-]+$"
+                  },
+                  "avatarUrl": {
+                    "type": "string",
+                    "nullable": true,
+                    "maxLength": 500,
+                    "format": "uri"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [true]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "avatarUrl": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "uri"
+                        },
+                        "createdAt": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "nullable": true,
+                              "format": "date-time"
+                            },
+                            {
+                              "type": "string",
+                              "format": "date-time"
+                            },
+                            {
+                              "nullable": true
+                            }
+                          ]
+                        }
+                      },
+                      "required": ["id", "username", "createdAt"]
+                    }
+                  },
+                  "required": ["success", "data"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [false]
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        },
+                        "required": ["field", "message"]
+                      }
+                    }
+                  },
+                  "required": ["success", "error", "details"]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [false]
+                    },
+                    "error": {
+                      "type": "string",
+                      "default": "Not authenticated"
+                    }
+                  },
+                  "required": ["success"]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - cannot update other users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [false]
+                    },
+                    "error": {
+                      "type": "string",
+                      "default": "Forbidden - insufficient permissions"
+                    }
+                  },
+                  "required": ["success"]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [false]
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["success", "error"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "DELETE/users/{id}",
+        "summary": "Delete user",
+        "description": "Delete a user account (admin only or own account)",
+        "tags": ["Users"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User deleted successfully"
+          },
+          "400": {
+            "description": "Invalid user ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [false]
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        },
+                        "required": ["field", "message"]
+                      }
+                    }
+                  },
+                  "required": ["success", "error", "details"]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [false]
+                    },
+                    "error": {
+                      "type": "string",
+                      "default": "Not authenticated"
+                    }
+                  },
+                  "required": ["success"]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - cannot delete other users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [false]
+                    },
+                    "error": {
+                      "type": "string",
+                      "default": "Forbidden - insufficient permissions"
+                    }
+                  },
+                  "required": ["success"]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [false]
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["success", "error"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/": {
+      "get": {
+        "operationId": "GET/users/",
+        "summary": "Get all users",
+        "description": "Retrieve a paginated list of all users",
+        "tags": ["Users"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": false,
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "minimum": 0,
+              "default": 0
+            },
+            "required": false,
+            "name": "offset",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [true]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "users": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "username": {
+                                "type": "string"
+                              },
+                              "avatarUrl": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "uri"
+                              },
+                              "createdAt": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "nullable": true,
+                                    "format": "date-time"
+                                  },
+                                  {
+                                    "type": "string",
+                                    "format": "date-time"
+                                  },
+                                  {
+                                    "nullable": true
+                                  }
+                                ]
+                              }
+                            },
+                            "required": ["id", "username", "createdAt"]
+                          }
+                        },
+                        "pagination": {
+                          "type": "object",
+                          "properties": {
+                            "page": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "default": 1
+                            },
+                            "total": {
+                              "type": "number",
+                              "minimum": 0
+                            },
+                            "totalPages": {
+                              "type": "number",
+                              "minimum": 0
+                            }
+                          },
+                          "required": ["total", "totalPages"]
+                        }
+                      },
+                      "required": ["users", "pagination"]
+                    }
+                  },
+                  "required": ["success", "data"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid pagination parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [false]
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        },
+                        "required": ["field", "message"]
+                      }
+                    }
+                  },
+                  "required": ["success", "error", "details"]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [false]
+                    },
+                    "error": {
+                      "type": "string",
+                      "default": "Not authenticated"
+                    }
+                  },
+                  "required": ["success"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/me": {
+      "get": {
+        "operationId": "GET/users/me",
+        "summary": "Get current user profile",
+        "description": "Retrieve the authenticated user own profile",
+        "tags": ["Users"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User profile retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [true]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "userId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "email": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 255,
+                          "format": "email"
+                        },
+                        "username": {
+                          "type": "string",
+                          "minLength": 3,
+                          "maxLength": 30,
+                          "pattern": "^[a-zA-Z0-9_-]+$"
+                        }
+                      },
+                      "required": ["userId", "email", "username"]
+                    }
+                  },
+                  "required": ["success", "data"]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [false]
+                    },
+                    "error": {
+                      "type": "string",
+                      "default": "Not authenticated"
+                    }
+                  },
+                  "required": ["success"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "PATCH/users/me",
+        "summary": "Update current user profile",
+        "description": "Update the authenticated user own profile",
+        "tags": ["Users"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 30,
+                    "pattern": "^[a-zA-Z0-9_-]+$"
+                  },
+                  "avatarUrl": {
+                    "type": "string",
+                    "nullable": true,
+                    "maxLength": 500,
+                    "format": "uri"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [true]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "userId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "format": "uuid"
+                        },
+                        "email": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 255,
+                          "format": "email"
+                        },
+                        "username": {
+                          "type": "string",
+                          "minLength": 3,
+                          "maxLength": 30,
+                          "pattern": "^[a-zA-Z0-9_-]+$"
+                        }
+                      },
+                      "required": ["userId", "email", "username"]
+                    }
+                  },
+                  "required": ["success", "data"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [false]
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "field": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          }
+                        },
+                        "required": ["field", "message"]
+                      }
+                    }
+                  },
+                  "required": ["success", "error", "details"]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [false]
+                    },
+                    "error": {
+                      "type": "string",
+                      "default": "Not authenticated"
+                    }
+                  },
+                  "required": ["success"]
                 }
               }
             }
@@ -2890,9 +3297,7 @@
       "get": {
         "operationId": "GET/watchlist/",
         "description": "Query watchlist",
-        "tags": [
-          "Watchlist"
-        ],
+        "tags": ["Watchlist"],
         "security": [
           {
             "BearerAuth": []
@@ -2926,9 +3331,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "array",
@@ -3000,10 +3403,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -3013,9 +3413,7 @@
       "post": {
         "operationId": "POST/watchlist/",
         "description": "Add content to personal watchlist",
-        "tags": [
-          "Watchlist"
-        ],
+        "tags": ["Watchlist"],
         "security": [
           {
             "BearerAuth": []
@@ -3060,9 +3458,7 @@
                     "format": "date-time"
                   }
                 },
-                "required": [
-                  "contentId"
-                ]
+                "required": ["contentId"]
               }
             }
           }
@@ -3077,9 +3473,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -3148,10 +3542,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -3165,9 +3556,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
@@ -3187,18 +3576,11 @@
                             "type": "string"
                           }
                         },
-                        "required": [
-                          "field",
-                          "message"
-                        ]
+                        "required": ["field", "message"]
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "error",
-                    "details"
-                  ]
+                  "required": ["success", "error", "details"]
                 }
               }
             }
@@ -3212,18 +3594,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -3237,9 +3615,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
@@ -3256,10 +3632,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -3271,9 +3644,7 @@
       "get": {
         "operationId": "GET/watchlist/content/{id}",
         "description": "Get watchlist content by id",
-        "tags": [
-          "Watchlist"
-        ],
+        "tags": ["Watchlist"],
         "security": [
           {
             "BearerAuth": []
@@ -3301,9 +3672,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -3372,10 +3741,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -3389,18 +3755,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -3414,18 +3776,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -3435,9 +3792,7 @@
       "patch": {
         "operationId": "PATCH/watchlist/content/{id}",
         "description": "Update watchlist by content id",
-        "tags": [
-          "Watchlist"
-        ],
+        "tags": ["Watchlist"],
         "security": [
           {
             "BearerAuth": []
@@ -3489,9 +3844,7 @@
                     "format": "date-time"
                   }
                 },
-                "required": [
-                  "status"
-                ]
+                "required": ["status"]
               }
             }
           }
@@ -3506,9 +3859,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -3577,10 +3928,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -3594,18 +3942,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -3619,18 +3963,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -3640,9 +3979,7 @@
       "delete": {
         "operationId": "DELETE/watchlist/content/{id}",
         "description": "Delete watchlist by content id",
-        "tags": [
-          "Watchlist"
-        ],
+        "tags": ["Watchlist"],
         "security": [
           {
             "BearerAuth": []
@@ -3670,17 +4007,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "message": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -3694,18 +4027,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -3719,18 +4048,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -3742,9 +4066,7 @@
       "get": {
         "operationId": "GET/watchlist/{id}",
         "description": "Get watchlist by id",
-        "tags": [
-          "Watchlist"
-        ],
+        "tags": ["Watchlist"],
         "security": [
           {
             "BearerAuth": []
@@ -3772,9 +4094,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -3843,10 +4163,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -3860,18 +4177,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -3885,18 +4198,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -3906,9 +4214,7 @@
       "patch": {
         "operationId": "PATCH/watchlist/{id}",
         "description": "Update watchlist by id",
-        "tags": [
-          "Watchlist"
-        ],
+        "tags": ["Watchlist"],
         "security": [
           {
             "BearerAuth": []
@@ -3960,9 +4266,7 @@
                     "format": "date-time"
                   }
                 },
-                "required": [
-                  "status"
-                ]
+                "required": ["status"]
               }
             }
           }
@@ -3977,9 +4281,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -4048,10 +4350,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -4065,18 +4364,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -4090,18 +4385,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -4111,9 +4401,7 @@
       "delete": {
         "operationId": "DELETE/watchlist/{id}",
         "description": "Delete watchlist by id",
-        "tags": [
-          "Watchlist"
-        ],
+        "tags": ["Watchlist"],
         "security": [
           {
             "BearerAuth": []
@@ -4141,17 +4429,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "message": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -4165,18 +4449,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -4190,801 +4470,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/peoples/": {
-      "get": {
-        "operationId": "GET/peoples/",
-        "description": "List people with optional filters and pagination",
-        "tags": [
-          "Peoples"
-        ],
-        "parameters": [
-          {
-            "schema": {
-              "type": "string"
-            },
-            "required": false,
-            "name": "nationality",
-            "in": "query"
-          },
-          {
-            "schema": {
-              "type": "string"
-            },
-            "required": false,
-            "name": "name",
-            "in": "query"
-          },
-          {
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 1
-            },
-            "required": false,
-            "name": "page",
-            "in": "query"
-          },
-          {
-            "schema": {
-              "type": "integer",
-              "nullable": true,
-              "minimum": 0,
-              "default": 0
-            },
-            "required": false,
-            "name": "offset",
-            "in": "query"
-          },
-          {
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 25
-            },
-            "required": false,
-            "name": "limit",
-            "in": "query"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "People retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "minLength": 1,
-                            "format": "uuid"
-                          },
-                          "name": {
-                            "type": "string",
-                            "minLength": 2,
-                            "maxLength": 100
-                          },
-                          "bio": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "photoUrl": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "uri"
-                          },
-                          "nationality": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "birthDate": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "date-time"
-                          },
-                          "tmdbId": {
-                            "type": "integer",
-                            "nullable": true
-                          },
-                          "createdAt": {
-                            "type": "string",
-                            "format": "date-time"
-                          },
-                          "updatedAt": {
-                            "type": "string",
-                            "format": "date-time"
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "name",
-                          "bio",
-                          "photoUrl",
-                          "nationality",
-                          "birthDate",
-                          "tmdbId",
-                          "createdAt",
-                          "updatedAt"
-                        ]
-                      }
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "operationId": "POST/peoples/",
-        "description": "Create a new person",
-        "tags": [
-          "Peoples"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "bio": {
-                    "type": "string",
-                    "nullable": true
-                  },
-                  "photoUrl": {
-                    "type": "string",
-                    "nullable": true,
-                    "format": "uri"
-                  },
-                  "birthDate": {
-                    "type": "string",
-                    "nullable": true,
-                    "format": "date-time"
-                  },
-                  "nationality": {
-                    "type": "string",
-                    "nullable": true
-                  },
-                  "tmdbId": {
-                    "type": "integer",
-                    "nullable": true,
-                    "minimum": 0,
-                    "exclusiveMinimum": true
-                  }
-                },
-                "required": [
-                  "name"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Person created successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "minLength": 1,
-                          "format": "uuid"
-                        },
-                        "name": {
-                          "type": "string",
-                          "minLength": 2,
-                          "maxLength": 100
-                        },
-                        "bio": {
-                          "type": "string",
-                          "nullable": true
-                        },
-                        "photoUrl": {
-                          "type": "string",
-                          "nullable": true,
-                          "format": "uri"
-                        },
-                        "nationality": {
-                          "type": "string",
-                          "nullable": true
-                        },
-                        "birthDate": {
-                          "type": "string",
-                          "nullable": true,
-                          "format": "date-time"
-                        },
-                        "tmdbId": {
-                          "type": "integer",
-                          "nullable": true
-                        },
-                        "createdAt": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "updatedAt": {
-                          "type": "string",
-                          "format": "date-time"
-                        }
-                      },
-                      "required": [
-                        "id",
-                        "name",
-                        "bio",
-                        "photoUrl",
-                        "nationality",
-                        "birthDate",
-                        "tmdbId",
-                        "createdAt",
-                        "updatedAt"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/peoples/search": {
-      "get": {
-        "operationId": "GET/peoples/search",
-        "description": "Search people on TMDB and sync to database",
-        "tags": [
-          "Peoples"
-        ],
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "minLength": 1
-            },
-            "required": true,
-            "name": "query",
-            "in": "query"
-          },
-          {
-            "schema": {
-              "type": "integer",
-              "minimum": 0,
-              "exclusiveMinimum": true,
-              "default": 1
-            },
-            "required": false,
-            "name": "page",
-            "in": "query"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "People search completed successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "minLength": 1,
-                            "format": "uuid"
-                          },
-                          "name": {
-                            "type": "string",
-                            "minLength": 2,
-                            "maxLength": 100
-                          },
-                          "bio": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "photoUrl": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "uri"
-                          },
-                          "nationality": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "birthDate": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "date-time"
-                          },
-                          "tmdbId": {
-                            "type": "integer",
-                            "nullable": true
-                          },
-                          "createdAt": {
-                            "type": "string",
-                            "format": "date-time"
-                          },
-                          "updatedAt": {
-                            "type": "string",
-                            "format": "date-time"
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "name",
-                          "bio",
-                          "photoUrl",
-                          "nationality",
-                          "birthDate",
-                          "tmdbId",
-                          "createdAt",
-                          "updatedAt"
-                        ]
-                      }
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/peoples/{id}": {
-      "get": {
-        "operationId": "GET/peoples/{id}",
-        "description": "Get a person by ID",
-        "tags": [
-          "Peoples"
-        ],
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "format": "uuid"
-            },
-            "required": true,
-            "name": "id",
-            "in": "path"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Person retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "minLength": 1,
-                          "format": "uuid"
-                        },
-                        "name": {
-                          "type": "string",
-                          "minLength": 2,
-                          "maxLength": 100
-                        },
-                        "bio": {
-                          "type": "string",
-                          "nullable": true
-                        },
-                        "photoUrl": {
-                          "type": "string",
-                          "nullable": true,
-                          "format": "uri"
-                        },
-                        "nationality": {
-                          "type": "string",
-                          "nullable": true
-                        },
-                        "birthDate": {
-                          "type": "string",
-                          "nullable": true,
-                          "format": "date-time"
-                        },
-                        "tmdbId": {
-                          "type": "integer",
-                          "nullable": true
-                        },
-                        "createdAt": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "updatedAt": {
-                          "type": "string",
-                          "format": "date-time"
-                        }
-                      },
-                      "required": [
-                        "id",
-                        "name",
-                        "bio",
-                        "photoUrl",
-                        "nationality",
-                        "birthDate",
-                        "tmdbId",
-                        "createdAt",
-                        "updatedAt"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Person not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "operationId": "PATCH/peoples/{id}",
-        "description": "Update a person",
-        "tags": [
-          "Peoples"
-        ],
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "format": "uuid"
-            },
-            "required": true,
-            "name": "id",
-            "in": "path"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "bio": {
-                    "type": "string",
-                    "nullable": true
-                  },
-                  "photoUrl": {
-                    "type": "string",
-                    "nullable": true,
-                    "format": "uri"
-                  },
-                  "birthDate": {
-                    "type": "string",
-                    "nullable": true,
-                    "format": "date-time"
-                  },
-                  "nationality": {
-                    "type": "string",
-                    "nullable": true
-                  },
-                  "tmdbId": {
-                    "type": "integer",
-                    "nullable": true,
-                    "minimum": 0,
-                    "exclusiveMinimum": true
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Person updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "minLength": 1,
-                          "format": "uuid"
-                        },
-                        "name": {
-                          "type": "string",
-                          "minLength": 2,
-                          "maxLength": 100
-                        },
-                        "bio": {
-                          "type": "string",
-                          "nullable": true
-                        },
-                        "photoUrl": {
-                          "type": "string",
-                          "nullable": true,
-                          "format": "uri"
-                        },
-                        "nationality": {
-                          "type": "string",
-                          "nullable": true
-                        },
-                        "birthDate": {
-                          "type": "string",
-                          "nullable": true,
-                          "format": "date-time"
-                        },
-                        "tmdbId": {
-                          "type": "integer",
-                          "nullable": true
-                        },
-                        "createdAt": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "updatedAt": {
-                          "type": "string",
-                          "format": "date-time"
-                        }
-                      },
-                      "required": [
-                        "id",
-                        "name",
-                        "bio",
-                        "photoUrl",
-                        "nationality",
-                        "birthDate",
-                        "tmdbId",
-                        "createdAt",
-                        "updatedAt"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string",
-                      "default": "Not authenticated"
-                    }
-                  },
-                  "required": [
-                    "success"
-                  ]
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Person not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "operationId": "DELETE/peoples/{id}",
-        "description": "Delete a person",
-        "tags": [
-          "Peoples"
-        ],
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "format": "uuid"
-            },
-            "required": true,
-            "name": "id",
-            "in": "path"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Person deleted successfully"
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string",
-                      "default": "Not authenticated"
-                    }
-                  },
-                  "required": [
-                    "success"
-                  ]
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Person not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -4996,9 +4488,7 @@
       "get": {
         "operationId": "GET/watchparty/",
         "description": "Query watchparties",
-        "tags": [
-          "Watchparty"
-        ],
+        "tags": ["Watchparty"],
         "security": [
           {
             "BearerAuth": []
@@ -5008,12 +4498,7 @@
           {
             "schema": {
               "type": "string",
-              "enum": [
-                "scheduled",
-                "active",
-                "ended",
-                "cancelled"
-              ]
+              "enum": ["scheduled", "active", "ended", "cancelled"]
             },
             "required": false,
             "name": "status",
@@ -5049,9 +4534,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "array",
@@ -5186,10 +4669,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -5199,9 +4679,7 @@
       "post": {
         "operationId": "POST/watchparty/",
         "description": "Create a new watchparty",
-        "tags": [
-          "Watchparty"
-        ],
+        "tags": ["Watchparty"],
         "security": [
           {
             "BearerAuth": []
@@ -5261,12 +4739,7 @@
                   },
                   "status": {
                     "type": "string",
-                    "enum": [
-                      "scheduled",
-                      "active",
-                      "ended",
-                      "cancelled"
-                    ]
+                    "enum": ["scheduled", "active", "ended", "cancelled"]
                   }
                 },
                 "required": [
@@ -5290,9 +4763,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -5370,12 +4841,7 @@
                         },
                         "status": {
                           "type": "string",
-                          "enum": [
-                            "scheduled",
-                            "active",
-                            "ended",
-                            "cancelled"
-                          ]
+                          "enum": ["scheduled", "active", "ended", "cancelled"]
                         },
                         "currentPositionTimestamp": {
                           "type": "integer",
@@ -5424,10 +4890,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -5441,9 +4904,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
@@ -5463,18 +4924,11 @@
                             "type": "string"
                           }
                         },
-                        "required": [
-                          "field",
-                          "message"
-                        ]
+                        "required": ["field", "message"]
                       }
                     }
                   },
-                  "required": [
-                    "success",
-                    "error",
-                    "details"
-                  ]
+                  "required": ["success", "error", "details"]
                 }
               }
             }
@@ -5488,18 +4942,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -5513,18 +4963,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -5536,9 +4981,7 @@
       "get": {
         "operationId": "GET/watchparty/{id}",
         "description": "Get watchparty by id",
-        "tags": [
-          "Watchparty"
-        ],
+        "tags": ["Watchparty"],
         "security": [
           {
             "BearerAuth": []
@@ -5566,9 +5009,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -5646,12 +5087,7 @@
                         },
                         "status": {
                           "type": "string",
-                          "enum": [
-                            "scheduled",
-                            "active",
-                            "ended",
-                            "cancelled"
-                          ]
+                          "enum": ["scheduled", "active", "ended", "cancelled"]
                         },
                         "currentPositionTimestamp": {
                           "type": "integer",
@@ -5700,10 +5136,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -5717,18 +5150,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -5742,18 +5171,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -5763,9 +5187,7 @@
       "patch": {
         "operationId": "PATCH/watchparty/{id}",
         "description": "Update watchparty by id",
-        "tags": [
-          "Watchparty"
-        ],
+        "tags": ["Watchparty"],
         "security": [
           {
             "BearerAuth": []
@@ -5831,12 +5253,7 @@
                   },
                   "status": {
                     "type": "string",
-                    "enum": [
-                      "scheduled",
-                      "active",
-                      "ended",
-                      "cancelled"
-                    ]
+                    "enum": ["scheduled", "active", "ended", "cancelled"]
                   },
                   "currentPositionTimestamp": {
                     "type": "number",
@@ -5865,9 +5282,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "data": {
                       "type": "object",
@@ -5945,12 +5360,7 @@
                         },
                         "status": {
                           "type": "string",
-                          "enum": [
-                            "scheduled",
-                            "active",
-                            "ended",
-                            "cancelled"
-                          ]
+                          "enum": ["scheduled", "active", "ended", "cancelled"]
                         },
                         "currentPositionTimestamp": {
                           "type": "integer",
@@ -5999,10 +5409,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "data"
-                  ]
+                  "required": ["success", "data"]
                 }
               }
             }
@@ -6016,18 +5423,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -6041,18 +5444,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }
@@ -6062,9 +5460,7 @@
       "delete": {
         "operationId": "DELETE/watchparty/{id}",
         "description": "Delete watchparty by id",
-        "tags": [
-          "Watchparty"
-        ],
+        "tags": ["Watchparty"],
         "security": [
           {
             "BearerAuth": []
@@ -6092,17 +5488,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "enum": [true]
                     },
                     "message": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -6116,18 +5508,14 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "default": "Not authenticated"
                     }
                   },
-                  "required": [
-                    "success"
-                  ]
+                  "required": ["success"]
                 }
               }
             }
@@ -6141,18 +5529,13 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "error"
-                  ]
+                  "required": ["success", "error"]
                 }
               }
             }

@@ -1,7 +1,7 @@
 import { logger } from "@packages/logger";
 import { TmdbService } from "../../../../shared/services/tmdb";
-import { TMDBFetchStatusRepository } from "../../../contents/infrastructure/database/repositories/tmdb-fetch-status/tmdb-fetch-status.repository";
 import { MetadataNotFoundError } from "../../../contents/infrastructure/database/repositories/tmdb-fetch-status/errors/metadata-not-found";
+import { TMDBFetchStatusRepository } from "../../../contents/infrastructure/database/repositories/tmdb-fetch-status/tmdb-fetch-status.repository";
 
 type TMDBPerson = {
   adult: boolean;
@@ -53,7 +53,7 @@ type TMDBPersonDetails = {
 
 type SearchPeopleResult = {
   page: number;
-  results: Array<TMDBPerson>;
+  results: TMDBPerson[];
   total_pages: number;
   total_results: number;
 };
@@ -119,7 +119,10 @@ export class PeoplesTMDBRepository {
   async getPersonById(tmdbId: number): Promise<CreatePersonFromTMDB | null> {
     try {
       const endpoint = `person/${tmdbId}`;
-      const result = await this.tmdbService.request<TMDBPersonDetails>("GET", endpoint);
+      const result = await this.tmdbService.request<TMDBPersonDetails>(
+        "GET",
+        endpoint
+      );
       return this.parsePersonDetails(result);
     } catch (error) {
       logger.error(`Error fetching person by TMDB ID ${tmdbId}: ${error}`);
@@ -130,12 +133,16 @@ export class PeoplesTMDBRepository {
   /**
    * Search people on TMDB with cache tracking
    */
-  async searchPeople(query: string, page: number = 1): Promise<CreatePersonFromTMDB[]> {
+  async searchPeople(query: string, page = 1): Promise<CreatePersonFromTMDB[]> {
     try {
-      const result = await this.tmdbService.request<SearchPeopleResult>("GET", "search/person", {
-        query,
-        page: page.toString(),
-      });
+      const result = await this.tmdbService.request<SearchPeopleResult>(
+        "GET",
+        "search/person",
+        {
+          query,
+          page: page.toString(),
+        }
+      );
 
       // Save search metadata to cache
       await this.tmdbFetchStatusRepository.setSearchMetadata(query, { page });
@@ -154,7 +161,9 @@ export class PeoplesTMDBRepository {
     try {
       const peoplePromises = tmdbIds.map((id) => this.getPersonById(id));
       const people = await Promise.all(peoplePromises);
-      return people.filter((person): person is CreatePersonFromTMDB => person !== null);
+      return people.filter(
+        (person): person is CreatePersonFromTMDB => person !== null
+      );
     } catch (error) {
       logger.error(`Error fetching people by IDs: ${error}`);
       return [];
@@ -182,6 +191,4 @@ export class PeoplesTMDBRepository {
   async clearSearchCache(query: string): Promise<void> {
     await this.tmdbFetchStatusRepository.deleteSearchMetadata(query);
   }
-
-
 }

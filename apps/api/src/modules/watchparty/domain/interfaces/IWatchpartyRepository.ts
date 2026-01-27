@@ -1,4 +1,9 @@
-import { CreateWatchpartyProps, UpdateWatchpartyProps, Watchparty, WatchpartyStatus } from "../entities/watchparty.entity";
+import type {
+  CreateWatchpartyProps,
+  UpdateWatchpartyProps,
+  Watchparty,
+  WatchpartyStatus,
+} from "../entities/watchparty.entity";
 
 export interface IWatchpartyRepository {
   create(watchparty: CreateWatchpartyProps): Promise<Watchparty>;

@@ -1,5 +1,6 @@
-import type { Request, Response, NextFunction } from "express";
-import z, { ZodError } from "zod";
+import type { NextFunction, Request, Response } from "express";
+import type z from "zod";
+import { ZodError } from "zod";
 import { ValidationError } from "../errors/index.js";
 
 type ValidationTarget = "body" | "query" | "params";
@@ -9,7 +10,7 @@ type ZodSchema = z.ZodType;
 
 export const validateRequest = (
   schema: ZodSchema,
-  target: ValidationTarget = "body",
+  target: ValidationTarget = "body"
 ) => {
   return (req: Request, _res: Response, next: NextFunction): void => {
     try {
@@ -44,7 +45,7 @@ export const validateRequest = (
 };
 
 export const validateMultiple = (
-  schemas: Partial<Record<ValidationTarget, ZodSchema>>,
+  schemas: Partial<Record<ValidationTarget, ZodSchema>>
 ) => {
   return (req: Request, _res: Response, next: NextFunction): void => {
     const errors: { field: string; message: string; code: string }[] = [];
@@ -68,7 +69,7 @@ export const validateMultiple = (
         }
       } catch (error) {
         if (error instanceof ZodError) {
-          error.issues.forEach((err: ZodIssue) => {
+          for (const err of error.issues) {
             const fieldPath =
               err.path.length > 0 ? err.path.join(".") : "unknown";
             errors.push({
@@ -76,7 +77,7 @@ export const validateMultiple = (
               message: err.message,
               code: err.code,
             });
-          });
+          }
         } else {
           return next(error);
         }

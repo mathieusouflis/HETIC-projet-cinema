@@ -5,7 +5,7 @@ import { AppError } from "./AppError.js";
  * Returns HTTP 404 Not Found
  */
 export class NotFoundError extends AppError {
-  constructor(resource: string = "Resource") {
+  constructor(resource = "Resource") {
     super(`${resource} not found`, 404);
   }
 }

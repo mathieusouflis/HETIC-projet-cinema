@@ -1,8 +1,8 @@
 import "reflect-metadata";
 import {
-  WebSocketMetadataStorage,
-  type EventListenerMetadata,
   type EventEmitterMetadata,
+  type EventListenerMetadata,
+  WebSocketMetadataStorage,
 } from "../decorators/web-socket/websocket.metadata.js";
 
 export interface AsyncAPIv3Channel {
@@ -159,7 +159,7 @@ export class AsyncAPIGenerator {
     try {
       // Handle ws:// or wss:// URLs
       const match = url.match(/^(wss?):\/\/([^\/]+)(\/.*)?$/);
-      if (match && match[1] && match[2]) {
+      if (match?.[1] && match[2]) {
         return {
           protocol: match[1],
           host: match[2],
@@ -172,7 +172,7 @@ export class AsyncAPIGenerator {
         host: url.replace(/^(wss?:\/\/)?/, ""),
         pathname: undefined,
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         protocol: "ws",
         host: "localhost:5001",
@@ -190,14 +190,19 @@ export class AsyncAPIGenerator {
     const emits = WebSocketMetadataStorage.getEmits(controller);
 
     // Process subscribe events (client -> server, action: receive)
-    events.forEach((event) => {
-      this.processReceiveOperation(event, controller, namespacePath, namespace?.description);
-    });
+    for (const event of events) {
+      this.processReceiveOperation(
+        event,
+        controller,
+        namespacePath,
+        namespace?.description
+      );
+    }
 
     // Process publish events (server -> client, action: send)
-    emits.forEach((emit) => {
+    for (const emit of emits) {
       this.processSendOperation(emit, namespacePath, namespace?.description);
-    });
+    }
   }
 
   /**
@@ -208,7 +213,7 @@ export class AsyncAPIGenerator {
     event: EventListenerMetadata,
     controller: any,
     namespacePath: string,
-    namespaceDescription?: string,
+    namespaceDescription?: string
   ): void {
     const channelId = this.sanitizeId(`${namespacePath}_${event.eventName}`);
     const messageId = this.sanitizeId(`${event.eventName}_message`);
@@ -216,7 +221,7 @@ export class AsyncAPIGenerator {
 
     const validation = WebSocketMetadataStorage.getValidation(
       controller,
-      event.methodName,
+      event.methodName
     );
 
     const messagePayload = validation?.data
@@ -243,7 +248,9 @@ export class AsyncAPIGenerator {
     if (!channel.messages) {
       channel.messages = {};
     }
-    channel.messages[messageId] = { $ref: `#/components/messages/${messageId}` };
+    channel.messages[messageId] = {
+      $ref: `#/components/messages/${messageId}`,
+    };
 
     const operation: AsyncAPIv3Operation = {
       action: "receive",
@@ -255,12 +262,14 @@ export class AsyncAPIGenerator {
     // Add reply (acknowledgment) if specified
     if (event.acknowledgment && validation?.ack) {
       const ackMessageId = this.sanitizeId(`${event.eventName}_ack_message`);
-      const ackChannelId = this.sanitizeId(`${namespacePath}_${event.eventName}_ack`);
+      const ackChannelId = this.sanitizeId(
+        `${namespacePath}_${event.eventName}_ack`
+      );
 
       // Create acknowledgment message
       const ackPayload = this.zodToJsonSchema(
         validation.ack,
-        `${event.eventName}AckPayload`,
+        `${event.eventName}AckPayload`
       );
 
       const ackMessage: AsyncAPIv3Message = {
@@ -296,7 +305,7 @@ export class AsyncAPIGenerator {
   private processSendOperation(
     emit: EventEmitterMetadata,
     namespacePath: string,
-    namespaceDescription?: string,
+    namespaceDescription?: string
   ): void {
     const channelId = this.sanitizeId(`${namespacePath}_${emit.eventName}`);
     const messageId = this.sanitizeId(`${emit.eventName}_message`);
@@ -328,7 +337,9 @@ export class AsyncAPIGenerator {
     if (!channel.messages) {
       channel.messages = {};
     }
-    channel.messages[messageId] = { $ref: `#/components/messages/${messageId}` };
+    channel.messages[messageId] = {
+      $ref: `#/components/messages/${messageId}`,
+    };
 
     // Create operation (send to client)
     // In AsyncAPI v3, operations don't reference messages directly
@@ -360,7 +371,7 @@ export class AsyncAPIGenerator {
     } catch (error) {
       console.error(
         `Error converting Zod schema to JSON Schema for ${name}:`,
-        error,
+        error
       );
       return { type: "object" };
     }
@@ -382,12 +393,16 @@ export class AsyncAPIGenerator {
       case "ZodObject": {
         const properties: any = {};
         const required: string[] = [];
-        const shape = typeof def.shape === 'function' ? def.shape() : def.shape;
+        const shape = typeof def.shape === "function" ? def.shape() : def.shape;
 
         for (const [key, value] of Object.entries(shape || {})) {
           properties[key] = this.convertZodToJsonSchema(value);
           const valueDef = (value as any).def || (value as any)._def;
-          if (valueDef && valueDef.type !== "optional" && valueDef.typeName !== "ZodOptional") {
+          if (
+            valueDef &&
+            valueDef.type !== "optional" &&
+            valueDef.typeName !== "ZodOptional"
+          ) {
             required.push(key);
           }
         }
@@ -428,7 +443,8 @@ export class AsyncAPIGenerator {
                 result.format = checkDef.format;
               }
             } else if (checkType === "regex") {
-              result.pattern = checkDef.regex?.source || checkDef.pattern?.source;
+              result.pattern =
+                checkDef.regex?.source || checkDef.pattern?.source;
             }
           }
         }
@@ -514,7 +530,9 @@ export class AsyncAPIGenerator {
       case "ZodRecord": {
         return {
           type: "object",
-          additionalProperties: this.convertZodToJsonSchema(def.valueType || def.value),
+          additionalProperties: this.convertZodToJsonSchema(
+            def.valueType || def.value
+          ),
         };
       }
 
@@ -566,14 +584,14 @@ export class AsyncAPIGenerator {
         yaml += this.jsonToYAML(value, indent + 1);
       } else if (Array.isArray(value)) {
         yaml += `${spaces}${key}:\n`;
-        value.forEach((item) => {
+        for (const item of value) {
           if (typeof item === "object") {
             yaml += `${spaces}  -\n`;
             yaml += this.jsonToYAML(item, indent + 2);
           } else {
             yaml += `${spaces}  - ${item}\n`;
           }
-        });
+        }
       } else {
         const valueStr =
           typeof value === "string" ? `"${value}"` : String(value);

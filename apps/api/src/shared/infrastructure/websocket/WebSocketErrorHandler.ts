@@ -1,9 +1,14 @@
-import type { Socket } from "socket.io";
-import { logger } from "@packages/logger";
 import { config } from "@packages/config";
+import { logger } from "@packages/logger";
+import type { Socket } from "socket.io";
 
 import { ZodError } from "zod";
-import { WebSocketAuthError, WebSocketError, WebSocketInternalError, WebSocketValidationError } from "../../errors/websocket";
+import {
+  WebSocketAuthError,
+  WebSocketError,
+  WebSocketInternalError,
+  WebSocketValidationError,
+} from "../../errors/websocket";
 
 /**
  * Centralized WebSocket error handler
@@ -28,7 +33,7 @@ export class WebSocketErrorHandler {
     error: Error,
     socket: Socket,
     eventName?: string,
-    callback?: (response: any) => void,
+    callback?: (response: any) => void
   ): void {
     const wsError = this.normalizeError(error, eventName);
 
@@ -47,15 +52,11 @@ export class WebSocketErrorHandler {
    * Handle fatal error and disconnect socket
    * Used for authentication failures or critical errors
    */
-  public handleFatal(
-    error: Error,
-    socket: Socket,
-    eventName?: string,
-  ): void {
+  public handleFatal(error: Error, socket: Socket, eventName?: string): void {
     const wsError = this.normalizeError(error, eventName);
 
     logger.error(
-      `Fatal WebSocket error for socket ${socket.id} on event '${eventName || "connection"}': ${wsError.message}`,
+      `Fatal WebSocket error for socket ${socket.id} on event '${eventName || "connection"}': ${wsError.message}`
     );
 
     if (this.isDevelopment && wsError.stack) {
@@ -84,7 +85,7 @@ export class WebSocketErrorHandler {
       return new WebSocketValidationError(
         "Validation failed",
         details,
-        eventName,
+        eventName
       );
     }
 
@@ -98,7 +99,7 @@ export class WebSocketErrorHandler {
 
     return new WebSocketInternalError(
       this.isDevelopment ? error.message : "Internal server error",
-      eventName,
+      eventName
     );
   }
 
@@ -144,14 +145,18 @@ export class WebSocketErrorHandler {
   private logError(
     error: WebSocketError,
     socketId: string,
-    eventName?: string,
+    eventName?: string
   ): void {
     const context = `Socket ${socketId}${eventName ? ` on event '${eventName}'` : ""}`;
 
     if (error.isOperational) {
-      logger.warn(`WebSocket error [${error.code}] ${context}: ${error.message}`);
+      logger.warn(
+        `WebSocket error [${error.code}] ${context}: ${error.message}`
+      );
     } else {
-      logger.error(`WebSocket error [${error.code}] ${context}: ${error.message}`);
+      logger.error(
+        `WebSocket error [${error.code}] ${context}: ${error.message}`
+      );
     }
 
     if (this.isDevelopment && error.stack) {

@@ -1,8 +1,8 @@
+import { logger } from "@packages/logger";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
-import { getDatabaseUrl, connectionOptions } from "../config/database.js";
+import { connectionOptions, getDatabaseUrl } from "../config/database.js";
 import * as schema from "./schema.js";
-import { logger } from "@packages/logger";
 
 const pool = new Pool({
   connectionString: getDatabaseUrl(),

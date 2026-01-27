@@ -1,5 +1,5 @@
-import type { Socket } from "socket.io";
 import { logger } from "@packages/logger";
+import type { Socket } from "socket.io";
 import { WebSocketMiddlewareError } from "../../errors/websocket";
 
 /**
@@ -8,8 +8,8 @@ import { WebSocketMiddlewareError } from "../../errors/websocket";
  */
 export type WebSocketEventMiddleware = (
   socket: Socket,
-  data: any,
-) => Promise<boolean | void> | boolean | void;
+  data: any
+) => Promise<boolean | undefined> | boolean | undefined;
 
 /**
  * Service for running WebSocket middlewares
@@ -30,7 +30,7 @@ export class WebSocketMiddlewareRunner {
     middlewares: WebSocketEventMiddleware[],
     socket: Socket,
     data: any,
-    eventName: string,
+    eventName: string
   ): Promise<void> {
     if (!middlewares || middlewares.length === 0) {
       return;
@@ -43,7 +43,7 @@ export class WebSocketMiddlewareRunner {
         if (result === false) {
           throw new WebSocketMiddlewareError(
             "Middleware rejected the request",
-            eventName,
+            eventName
           );
         }
       } catch (error) {
@@ -53,14 +53,14 @@ export class WebSocketMiddlewareRunner {
 
         logger.error(
           `Middleware error for event '${eventName}':`,
-          error instanceof Error ? error.message : String(error),
+          error instanceof Error ? error.message : String(error)
         );
 
         throw new WebSocketMiddlewareError(
           error instanceof Error
             ? error.message
             : "Middleware execution failed",
-          eventName,
+          eventName
         );
       }
     }
@@ -79,4 +79,5 @@ export class WebSocketMiddlewareRunner {
   }
 }
 
-export const webSocketMiddlewareRunner = WebSocketMiddlewareRunner.getInstance();
+export const webSocketMiddlewareRunner =
+  WebSocketMiddlewareRunner.getInstance();

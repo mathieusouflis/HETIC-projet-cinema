@@ -1,13 +1,13 @@
-import { Router } from "express";
+import type { Router } from "express";
+import { RestModule } from "../../shared/infrastructure/base/modules/RestModule.js";
+import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-generator.js";
+import { UsersController } from "./application/controllers/users.controller.js";
+import { DeleteUserUseCase } from "./application/use-cases/DeleteUser.usecase.js";
+import { GetMeUseCase } from "./application/use-cases/GetMe.usecase.js";
 import { GetUserByIdUseCase } from "./application/use-cases/GetUserById.usecase.js";
 import { GetUsersUseCase } from "./application/use-cases/GetUsers.usecase.js";
 import { UpdateUserUseCase } from "./application/use-cases/UpdateUser.usecase.js";
-import { DeleteUserUseCase } from "./application/use-cases/DeleteUser.usecase.js";
-import { UsersController } from "./application/controllers/users.controller.js";
 import { UserRepository } from "./infrastructure/database/repositories/user.repository.js";
-import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-generator.js";
-import { GetMeUseCase } from "./application/use-cases/GetMe.usecase.js";
-import { RestModule } from "../../shared/infrastructure/base/modules/RestModule.js";
 
 class UsersModule extends RestModule {
   // ============================================
@@ -43,8 +43,8 @@ class UsersModule extends RestModule {
   constructor() {
     super({
       name: "Users Module",
-      description: "Module for managing users"
-    })
+      description: "Module for managing users",
+    });
     this.userRepository = new UserRepository();
 
     this.getUserByIdUseCase = new GetUserByIdUseCase(this.userRepository);

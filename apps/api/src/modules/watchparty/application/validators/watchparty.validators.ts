@@ -5,7 +5,7 @@ export const watchpartyStatusSchema = z.enum([
   "scheduled",
   "active",
   "ended",
-  "cancelled"
+  "cancelled",
 ]);
 
 export const watchpartySchema = z.object({

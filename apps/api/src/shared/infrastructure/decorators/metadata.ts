@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { z } from "zod";
+import type { z } from "zod";
 
 export const METADATA_KEYS = {
   CONTROLLER_TAG: Symbol("controller:tag"),
@@ -45,7 +45,7 @@ export class MetadataStorage {
   }
 
   static addRoute(target: object, route: RouteMetadata): void {
-    const routes = this.getRoutes(target);
+    const routes = MetadataStorage.getRoutes(target);
     routes.push(route);
     Reflect.defineMetadata(METADATA_KEYS.ROUTES, routes, target);
   }

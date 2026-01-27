@@ -1,8 +1,8 @@
-import { describe, it, expect } from "vitest";
-import { JWTService } from "./JWTService";
-import { AccessTokenPayload, RefreshTokenPayload } from "./ITokenService";
-import jwt from "jsonwebtoken";
 import { config } from "@packages/config";
+import jwt from "jsonwebtoken";
+import { describe, expect, it } from "vitest";
+import type { AccessTokenPayload, RefreshTokenPayload } from "./ITokenService";
+import { JWTService } from "./JWTService";
 
 describe("JWT service test", () => {
   const jwtService = new JWTService();
@@ -93,7 +93,7 @@ describe("JWT service test", () => {
     it("should generate a pair of tokens", () => {
       const token = jwtService.generateTokenPair(
         ACCESS_TOKEN_PAYLOAD.userId,
-        ACCESS_TOKEN_PAYLOAD.email,
+        ACCESS_TOKEN_PAYLOAD.email
       );
       expect(token.accessToken).toBeDefined();
       expect(token.refreshToken).toBeDefined();
@@ -104,7 +104,7 @@ describe("JWT service test", () => {
     it("should generate valid access and refresh tokens", () => {
       const { accessToken, refreshToken } = jwtService.generateTokenPair(
         ACCESS_TOKEN_PAYLOAD.userId,
-        ACCESS_TOKEN_PAYLOAD.email,
+        ACCESS_TOKEN_PAYLOAD.email
       );
 
       const accessDecoded = jwt.decode(accessToken) as AccessTokenPayload;
@@ -119,7 +119,7 @@ describe("JWT service test", () => {
     it("should include email only in access token", () => {
       const { accessToken, refreshToken } = jwtService.generateTokenPair(
         ACCESS_TOKEN_PAYLOAD.userId,
-        ACCESS_TOKEN_PAYLOAD.email,
+        ACCESS_TOKEN_PAYLOAD.email
       );
 
       const accessDecoded = jwt.decode(accessToken) as AccessTokenPayload;
@@ -132,7 +132,7 @@ describe("JWT service test", () => {
     it("should generate tokens with different expiration times", () => {
       const { accessToken, refreshToken } = jwtService.generateTokenPair(
         ACCESS_TOKEN_PAYLOAD.userId,
-        ACCESS_TOKEN_PAYLOAD.email,
+        ACCESS_TOKEN_PAYLOAD.email
       );
 
       const accessDecoded = jwt.decode(accessToken) as AccessTokenPayload & {
@@ -170,14 +170,14 @@ describe("JWT service test", () => {
     it("should throw error for token with invalid signature", () => {
       expect(() => {
         jwtService.verifyAccessToken(
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30"
         );
       }).toThrowError("Invalid access token");
     });
 
     it("should throw error when using refresh token for access verification", () => {
       const refreshToken = jwtService.generateRefreshToken(
-        REFRESH_TOKEN_PAYLOAD,
+        REFRESH_TOKEN_PAYLOAD
       );
       expect(() => {
         jwtService.verifyAccessToken(refreshToken);
@@ -187,8 +187,8 @@ describe("JWT service test", () => {
     it("should throw error for expired access token", () => {
       const expiredToken = jwt.sign(
         { userId: "1", email: "test@example.com", type: "access" },
-        config.env.JWT_SECRET + "_access",
-        { expiresIn: "0s" },
+        `${config.env.JWT_SECRET}_access`,
+        { expiresIn: "0s" }
       );
 
       setTimeout(() => {
@@ -213,8 +213,8 @@ describe("JWT service test", () => {
     it("should throw error for token with wrong type field", () => {
       const wrongTypeToken = jwt.sign(
         { userId: "1", email: "test@example.com", type: "wrong" },
-        config.env.JWT_SECRET + "_refresh",
-        { expiresIn: "15m" },
+        `${config.env.JWT_SECRET}_refresh`,
+        { expiresIn: "15m" }
       );
 
       expect(() => {
@@ -226,7 +226,7 @@ describe("JWT service test", () => {
   describe("verifyRefreshToken", () => {
     it("should verify a valid refresh token", () => {
       const refreshToken = jwtService.generateRefreshToken(
-        REFRESH_TOKEN_PAYLOAD,
+        REFRESH_TOKEN_PAYLOAD
       );
       const decoded = jwtService.verifyRefreshToken(refreshToken);
 
@@ -243,7 +243,7 @@ describe("JWT service test", () => {
     it("should throw error for token with invalid signature", () => {
       expect(() => {
         jwtService.verifyRefreshToken(
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30"
         );
       }).toThrowError("Invalid refresh token");
     });
@@ -281,8 +281,8 @@ describe("JWT service test", () => {
     it("should throw error for token with wrong type field", () => {
       const wrongTypeToken = jwt.sign(
         { userId: "1", type: "wrong" },
-        config.env.JWT_SECRET + "_refresh",
-        { expiresIn: "7d" },
+        `${config.env.JWT_SECRET}_refresh`,
+        { expiresIn: "7d" }
       );
 
       expect(() => {
@@ -295,22 +295,22 @@ describe("JWT service test", () => {
     it("should use different secrets for access and refresh tokens", () => {
       const { accessToken, refreshToken } = jwtService.generateTokenPair(
         "1",
-        "test@example.com",
+        "test@example.com"
       );
 
       expect(() => {
-        jwt.verify(accessToken, config.env.JWT_SECRET + "_refresh");
+        jwt.verify(accessToken, `${config.env.JWT_SECRET}_refresh`);
       }).toThrow();
 
       expect(() => {
-        jwt.verify(refreshToken, config.env.JWT_SECRET + "_access");
+        jwt.verify(refreshToken, `${config.env.JWT_SECRET}_access`);
       }).toThrow();
     });
 
     it("should not be able to swap token types", () => {
       const accessToken = jwtService.generateAccessToken(ACCESS_TOKEN_PAYLOAD);
       const refreshToken = jwtService.generateRefreshToken(
-        REFRESH_TOKEN_PAYLOAD,
+        REFRESH_TOKEN_PAYLOAD
       );
 
       expect(() => {
@@ -329,7 +329,7 @@ describe("JWT service test", () => {
           const token2 = jwtService.generateAccessToken(ACCESS_TOKEN_PAYLOAD);
           expect(token1).not.toBe(token2);
         },
-        1000 * 1000 * 1000,
+        1000 * 1000 * 1000
       );
     });
   });

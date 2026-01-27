@@ -1,4 +1,7 @@
-import { People, CreatePeopleProps } from "../../domain/entities/people.entity";
+import type {
+  CreatePeopleProps,
+  People,
+} from "../../domain/entities/people.entity";
 import type { IPeoplesRepository } from "../../domain/interfaces/IPeoplesRepository";
 
 export class CreatePeopleUseCase {

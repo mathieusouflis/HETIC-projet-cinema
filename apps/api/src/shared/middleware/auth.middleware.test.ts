@@ -1,13 +1,13 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import type { Request, Response, NextFunction } from "express";
+import type { NextFunction, Request, Response } from "express";
+import { beforeEach, describe, expect, it } from "vitest";
+import { UnauthorizedError } from "../errors/index.js";
+import { JWTService } from "../services/token/JWTService.js";
 import {
   authMiddleware,
   optionalAuthMiddleware,
-  requireRole,
   requireOwnership,
+  requireRole,
 } from "./auth.middleware.js";
-import { JWTService } from "../services/token/JWTService.js";
-import { UnauthorizedError } from "../errors/index.js";
 
 describe("authMiddleware", () => {
   let req: Partial<Request>;

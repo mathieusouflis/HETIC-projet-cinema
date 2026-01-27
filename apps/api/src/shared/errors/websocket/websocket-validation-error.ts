@@ -7,9 +7,9 @@ export class WebSocketValidationError extends WebSocketError {
   public readonly details?: Array<{ path: string[]; message: string }>;
 
   constructor(
-    message: string = "Validation failed",
+    message = "Validation failed",
     details?: Array<{ path: string[]; message: string }>,
-    event?: string,
+    event?: string
   ) {
     super(message, "WS_VALIDATION_ERROR", event);
     this.details = details;

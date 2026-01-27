@@ -1,5 +1,5 @@
 import { NotFoundError, UnauthorizedError } from "../../../../shared/errors";
-import { IWatchlistRepository } from "../../domain/interfaces/IWatchlistRepository";
+import type { IWatchlistRepository } from "../../domain/interfaces/IWatchlistRepository";
 
 export class DeleteWatchlistByIdUseCase {
   constructor(private readonly watchlistRepository: IWatchlistRepository) {}
@@ -12,11 +12,13 @@ export class DeleteWatchlistByIdUseCase {
     }
 
     if (watchlist.userId !== userId) {
-      throw new UnauthorizedError("You are not authorized to update this watchlist");
+      throw new UnauthorizedError(
+        "You are not authorized to update this watchlist"
+      );
     }
 
     const updatedWatchlist = await this.watchlistRepository.delete(id);
 
-    return updatedWatchlist
+    return updatedWatchlist;
   }
 }

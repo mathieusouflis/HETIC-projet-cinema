@@ -6,7 +6,7 @@ import { AppError } from "./AppError.js";
  */
 export class ServerError extends AppError {
   constructor(
-    message: string = "Server error occured, please contact the administrator.",
+    message = "Server error occured, please contact the administrator."
   ) {
     super(message);
   }

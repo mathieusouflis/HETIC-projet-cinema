@@ -1,8 +1,15 @@
 import z from "zod";
-import { WatchStatus } from "../../domain/entities/watchlist.entity";
 import { uuidSchema } from "../../../../shared/schemas/fields";
+import type { WatchStatus } from "../../domain/entities/watchlist.entity";
 
-export const watchlistStatusSchema = z.enum<WatchStatus[]>(["completed", "dropped", "not_interested", "plan_to_watch", "undecided", "watching"]);
+export const watchlistStatusSchema = z.enum<WatchStatus[]>([
+  "completed",
+  "dropped",
+  "not_interested",
+  "plan_to_watch",
+  "undecided",
+  "watching",
+]);
 
 export const watchlistSchema = z.object({
   id: uuidSchema,
