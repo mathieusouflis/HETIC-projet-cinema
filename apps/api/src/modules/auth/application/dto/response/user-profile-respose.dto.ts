@@ -1,7 +1,7 @@
 import type z from "zod";
-import { publicUserSchema } from "../../../../users/application/schema/user.schema";
+import { publicUserValidator } from "../../../../users/application/validators/user.validator";
 
-export const userProfileResponseValidator = publicUserSchema;
+export const userProfileResponseValidator = publicUserValidator;
 export type UserProfileResponseDTO = z.infer<
   typeof userProfileResponseValidator
 >;
