@@ -1,6 +1,6 @@
 import type z from "zod";
-import { publicUserSchema } from "../../schema/user.schema";
+import { publicUserValidator } from "../../validators/user.validator";
 
-export const patchIdResponseSchema = publicUserSchema;
+export const patchIdResponseSchema = publicUserValidator;
 
 export type PatchIdResponseDTO = z.infer<typeof patchIdResponseSchema>;

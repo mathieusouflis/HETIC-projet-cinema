@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const userSchema = z.object({
+export const userValidator = z.object({
   id: z.uuid(),
   email: z.email(),
   username: z.string().min(3).max(30),
@@ -8,31 +8,31 @@ export const userSchema = z.object({
   updatedAt: z.coerce.date().or(z.string().datetime()),
 });
 
-export const userWithProfileSchema = userSchema.extend({
+export const userWithProfileValidator = userValidator.extend({
   avatarUrl: z.string().url().nullable().optional(),
 });
 
-export const minimalUserSchema = z.object({
+export const minimalUserValidator = z.object({
   id: z.uuid(),
   username: z.string(),
   avatarUrl: z.url().nullable().optional(),
 });
 
-export const publicUserSchema = z.object({
+export const publicUserValidator = z.object({
   id: z.uuid(),
   username: z.string(),
   avatarUrl: z.string().url().nullable().optional(),
   createdAt: z.coerce.date().or(z.string().datetime()),
 });
 
-export const userProfileSchema = z.object({
+export const userProfileValidator = z.object({
   userId: z.uuid(),
   email: z.email(),
   username: z.string().optional(),
 });
 
-export type User = z.infer<typeof userSchema>;
-export type UserWithProfile = z.infer<typeof userWithProfileSchema>;
-export type MinimalUser = z.infer<typeof minimalUserSchema>;
-export type PublicUser = z.infer<typeof publicUserSchema>;
-export type UserProfile = z.infer<typeof userProfileSchema>;
+export type User = z.infer<typeof userValidator>;
+export type UserWithProfile = z.infer<typeof userWithProfileValidator>;
+export type MinimalUser = z.infer<typeof minimalUserValidator>;
+export type PublicUser = z.infer<typeof publicUserValidator>;
+export type UserProfile = z.infer<typeof userProfileValidator>;
