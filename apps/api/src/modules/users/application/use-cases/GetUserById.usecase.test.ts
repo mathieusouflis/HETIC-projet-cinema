@@ -1,5 +1,5 @@
 import { describe, it } from "vitest";
-import { createMockedUserRepository } from "../../domain/interfaces/user.repository.mock";
+import { createMockedUserRepository } from "../../domain/interfaces/user.repository.mock.";
 import { GetUserByIdUseCase } from "./GetUserById.usecase";
 
 describe("LoginUseCase", () => {

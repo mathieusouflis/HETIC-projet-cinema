@@ -1,4 +1,4 @@
-import type { User } from "../../../domain";
+import type { User } from "../../../domain/entities";
 import type { GetResponseDTO } from "../responses/get-response";
 import { toUserResponseDTO } from "./to-user-response";
 

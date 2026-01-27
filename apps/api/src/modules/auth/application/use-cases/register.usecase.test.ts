@@ -1,7 +1,7 @@
 import { describe, it } from "vitest";
 import { PasswordService } from "../../../../shared/services/password";
 import { JWTService } from "../../../../shared/services/token";
-import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock";
+import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock.";
 import { RegisterUseCase } from "./register.usecase";
 
 describe("LoginUseCase", () => {

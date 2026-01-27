@@ -1,6 +1,6 @@
 import { describe, it } from "vitest";
 import { JWTService } from "../../../../shared/services/token";
-import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock";
+import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock.";
 import { RefreshTokenUseCase } from "./refresh-token.usecase";
 
 describe("RefreshTokenUseCase", () => {
