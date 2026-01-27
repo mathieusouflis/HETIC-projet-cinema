@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   check,
   foreignKey,
@@ -59,6 +59,22 @@ export const friendshipsSchema = pgTable(
     unique("unique_friendship").on(table.userId, table.friendId),
     check("no_self_friend", sql`user_id <> friend_id`),
   ]
+);
+
+export const friendshipsRelationsSchema = relations(
+  friendshipsSchema,
+  ({ one }) => ({
+    user_userId: one(users, {
+      fields: [friendshipsSchema.userId],
+      references: [users.id],
+      relationName: "friendships_userId_users_id",
+    }),
+    user_friendId: one(users, {
+      fields: [friendshipsSchema.friendId],
+      references: [users.id],
+      relationName: "friendships_friendId_users_id",
+    }),
+  })
 );
 
 export type FriendshipRow = typeof friendshipsSchema.$inferSelect;
