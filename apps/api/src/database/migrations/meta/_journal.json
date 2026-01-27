@@ -43,6 +43,13 @@
       "when": 1769371902748,
       "tag": "0005_violet_energizer",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1769529385941,
+      "tag": "0006_remarkable_dragon_lord",
+      "breakpoints": true
     }
   ]
 }
