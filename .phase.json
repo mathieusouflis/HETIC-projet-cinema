@@ -4,5 +4,5 @@
   "appId": "50163caa-0898-41a4-ab67-44db8f87622b",
   "defaultEnv": "Development",
   "envId": "adda3644-c411-4971-bdc7-0398652166c2",
-  "monorepoSupport": false
+  "monorepoSupport": true
 }
