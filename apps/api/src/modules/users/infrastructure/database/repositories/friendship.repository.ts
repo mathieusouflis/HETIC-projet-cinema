@@ -69,11 +69,11 @@ export class FriendshipRepository implements IFriendshipsRepository {
       const followers = await db.query.friendships.findMany({
         where: eq(friendships.friendId, userId),
         with: {
-          user: true,
+          user_userId: true,
         },
       });
 
-      return followers.map((follower) => new User(follower.user));
+      return followers.map((follower) => new User(follower.user_userId));
     } catch (error) {
       throw new ServerError(`Failed to get followers: ${error}`);
     }
@@ -84,11 +84,11 @@ export class FriendshipRepository implements IFriendshipsRepository {
       const following = await db.query.friendships.findMany({
         where: eq(friendships.userId, userId),
         with: {
-          friend: true,
+          user_friendId: true,
         },
       });
 
-      return following.map((following) => new User(following.friend));
+      return following.map((following) => new User(following.user_friendId));
     } catch (error) {
       throw new ServerError(`Failed to get following: ${error}`);
     }
