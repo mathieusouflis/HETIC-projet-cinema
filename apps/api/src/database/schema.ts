@@ -22,7 +22,10 @@ import {
 import { contentSchema } from "../modules/contents/infrastructure/database/schemas/contents.schema";
 import { tmdbFetchStatusSchema } from "../modules/contents/infrastructure/database/schemas/tmdb-fetch-status.schema";
 import { peopleSchema } from "../modules/peoples/infrastructure/schemas/people.schema";
-import { friendshipsSchema } from "../modules/users/infrastructure/database/schemas/friendships.schema";
+import {
+  friendshipsSchema,
+  friendshipsStatusEnum,
+} from "../modules/users/infrastructure/database/schemas/friendships.schema";
 import { users as usersSchema } from "../modules/users/infrastructure/database/schemas/users.schema";
 import {
   watchlistStatusEnum as watchlistCustomEnumImported,
@@ -74,6 +77,7 @@ export const refreshTokens = pgTable(
   ]
 );
 
+export const friendsshipStatus = friendshipsStatusEnum;
 export const friendships = friendshipsSchema;
 
 export const content = contentSchema;

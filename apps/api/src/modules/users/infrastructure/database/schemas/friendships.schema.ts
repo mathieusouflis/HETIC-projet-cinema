@@ -3,13 +3,19 @@ import {
   check,
   foreignKey,
   index,
+  pgEnum,
   pgTable,
   timestamp,
   unique,
   uuid,
-  varchar,
 } from "drizzle-orm/pg-core";
 import { users } from "./users.schema";
+
+export const friendshipsStatusEnum = pgEnum("friendship_status", [
+  "pending",
+  "accepted",
+  "rejected",
+]);
 
 export const friendshipsSchema = pgTable(
   "friendships",
@@ -17,7 +23,7 @@ export const friendshipsSchema = pgTable(
     id: uuid().defaultRandom().primaryKey().notNull(),
     userId: uuid("user_id").notNull(),
     friendId: uuid("friend_id").notNull(),
-    status: varchar({ length: 20 }).default("pending").notNull(),
+    status: friendshipsStatusEnum("status").default("pending").notNull(),
     createdAt: timestamp("created_at", {
       withTimezone: true,
       mode: "string",
@@ -52,3 +58,6 @@ export const friendshipsSchema = pgTable(
     check("no_self_friend", sql`user_id <> friend_id`),
   ]
 );
+
+export type FriendshipRow = typeof friendshipsSchema.$inferSelect;
+export type NewFriendshipRow = typeof friendshipsSchema.$inferInsert;
