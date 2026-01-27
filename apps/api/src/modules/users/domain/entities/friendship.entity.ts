@@ -1,8 +1,8 @@
 import type {
   FriendshipRow,
   FriendshipStatus,
+  NewFriendshipRow,
 } from "../../infrastructure/database/schemas/friendships.schema.js";
-import type { NewUserRow } from "../../infrastructure/database/schemas/users.schema.js";
 
 export class Friendship {
   public readonly id: string;
@@ -54,8 +54,8 @@ export class Friendship {
   }
 }
 
-export type CreateUserProps = NewUserRow;
+export type CreateFriendshipProps = NewFriendshipRow;
 
-export type UpdateUserProps = Partial<
+export type UpdateFriendshipProps = Partial<
   Pick<FriendshipRow, "userId" | "friendId" | "status">
 >;
