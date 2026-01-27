@@ -8,6 +8,10 @@ import { GetUserByIdUseCase } from "./application/use-cases/GetUserById.usecase.
 import { GetUsersUseCase } from "./application/use-cases/GetUsers.usecase.js";
 import { UpdateUserUseCase } from "./application/use-cases/UpdateUser.usecase.js";
 import { CreateFriendshipUseCase } from "./application/use-cases/create-friendship.use-case.js";
+import { DeleteFriendshipUseCase } from "./application/use-cases/delete-friendship.use-case.js";
+import { GetMyFollowingUseCase } from "./application/use-cases/get-my-following.use-case.js";
+import { GetUserFollowersUseCase } from "./application/use-cases/get-user-followers.use-case.js";
+import { GetUserFollowingUseCase } from "./application/use-cases/get-user-following.use-case.js";
 import type { IFriendshipsRepository } from "./domain/interfaces/IFriendshipsRepository.js";
 import { FriendshipRepository } from "./infrastructure/database/repositories/friendship.repository.js";
 import { UserRepository } from "./infrastructure/database/repositories/user.repository.js";
@@ -37,6 +41,14 @@ class UsersModule extends RestModule {
 
   private readonly createFriendshipUseCase: CreateFriendshipUseCase;
 
+  private readonly deleteFriendshipUseCase: DeleteFriendshipUseCase;
+
+  private readonly getMyFollowingUseCase: GetMyFollowingUseCase;
+
+  private readonly getUserFollowersUseCase: GetUserFollowersUseCase;
+
+  private readonly getUserFollowingUseCase: GetUserFollowingUseCase;
+
   // ============================================
   // Presentation Layer (Controller & Router)
   // ============================================
@@ -64,6 +76,21 @@ class UsersModule extends RestModule {
       this.userRepository,
       this.friendshipRepository
     );
+    this.deleteFriendshipUseCase = new DeleteFriendshipUseCase(
+      this.userRepository,
+      this.friendshipRepository
+    );
+    this.getMyFollowingUseCase = new GetMyFollowingUseCase(
+      this.friendshipRepository
+    );
+    this.getUserFollowersUseCase = new GetUserFollowersUseCase(
+      this.userRepository,
+      this.friendshipRepository
+    );
+    this.getUserFollowingUseCase = new GetUserFollowingUseCase(
+      this.userRepository,
+      this.friendshipRepository
+    );
 
     this.controller = new UsersController(
       this.getUserByIdUseCase,
@@ -71,7 +98,11 @@ class UsersModule extends RestModule {
       this.updateUserUseCase,
       this.deleteUserUseCase,
       this.getMeUseCase,
-      this.createFriendshipUseCase
+      this.createFriendshipUseCase,
+      this.deleteFriendshipUseCase,
+      this.getMyFollowingUseCase,
+      this.getUserFollowersUseCase,
+      this.getUserFollowingUseCase
     );
 
     this.decoratorRouter = new DecoratorRouter();
