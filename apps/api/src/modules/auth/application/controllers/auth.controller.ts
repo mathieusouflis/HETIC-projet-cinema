@@ -26,8 +26,8 @@ import {
 import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
 import {
   type UserProfile,
-  userProfileSchema,
-} from "../../../users/application/schema/user.schema.js";
+  userProfileValidator,
+} from "../../../users/application/validators/user.validator.js";
 import { loginValidator } from "../dto/request/login.dto.js";
 import { registerValidator } from "../dto/request/register.dto.js";
 import { authResponseDataValidator } from "../dto/response/auth-response.dto.js";
@@ -202,7 +202,7 @@ export class AuthController extends BaseController {
   @ApiResponse(
     200,
     "User profile retrieved successfully",
-    createSuccessResponse(userProfileSchema)
+    createSuccessResponse(userProfileValidator)
   )
   @ApiResponse(
     401,
