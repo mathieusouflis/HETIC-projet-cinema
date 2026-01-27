@@ -6,6 +6,10 @@ export interface IFriendshipsRepository {
   create(userId: string, friendId: string): Promise<Friendship>;
   update(friendshipId: string, status: FriendshipStatus): Promise<Friendship>;
   delete(friendshipId: string): Promise<void>;
+  findByUserAndFriend(
+    userId: string,
+    friendId: string
+  ): Promise<Friendship | null>;
   getFollowers(userId: string): Promise<User[]>;
   getFollowing(userId: string): Promise<User[]>;
 }

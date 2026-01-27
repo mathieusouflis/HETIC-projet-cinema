@@ -3,3 +3,8 @@ export * from "./GetMe.usecase";
 export * from "./GetUserById.usecase";
 export * from "./GetUsers.usecase";
 export * from "./UpdateUser.usecase";
+export * from "./create-friendship.use-case";
+export * from "./delete-friendship.use-case";
+export * from "./get-user-followers.use-case";
+export * from "./get-user-following.use-case";
+export * from "./get-my-following.use-case";
