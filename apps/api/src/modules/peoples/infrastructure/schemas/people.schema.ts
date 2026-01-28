@@ -10,11 +10,7 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
-import {
-  contentCredits,
-  people,
-  peopleLikes,
-} from "../../../../database/schema";
+import { contentCredits, peopleLikes } from "../../../../database/schema";
 
 export const peopleSchema = pgTable(
   "people",
@@ -42,7 +38,7 @@ export const peopleSchema = pgTable(
   ]
 );
 
-export const peopleRelationSchema = relations(people, ({ many }) => ({
+export const peopleRelationSchema = relations(peopleSchema, ({ many }) => ({
   contentCredits: many(contentCredits),
   peopleLikes: many(peopleLikes),
 }));
