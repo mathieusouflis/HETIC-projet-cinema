@@ -5,12 +5,14 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
+import type { GETContentsSearchType } from './getcontents-search-type';
 
-export type GETPeoplesSearchParams = {
+export type GETContentsSearchParams = {
 /**
  * @minLength 1
  */
 query: string;
+type?: GETContentsSearchType;
 /**
  * @minimum 1
  */

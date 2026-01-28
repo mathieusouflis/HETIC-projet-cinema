@@ -5,9 +5,12 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { GETWatchlist200Data } from './getwatchlist200-data';
 
-export type GETWatchlist200 = {
-  success: boolean;
-  data: GETWatchlist200Data;
+export type GETPeoplesSearch200DataPagination = {
+  /** @exclusiveMinimum 0 */
+  page: number;
+  /** @minimum 0 */
+  total: number;
+  /** @minimum 0 */
+  totalPages: number;
 };

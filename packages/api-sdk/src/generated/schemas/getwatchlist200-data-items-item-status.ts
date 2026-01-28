@@ -6,10 +6,10 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GETWatchlist200DataItemStatus = typeof GETWatchlist200DataItemStatus[keyof typeof GETWatchlist200DataItemStatus];
+export type GETWatchlist200DataItemsItemStatus = typeof GETWatchlist200DataItemsItemStatus[keyof typeof GETWatchlist200DataItemsItemStatus];
 
 
-export const GETWatchlist200DataItemStatus = {
+export const GETWatchlist200DataItemsItemStatus = {
   completed: 'completed',
   dropped: 'dropped',
   not_interested: 'not_interested',
