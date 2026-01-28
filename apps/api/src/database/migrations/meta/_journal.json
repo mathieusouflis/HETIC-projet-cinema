@@ -50,6 +50,13 @@
       "when": 1769529385941,
       "tag": "0006_remarkable_dragon_lord",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1769623055970,
+      "tag": "0007_mysterious_mockingbird",
+      "breakpoints": true
     }
   ]
 }
