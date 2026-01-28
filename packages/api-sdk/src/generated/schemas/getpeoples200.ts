@@ -5,9 +5,9 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { GETPeoples200DataItem } from './getpeoples200-data-item';
+import type { GETPeoples200Data } from './getpeoples200-data';
 
 export type GETPeoples200 = {
   success: boolean;
-  data: GETPeoples200DataItem[];
+  data: GETPeoples200Data;
 };

@@ -19,6 +19,8 @@ import type {
   GETContents200,
   GETContentsId200,
   GETContentsParams,
+  GETContentsSearch200,
+  GETContentsSearchParams,
   GETMovies200,
   GETMoviesId200,
   GETMoviesParams,
@@ -137,13 +139,28 @@ export const gETAuthMe = <TData = AxiosResponse<GETAuthMe200>>(
   }
 
 /**
- * List contents by type
+ * List contents with pagination
+ * @summary Query contents
  */
 export const gETContents = <TData = AxiosResponse<GETContents200>>(
     params?: GETContentsParams, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
       `/contents/`,{
+    ...options,
+        params: {...params, ...options?.params},}
+    );
+  }
+
+/**
+ * Search contents with pagination
+ * @summary Search contents
+ */
+export const gETContentsSearch = <TData = AxiosResponse<GETContentsSearch200>>(
+    params: GETContentsSearchParams, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/contents/search`,{
     ...options,
         params: {...params, ...options?.params},}
     );
@@ -161,7 +178,8 @@ export const gETContentsId = <TData = AxiosResponse<GETContentsId200>>(
   }
 
 /**
- * List movies by type
+ * List movies with pagination
+ * @summary Query movies
  */
 export const gETMovies = <TData = AxiosResponse<GETMovies200>>(
     params?: GETMoviesParams, options?: AxiosRequestConfig
@@ -186,6 +204,7 @@ export const gETMoviesId = <TData = AxiosResponse<GETMoviesId200>>(
 
 /**
  * List people with optional filters and pagination
+ * @summary Query people with offset-based pagination
  */
 export const gETPeoples = <TData = AxiosResponse<GETPeoples200>>(
     params?: GETPeoplesParams, options?: AxiosRequestConfig
@@ -211,6 +230,7 @@ export const pOSTPeoples = <TData = AxiosResponse<POSTPeoples201>>(
 
 /**
  * Search people on TMDB and sync to database
+ * @summary Search people with pagination
  */
 export const gETPeoplesSearch = <TData = AxiosResponse<GETPeoplesSearch200>>(
     params: GETPeoplesSearchParams, options?: AxiosRequestConfig
@@ -258,7 +278,8 @@ export const dELETEPeoplesId = <TData = AxiosResponse<void>>(
   }
 
 /**
- * List series by type
+ * List series with pagination
+ * @summary Query series
  */
 export const gETSeries = <TData = AxiosResponse<GETSeries200>>(
     params?: GETSeriesParams, options?: AxiosRequestConfig
@@ -419,7 +440,8 @@ export const gETUsersIdFollowers = <TData = AxiosResponse<GETUsersIdFollowers200
   }
 
 /**
- * Query watchlist
+ * Query watchlist with pagination
+ * @summary List user's watchlist items
  */
 export const gETWatchlist = <TData = AxiosResponse<GETWatchlist200>>(
     params?: GETWatchlistParams, options?: AxiosRequestConfig
@@ -514,7 +536,8 @@ export const dELETEWatchlistId = <TData = AxiosResponse<DELETEWatchlistId204>>(
   }
 
 /**
- * Query watchparties
+ * Query watchparties with pagination
+ * @summary List watchparties
  */
 export const gETWatchparty = <TData = AxiosResponse<GETWatchparty200>>(
     params?: GETWatchpartyParams, options?: AxiosRequestConfig
@@ -579,6 +602,7 @@ export type POSTAuthRefreshResult = AxiosResponse<POSTAuthRefresh200>
 export type POSTAuthLogoutResult = AxiosResponse<POSTAuthLogout200>
 export type GETAuthMeResult = AxiosResponse<GETAuthMe200>
 export type GETContentsResult = AxiosResponse<GETContents200>
+export type GETContentsSearchResult = AxiosResponse<GETContentsSearch200>
 export type GETContentsIdResult = AxiosResponse<GETContentsId200>
 export type GETMoviesResult = AxiosResponse<GETMovies200>
 export type GETMoviesIdResult = AxiosResponse<GETMoviesId200>

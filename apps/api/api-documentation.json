@@ -746,7 +746,8 @@
     "/contents/": {
       "get": {
         "operationId": "GET/contents/",
-        "description": "List contents by type",
+        "summary": "Query contents",
+        "description": "List contents with pagination",
         "tags": [
           "Contents"
         ],
@@ -854,111 +855,360 @@
                       ]
                     },
                     "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "format": "uuid"
-                          },
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "movie",
-                              "serie"
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "movie",
+                                  "serie"
+                                ]
+                              },
+                              "title": {
+                                "type": "string"
+                              },
+                              "originalTitle": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "slug": {
+                                "type": "string"
+                              },
+                              "synopsis": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "posterUrl": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "uri"
+                              },
+                              "backdropUrl": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "uri"
+                              },
+                              "trailerUrl": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "uri"
+                              },
+                              "releaseDate": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "date-time"
+                              },
+                              "year": {
+                                "type": "integer",
+                                "nullable": true,
+                                "minimum": 1800
+                              },
+                              "durationMinutes": {
+                                "type": "integer",
+                                "nullable": true,
+                                "minimum": 0
+                              },
+                              "tmdbId": {
+                                "type": "integer",
+                                "nullable": true
+                              },
+                              "averageRating": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              },
+                              "totalRatings": {
+                                "type": "integer",
+                                "minimum": 0
+                              },
+                              "totalViews": {
+                                "type": "integer",
+                                "minimum": 0
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "type",
+                              "title",
+                              "originalTitle",
+                              "synopsis",
+                              "posterUrl",
+                              "backdropUrl",
+                              "trailerUrl",
+                              "releaseDate",
+                              "year",
+                              "durationMinutes",
+                              "tmdbId",
+                              "averageRating",
+                              "totalRatings",
+                              "totalViews",
+                              "createdAt",
+                              "updatedAt"
                             ]
-                          },
-                          "title": {
-                            "type": "string"
-                          },
-                          "originalTitle": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "slug": {
-                            "type": "string"
-                          },
-                          "synopsis": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "posterUrl": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "uri"
-                          },
-                          "backdropUrl": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "uri"
-                          },
-                          "trailerUrl": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "uri"
-                          },
-                          "releaseDate": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "date-time"
-                          },
-                          "year": {
-                            "type": "integer",
-                            "nullable": true,
-                            "minimum": 1800
-                          },
-                          "durationMinutes": {
-                            "type": "integer",
-                            "nullable": true,
-                            "minimum": 0
-                          },
-                          "tmdbId": {
-                            "type": "integer",
-                            "nullable": true
-                          },
-                          "averageRating": {
-                            "type": "number",
-                            "minimum": 0,
-                            "maximum": 10
-                          },
-                          "totalRatings": {
-                            "type": "integer",
-                            "minimum": 0
-                          },
-                          "totalViews": {
-                            "type": "integer",
-                            "minimum": 0
-                          },
-                          "createdAt": {
-                            "type": "string",
-                            "format": "date-time"
-                          },
-                          "updatedAt": {
-                            "type": "string",
-                            "format": "date-time"
                           }
                         },
-                        "required": [
-                          "id",
-                          "type",
-                          "title",
-                          "originalTitle",
-                          "synopsis",
-                          "posterUrl",
-                          "backdropUrl",
-                          "trailerUrl",
-                          "releaseDate",
-                          "year",
-                          "durationMinutes",
-                          "tmdbId",
-                          "averageRating",
-                          "totalRatings",
-                          "totalViews",
-                          "createdAt",
-                          "updatedAt"
-                        ]
-                      }
+                        "pagination": {
+                          "type": "object",
+                          "properties": {
+                            "page": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "exclusiveMinimum": true
+                            },
+                            "total": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "totalPages": {
+                              "type": "integer",
+                              "minimum": 0
+                            }
+                          },
+                          "required": [
+                            "page",
+                            "total",
+                            "totalPages"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "items",
+                        "pagination"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/contents/search": {
+      "get": {
+        "operationId": "GET/contents/search",
+        "summary": "Search contents",
+        "description": "Search contents with pagination",
+        "tags": [
+          "Contents"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "required": true,
+            "name": "query",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "movie",
+                "serie"
+              ]
+            },
+            "required": false,
+            "name": "type",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": false,
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contents search completed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "movie",
+                                  "serie"
+                                ]
+                              },
+                              "title": {
+                                "type": "string"
+                              },
+                              "originalTitle": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "slug": {
+                                "type": "string"
+                              },
+                              "synopsis": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "posterUrl": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "uri"
+                              },
+                              "backdropUrl": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "uri"
+                              },
+                              "trailerUrl": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "uri"
+                              },
+                              "releaseDate": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "date-time"
+                              },
+                              "year": {
+                                "type": "integer",
+                                "nullable": true,
+                                "minimum": 1800
+                              },
+                              "durationMinutes": {
+                                "type": "integer",
+                                "nullable": true,
+                                "minimum": 0
+                              },
+                              "tmdbId": {
+                                "type": "integer",
+                                "nullable": true
+                              },
+                              "averageRating": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              },
+                              "totalRatings": {
+                                "type": "integer",
+                                "minimum": 0
+                              },
+                              "totalViews": {
+                                "type": "integer",
+                                "minimum": 0
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "type",
+                              "title",
+                              "originalTitle",
+                              "synopsis",
+                              "posterUrl",
+                              "backdropUrl",
+                              "trailerUrl",
+                              "releaseDate",
+                              "year",
+                              "durationMinutes",
+                              "tmdbId",
+                              "averageRating",
+                              "totalRatings",
+                              "totalViews",
+                              "createdAt",
+                              "updatedAt"
+                            ]
+                          }
+                        },
+                        "pagination": {
+                          "type": "object",
+                          "properties": {
+                            "page": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "exclusiveMinimum": true
+                            },
+                            "total": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "totalPages": {
+                              "type": "integer",
+                              "minimum": 0
+                            }
+                          },
+                          "required": [
+                            "page",
+                            "total",
+                            "totalPages"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "items",
+                        "pagination"
+                      ]
                     }
                   },
                   "required": [
@@ -1134,7 +1384,8 @@
     "/movies/": {
       "get": {
         "operationId": "GET/movies/",
-        "description": "List movies by type",
+        "summary": "Query movies",
+        "description": "List movies with pagination",
         "tags": [
           "Movies"
         ],
@@ -1230,110 +1481,142 @@
                       ]
                     },
                     "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "format": "uuid"
-                          },
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "movie"
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "movie"
+                                ]
+                              },
+                              "title": {
+                                "type": "string"
+                              },
+                              "originalTitle": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "slug": {
+                                "type": "string"
+                              },
+                              "synopsis": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "posterUrl": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "uri"
+                              },
+                              "backdropUrl": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "uri"
+                              },
+                              "trailerUrl": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "uri"
+                              },
+                              "releaseDate": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "date-time"
+                              },
+                              "year": {
+                                "type": "integer",
+                                "nullable": true,
+                                "minimum": 1800
+                              },
+                              "durationMinutes": {
+                                "type": "integer",
+                                "nullable": true,
+                                "minimum": 0
+                              },
+                              "tmdbId": {
+                                "type": "integer",
+                                "nullable": true
+                              },
+                              "averageRating": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              },
+                              "totalRatings": {
+                                "type": "integer",
+                                "minimum": 0
+                              },
+                              "totalViews": {
+                                "type": "integer",
+                                "minimum": 0
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "type",
+                              "title",
+                              "originalTitle",
+                              "synopsis",
+                              "posterUrl",
+                              "backdropUrl",
+                              "trailerUrl",
+                              "releaseDate",
+                              "year",
+                              "durationMinutes",
+                              "tmdbId",
+                              "averageRating",
+                              "totalRatings",
+                              "totalViews",
+                              "createdAt",
+                              "updatedAt"
                             ]
-                          },
-                          "title": {
-                            "type": "string"
-                          },
-                          "originalTitle": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "slug": {
-                            "type": "string"
-                          },
-                          "synopsis": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "posterUrl": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "uri"
-                          },
-                          "backdropUrl": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "uri"
-                          },
-                          "trailerUrl": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "uri"
-                          },
-                          "releaseDate": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "date-time"
-                          },
-                          "year": {
-                            "type": "integer",
-                            "nullable": true,
-                            "minimum": 1800
-                          },
-                          "durationMinutes": {
-                            "type": "integer",
-                            "nullable": true,
-                            "minimum": 0
-                          },
-                          "tmdbId": {
-                            "type": "integer",
-                            "nullable": true
-                          },
-                          "averageRating": {
-                            "type": "number",
-                            "minimum": 0,
-                            "maximum": 10
-                          },
-                          "totalRatings": {
-                            "type": "integer",
-                            "minimum": 0
-                          },
-                          "totalViews": {
-                            "type": "integer",
-                            "minimum": 0
-                          },
-                          "createdAt": {
-                            "type": "string",
-                            "format": "date-time"
-                          },
-                          "updatedAt": {
-                            "type": "string",
-                            "format": "date-time"
                           }
                         },
-                        "required": [
-                          "id",
-                          "type",
-                          "title",
-                          "originalTitle",
-                          "synopsis",
-                          "posterUrl",
-                          "backdropUrl",
-                          "trailerUrl",
-                          "releaseDate",
-                          "year",
-                          "durationMinutes",
-                          "tmdbId",
-                          "averageRating",
-                          "totalRatings",
-                          "totalViews",
-                          "createdAt",
-                          "updatedAt"
-                        ]
-                      }
+                        "pagination": {
+                          "type": "object",
+                          "properties": {
+                            "page": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "exclusiveMinimum": true
+                            },
+                            "total": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "totalPages": {
+                              "type": "integer",
+                              "minimum": 0
+                            }
+                          },
+                          "required": [
+                            "page",
+                            "total",
+                            "totalPages"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "items",
+                        "pagination"
+                      ]
                     }
                   },
                   "required": [
@@ -1508,6 +1791,7 @@
     "/peoples/": {
       "get": {
         "operationId": "GET/peoples/",
+        "summary": "Query people with offset-based pagination",
         "description": "List people with optional filters and pagination",
         "tags": [
           "Peoples"
@@ -1577,63 +1861,99 @@
                       ]
                     },
                     "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "minLength": 1,
-                            "format": "uuid"
-                          },
-                          "name": {
-                            "type": "string",
-                            "minLength": 2,
-                            "maxLength": 100
-                          },
-                          "bio": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "photoUrl": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "uri"
-                          },
-                          "nationality": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "birthDate": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "date-time"
-                          },
-                          "tmdbId": {
-                            "type": "integer",
-                            "nullable": true
-                          },
-                          "createdAt": {
-                            "type": "string",
-                            "format": "date-time"
-                          },
-                          "updatedAt": {
-                            "type": "string",
-                            "format": "date-time"
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "name": {
+                                "type": "string",
+                                "minLength": 2,
+                                "maxLength": 100
+                              },
+                              "bio": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "photoUrl": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "uri"
+                              },
+                              "nationality": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "birthDate": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "date-time"
+                              },
+                              "tmdbId": {
+                                "type": "integer",
+                                "nullable": true
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name",
+                              "bio",
+                              "photoUrl",
+                              "nationality",
+                              "birthDate",
+                              "tmdbId",
+                              "createdAt",
+                              "updatedAt"
+                            ]
                           }
                         },
-                        "required": [
-                          "id",
-                          "name",
-                          "bio",
-                          "photoUrl",
-                          "nationality",
-                          "birthDate",
-                          "tmdbId",
-                          "createdAt",
-                          "updatedAt"
-                        ]
-                      }
+                        "pagination": {
+                          "type": "object",
+                          "properties": {
+                            "offset": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "limit": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "exclusiveMinimum": true
+                            },
+                            "total": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "hasMore": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "offset",
+                            "limit",
+                            "total",
+                            "hasMore"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "items",
+                        "pagination"
+                      ]
                     }
                   },
                   "required": [
@@ -1779,6 +2099,7 @@
     "/peoples/search": {
       "get": {
         "operationId": "GET/peoples/search",
+        "summary": "Search people with pagination",
         "description": "Search people on TMDB and sync to database",
         "tags": [
           "Peoples"
@@ -1796,12 +2117,22 @@
           {
             "schema": {
               "type": "integer",
-              "minimum": 0,
-              "exclusiveMinimum": true,
+              "minimum": 1,
               "default": 1
             },
             "required": false,
             "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            },
+            "required": false,
+            "name": "limit",
             "in": "query"
           }
         ],
@@ -1820,63 +2151,95 @@
                       ]
                     },
                     "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "minLength": 1,
-                            "format": "uuid"
-                          },
-                          "name": {
-                            "type": "string",
-                            "minLength": 2,
-                            "maxLength": 100
-                          },
-                          "bio": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "photoUrl": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "uri"
-                          },
-                          "nationality": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "birthDate": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "date-time"
-                          },
-                          "tmdbId": {
-                            "type": "integer",
-                            "nullable": true
-                          },
-                          "createdAt": {
-                            "type": "string",
-                            "format": "date-time"
-                          },
-                          "updatedAt": {
-                            "type": "string",
-                            "format": "date-time"
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "name": {
+                                "type": "string",
+                                "minLength": 2,
+                                "maxLength": 100
+                              },
+                              "bio": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "photoUrl": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "uri"
+                              },
+                              "nationality": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "birthDate": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "date-time"
+                              },
+                              "tmdbId": {
+                                "type": "integer",
+                                "nullable": true
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name",
+                              "bio",
+                              "photoUrl",
+                              "nationality",
+                              "birthDate",
+                              "tmdbId",
+                              "createdAt",
+                              "updatedAt"
+                            ]
                           }
                         },
-                        "required": [
-                          "id",
-                          "name",
-                          "bio",
-                          "photoUrl",
-                          "nationality",
-                          "birthDate",
-                          "tmdbId",
-                          "createdAt",
-                          "updatedAt"
-                        ]
-                      }
+                        "pagination": {
+                          "type": "object",
+                          "properties": {
+                            "page": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "exclusiveMinimum": true
+                            },
+                            "total": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "totalPages": {
+                              "type": "integer",
+                              "minimum": 0
+                            }
+                          },
+                          "required": [
+                            "page",
+                            "total",
+                            "totalPages"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "items",
+                        "pagination"
+                      ]
                     }
                   },
                   "required": [
@@ -2291,7 +2654,8 @@
     "/series/": {
       "get": {
         "operationId": "GET/series/",
-        "description": "List series by type",
+        "summary": "Query series",
+        "description": "List series with pagination",
         "tags": [
           "Series"
         ],
@@ -2387,110 +2751,142 @@
                       ]
                     },
                     "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "format": "uuid"
-                          },
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "serie"
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "serie"
+                                ]
+                              },
+                              "title": {
+                                "type": "string"
+                              },
+                              "originalTitle": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "slug": {
+                                "type": "string"
+                              },
+                              "synopsis": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "posterUrl": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "uri"
+                              },
+                              "backdropUrl": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "uri"
+                              },
+                              "trailerUrl": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "uri"
+                              },
+                              "releaseDate": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "date-time"
+                              },
+                              "year": {
+                                "type": "integer",
+                                "nullable": true,
+                                "minimum": 1800
+                              },
+                              "durationMinutes": {
+                                "type": "integer",
+                                "nullable": true,
+                                "minimum": 0
+                              },
+                              "tmdbId": {
+                                "type": "integer",
+                                "nullable": true
+                              },
+                              "averageRating": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              },
+                              "totalRatings": {
+                                "type": "integer",
+                                "minimum": 0
+                              },
+                              "totalViews": {
+                                "type": "integer",
+                                "minimum": 0
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "type",
+                              "title",
+                              "originalTitle",
+                              "synopsis",
+                              "posterUrl",
+                              "backdropUrl",
+                              "trailerUrl",
+                              "releaseDate",
+                              "year",
+                              "durationMinutes",
+                              "tmdbId",
+                              "averageRating",
+                              "totalRatings",
+                              "totalViews",
+                              "createdAt",
+                              "updatedAt"
                             ]
-                          },
-                          "title": {
-                            "type": "string"
-                          },
-                          "originalTitle": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "slug": {
-                            "type": "string"
-                          },
-                          "synopsis": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "posterUrl": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "uri"
-                          },
-                          "backdropUrl": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "uri"
-                          },
-                          "trailerUrl": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "uri"
-                          },
-                          "releaseDate": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "date-time"
-                          },
-                          "year": {
-                            "type": "integer",
-                            "nullable": true,
-                            "minimum": 1800
-                          },
-                          "durationMinutes": {
-                            "type": "integer",
-                            "nullable": true,
-                            "minimum": 0
-                          },
-                          "tmdbId": {
-                            "type": "integer",
-                            "nullable": true
-                          },
-                          "averageRating": {
-                            "type": "number",
-                            "minimum": 0,
-                            "maximum": 10
-                          },
-                          "totalRatings": {
-                            "type": "integer",
-                            "minimum": 0
-                          },
-                          "totalViews": {
-                            "type": "integer",
-                            "minimum": 0
-                          },
-                          "createdAt": {
-                            "type": "string",
-                            "format": "date-time"
-                          },
-                          "updatedAt": {
-                            "type": "string",
-                            "format": "date-time"
                           }
                         },
-                        "required": [
-                          "id",
-                          "type",
-                          "title",
-                          "originalTitle",
-                          "synopsis",
-                          "posterUrl",
-                          "backdropUrl",
-                          "trailerUrl",
-                          "releaseDate",
-                          "year",
-                          "durationMinutes",
-                          "tmdbId",
-                          "averageRating",
-                          "totalRatings",
-                          "totalViews",
-                          "createdAt",
-                          "updatedAt"
-                        ]
-                      }
+                        "pagination": {
+                          "type": "object",
+                          "properties": {
+                            "page": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "exclusiveMinimum": true
+                            },
+                            "total": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "totalPages": {
+                              "type": "integer",
+                              "minimum": 0
+                            }
+                          },
+                          "required": [
+                            "page",
+                            "total",
+                            "totalPages"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "items",
+                        "pagination"
+                      ]
                     }
                   },
                   "required": [
@@ -4475,7 +4871,8 @@
     "/watchlist/": {
       "get": {
         "operationId": "GET/watchlist/",
-        "description": "Query watchlist",
+        "summary": "List user's watchlist items",
+        "description": "Query watchlist with pagination",
         "tags": [
           "Watchlist"
         ],
@@ -4500,6 +4897,38 @@
             "required": false,
             "name": "status",
             "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": false,
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "minimum": 0,
+              "default": 0
+            },
+            "required": false,
+            "name": "offset",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
           }
         ],
         "responses": {
@@ -4517,73 +4946,105 @@
                       ]
                     },
                     "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "minLength": 1,
-                            "format": "uuid"
-                          },
-                          "userId": {
-                            "type": "string",
-                            "minLength": 1,
-                            "format": "uuid"
-                          },
-                          "contentId": {
-                            "type": "string",
-                            "minLength": 1,
-                            "format": "uuid"
-                          },
-                          "status": {
-                            "type": "string",
-                            "enum": [
-                              "completed",
-                              "dropped",
-                              "not_interested",
-                              "plan_to_watch",
-                              "undecided",
-                              "watching"
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "userId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "contentId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "completed",
+                                  "dropped",
+                                  "not_interested",
+                                  "plan_to_watch",
+                                  "undecided",
+                                  "watching"
+                                ]
+                              },
+                              "currentEpisode": {
+                                "type": "number",
+                                "nullable": true,
+                                "minimum": 1
+                              },
+                              "currentSeason": {
+                                "type": "number",
+                                "nullable": true,
+                                "minimum": 1
+                              },
+                              "addedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "startedAt": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "date-time"
+                              },
+                              "completedAt": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "date-time"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "userId",
+                              "contentId",
+                              "status",
+                              "currentEpisode",
+                              "currentSeason",
+                              "addedAt",
+                              "startedAt",
+                              "completedAt"
                             ]
-                          },
-                          "currentEpisode": {
-                            "type": "number",
-                            "nullable": true,
-                            "minimum": 1
-                          },
-                          "currentSeason": {
-                            "type": "number",
-                            "nullable": true,
-                            "minimum": 1
-                          },
-                          "addedAt": {
-                            "type": "string",
-                            "format": "date-time"
-                          },
-                          "startedAt": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "date-time"
-                          },
-                          "completedAt": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "date-time"
                           }
                         },
-                        "required": [
-                          "id",
-                          "userId",
-                          "contentId",
-                          "status",
-                          "currentEpisode",
-                          "currentSeason",
-                          "addedAt",
-                          "startedAt",
-                          "completedAt"
-                        ]
-                      }
+                        "pagination": {
+                          "type": "object",
+                          "properties": {
+                            "page": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "exclusiveMinimum": true
+                            },
+                            "total": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "totalPages": {
+                              "type": "integer",
+                              "minimum": 0
+                            }
+                          },
+                          "required": [
+                            "page",
+                            "total",
+                            "totalPages"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "items",
+                        "pagination"
+                      ]
                     }
                   },
                   "required": [
@@ -5798,7 +6259,8 @@
     "/watchparty/": {
       "get": {
         "operationId": "GET/watchparty/",
-        "description": "Query watchparties",
+        "summary": "List watchparties",
+        "description": "Query watchparties with pagination",
         "tags": [
           "Watchparty"
         ],
@@ -5840,6 +6302,38 @@
             "required": false,
             "name": "contentId",
             "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": false,
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "minimum": 0,
+              "default": 0
+            },
+            "required": false,
+            "name": "offset",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
           }
         ],
         "responses": {
@@ -5857,136 +6351,168 @@
                       ]
                     },
                     "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "minLength": 1,
-                            "format": "uuid"
-                          },
-                          "createdBy": {
-                            "type": "string",
-                            "minLength": 1,
-                            "format": "uuid"
-                          },
-                          "contentId": {
-                            "type": "string",
-                            "minLength": 1,
-                            "format": "uuid"
-                          },
-                          "seasonId": {
-                            "type": "string",
-                            "nullable": true,
-                            "minLength": 1,
-                            "format": "uuid"
-                          },
-                          "episodeId": {
-                            "type": "string",
-                            "nullable": true,
-                            "minLength": 1,
-                            "format": "uuid"
-                          },
-                          "name": {
-                            "type": "string",
-                            "minLength": 1,
-                            "maxLength": 255
-                          },
-                          "description": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "isPublic": {
-                            "type": "boolean"
-                          },
-                          "maxParticipants": {
-                            "type": "integer",
-                            "nullable": true,
-                            "minimum": 0,
-                            "exclusiveMinimum": true
-                          },
-                          "platformId": {
-                            "type": "string",
-                            "nullable": true,
-                            "minLength": 1,
-                            "format": "uuid"
-                          },
-                          "platformUrl": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "uri"
-                          },
-                          "scheduledAt": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "date-time"
-                          },
-                          "startedAt": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "date-time"
-                          },
-                          "endedAt": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "date-time"
-                          },
-                          "status": {
-                            "type": "string",
-                            "enum": [
-                              "scheduled",
-                              "active",
-                              "ended",
-                              "cancelled"
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "createdBy": {
+                                "type": "string",
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "contentId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "seasonId": {
+                                "type": "string",
+                                "nullable": true,
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "episodeId": {
+                                "type": "string",
+                                "nullable": true,
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "name": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 255
+                              },
+                              "description": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "isPublic": {
+                                "type": "boolean"
+                              },
+                              "maxParticipants": {
+                                "type": "integer",
+                                "nullable": true,
+                                "minimum": 0,
+                                "exclusiveMinimum": true
+                              },
+                              "platformId": {
+                                "type": "string",
+                                "nullable": true,
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "platformUrl": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "uri"
+                              },
+                              "scheduledAt": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "date-time"
+                              },
+                              "startedAt": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "date-time"
+                              },
+                              "endedAt": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "date-time"
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "scheduled",
+                                  "active",
+                                  "ended",
+                                  "cancelled"
+                                ]
+                              },
+                              "currentPositionTimestamp": {
+                                "type": "integer",
+                                "nullable": true,
+                                "minimum": 0
+                              },
+                              "isPlaying": {
+                                "type": "boolean"
+                              },
+                              "leaderUserId": {
+                                "type": "string",
+                                "nullable": true,
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "createdBy",
+                              "contentId",
+                              "seasonId",
+                              "episodeId",
+                              "name",
+                              "description",
+                              "isPublic",
+                              "maxParticipants",
+                              "platformId",
+                              "platformUrl",
+                              "scheduledAt",
+                              "startedAt",
+                              "endedAt",
+                              "status",
+                              "currentPositionTimestamp",
+                              "isPlaying",
+                              "leaderUserId",
+                              "createdAt",
+                              "updatedAt"
                             ]
-                          },
-                          "currentPositionTimestamp": {
-                            "type": "integer",
-                            "nullable": true,
-                            "minimum": 0
-                          },
-                          "isPlaying": {
-                            "type": "boolean"
-                          },
-                          "leaderUserId": {
-                            "type": "string",
-                            "nullable": true,
-                            "minLength": 1,
-                            "format": "uuid"
-                          },
-                          "createdAt": {
-                            "type": "string",
-                            "format": "date-time"
-                          },
-                          "updatedAt": {
-                            "type": "string",
-                            "format": "date-time"
                           }
                         },
-                        "required": [
-                          "id",
-                          "createdBy",
-                          "contentId",
-                          "seasonId",
-                          "episodeId",
-                          "name",
-                          "description",
-                          "isPublic",
-                          "maxParticipants",
-                          "platformId",
-                          "platformUrl",
-                          "scheduledAt",
-                          "startedAt",
-                          "endedAt",
-                          "status",
-                          "currentPositionTimestamp",
-                          "isPlaying",
-                          "leaderUserId",
-                          "createdAt",
-                          "updatedAt"
-                        ]
-                      }
+                        "pagination": {
+                          "type": "object",
+                          "properties": {
+                            "page": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "exclusiveMinimum": true
+                            },
+                            "total": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "totalPages": {
+                              "type": "integer",
+                              "minimum": 0
+                            }
+                          },
+                          "required": [
+                            "page",
+                            "total",
+                            "totalPages"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "items",
+                        "pagination"
+                      ]
                     }
                   },
                   "required": [

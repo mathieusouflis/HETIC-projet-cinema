@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GETPeoples200DataItem = {
+export type GETPeoples200DataItemsItem = {
   /** @minLength 1 */
   id: string;
   /**

@@ -6,9 +6,10 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GETMovies200DataItemType = typeof GETMovies200DataItemType[keyof typeof GETMovies200DataItemType];
+export type GETContentsSearchType = typeof GETContentsSearchType[keyof typeof GETContentsSearchType];
 
 
-export const GETMovies200DataItemType = {
+export const GETContentsSearchType = {
   movie: 'movie',
+  serie: 'serie',
 } as const;

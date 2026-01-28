@@ -6,10 +6,10 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GETWatchparty200DataItemStatus = typeof GETWatchparty200DataItemStatus[keyof typeof GETWatchparty200DataItemStatus];
+export type GETWatchparty200DataItemsItemStatus = typeof GETWatchparty200DataItemsItemStatus[keyof typeof GETWatchparty200DataItemsItemStatus];
 
 
-export const GETWatchparty200DataItemStatus = {
+export const GETWatchparty200DataItemsItemStatus = {
   scheduled: 'scheduled',
   active: 'active',
   ended: 'ended',

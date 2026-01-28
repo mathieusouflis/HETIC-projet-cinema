@@ -5,11 +5,11 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { GETSeries200DataItemType } from './getseries200-data-item-type';
+import type { GETMovies200DataItemsItemType } from './getmovies200-data-items-item-type';
 
-export type GETSeries200DataItem = {
+export type GETMovies200DataItemsItem = {
   id: string;
-  type: GETSeries200DataItemType;
+  type: GETMovies200DataItemsItemType;
   title: string;
   /** @nullable */
   originalTitle: string | null;

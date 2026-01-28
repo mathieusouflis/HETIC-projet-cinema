@@ -9,4 +9,18 @@ import type { GETWatchlistStatus } from './getwatchlist-status';
 
 export type GETWatchlistParams = {
 status?: GETWatchlistStatus;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 0
+ * @nullable
+ */
+offset?: number | null;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: number;
 };
