@@ -1,0 +1,1 @@
+ALTER TABLE "categories" ADD COLUMN "tmdb_id" integer;

@@ -20,6 +20,10 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import {
+  categoriesRelationsSchema,
+  categorySchema,
+} from "../modules/categories/infrastructure/database/schemas/categories.schema";
+import {
   contentRelationsSchema,
   contentSchema,
 } from "../modules/contents/infrastructure/database/schemas/contents.schema";
@@ -93,23 +97,7 @@ export const friendships = friendshipsSchema;
 
 export const content = contentSchema;
 
-export const categories = pgTable(
-  "categories",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    name: varchar({ length: 100 }).notNull(),
-    slug: varchar({ length: 100 }).notNull(),
-    description: text(),
-    createdAt: timestamp("created_at", {
-      withTimezone: true,
-      mode: "string",
-    }).defaultNow(),
-  },
-  (table) => [
-    unique("categories_name_key").on(table.name),
-    unique("categories_slug_key").on(table.slug),
-  ]
-);
+export const categories = categorySchema;
 
 export const contentCredits = pgTable(
   "content_credits",
@@ -1113,10 +1101,7 @@ export const userStatsRelations = relations(userStats, ({ one }) => ({
   }),
 }));
 
-export const categoriesRelations = relations(categories, ({ many }) => ({
-  userStats: many(userStats),
-  contentCategories: many(contentCategories),
-}));
+export const categoriesRelations = categoriesRelationsSchema;
 
 export const notificationsRelations = relations(notifications, ({ one }) => ({
   user_userId: one(users, {
