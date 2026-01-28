@@ -1,7 +1,7 @@
-import type { Request, Response, NextFunction } from "express";
-import { JWTService } from "../services/token/JWTService.js";
+import type { NextFunction, Request, Response } from "express";
 import { UnauthorizedError } from "../errors/index.js";
 import type { AccessTokenPayload } from "../services/token/ITokenService.js";
+import { JWTService } from "../services/token/JWTService.js";
 
 declare global {
   namespace Express {
@@ -50,7 +50,7 @@ const extractBearerToken = (authHeader: string | undefined): string | null => {
 export const authMiddleware = (
   req: Request,
   _res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): void => {
   try {
     const token = extractBearerToken(req.headers.authorization);
@@ -99,7 +99,7 @@ export const authMiddleware = (
 export const optionalAuthMiddleware = (
   req: Request,
   _res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): void => {
   const token = extractBearerToken(req.headers.authorization);
 
@@ -173,7 +173,7 @@ export const requireRole = (..._allowedRoles: string[]) => {
  * );
  * ```
  */
-export const requireOwnership = (paramName: string = "id") => {
+export const requireOwnership = (paramName = "id") => {
   return (req: Request, _res: Response, next: NextFunction): void => {
     if (!req.user) {
       return next(new UnauthorizedError("Authentication required"));
@@ -183,7 +183,7 @@ export const requireOwnership = (paramName: string = "id") => {
 
     if (req.user.userId !== resourceOwnerId) {
       return next(
-        new UnauthorizedError("You can only access your own resources"),
+        new UnauthorizedError("You can only access your own resources")
       );
     }
 

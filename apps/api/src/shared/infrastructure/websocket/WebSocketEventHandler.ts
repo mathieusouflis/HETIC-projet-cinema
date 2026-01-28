@@ -1,14 +1,13 @@
+import { logger } from "@packages/logger";
 import type { Socket } from "socket.io";
+import { WebSocketAckValidationError } from "../../errors/websocket/websocket-ack-validator-error.js";
+import { WebSocketHandlerNotFoundError } from "../../errors/websocket/websocket-handler-error.js";
 import type { EventListenerMetadata } from "../decorators/web-socket/websocket.metadata.js";
 import { WebSocketMetadataStorage } from "../decorators/web-socket/websocket.metadata.js";
-import { webSocketValidationService } from "./WebSocketValidationService.js";
-import { webSocketMiddlewareRunner } from "./WebSocketMiddlewareRunner.js";
-import { webSocketErrorHandler } from "./WebSocketErrorHandler.js";
-
-import { logger } from "@packages/logger";
 import { globalAuthEventMiddleware } from "./WebSocketAuthMiddleware.js";
-import { WebSocketHandlerNotFoundError } from "../../errors/websocket/websocket-handler-error.js";
-import { WebSocketAckValidationError } from "../../errors/websocket/websocket-ack-validator-error.js";
+import { webSocketErrorHandler } from "./WebSocketErrorHandler.js";
+import { webSocketMiddlewareRunner } from "./WebSocketMiddlewareRunner.js";
+import { webSocketValidationService } from "./WebSocketValidationService.js";
 
 /**
  * Acknowledgment callback type
@@ -39,7 +38,7 @@ export class WebSocketEventHandler {
     event: EventListenerMetadata,
     socket: Socket,
     args: any[],
-    requireAuth: boolean = false,
+    requireAuth = false
   ): Promise<void> {
     const eventName = event.eventName;
     let callback: AcknowledgmentCallback | null = null;
@@ -52,21 +51,20 @@ export class WebSocketEventHandler {
 
       const validationMetadata = WebSocketMetadataStorage.getValidation(
         controller,
-        event.methodName,
+        event.methodName
       );
 
       if (validationMetadata?.data) {
         parsedData = webSocketValidationService.validateEventData(
           validationMetadata.data,
           parsedData,
-          eventName,
+          eventName
         );
       }
 
-      let middlewares = WebSocketMetadataStorage.getMiddlewares(
-        controller,
-        event.methodName,
-      ) || [];
+      let middlewares =
+        WebSocketMetadataStorage.getMiddlewares(controller, event.methodName) ||
+        [];
 
       if (requireAuth) {
         middlewares = [globalAuthEventMiddleware, ...middlewares];
@@ -77,7 +75,7 @@ export class WebSocketEventHandler {
           middlewares,
           socket,
           parsedData,
-          eventName,
+          eventName
         );
       }
 
@@ -86,7 +84,7 @@ export class WebSocketEventHandler {
         event.methodName,
         socket,
         parsedData,
-        eventName,
+        eventName
       );
 
       if (event.acknowledgment && callback) {
@@ -94,17 +92,19 @@ export class WebSocketEventHandler {
           result,
           validationMetadata?.ack,
           callback,
-          eventName,
+          eventName
         );
       }
 
-      logger.info(`Successfully handled event '${eventName}' for socket ${socket.id}`);
+      logger.info(
+        `Successfully handled event '${eventName}' for socket ${socket.id}`
+      );
     } catch (error) {
       webSocketErrorHandler.handle(
         error instanceof Error ? error : new Error(String(error)),
         socket,
         eventName,
-        callback || undefined,
+        callback || undefined
       );
     }
   }
@@ -126,7 +126,7 @@ export class WebSocketEventHandler {
     methodName: string,
     socket: Socket,
     data: any,
-    eventName: string,
+    eventName: string
   ): Promise<any> {
     const handler = controller[methodName];
 
@@ -145,7 +145,7 @@ export class WebSocketEventHandler {
     result: any,
     ackSchema: any,
     callback: AcknowledgmentCallback,
-    eventName: string,
+    eventName: string
   ): Promise<void> {
     let validatedResult = result;
 
@@ -154,12 +154,14 @@ export class WebSocketEventHandler {
         validatedResult = webSocketValidationService.validateAcknowledgment(
           ackSchema,
           result,
-          eventName,
+          eventName
         );
       } catch (error) {
         throw new WebSocketAckValidationError(
-          error instanceof Error ? error.message : "Acknowledgment validation failed",
-          eventName,
+          error instanceof Error
+            ? error.message
+            : "Acknowledgment validation failed",
+          eventName
         );
       }
     }

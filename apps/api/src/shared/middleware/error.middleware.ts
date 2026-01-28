@@ -1,8 +1,8 @@
-import type { Request, Response, NextFunction } from "express";
+import { config } from "@packages/config";
+import { logger } from "@packages/logger";
+import type { NextFunction, Request, Response } from "express";
 import { AppError } from "../errors/AppError.js";
 import { ValidationError } from "../errors/ValidationError.js";
-import { logger } from "@packages/logger";
-import { config } from "@packages/config";
 
 interface ErrorResponse {
   success: false;
@@ -19,7 +19,7 @@ export const errorMiddleware = (
   err: Error,
   _req: Request,
   res: Response,
-  _next: NextFunction,
+  _next: NextFunction
 ): void => {
   logger.error(`${err.message}`);
 
@@ -65,7 +65,7 @@ export const errorMiddleware = (
 
   if (!isDevelopment()) {
     response.error = "Internal server error";
-    delete response.stack;
+    response.stack = undefined;
   }
 
   res.status(500).json(response);
@@ -74,7 +74,7 @@ export const errorMiddleware = (
 export const notFoundMiddleware = (
   req: Request,
   res: Response,
-  _next: NextFunction,
+  _next: NextFunction
 ): void => {
   res.status(404).json({
     success: false,

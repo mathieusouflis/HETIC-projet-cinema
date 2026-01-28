@@ -1,18 +1,18 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import type { Request, Response, NextFunction } from "express";
+import type { NextFunction, Request, Response } from "express";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
-  RequiredHeaders,
-  SetHeaders,
-  RequiredCookie,
-  RefreshTokenCookie,
-  SetCookie,
-  getRequiredHeadersMetadata,
-  getSetHeadersMetadata,
-  getRequiredCookieMetadata,
-  getSetCookieMetadata,
+  createRequiredCookieMiddleware,
   createRequiredHeadersMiddleware,
   createSetHeadersMiddleware,
-  createRequiredCookieMiddleware,
+  getRequiredCookieMetadata,
+  getRequiredHeadersMetadata,
+  getSetCookieMetadata,
+  getSetHeadersMetadata,
+  RefreshTokenCookie,
+  RequiredCookie,
+  RequiredHeaders,
+  SetCookie,
+  SetHeaders,
 } from "./header.decorator.js";
 
 describe("Header Decorator tests", () => {
@@ -350,7 +350,7 @@ describe("Header Decorator tests", () => {
       const instance = new TestController();
 
       expect(
-        getRequiredHeadersMetadata(instance, "testMethod"),
+        getRequiredHeadersMetadata(instance, "testMethod")
       ).toBeUndefined();
       expect(getSetHeadersMetadata(instance, "testMethod")).toBeUndefined();
       expect(getRequiredCookieMetadata(instance, "testMethod")).toBeUndefined();
@@ -366,7 +366,7 @@ describe("Header Decorator tests", () => {
       const instance = new TestController();
 
       expect(
-        getRequiredHeadersMetadata(instance, "nonExistent"),
+        getRequiredHeadersMetadata(instance, "nonExistent")
       ).toBeUndefined();
     });
   });
@@ -510,7 +510,7 @@ describe("Header Decorator tests", () => {
       expect(mockRes.setHeader).toHaveBeenCalledWith("X-API-Version", "1.0");
       expect(mockRes.setHeader).toHaveBeenCalledWith(
         "X-Custom",
-        "custom-value",
+        "custom-value"
       );
       expect(mockNext).toHaveBeenCalledOnce();
     });
@@ -568,7 +568,7 @@ describe("Header Decorator tests", () => {
       expect(dynamicFn).toHaveBeenCalledWith(mockReq, mockRes);
       expect(mockRes.setHeader).toHaveBeenCalledWith(
         "X-Dynamic",
-        "dynamic-value",
+        "dynamic-value"
       );
     });
   });
@@ -668,7 +668,7 @@ describe("Header Decorator tests", () => {
       const instance = new TestController();
       const requiredHeaders = getRequiredHeadersMetadata(
         instance,
-        "testMethod",
+        "testMethod"
       );
       const setHeaders = getSetHeadersMetadata(instance, "testMethod");
 
@@ -687,13 +687,13 @@ describe("Header Decorator tests", () => {
       const instance = new TestController();
 
       expect(getRequiredCookieMetadata(instance, "testMethod")?.name).toBe(
-        "sessionId",
+        "sessionId"
       );
       expect(
-        getRequiredHeadersMetadata(instance, "testMethod")?.headers,
+        getRequiredHeadersMetadata(instance, "testMethod")?.headers
       ).toEqual(["authorization"]);
       expect(
-        getSetHeadersMetadata(instance, "testMethod")?.headers[0]?.name,
+        getSetHeadersMetadata(instance, "testMethod")?.headers[0]?.name
       ).toBe("X-Custom");
     });
 
@@ -707,13 +707,13 @@ describe("Header Decorator tests", () => {
       const instance = new TestController();
 
       expect(getSetCookieMetadata(instance, "testMethod")?.name).toBe(
-        "newSession",
+        "newSession"
       );
       expect(
-        getSetCookieMetadata(instance, "testMethod")?.options?.httpOnly,
+        getSetCookieMetadata(instance, "testMethod")?.options?.httpOnly
       ).toBe(true);
       expect(
-        getSetHeadersMetadata(instance, "testMethod")?.headers[0]?.value,
+        getSetHeadersMetadata(instance, "testMethod")?.headers[0]?.value
       ).toBe("true");
     });
   });

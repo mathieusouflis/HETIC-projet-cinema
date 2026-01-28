@@ -6,15 +6,14 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
-    "generate-sdk": "npx orval",
+    "generate-sdk": "rm -rf ../../packages/api-sdk/src/generated && pnpm orval",
     "build": "tsc",
     "build:watch": "pnpm build --watch",
     "check-types": "tsc --noEmit",
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
+    "db:migrate": "phase run drizzle-kit migrate",
     "clean": "rm -rf dist",
-    "lint": "eslint src/",
     "test": "vitest run"
   },
   "dependencies": {
@@ -24,7 +23,7 @@
     "bcrypt": "^6.0.0",
     "body-parser": "^2.2.2",
     "cookie-parser": "^1.4.7",
-    "cors": "^2.8.5",
+    "cors": "^2.8.6",
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.45.1",
@@ -32,15 +31,14 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "openapi3-ts": "^4.5.0",
-    "pg": "^8.16.3",
+    "pg": "^8.17.2",
     "reflect-metadata": "^0.2.2",
     "socket.io": "^4.8.3",
     "swagger-ui-express": "^5.0.1",
-    "zod": "^4.3.5",
+    "zod": "^4.3.6",
     "zod-to-json-schema": "^3.25.1"
   },
   "devDependencies": {
-    "@packages/eslint-config": "workspace:*",
     "@packages/typescript-config": "workspace:*",
     "@packages/vitest-presets": "workspace:*",
     "@types/bcrypt": "^5.0.2",
@@ -49,18 +47,18 @@
     "@types/express": "5.0.6",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/morgan": "^1.9.9",
-    "@types/node": "^25.0.8",
+    "@types/node": "^25.0.10",
     "@types/pg": "^8.16.0",
     "@types/socket.io": "^3.0.2",
     "@types/supertest": "^6.0.2",
     "@types/swagger-ui-express": "^4.1.8",
-    "@vitest/coverage-v8": "^4.0.17",
+    "@vitest/coverage-v8": "^4.0.18",
     "drizzle-kit": "^0.31.8",
-    "eslint": "^9.39.0",
-    "orval": "^7.17.2",
+
+    "orval": "^8.0.3",
     "supertest": "^7.2.2",
     "tsx": "^4.21.0",
     "typescript": "5.9.3",
-    "vitest": "4.0.17"
+    "vitest": "4.0.18"
   }
 }

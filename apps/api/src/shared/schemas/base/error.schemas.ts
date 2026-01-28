@@ -80,7 +80,7 @@ export function createErrorResponse(message: string) {
  */
 export function createDetailedError<T extends z.ZodTypeAny>(
   message: string,
-  detailsSchema: T,
+  detailsSchema: T
 ) {
   return z.object({
     success: z.literal(false),

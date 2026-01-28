@@ -1,6 +1,6 @@
 import type { IUserRepository } from "../../domain/interfaces/IUserRepository.js";
-import { GetQueryDTO } from "../dto/requests/get.validator.js";
-import { GetResponseDTO } from "../dto/responses/get-response.js";
+import type { GetQueryDTO } from "../dto/requests/get.validator.js";
+import type { GetResponseDTO } from "../dto/responses/get-response.js";
 import { toUserListResponseDTO } from "../dto/utils/to-user-list-response.js";
 
 export class GetUsersUseCase {
@@ -11,8 +11,8 @@ export class GetUsersUseCase {
    * @returns Promise resolving to UserListResponseDTO with users and pagination info
    */
   async execute(pagination: GetQueryDTO): Promise<GetResponseDTO> {
-    const page = Math.max(1, pagination.page);
-    const limit = Math.min(100, Math.max(1, pagination.limit));
+    const page = Math.max(1, pagination.page ?? 0);
+    const limit = Math.min(100, Math.max(1, pagination.limit ?? 0));
 
     const { users, total } = await this.userRepository.findAll({
       page,

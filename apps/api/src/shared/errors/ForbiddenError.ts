@@ -5,7 +5,7 @@ import { AppError } from "./AppError.js";
  * Returns HTTP 403 Forbidden
  */
 export class ForbiddenError extends AppError {
-  constructor(message: string = "Forbidden") {
+  constructor(message = "Forbidden") {
     super(message, 403);
   }
 }

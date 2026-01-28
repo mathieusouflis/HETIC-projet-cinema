@@ -1,11 +1,11 @@
+import { config } from "@packages/config";
 import jwt from "jsonwebtoken";
 import type {
-  ITokenService,
   AccessTokenPayload,
+  ITokenService,
   RefreshTokenPayload,
   TokenPair,
 } from "./ITokenService.js";
-import { config } from "@packages/config";
 
 export class JWTService implements ITokenService {
   private readonly accessTokenSecret: string;
@@ -14,8 +14,8 @@ export class JWTService implements ITokenService {
   private readonly refreshTokenExpirySeconds: number;
 
   constructor() {
-    this.accessTokenSecret = config.env.JWT_SECRET + "_access";
-    this.refreshTokenSecret = config.env.JWT_SECRET + "_refresh";
+    this.accessTokenSecret = `${config.env.JWT_SECRET}_access`;
+    this.refreshTokenSecret = `${config.env.JWT_SECRET}_refresh`;
     this.accessTokenExpirySeconds = 15 * 60;
     this.refreshTokenExpirySeconds = 7 * 24 * 60 * 60;
   }
@@ -79,7 +79,7 @@ export class JWTService implements ITokenService {
     try {
       const payload = jwt.verify(
         token,
-        this.accessTokenSecret,
+        this.accessTokenSecret
       ) as AccessTokenPayload;
 
       if (payload.type !== "access") {
@@ -109,7 +109,7 @@ export class JWTService implements ITokenService {
     try {
       const payload = jwt.verify(
         token,
-        this.refreshTokenSecret,
+        this.refreshTokenSecret
       ) as RefreshTokenPayload;
 
       if (payload.type !== "refresh") {

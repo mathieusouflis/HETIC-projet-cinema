@@ -1,4 +1,10 @@
-export { GetUserByIdUseCase } from "./GetUserById.usecase.js";
-export { GetUsersUseCase } from "./GetUsers.usecase.js";
-export { UpdateUserUseCase } from "./UpdateUser.usecase.js";
-export { DeleteUserUseCase } from "./DeleteUser.usecase.js";
+export * from "./create-friendship.use-case";
+export * from "./DeleteUser.usecase";
+export * from "./delete-friendship.use-case";
+export * from "./GetMe.usecase";
+export * from "./GetUserById.usecase";
+export * from "./GetUsers.usecase";
+export * from "./get-my-following.use-case";
+export * from "./get-user-followers.use-case";
+export * from "./get-user-following.use-case";
+export * from "./UpdateUser.usecase";

@@ -5,7 +5,7 @@ import { AppError } from "./AppError.js";
  * Returns HTTP 409 Conflict
  */
 export class ConflictError extends AppError {
-  constructor(message: string = "Resource already exists") {
+  constructor(message = "Resource already exists") {
     super(message, 409);
   }
 }

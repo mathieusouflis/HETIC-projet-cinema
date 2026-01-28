@@ -5,7 +5,7 @@ import { AppError } from "./AppError.js";
  * Returns HTTP 401 Unauthorized
  */
 export class UnauthorizedError extends AppError {
-  constructor(message: string = "Unauthorized") {
+  constructor(message = "Unauthorized") {
     super(message, 401);
   }
 }

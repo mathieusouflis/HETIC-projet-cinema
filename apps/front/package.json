@@ -9,24 +9,20 @@
     "build:watch": "vite build -w",
     "check-types": "tsc --noEmit",
     "clean": "rm -rf dist",
-    "dev": "vite --host 0.0.0.0 --port 3001 --clearScreen false",
-    "lint": "eslint src/"
+    "dev": "vite --host 0.0.0.0 --port 3001 --clearScreen false"
   },
   "dependencies": {
     "@packages/config": "workspace:*",
-    "@packages/ui": "workspace:*",
     "@tanstack/react-router": "^1.154.12",
     "@tanstack/router-devtools": "^1.157.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
   },
   "devDependencies": {
-    "@packages/eslint-config": "workspace:*",
     "@packages/typescript-config": "workspace:*",
-    "@types/react": "^19.2.8",
+    "@types/react": "^19.2.9",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.2",
-    "eslint": "^9.39.0",
     "typescript": "5.9.3",
     "vite": "^7.3.1"
   }

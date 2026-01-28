@@ -66,7 +66,7 @@ export class WebSocketMetadataStorage {
   }
 
   static addEvent(target: any, event: EventListenerMetadata): void {
-    const events = this.getEvents(target);
+    const events = WebSocketMetadataStorage.getEvents(target);
     events.push(event);
     Reflect.defineMetadata(WS_METADATA_KEYS.EVENTS, events, target);
   }
@@ -76,7 +76,7 @@ export class WebSocketMetadataStorage {
   }
 
   static addEmit(target: any, emit: EventEmitterMetadata): void {
-    const emits = this.getEmits(target);
+    const emits = WebSocketMetadataStorage.getEmits(target);
     emits.push(emit);
     Reflect.defineMetadata(WS_METADATA_KEYS.EMITS, emits, target);
   }
@@ -86,23 +86,23 @@ export class WebSocketMetadataStorage {
   }
 
   static addRoom(target: any, room: RoomMetadata): void {
-    const rooms = this.getRooms(target);
+    const rooms = WebSocketMetadataStorage.getRooms(target);
     rooms.push(room);
     Reflect.defineMetadata(WS_METADATA_KEYS.ROOMS, rooms, target);
   }
 
   static getValidation(
     target: any,
-    methodName: string,
+    methodName: string
   ): WebSocketValidationMetadata | undefined {
     const key = `${WS_METADATA_KEYS.VALIDATION.toString()}_${methodName}`;
-      return Reflect.getMetadata(key, target);
+    return Reflect.getMetadata(key, target);
   }
 
   static setValidation(
     target: any,
     methodName: string,
-    validation: WebSocketValidationMetadata,
+    validation: WebSocketValidationMetadata
   ): void {
     const key = `${WS_METADATA_KEYS.VALIDATION.toString()}_${methodName}`;
     Reflect.defineMetadata(key, validation, target);
@@ -113,7 +113,11 @@ export class WebSocketMetadataStorage {
     return Reflect.getMetadata(key, target);
   }
 
-  static setMiddlewares(target: any, methodName: string, middlewares: any[]): void {
+  static setMiddlewares(
+    target: any,
+    methodName: string,
+    middlewares: any[]
+  ): void {
     const key = `${WS_METADATA_KEYS.MIDDLEWARES.toString()}_${methodName}`;
     Reflect.defineMetadata(key, middlewares, target);
   }

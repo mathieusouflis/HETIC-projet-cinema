@@ -16,6 +16,7 @@ in
     pkgs.nodejs_24
     pkgs.postgresql
     pkgs.docker
+    pkgs.phase-cli
   ];
 
   # https://devenv.sh/languages/
@@ -43,6 +44,7 @@ in
     echo -e "$(tput bold)░▀▄░░░░${azure}▀▄▀${reset}░░${azure}█${reset}░░░${azure}▀█${reset}░░░${green}▀▀█${reset}░${green}█▀█${reset}░${green}█▀▀${reset}░${green}█${reset}░░░${green}█${reset}░░░░░░▄▀░$(tput sgr0)"
     echo -e "$(tput bold)░░▀▀░░░░${azure}▀${reset}░░${azure}▀▀▀${reset}░░░${azure}▀${reset}░░░${green}▀▀▀${reset}░${green}▀${reset}░${green}▀${reset}░${green}▀▀▀${reset}░${green}▀▀▀${reset}░${green}▀▀▀${reset}░░░▀▀░░$(tput sgr0)"
     echo "$(tput bold)░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░$(tput sgr0)"
+    echo
   '';
 
   # https://devenv.sh/tasks/
@@ -57,8 +59,8 @@ in
     git --version | grep --color=auto "${pkgs.git.version}"
   '';
 
-  dotenv.enable = true;
-  dotenv.filename = ".env.local";
+  # dotenv.enable = true;
+  # dotenv.filename = ".env.local";
 
   # https://devenv.sh/git-hooks/
   # git-hooks.hooks.shellcheck.enable = true;

@@ -1,9 +1,9 @@
-import { describe, it, expect, vi } from "vitest";
 import type { RequestHandler } from "express";
+import { describe, expect, it, vi } from "vitest";
 import {
+  getMiddlewaresMetadata,
   Middlewares,
   Protected,
-  getMiddlewaresMetadata,
 } from "./auth.decorator.js";
 import { AUTH_MIDDLEWARE_MARKER } from "./types.js";
 
@@ -182,7 +182,7 @@ describe("Auth Decorator tests", () => {
       const instance = new TestController();
       const metadata = getMiddlewaresMetadata(
         Object.getPrototypeOf(instance),
-        "testMethod",
+        "testMethod"
       );
 
       expect(metadata).toBeDefined();
@@ -206,7 +206,7 @@ describe("Auth Decorator tests", () => {
       const customMetadata = getMiddlewaresMetadata(instance, "customMethod");
       const protectedMetadata = getMiddlewaresMetadata(
         instance,
-        "protectedMethod",
+        "protectedMethod"
       );
 
       expect(customMetadata?.middlewares[0]).toBe(customMiddleware);

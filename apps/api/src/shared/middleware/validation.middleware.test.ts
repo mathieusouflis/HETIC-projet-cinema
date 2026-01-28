@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import type { Request, Response, NextFunction } from "express";
+import type { NextFunction, Request, Response } from "express";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
-import { validateRequest, validateMultiple } from "./validation.middleware.js";
 import { ValidationError } from "../errors/ValidationError.js";
+import { validateMultiple, validateRequest } from "./validation.middleware.js";
 
 describe("validateRequest", () => {
   let req: Partial<Request>;
@@ -50,7 +50,7 @@ describe("validateRequest", () => {
 
     it("should validate and transform data", () => {
       const schema = z.object({
-        age: z.string().transform((val) => parseInt(val, 10)),
+        age: z.string().transform((val) => Number.parseInt(val, 10)),
         active: z.string().transform((val) => val === "true"),
       });
 
@@ -99,7 +99,7 @@ describe("validateRequest", () => {
             message: expect.any(String),
             code: expect.any(String),
           }),
-        ]),
+        ])
       );
     });
 
@@ -168,7 +168,7 @@ describe("validateRequest", () => {
       const error = nextError as ValidationError;
       expect(error.details).toBeDefined();
       expect(error.details).toHaveLength(1);
-      expect(error.details![0]?.field).toBe("user.email");
+      expect(error.details?.[0]?.field).toBe("user.email");
     });
 
     it("should strip unknown fields with strict schema", () => {
@@ -213,7 +213,7 @@ describe("validateRequest", () => {
           z.object({
             id: z.number(),
             name: z.string(),
-          }),
+          })
         ),
       });
 
@@ -230,7 +230,7 @@ describe("validateRequest", () => {
       expect(nextError).toBeInstanceOf(ValidationError);
       const error = nextError as ValidationError;
       expect(error.details).toBeDefined();
-      expect(error.details![0]?.field).toBe("items.1.id");
+      expect(error.details?.[0]?.field).toBe("items.1.id");
     });
   });
 
@@ -258,8 +258,8 @@ describe("validateRequest", () => {
 
     it("should validate and transform query parameters", () => {
       const schema = z.object({
-        page: z.string().transform((val) => parseInt(val, 10)),
-        limit: z.string().transform((val) => parseInt(val, 10)),
+        page: z.string().transform((val) => Number.parseInt(val, 10)),
+        limit: z.string().transform((val) => Number.parseInt(val, 10)),
       });
 
       req.query = {
@@ -292,7 +292,7 @@ describe("validateRequest", () => {
       expect(nextError).toBeInstanceOf(ValidationError);
       const error = nextError as ValidationError;
       expect(error.details).toBeDefined();
-      expect(error.details![0]?.field).toBe("email");
+      expect(error.details?.[0]?.field).toBe("email");
     });
 
     it("should use Object.defineProperty for query validation", () => {
@@ -318,7 +318,7 @@ describe("validateRequest", () => {
   describe("params validation", () => {
     it("should validate valid URL parameters", () => {
       const schema = z.object({
-        id: z.string().uuid(),
+        id: z.uuid(),
       });
 
       req.params = {
@@ -336,7 +336,7 @@ describe("validateRequest", () => {
 
     it("should fail validation for invalid URL parameters", () => {
       const schema = z.object({
-        id: z.string().uuid(),
+        id: z.uuid(),
       });
 
       req.params = {
@@ -349,7 +349,7 @@ describe("validateRequest", () => {
       expect(nextError).toBeInstanceOf(ValidationError);
       const error = nextError as ValidationError;
       expect(error.details).toBeDefined();
-      expect(error.details![0]?.field).toBe("id");
+      expect(error.details?.[0]?.field).toBe("id");
     });
 
     it("should use Object.defineProperty for params validation", () => {
@@ -418,7 +418,7 @@ describe("validateRequest", () => {
       expect(nextError).toBeInstanceOf(ValidationError);
       const error = nextError as ValidationError;
       expect(error.details).toBeDefined();
-      expect(error.details![0]?.field).toBe("unknown");
+      expect(error.details?.[0]?.field).toBe("unknown");
     });
   });
 });
@@ -501,7 +501,7 @@ describe("validateMultiple", () => {
         page: z.string().regex(/^\d+$/),
       }),
       params: z.object({
-        id: z.string().uuid(),
+        id: z.uuid(),
       }),
     };
 
@@ -526,7 +526,7 @@ describe("validateMultiple", () => {
         expect.objectContaining({
           field: "params.id",
         }),
-      ]),
+      ])
     );
   });
 
@@ -551,7 +551,7 @@ describe("validateMultiple", () => {
     expect(nextError).toBeInstanceOf(ValidationError);
     const error = nextError as ValidationError;
     expect(error.details).toBeDefined();
-    expect(error.details![0]?.field).toBe("body.user.email");
+    expect(error.details?.[0]?.field).toBe("body.user.email");
   });
 
   it("should handle partial validation success", () => {
@@ -574,7 +574,7 @@ describe("validateMultiple", () => {
     const error = nextError as ValidationError;
     expect(error.details).toBeDefined();
     expect(error.details).toHaveLength(1);
-    expect(error.details![0]?.field).toBe("body.email");
+    expect(error.details?.[0]?.field).toBe("body.email");
     expect(req.query).toEqual({ page: "1" });
   });
 
@@ -607,16 +607,16 @@ describe("validateMultiple", () => {
     expect(nextError).toBeInstanceOf(ValidationError);
     const error = nextError as ValidationError;
     expect(error.details).toBeDefined();
-    expect(error.details![0]?.field).toBe("body.unknown");
+    expect(error.details?.[0]?.field).toBe("body.unknown");
   });
 
   it("should transform data for multiple targets", () => {
     const schemas = {
       body: z.object({
-        age: z.string().transform((val) => parseInt(val, 10)),
+        age: z.string().transform((val) => Number.parseInt(val, 10)),
       }),
       query: z.object({
-        limit: z.string().transform((val) => parseInt(val, 10)),
+        limit: z.string().transform((val) => Number.parseInt(val, 10)),
       }),
     };
 

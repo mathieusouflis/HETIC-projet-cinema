@@ -1,4 +1,4 @@
-import { Router } from "express";
+import type { Router } from "express";
 import { BaseModule } from "./BaseModule";
 
 export interface RestModuleInterface {

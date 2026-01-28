@@ -1,6 +1,6 @@
 import { describe, it } from "vitest";
-import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock";
 import { JWTService } from "../../../../shared/services/token";
+import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock.";
 import { RefreshTokenUseCase } from "./refresh-token.usecase";
 
 describe("RefreshTokenUseCase", () => {
@@ -12,7 +12,7 @@ describe("RefreshTokenUseCase", () => {
     const invalidToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkXVCJ9.eyJzdWIiOiIxMj0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30";
     await expect(
-      useCase.execute({ refreshToken: invalidToken }),
+      useCase.execute({ refreshToken: invalidToken })
     ).rejects.toThrow("Invalid or expired refresh token");
   });
 
@@ -21,7 +21,7 @@ describe("RefreshTokenUseCase", () => {
       userId: "1",
     });
     await expect(
-      useCase.execute({ refreshToken: validToken }),
+      useCase.execute({ refreshToken: validToken })
     ).rejects.toThrow();
   });
   it("should pass when token and user id are valid", async () => {

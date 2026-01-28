@@ -1,22 +1,34 @@
+// import { asyncAPIGenerator } from "../shared/infrastructure/documentation/asyncapi-generator.js"; // TODO: Uncomment when chat module is needed
+// import { chatModule } from "./chat/chat.module.js"; // TODO: Uncomment when chat module is needed
+import fs from "node:fs";
+import { logger } from "@packages/logger";
 import { Router } from "express";
-import swaggerUi from "swagger-ui-express";
 import type { Server as SocketIOServer } from "socket.io";
-import { usersModule } from "./users/users.module.js";
-import { authModule } from "./auth/auth.module.js";
+import swaggerUi from "swagger-ui-express";
+import { moduleRegistry } from "../shared/infrastructure/openapi/module-registry.js";
+import { OpenAPISpecAggregator } from "../shared/infrastructure/openapi/openapi-spec-aggregator.js";
 import {
   errorMiddleware,
   notFoundMiddleware,
 } from "../shared/middleware/error.middleware.js";
-import { moduleRegistry } from "../shared/infrastructure/openapi/module-registry.js";
-import { OpenAPISpecAggregator } from "../shared/infrastructure/openapi/openapi-spec-aggregator.js";
-// import { asyncAPIGenerator } from "../shared/infrastructure/documentation/asyncapi-generator.js"; // TODO: Uncomment when chat module is needed
-// import { chatModule } from "./chat/chat.module.js"; // TODO: Uncomment when chat module is needed
-import fs from "fs";
-import { logger } from "@packages/logger";
+import { authModule } from "./auth/auth.module.js";
+import { contentsModule } from "./contents/contents.module.js";
+import { moviesModule } from "./movies/movie.module.js";
+import { peoplesModule } from "./peoples/peoples.module.js";
+import { seriesModule } from "./series/serie.module.js";
+import { usersModule } from "./users/users.module.js";
+import { watchlistModule } from "./watchlist/watchlist.module.js";
+import { watchpartyModule } from "./watchparty/watchparty.module.js";
 
 function registerModules(): void {
   moduleRegistry.register("auth", authModule);
   moduleRegistry.register("users", usersModule);
+  moduleRegistry.register("contents", contentsModule);
+  moduleRegistry.register("movies", moviesModule);
+  moduleRegistry.register("series", seriesModule);
+  moduleRegistry.register("watchlist", watchlistModule);
+  moduleRegistry.register("peoples", peoplesModule);
+  moduleRegistry.register("watchparties", watchpartyModule);
 }
 
 function generateOpenAPISpec() {
@@ -46,9 +58,9 @@ export function apiVersion1Router(): Router {
   });
 
   const modules = moduleRegistry.getAllModules();
-  modules.forEach((module) => {
+  for (const module of modules) {
     router.use(module.getRouter());
-  });
+  }
 
   const openApiSpec = generateOpenAPISpec();
   fs.writeFile(
@@ -58,7 +70,7 @@ export function apiVersion1Router(): Router {
       if (err) {
         console.error("Error writing OpenAPI spec:", err);
       }
-    },
+    }
   );
   router.get("/openapi.json", (_, res) => {
     res.json(openApiSpec);
@@ -70,7 +82,7 @@ export function apiVersion1Router(): Router {
     swaggerUi.setup(openApiSpec, {
       customCss: ".swagger-ui .topbar { display: none }",
       customSiteTitle: "Cinema API Documentation",
-    }),
+    })
   );
 
   router.use(notFoundMiddleware);

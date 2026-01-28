@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import {
-  MetadataStorage,
   type HttpMethod,
+  MetadataStorage,
   type RouteMetadata,
 } from "./metadata.js";
 
@@ -11,21 +11,28 @@ interface RouteOptions {
   description?: string;
 }
 
+function parsePath(path: string): string {
+  return path
+    .split("/")
+    .map((part) => (part.startsWith(":") ? `{${part.slice(1)}}` : part))
+    .join("/");
+}
+
 function createRouteDecorator(method: HttpMethod) {
-  return function (pathOrOptions?: string | RouteOptions) {
-    return function (
+  return (pathOrOptions?: string | RouteOptions) =>
+    (
       target: object,
       propertyKey: string,
-      _descriptor?: PropertyDescriptor,
-    ): void {
+      _descriptor?: PropertyDescriptor
+    ): void => {
       let path = "";
       let summary: string | undefined;
       let description: string | undefined;
 
       if (typeof pathOrOptions === "string") {
-        path = pathOrOptions;
+        path = parsePath(pathOrOptions);
       } else if (pathOrOptions) {
-        path = pathOrOptions.path || "";
+        path = parsePath(pathOrOptions.path || "");
         summary = pathOrOptions.summary;
         description = pathOrOptions.description;
       }
@@ -40,7 +47,6 @@ function createRouteDecorator(method: HttpMethod) {
 
       MetadataStorage.addRoute(target, route);
     };
-  };
 }
 
 /**
@@ -97,11 +103,11 @@ export const Patch = createRouteDecorator("patch");
 export const Delete = createRouteDecorator("delete");
 
 export function Summary(summary: string) {
-  return function (
+  return (
     target: object,
     propertyKey: string,
-    _descriptor?: PropertyDescriptor,
-  ): void {
+    _descriptor?: PropertyDescriptor
+  ): void => {
     const routes = MetadataStorage.getRoutes(target);
     const route = routes.find((r) => r.methodName === propertyKey);
     if (route) {
@@ -111,11 +117,11 @@ export function Summary(summary: string) {
 }
 
 export function Description(description: string) {
-  return function (
+  return (
     target: object,
     propertyKey: string,
-    _descriptor?: PropertyDescriptor,
-  ): void {
+    _descriptor?: PropertyDescriptor
+  ): void => {
     const routes = MetadataStorage.getRoutes(target);
     const route = routes.find((r) => r.methodName === propertyKey);
     if (route) {

@@ -1,27 +1,52 @@
+import { relations, sql } from "drizzle-orm";
 import {
-  pgTable,
-  index,
-  unique,
+  bigint,
+  boolean,
   check,
+  date,
+  foreignKey,
+  index,
+  inet,
+  integer,
+  jsonb,
+  numeric,
+  pgTable,
+  pgView,
+  primaryKey,
+  text,
+  timestamp,
+  unique,
   uuid,
   varchar,
-  text,
-  boolean,
-  timestamp,
-  foreignKey,
-  inet,
-  date,
-  integer,
-  numeric,
-  jsonb,
-  primaryKey,
-  pgView,
-  bigint,
 } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
-import { users as usersSchema } from "../modules/users/infrastructure/database/schemas/users.schema";
+import {
+  contentRelationsSchema,
+  contentSchema,
+} from "../modules/contents/infrastructure/database/schemas/contents.schema";
+import { tmdbFetchStatusSchema } from "../modules/contents/infrastructure/database/schemas/tmdb-fetch-status.schema";
+import {
+  peopleRelationSchema,
+  peopleSchema,
+} from "../modules/peoples/infrastructure/schemas/people.schema";
+import {
+  friendshipsRelationsSchema,
+  friendshipsSchema,
+  friendshipsStatusEnum,
+} from "../modules/users/infrastructure/database/schemas/friendships.schema";
+import {
+  usersRelationSchema,
+  users as usersSchema,
+} from "../modules/users/infrastructure/database/schemas/users.schema";
+import {
+  watchlistStatusEnum as watchlistCustomEnumImported,
+  watchlistRelationsSchema,
+  watchlistSchema,
+} from "../modules/watchlist/infrastructure/schemas/watchlist.schema";
+import { watchpartySchema } from "../modules/watchparty/infrastructure/schemas/watchparty.schema";
 
 export const users = usersSchema;
+
+export const tmdbFetchStatus = tmdbFetchStatusSchema;
 
 export const refreshTokens = pgTable(
   "refresh_tokens",
@@ -45,128 +70,28 @@ export const refreshTokens = pgTable(
   (table) => [
     index("idx_refresh_tokens_expires").using(
       "btree",
-      table.expiresAt.asc().nullsLast().op("timestamptz_ops"),
+      table.expiresAt.asc().nullsLast()
     ),
     index("idx_refresh_tokens_hash").using(
       "btree",
-      table.tokenHash.asc().nullsLast().op("text_ops"),
+      table.tokenHash.asc().nullsLast()
     ),
     index("idx_refresh_tokens_user").using(
       "btree",
-      table.userId.asc().nullsLast().op("uuid_ops"),
+      table.userId.asc().nullsLast()
     ),
     foreignKey({
       columns: [table.userId],
       foreignColumns: [users.id],
       name: "refresh_tokens_user_id_fkey",
     }).onDelete("cascade"),
-  ],
+  ]
 );
 
-export const friendships = pgTable(
-  "friendships",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    userId: uuid("user_id").notNull(),
-    friendId: uuid("friend_id").notNull(),
-    status: varchar({ length: 20 }).default("pending").notNull(),
-    createdAt: timestamp("created_at", {
-      withTimezone: true,
-      mode: "string",
-    }).defaultNow(),
-    updatedAt: timestamp("updated_at", {
-      withTimezone: true,
-      mode: "string",
-    }).defaultNow(),
-  },
-  (table) => [
-    index("idx_friendships_friend").using(
-      "btree",
-      table.friendId.asc().nullsLast().op("text_ops"),
-      table.status.asc().nullsLast().op("uuid_ops"),
-    ),
-    index("idx_friendships_user").using(
-      "btree",
-      table.userId.asc().nullsLast().op("text_ops"),
-      table.status.asc().nullsLast().op("text_ops"),
-    ),
-    foreignKey({
-      columns: [table.userId],
-      foreignColumns: [users.id],
-      name: "friendships_user_id_fkey",
-    }).onDelete("cascade"),
-    foreignKey({
-      columns: [table.friendId],
-      foreignColumns: [users.id],
-      name: "friendships_friend_id_fkey",
-    }).onDelete("cascade"),
-    unique("unique_friendship").on(table.userId, table.friendId),
-    check("no_self_friend", sql`user_id <> friend_id`),
-  ],
-);
+export const friendsshipStatus = friendshipsStatusEnum;
+export const friendships = friendshipsSchema;
 
-export const content = pgTable(
-  "content",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    type: varchar({ length: 20 }).notNull(),
-    title: varchar({ length: 255 }).notNull(),
-    originalTitle: varchar("original_title", { length: 255 }),
-    slug: varchar({ length: 255 }).notNull(),
-    synopsis: text(),
-    posterUrl: text("poster_url"),
-    backdropUrl: text("backdrop_url"),
-    trailerUrl: text("trailer_url"),
-    releaseDate: date("release_date"),
-    year: integer(),
-    durationMinutes: integer("duration_minutes"),
-    tmdbId: integer("tmdb_id"),
-    imdbId: varchar("imdb_id", { length: 20 }),
-    averageRating: numeric("average_rating", {
-      precision: 3,
-      scale: 2,
-    }).default("0"),
-    totalRatings: integer("total_ratings").default(0),
-    totalViews: integer("total_views").default(0),
-    createdAt: timestamp("created_at", {
-      withTimezone: true,
-      mode: "string",
-    }).defaultNow(),
-    updatedAt: timestamp("updated_at", {
-      withTimezone: true,
-      mode: "string",
-    }).defaultNow(),
-  },
-  (table) => [
-    index("idx_content_rating").using(
-      "btree",
-      table.averageRating.desc().nullsFirst().op("numeric_ops"),
-    ),
-    index("idx_content_slug").using(
-      "btree",
-      table.slug.asc().nullsLast().op("text_ops"),
-    ),
-    index("idx_content_tmdb").using(
-      "btree",
-      table.tmdbId.asc().nullsLast().op("int4_ops"),
-    ),
-    index("idx_content_type").using(
-      "btree",
-      table.type.asc().nullsLast().op("text_ops"),
-    ),
-    index("idx_content_year").using(
-      "btree",
-      table.year.asc().nullsLast().op("int4_ops"),
-    ),
-    unique("content_slug_key").on(table.slug),
-    unique("content_tmdb_id_key").on(table.tmdbId),
-    unique("content_imdb_id_key").on(table.imdbId),
-    check(
-      "valid_type",
-      sql`(type)::text = ANY ((ARRAY['movie'::character varying, 'series'::character varying])::text[])`,
-    ),
-  ],
-);
+export const content = contentSchema;
 
 export const categories = pgTable(
   "categories",
@@ -183,7 +108,7 @@ export const categories = pgTable(
   (table) => [
     unique("categories_name_key").on(table.name),
     unique("categories_slug_key").on(table.slug),
-  ],
+  ]
 );
 
 export const contentCredits = pgTable(
@@ -199,12 +124,12 @@ export const contentCredits = pgTable(
   (table) => [
     index("idx_credits_content").using(
       "btree",
-      table.contentId.asc().nullsLast().op("uuid_ops"),
+      table.contentId.asc().nullsLast()
     ),
     index("idx_credits_person").using(
       "btree",
-      table.personId.asc().nullsLast().op("uuid_ops"),
-      table.role.asc().nullsLast().op("uuid_ops"),
+      table.personId.asc().nullsLast(),
+      table.role.asc().nullsLast()
     ),
     foreignKey({
       columns: [table.contentId],
@@ -217,40 +142,10 @@ export const contentCredits = pgTable(
       name: "content_credits_person_id_fkey",
     }).onDelete("cascade"),
     unique("unique_credit").on(table.role, table.personId, table.contentId),
-  ],
+  ]
 );
 
-export const people = pgTable(
-  "people",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    name: varchar({ length: 255 }).notNull(),
-    bio: text(),
-    photoUrl: text("photo_url"),
-    birthDate: date("birth_date"),
-    nationality: varchar({ length: 100 }),
-    tmdbId: integer("tmdb_id"),
-    createdAt: timestamp("created_at", {
-      withTimezone: true,
-      mode: "string",
-    }).defaultNow(),
-    updatedAt: timestamp("updated_at", {
-      withTimezone: true,
-      mode: "string",
-    }).defaultNow(),
-  },
-  (table) => [
-    index("idx_people_name").using(
-      "btree",
-      table.name.asc().nullsLast().op("text_ops"),
-    ),
-    index("idx_people_tmdb").using(
-      "btree",
-      table.tmdbId.asc().nullsLast().op("int4_ops"),
-    ),
-    unique("people_tmdb_id_key").on(table.tmdbId),
-  ],
-);
+export const people = peopleSchema;
 
 export const seasons = pgTable(
   "seasons",
@@ -267,8 +162,8 @@ export const seasons = pgTable(
   (table) => [
     index("idx_seasons_series").using(
       "btree",
-      table.seriesId.asc().nullsLast().op("int4_ops"),
-      table.seasonNumber.asc().nullsLast().op("uuid_ops"),
+      table.seriesId.asc().nullsLast(),
+      table.seasonNumber.asc().nullsLast()
     ),
     foreignKey({
       columns: [table.seriesId],
@@ -277,7 +172,7 @@ export const seasons = pgTable(
     }).onDelete("cascade"),
     unique("unique_season").on(table.seriesId, table.seasonNumber),
     check("valid_series", sql`season_number > 0`),
-  ],
+  ]
 );
 
 export const episodes = pgTable(
@@ -295,8 +190,8 @@ export const episodes = pgTable(
   (table) => [
     index("idx_episodes_season").using(
       "btree",
-      table.seasonId.asc().nullsLast().op("int4_ops"),
-      table.episodeNumber.asc().nullsLast().op("uuid_ops"),
+      table.seasonId.asc().nullsLast(),
+      table.episodeNumber.asc().nullsLast()
     ),
     foreignKey({
       columns: [table.seasonId],
@@ -305,7 +200,7 @@ export const episodes = pgTable(
     }).onDelete("cascade"),
     unique("unique_episode").on(table.seasonId, table.episodeNumber),
     check("valid_episode", sql`episode_number > 0`),
-  ],
+  ]
 );
 
 export const conversations = pgTable(
@@ -331,7 +226,7 @@ export const conversations = pgTable(
       foreignColumns: [users.id],
       name: "conversations_created_by_fkey",
     }).onDelete("set null"),
-  ],
+  ]
 );
 
 export const conversationParticipants = pgTable(
@@ -353,11 +248,11 @@ export const conversationParticipants = pgTable(
   (table) => [
     index("idx_conv_participants_conv").using(
       "btree",
-      table.conversationId.asc().nullsLast().op("uuid_ops"),
+      table.conversationId.asc().nullsLast()
     ),
     index("idx_conv_participants_user").using(
       "btree",
-      table.userId.asc().nullsLast().op("uuid_ops"),
+      table.userId.asc().nullsLast()
     ),
     foreignKey({
       columns: [table.conversationId],
@@ -370,106 +265,10 @@ export const conversationParticipants = pgTable(
       name: "conversation_participants_user_id_fkey",
     }).onDelete("cascade"),
     unique("unique_participant").on(table.userId, table.conversationId),
-  ],
+  ]
 );
 
-export const watchparties = pgTable(
-  "watchparties",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    createdBy: uuid("created_by").notNull(),
-    contentId: uuid("content_id").notNull(),
-    seasonId: uuid("season_id"),
-    episodeId: uuid("episode_id"),
-    name: varchar({ length: 255 }).notNull(),
-    description: text(),
-    isPublic: boolean("is_public").default(false),
-    maxParticipants: integer("max_participants"),
-    platformId: uuid("platform_id").notNull(),
-    platformUrl: text("platform_url").notNull(),
-    scheduledAt: timestamp("scheduled_at", {
-      withTimezone: true,
-      mode: "string",
-    }).notNull(),
-    startedAt: timestamp("started_at", { withTimezone: true, mode: "string" }),
-    endedAt: timestamp("ended_at", { withTimezone: true, mode: "string" }),
-    status: varchar({ length: 20 }).default("scheduled"),
-    currentPositionTimestamp: integer("current_position_timestamp").default(0),
-    isPlaying: boolean("is_playing").default(false),
-    leaderUserId: uuid("leader_user_id"),
-    createdAt: timestamp("created_at", {
-      withTimezone: true,
-      mode: "string",
-    }).defaultNow(),
-    updatedAt: timestamp("updated_at", {
-      withTimezone: true,
-      mode: "string",
-    }).defaultNow(),
-  },
-  (table) => [
-    index("idx_watchparties_content").using(
-      "btree",
-      table.contentId.asc().nullsLast().op("uuid_ops"),
-    ),
-    index("idx_watchparties_content_related").using(
-      "btree",
-      table.contentId.asc().nullsLast().op("uuid_ops"),
-      table.seasonId.asc().nullsLast().op("uuid_ops"),
-      table.episodeId.asc().nullsLast().op("uuid_ops"),
-    ),
-    index("idx_watchparties_creator").using(
-      "btree",
-      table.createdBy.asc().nullsLast().op("uuid_ops"),
-    ),
-    index("idx_watchparties_episode").using(
-      "btree",
-      table.episodeId.asc().nullsLast().op("uuid_ops"),
-    ),
-    index("idx_watchparties_scheduled").using(
-      "btree",
-      table.scheduledAt.asc().nullsLast().op("text_ops"),
-      table.status.asc().nullsLast().op("timestamptz_ops"),
-    ),
-    index("idx_watchparties_season").using(
-      "btree",
-      table.seasonId.asc().nullsLast().op("uuid_ops"),
-    ),
-    index("idx_watchparties_status").using(
-      "btree",
-      table.status.asc().nullsLast().op("text_ops"),
-    ),
-    foreignKey({
-      columns: [table.createdBy],
-      foreignColumns: [users.id],
-      name: "watchparties_created_by_fkey",
-    }).onDelete("cascade"),
-    foreignKey({
-      columns: [table.contentId],
-      foreignColumns: [content.id],
-      name: "watchparties_content_id_fkey",
-    }).onDelete("cascade"),
-    foreignKey({
-      columns: [table.seasonId],
-      foreignColumns: [seasons.id],
-      name: "watchparties_season_id_fkey",
-    }).onDelete("cascade"),
-    foreignKey({
-      columns: [table.episodeId],
-      foreignColumns: [episodes.id],
-      name: "watchparties_episode_id_fkey",
-    }).onDelete("cascade"),
-    foreignKey({
-      columns: [table.platformId],
-      foreignColumns: [streamingPlatforms.id],
-      name: "watchparties_platform_id_fkey",
-    }),
-    foreignKey({
-      columns: [table.leaderUserId],
-      foreignColumns: [users.id],
-      name: "watchparties_leader_user_id_fkey",
-    }),
-  ],
-);
+export const watchparties = watchpartySchema;
 
 export const streamingPlatforms = pgTable(
   "streaming_platforms",
@@ -488,7 +287,7 @@ export const streamingPlatforms = pgTable(
   (table) => [
     unique("streaming_platforms_name_key").on(table.name),
     unique("streaming_platforms_slug_key").on(table.slug),
-  ],
+  ]
 );
 
 export const messages = pgTable(
@@ -510,13 +309,13 @@ export const messages = pgTable(
   (table) => [
     index("idx_messages_conversation").using(
       "btree",
-      table.conversationId.asc().nullsLast().op("timestamptz_ops"),
-      table.createdAt.desc().nullsFirst().op("timestamptz_ops"),
+      table.conversationId.asc().nullsLast(),
+      table.createdAt.desc().nullsFirst()
     ),
     index("idx_messages_watchparty").using(
       "btree",
-      table.watchpartyId.asc().nullsLast().op("uuid_ops"),
-      table.createdAt.desc().nullsFirst().op("uuid_ops"),
+      table.watchpartyId.asc().nullsLast(),
+      table.createdAt.desc().nullsFirst()
     ),
     foreignKey({
       columns: [table.conversationId],
@@ -533,7 +332,7 @@ export const messages = pgTable(
       foreignColumns: [watchparties.id],
       name: "messages_watchparty_id_fkey",
     }).onDelete("cascade"),
-  ],
+  ]
 );
 
 export const ratings = pgTable(
@@ -555,12 +354,9 @@ export const ratings = pgTable(
   (table) => [
     index("idx_ratings_content").using(
       "btree",
-      table.contentId.asc().nullsLast().op("uuid_ops"),
+      table.contentId.asc().nullsLast()
     ),
-    index("idx_ratings_user").using(
-      "btree",
-      table.userId.asc().nullsLast().op("uuid_ops"),
-    ),
+    index("idx_ratings_user").using("btree", table.userId.asc().nullsLast()),
     foreignKey({
       columns: [table.userId],
       foreignColumns: [users.id],
@@ -573,7 +369,7 @@ export const ratings = pgTable(
     }).onDelete("cascade"),
     unique("unique_rating").on(table.userId, table.contentId),
     check("valid_rating", sql`(rating >= 1.0) AND (rating <= 5.0)`),
-  ],
+  ]
 );
 
 export const reviews = pgTable(
@@ -600,17 +396,14 @@ export const reviews = pgTable(
   (table) => [
     index("idx_reviews_content").using(
       "btree",
-      table.contentId.asc().nullsLast().op("uuid_ops"),
-      table.createdAt.desc().nullsFirst().op("timestamptz_ops"),
+      table.contentId.asc().nullsLast(),
+      table.createdAt.desc().nullsFirst()
     ),
     index("idx_reviews_parent").using(
       "btree",
-      table.parentReviewId.asc().nullsLast().op("uuid_ops"),
+      table.parentReviewId.asc().nullsLast()
     ),
-    index("idx_reviews_user").using(
-      "btree",
-      table.userId.asc().nullsLast().op("uuid_ops"),
-    ),
+    index("idx_reviews_user").using("btree", table.userId.asc().nullsLast()),
     foreignKey({
       columns: [table.userId],
       foreignColumns: [users.id],
@@ -626,51 +419,11 @@ export const reviews = pgTable(
       foreignColumns: [table.id],
       name: "reviews_parent_review_id_fkey",
     }).onDelete("cascade"),
-  ],
+  ]
 );
 
-export const userWatchlist = pgTable(
-  "user_watchlist",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    userId: uuid("user_id").notNull(),
-    contentId: uuid("content_id").notNull(),
-    status: varchar({ length: 20 }).default("to_watch").notNull(),
-    currentSeason: integer("current_season"),
-    currentEpisode: integer("current_episode"),
-    addedAt: timestamp("added_at", {
-      withTimezone: true,
-      mode: "string",
-    }).defaultNow(),
-    startedAt: timestamp("started_at", { withTimezone: true, mode: "string" }),
-    completedAt: timestamp("completed_at", {
-      withTimezone: true,
-      mode: "string",
-    }),
-  },
-  (table) => [
-    index("idx_watchlist_content").using(
-      "btree",
-      table.contentId.asc().nullsLast().op("uuid_ops"),
-    ),
-    index("idx_watchlist_user").using(
-      "btree",
-      table.userId.asc().nullsLast().op("uuid_ops"),
-      table.status.asc().nullsLast().op("text_ops"),
-    ),
-    foreignKey({
-      columns: [table.userId],
-      foreignColumns: [users.id],
-      name: "user_watchlist_user_id_fkey",
-    }).onDelete("cascade"),
-    foreignKey({
-      columns: [table.contentId],
-      foreignColumns: [content.id],
-      name: "user_watchlist_content_id_fkey",
-    }).onDelete("cascade"),
-    unique("unique_watchlist_entry").on(table.userId, table.contentId),
-  ],
-);
+export const watchlistStatusEnum = watchlistCustomEnumImported;
+export const watchlist = watchlistSchema;
 
 export const lists = pgTable(
   "lists",
@@ -695,19 +448,16 @@ export const lists = pgTable(
   (table) => [
     index("idx_lists_public").using(
       "btree",
-      table.isPublic.asc().nullsLast().op("timestamptz_ops"),
-      table.createdAt.desc().nullsFirst().op("timestamptz_ops"),
+      table.isPublic.asc().nullsLast(),
+      table.createdAt.desc().nullsFirst()
     ),
-    index("idx_lists_user").using(
-      "btree",
-      table.userId.asc().nullsLast().op("uuid_ops"),
-    ),
+    index("idx_lists_user").using("btree", table.userId.asc().nullsLast()),
     foreignKey({
       columns: [table.userId],
       foreignColumns: [users.id],
       name: "lists_user_id_fkey",
     }).onDelete("cascade"),
-  ],
+  ]
 );
 
 export const listItems = pgTable(
@@ -726,8 +476,8 @@ export const listItems = pgTable(
   (table) => [
     index("idx_list_items_list").using(
       "btree",
-      table.listId.asc().nullsLast().op("int4_ops"),
-      table.orderIndex.asc().nullsLast().op("uuid_ops"),
+      table.listId.asc().nullsLast(),
+      table.orderIndex.asc().nullsLast()
     ),
     foreignKey({
       columns: [table.listId],
@@ -740,7 +490,7 @@ export const listItems = pgTable(
       name: "list_items_content_id_fkey",
     }).onDelete("cascade"),
     unique("unique_list_item").on(table.listId, table.contentId),
-  ],
+  ]
 );
 
 export const watchpartyParticipants = pgTable(
@@ -757,12 +507,12 @@ export const watchpartyParticipants = pgTable(
   (table) => [
     index("idx_watchparty_participants_party").using(
       "btree",
-      table.watchpartyId.asc().nullsLast().op("uuid_ops"),
-      table.status.asc().nullsLast().op("uuid_ops"),
+      table.watchpartyId.asc().nullsLast(),
+      table.status.asc().nullsLast()
     ),
     index("idx_watchparty_participants_user").using(
       "btree",
-      table.userId.asc().nullsLast().op("uuid_ops"),
+      table.userId.asc().nullsLast()
     ),
     foreignKey({
       columns: [table.watchpartyId],
@@ -776,9 +526,9 @@ export const watchpartyParticipants = pgTable(
     }).onDelete("cascade"),
     unique("unique_watchparty_participant").on(
       table.watchpartyId,
-      table.userId,
+      table.userId
     ),
-  ],
+  ]
 );
 
 export const watchpartyInvitations = pgTable(
@@ -799,11 +549,11 @@ export const watchpartyInvitations = pgTable(
   (table) => [
     index("idx_invitations_invitee").using(
       "btree",
-      table.inviteeId.asc().nullsLast().op("uuid_ops"),
+      table.inviteeId.asc().nullsLast()
     ),
     index("idx_invitations_token").using(
       "btree",
-      table.inviteToken.asc().nullsLast().op("text_ops"),
+      table.inviteToken.asc().nullsLast()
     ),
     foreignKey({
       columns: [table.watchpartyId],
@@ -822,7 +572,7 @@ export const watchpartyInvitations = pgTable(
     }).onDelete("cascade"),
     unique("watchparty_invitations_invite_token_key").on(table.inviteToken),
     unique("unique_invitation").on(table.watchpartyId, table.inviteeId),
-  ],
+  ]
 );
 
 export const userActivityLogs = pgTable(
@@ -842,16 +592,16 @@ export const userActivityLogs = pgTable(
   (table) => [
     index("idx_activity_content").using(
       "btree",
-      table.contentId.asc().nullsLast().op("uuid_ops"),
+      table.contentId.asc().nullsLast()
     ),
     index("idx_activity_type").using(
       "btree",
-      table.eventType.asc().nullsLast().op("text_ops"),
+      table.eventType.asc().nullsLast()
     ),
     index("idx_activity_user").using(
       "btree",
-      table.userId.asc().nullsLast().op("timestamptz_ops"),
-      table.createdAt.desc().nullsFirst().op("timestamptz_ops"),
+      table.userId.asc().nullsLast(),
+      table.createdAt.desc().nullsFirst()
     ),
     foreignKey({
       columns: [table.userId],
@@ -868,7 +618,7 @@ export const userActivityLogs = pgTable(
       foreignColumns: [watchparties.id],
       name: "user_activity_logs_watchparty_id_fkey",
     }).onDelete("set null"),
-  ],
+  ]
 );
 
 export const userStats = pgTable(
@@ -901,7 +651,7 @@ export const userStats = pgTable(
       foreignColumns: [categories.id],
       name: "user_stats_favorite_genre_id_fkey",
     }),
-  ],
+  ]
 );
 
 export const notifications = pgTable(
@@ -924,9 +674,9 @@ export const notifications = pgTable(
   (table) => [
     index("idx_notifications_user").using(
       "btree",
-      table.userId.asc().nullsLast().op("timestamptz_ops"),
-      table.isRead.asc().nullsLast().op("uuid_ops"),
-      table.createdAt.desc().nullsFirst().op("uuid_ops"),
+      table.userId.asc().nullsLast(),
+      table.isRead.asc().nullsLast(),
+      table.createdAt.desc().nullsFirst()
     ),
     foreignKey({
       columns: [table.userId],
@@ -948,7 +698,7 @@ export const notifications = pgTable(
       foreignColumns: [watchparties.id],
       name: "notifications_related_watchparty_id_fkey",
     }).onDelete("cascade"),
-  ],
+  ]
 );
 
 export const contentCategories = pgTable(
@@ -960,7 +710,7 @@ export const contentCategories = pgTable(
   (table) => [
     index("idx_content_categories_category").using(
       "btree",
-      table.categoryId.asc().nullsLast().op("uuid_ops"),
+      table.categoryId.asc().nullsLast()
     ),
     foreignKey({
       columns: [table.contentId],
@@ -976,7 +726,7 @@ export const contentCategories = pgTable(
       columns: [table.contentId, table.categoryId],
       name: "content_categories_pkey",
     }),
-  ],
+  ]
 );
 
 export const reviewLikes = pgTable(
@@ -1004,7 +754,7 @@ export const reviewLikes = pgTable(
       columns: [table.userId, table.reviewId],
       name: "review_likes_pkey",
     }),
-  ],
+  ]
 );
 
 export const listLikes = pgTable(
@@ -1032,7 +782,7 @@ export const listLikes = pgTable(
       columns: [table.userId, table.listId],
       name: "list_likes_pkey",
     }),
-  ],
+  ]
 );
 
 export const peopleLikes = pgTable(
@@ -1060,7 +810,7 @@ export const peopleLikes = pgTable(
       columns: [table.userId, table.personId],
       name: "people_likes_pkey",
     }),
-  ],
+  ]
 );
 export const popularContent = pgView("popular_content", {
   id: uuid(),
@@ -1076,7 +826,6 @@ export const popularContent = pgView("popular_content", {
   year: integer(),
   durationMinutes: integer("duration_minutes"),
   tmdbId: integer("tmdb_id"),
-  imdbId: varchar("imdb_id", { length: 20 }),
   averageRating: numeric("average_rating", { precision: 3, scale: 2 }),
   totalRatings: integer("total_ratings"),
   totalViews: integer("total_views"),
@@ -1084,7 +833,7 @@ export const popularContent = pgView("popular_content", {
   updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" }),
   popularityScore: numeric("popularity_score"),
 }).as(
-  sql`SELECT id, type, title, original_title, slug, synopsis, poster_url, backdrop_url, trailer_url, release_date, year, duration_minutes, tmdb_id, imdb_id, average_rating, total_ratings, total_views, created_at, updated_at, COALESCE(total_ratings::numeric * average_rating, 0::numeric) AS popularity_score FROM content c ORDER BY (COALESCE(total_ratings::numeric * average_rating, 0::numeric)) DESC`,
+  sql`SELECT id, type, title, original_title, slug, synopsis, poster_url, backdrop_url, trailer_url, release_date, year, duration_minutes, tmdb_id, average_rating, total_ratings, total_views, created_at, updated_at, COALESCE(total_ratings::numeric * average_rating, 0::numeric) AS popularity_score FROM content c ORDER BY (COALESCE(total_ratings::numeric * average_rating, 0::numeric)) DESC`
 );
 
 export const upcomingWatchparties = pgView("upcoming_watchparties", {
@@ -1117,5 +866,322 @@ export const upcomingWatchparties = pgView("upcoming_watchparties", {
   // You can use { mode: "bigint" } if numbers are exceeding js number limitations
   participantCount: bigint("participant_count", { mode: "number" }),
 }).as(
-  sql`SELECT wp.id, wp.created_by, wp.content_id, wp.season_id, wp.episode_id, wp.name, wp.description, wp.is_public, wp.max_participants, wp.platform_id, wp.platform_url, wp.scheduled_at, wp.started_at, wp.ended_at, wp.status, wp.current_position_timestamp, wp.is_playing, wp.leader_user_id, wp.created_at, wp.updated_at, u.username AS creator_username, c.title AS content_title, sp.name AS platform_name, count(wpp.id) AS participant_count FROM watchparties wp JOIN users u ON wp.created_by = u.id JOIN content c ON wp.content_id = c.id JOIN streaming_platforms sp ON wp.platform_id = sp.id LEFT JOIN watchparty_participants wpp ON wp.id = wpp.watchparty_id AND wpp.status::text = 'confirmed'::text WHERE wp.status::text = 'scheduled'::text AND wp.scheduled_at > now() GROUP BY wp.id, u.username, c.title, sp.name`,
+  sql`SELECT wp.id, wp.created_by, wp.content_id, wp.season_id, wp.episode_id, wp.name, wp.description, wp.is_public, wp.max_participants, wp.platform_id, wp.platform_url, wp.scheduled_at, wp.started_at, wp.ended_at, wp.status, wp.current_position_timestamp, wp.is_playing, wp.leader_user_id, wp.created_at, wp.updated_at, u.username AS creator_username, c.title AS content_title, sp.name AS platform_name, count(wpp.id) AS participant_count FROM watchparties wp JOIN users u ON wp.created_by = u.id JOIN content c ON wp.content_id = c.id JOIN streaming_platforms sp ON wp.platform_id = sp.id LEFT JOIN watchparty_participants wpp ON wp.id = wpp.watchparty_id AND wpp.status::text = 'confirmed'::text WHERE wp.status::text = 'scheduled'::text AND wp.scheduled_at > now() GROUP BY wp.id, u.username, c.title, sp.name`
 );
+
+export const refreshTokensRelations = relations(refreshTokens, ({ one }) => ({
+  user: one(users, {
+    fields: [refreshTokens.userId],
+    references: [users.id],
+  }),
+}));
+
+export const usersRelations = usersRelationSchema;
+
+export const friendshipsRelations = friendshipsRelationsSchema;
+
+export const contentCreditsRelations = relations(contentCredits, ({ one }) => ({
+  content: one(content, {
+    fields: [contentCredits.contentId],
+    references: [content.id],
+  }),
+  person: one(people, {
+    fields: [contentCredits.personId],
+    references: [people.id],
+  }),
+}));
+
+export const contentRelations = contentRelationsSchema;
+
+export const peopleRelations = peopleRelationSchema;
+
+export const seasonsRelations = relations(seasons, ({ one, many }) => ({
+  content: one(content, {
+    fields: [seasons.seriesId],
+    references: [content.id],
+  }),
+  episodes: many(episodes),
+  watchparties: many(watchparties),
+}));
+
+export const episodesRelations = relations(episodes, ({ one, many }) => ({
+  season: one(seasons, {
+    fields: [episodes.seasonId],
+    references: [seasons.id],
+  }),
+  watchparties: many(watchparties),
+}));
+
+export const conversationsRelations = relations(
+  conversations,
+  ({ one, many }) => ({
+    user: one(users, {
+      fields: [conversations.createdBy],
+      references: [users.id],
+    }),
+    conversationParticipants: many(conversationParticipants),
+    messages: many(messages),
+  })
+);
+
+export const conversationParticipantsRelations = relations(
+  conversationParticipants,
+  ({ one }) => ({
+    conversation: one(conversations, {
+      fields: [conversationParticipants.conversationId],
+      references: [conversations.id],
+    }),
+    user: one(users, {
+      fields: [conversationParticipants.userId],
+      references: [users.id],
+    }),
+  })
+);
+
+export const watchpartiesRelations = relations(
+  watchparties,
+  ({ one, many }) => ({
+    user_createdBy: one(users, {
+      fields: [watchparties.createdBy],
+      references: [users.id],
+      relationName: "watchparties_createdBy_users_id",
+    }),
+    content: one(content, {
+      fields: [watchparties.contentId],
+      references: [content.id],
+    }),
+    season: one(seasons, {
+      fields: [watchparties.seasonId],
+      references: [seasons.id],
+    }),
+    episode: one(episodes, {
+      fields: [watchparties.episodeId],
+      references: [episodes.id],
+    }),
+    streamingPlatform: one(streamingPlatforms, {
+      fields: [watchparties.platformId],
+      references: [streamingPlatforms.id],
+    }),
+    user_leaderUserId: one(users, {
+      fields: [watchparties.leaderUserId],
+      references: [users.id],
+      relationName: "watchparties_leaderUserId_users_id",
+    }),
+    messages: many(messages),
+    watchpartyParticipants: many(watchpartyParticipants),
+    watchpartyInvitations: many(watchpartyInvitations),
+    userActivityLogs: many(userActivityLogs),
+    notifications: many(notifications),
+  })
+);
+
+export const streamingPlatformsRelations = relations(
+  streamingPlatforms,
+  ({ many }) => ({
+    watchparties: many(watchparties),
+  })
+);
+
+export const messagesRelations = relations(messages, ({ one }) => ({
+  conversation: one(conversations, {
+    fields: [messages.conversationId],
+    references: [conversations.id],
+  }),
+  user: one(users, {
+    fields: [messages.userId],
+    references: [users.id],
+  }),
+  watchparty: one(watchparties, {
+    fields: [messages.watchpartyId],
+    references: [watchparties.id],
+  }),
+}));
+
+export const ratingsRelations = relations(ratings, ({ one }) => ({
+  user: one(users, {
+    fields: [ratings.userId],
+    references: [users.id],
+  }),
+  content: one(content, {
+    fields: [ratings.contentId],
+    references: [content.id],
+  }),
+}));
+
+export const reviewsRelations = relations(reviews, ({ one, many }) => ({
+  user: one(users, {
+    fields: [reviews.userId],
+    references: [users.id],
+  }),
+  content: one(content, {
+    fields: [reviews.contentId],
+    references: [content.id],
+  }),
+  review: one(reviews, {
+    fields: [reviews.parentReviewId],
+    references: [reviews.id],
+    relationName: "reviews_parentReviewId_reviews_id",
+  }),
+  reviews: many(reviews, {
+    relationName: "reviews_parentReviewId_reviews_id",
+  }),
+  reviewLikes: many(reviewLikes),
+}));
+
+export const watchlistRelations = watchlistRelationsSchema;
+
+export const listsRelations = relations(lists, ({ one, many }) => ({
+  user: one(users, {
+    fields: [lists.userId],
+    references: [users.id],
+  }),
+  listItems: many(listItems),
+  listLikes: many(listLikes),
+}));
+
+export const listItemsRelations = relations(listItems, ({ one }) => ({
+  list: one(lists, {
+    fields: [listItems.listId],
+    references: [lists.id],
+  }),
+  content: one(content, {
+    fields: [listItems.contentId],
+    references: [content.id],
+  }),
+}));
+
+export const watchpartyParticipantsRelations = relations(
+  watchpartyParticipants,
+  ({ one }) => ({
+    watchparty: one(watchparties, {
+      fields: [watchpartyParticipants.watchpartyId],
+      references: [watchparties.id],
+    }),
+    user: one(users, {
+      fields: [watchpartyParticipants.userId],
+      references: [users.id],
+    }),
+  })
+);
+
+export const watchpartyInvitationsRelations = relations(
+  watchpartyInvitations,
+  ({ one }) => ({
+    watchparty: one(watchparties, {
+      fields: [watchpartyInvitations.watchpartyId],
+      references: [watchparties.id],
+    }),
+    user_inviterId: one(users, {
+      fields: [watchpartyInvitations.inviterId],
+      references: [users.id],
+      relationName: "watchpartyInvitations_inviterId_users_id",
+    }),
+    user_inviteeId: one(users, {
+      fields: [watchpartyInvitations.inviteeId],
+      references: [users.id],
+      relationName: "watchpartyInvitations_inviteeId_users_id",
+    }),
+  })
+);
+
+export const userActivityLogsRelations = relations(
+  userActivityLogs,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [userActivityLogs.userId],
+      references: [users.id],
+    }),
+    content: one(content, {
+      fields: [userActivityLogs.contentId],
+      references: [content.id],
+    }),
+    watchparty: one(watchparties, {
+      fields: [userActivityLogs.watchpartyId],
+      references: [watchparties.id],
+    }),
+  })
+);
+
+export const userStatsRelations = relations(userStats, ({ one }) => ({
+  user: one(users, {
+    fields: [userStats.userId],
+    references: [users.id],
+  }),
+  category: one(categories, {
+    fields: [userStats.favoriteGenreId],
+    references: [categories.id],
+  }),
+}));
+
+export const categoriesRelations = relations(categories, ({ many }) => ({
+  userStats: many(userStats),
+  contentCategories: many(contentCategories),
+}));
+
+export const notificationsRelations = relations(notifications, ({ one }) => ({
+  user_userId: one(users, {
+    fields: [notifications.userId],
+    references: [users.id],
+    relationName: "notifications_userId_users_id",
+  }),
+  user_relatedUserId: one(users, {
+    fields: [notifications.relatedUserId],
+    references: [users.id],
+    relationName: "notifications_relatedUserId_users_id",
+  }),
+  content: one(content, {
+    fields: [notifications.relatedContentId],
+    references: [content.id],
+  }),
+  watchparty: one(watchparties, {
+    fields: [notifications.relatedWatchpartyId],
+    references: [watchparties.id],
+  }),
+}));
+
+export const contentCategoriesRelations = relations(
+  contentCategories,
+  ({ one }) => ({
+    content: one(content, {
+      fields: [contentCategories.contentId],
+      references: [content.id],
+    }),
+    category: one(categories, {
+      fields: [contentCategories.categoryId],
+      references: [categories.id],
+    }),
+  })
+);
+
+export const reviewLikesRelations = relations(reviewLikes, ({ one }) => ({
+  user: one(users, {
+    fields: [reviewLikes.userId],
+    references: [users.id],
+  }),
+  review: one(reviews, {
+    fields: [reviewLikes.reviewId],
+    references: [reviews.id],
+  }),
+}));
+
+export const listLikesRelations = relations(listLikes, ({ one }) => ({
+  user: one(users, {
+    fields: [listLikes.userId],
+    references: [users.id],
+  }),
+  list: one(lists, {
+    fields: [listLikes.listId],
+    references: [lists.id],
+  }),
+}));
+
+export const peopleLikesRelations = relations(peopleLikes, ({ one }) => ({
+  user: one(users, {
+    fields: [peopleLikes.userId],
+    references: [users.id],
+  }),
+  person: one(people, {
+    fields: [peopleLikes.personId],
+    references: [people.id],
+  }),
+}));

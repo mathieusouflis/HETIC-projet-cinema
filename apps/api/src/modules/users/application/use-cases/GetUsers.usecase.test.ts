@@ -1,5 +1,5 @@
 import { describe, it } from "vitest";
-import { createMockedUserRepository } from "../../domain/interfaces/user.repository.mock";
+import { createMockedUserRepository } from "../../domain/interfaces/user.repository.mock.";
 import { GetUsersUseCase } from "./GetUsers.usecase";
 
 describe("LoginUseCase", () => {
@@ -12,7 +12,7 @@ describe("LoginUseCase", () => {
         page: 1,
         limit: 10,
         offset: 0,
-      }),
+      })
     ).toBeDefined();
   });
 });

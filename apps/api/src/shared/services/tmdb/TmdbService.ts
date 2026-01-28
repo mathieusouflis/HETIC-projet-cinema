@@ -1,6 +1,6 @@
 import { config } from "@packages/config";
-import { ITmdbService } from "./ITmdbService";
 import { ServerError } from "../../errors/ServerError";
+import type { ITmdbService } from "./ITmdbService";
 
 export class TmdbService implements ITmdbService {
   private apiKey = config.env.externalApi.tmdbApiKey;
@@ -8,19 +8,19 @@ export class TmdbService implements ITmdbService {
   private version: number;
   private baseUrl: string;
 
-  constructor(lang: "en_EN" | "fr_FR" = "fr_FR", version: number = 3) {
+  constructor(lang: "en_EN" | "fr_FR" = "fr_FR", version = 3) {
     this.lang = lang;
     this.version = version;
-    this.baseUrl = `https://api.themoviedb.org/`;
+    this.baseUrl = "https://api.themoviedb.org/";
   }
 
   async request<T>(
     method: "GET",
     endpoint: string,
-    params?: Record<string, string>,
+    params?: Record<string, string>
   ): Promise<T> {
-    const url = `${this.baseUrl}${this.version}/${endpoint}?api_key=${this.apiKey}&language=${this.lang}`;
-    let paramsUrl: string = "";
+    const url = `${this.baseUrl}${this.version}/${endpoint}${endpoint.includes("?") ? "&" : "?"}api_key=${this.apiKey}&language=${this.lang}`;
+    let paramsUrl = "";
     if (params) {
       paramsUrl = Object.keys(params).reduce((acc, key) => {
         return `${acc}&${key}=${params[key]}`;

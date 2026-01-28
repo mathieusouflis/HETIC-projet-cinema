@@ -1,5 +1,13 @@
-import { describe, it, expect, vi, beforeEach, afterEach, Mock } from "vitest";
 import type { Socket } from "socket.io";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  type Mock,
+  vi,
+} from "vitest";
 
 const { mockVerifyAccessToken } = vi.hoisted(() => ({
   mockVerifyAccessToken: vi.fn(),
@@ -233,8 +241,8 @@ describe("Socket Authentication Middleware", () => {
         socketAuthMiddleware(mockSocket as Socket);
 
         expect(mockSocket.user).toBeDefined();
-        expect(mockSocket.user!.userId).toBe(payload.userId);
-        expect(mockSocket.user!.email).toBe(payload.email);
+        expect(mockSocket.user?.userId).toBe(payload.userId);
+        expect(mockSocket.user?.email).toBe(payload.email);
       });
 
       it("should overwrite existing user data on socket", () => {
@@ -260,7 +268,7 @@ describe("Socket Authentication Middleware", () => {
   });
 
   describe("socketAuthNamespaceMiddleware", () => {
-    let nextCallback: Mock
+    let nextCallback: Mock;
 
     beforeEach(() => {
       nextCallback = vi.fn();
@@ -387,7 +395,8 @@ describe("Socket Authentication Middleware", () => {
     });
 
     it("should handle token with special characters (JWT format)", () => {
-      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+      const token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
       mockSocket.handshake!.auth = { token };
       mockVerifyAccessToken.mockReturnValue({
         userId: "user-123",

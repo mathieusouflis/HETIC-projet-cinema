@@ -1,8 +1,8 @@
 import z from "zod";
-import { publicUserSchema } from "../../schema/user.schema";
 import { returnedPaginationSchema } from "../../../../../shared/schemas/base/pagination.schema";
+import { publicUserValidator } from "../../validators/user.validator";
 export const getResponseSchema = z.object({
-  users: z.array(publicUserSchema),
+  users: z.array(publicUserValidator),
   pagination: returnedPaginationSchema,
 });
 

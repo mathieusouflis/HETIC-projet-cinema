@@ -5,9 +5,9 @@ export class WebSocketError extends Error {
 
   constructor(
     message: string,
-    code: string = "WS_ERROR",
+    code = "WS_ERROR",
     event?: string,
-    isOperational: boolean = true,
+    isOperational = true
   ) {
     super(message);
 

@@ -1,9 +1,9 @@
 import "reflect-metadata";
 import "./shared/infrastructure/openapi/zod-openapi.js";
-import { logger } from "@packages/logger";
-import { createServer } from "./server.js";
 import { config } from "@packages/config";
+import { logger } from "@packages/logger";
 import { registerAllWebSocketEvents } from "./modules/index.js";
+import { createServer } from "./server.js";
 
 const port = config.env.backend.port || 5001;
 const { httpServer, io } = createServer();
@@ -11,10 +11,18 @@ const { httpServer, io } = createServer();
 registerAllWebSocketEvents(io);
 
 httpServer.listen(port, () => {
-  logger.info(`🚀 \x1b[35mAPI server\x1b[0m running on http://localhost:${port}`);
-  logger.info(`🚀 \x1b[35mWebSocket server\x1b[0m running on ws://localhost:${port}`);
-  logger.info(`📚 \x1b[35mREST API docs\x1b[0m: http://localhost:${port}/api/v${config.env.backend.version}/docs`);
-  logger.info(`📚 \x1b[35mWebSocket docs\x1b[0m: http://localhost:${port}/docs/asyncapi.json`);
+  logger.info(
+    `🚀 \x1b[35mAPI server\x1b[0m running on http://localhost:${port}`
+  );
+  logger.info(
+    `🚀 \x1b[35mWebSocket server\x1b[0m running on ws://localhost:${port}`
+  );
+  logger.info(
+    `📚 \x1b[35mREST API docs\x1b[0m: http://localhost:${port}/api/v${config.env.backend.version}/docs`
+  );
+  logger.info(
+    `📚 \x1b[35mWebSocket docs\x1b[0m: http://localhost:${port}/docs/asyncapi.json`
+  );
 });
 
 const shutdown = (signal: string) => {

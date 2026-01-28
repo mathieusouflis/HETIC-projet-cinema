@@ -1,12 +1,12 @@
-import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";
+import { UnauthorizedError } from "../../../../shared/errors/UnauthorizedError.js";
 import type { IPasswordService } from "../../../../shared/services/password/IPasswordService.js";
 import type { ITokenService } from "../../../../shared/services/token/ITokenService.js";
-import { UnauthorizedError } from "../../../../shared/errors/UnauthorizedError.js";
-import { toAuthResponseDTO } from "../dto/utils/to-auth-response-dto.js";
+import type { RefreshToken } from "../../../../shared/services/token/schemas/tokens.schema.js";
 import { toUserResponseDTO } from "../../../users/application/dto/utils/to-user-response.js";
-import { LoginDTO } from "../dto/request/login.dto.js";
-import { AuthResponseDTO } from "../dto/response/auth-response.dto.js";
-import { RefreshToken } from "../../../../shared/services/token/schemas/tokens.schema.js";
+import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";
+import type { LoginDTO } from "../dto/request/login.dto.js";
+import type { AuthResponseDTO } from "../dto/response/auth-response.dto.js";
+import { toAuthResponseDTO } from "../dto/utils/to-auth-response-dto.js";
 
 /**
  * Login Use Case
@@ -17,7 +17,7 @@ export class LoginUseCase {
   constructor(
     private readonly userRepository: IUserRepository,
     private readonly passwordService: IPasswordService,
-    private readonly tokenService: ITokenService,
+    private readonly tokenService: ITokenService
   ) {}
 
   /**
@@ -38,7 +38,7 @@ export class LoginUseCase {
 
     const isPasswordValid = await this.passwordService.compare(
       data.password,
-      user.passwordHash,
+      user.passwordHash
     );
 
     if (!isPasswordValid) {
@@ -47,7 +47,7 @@ export class LoginUseCase {
 
     const { accessToken, refreshToken } = this.tokenService.generateTokenPair(
       user.id,
-      user.email,
+      user.email
     );
 
     const userResponse = toUserResponseDTO(user);

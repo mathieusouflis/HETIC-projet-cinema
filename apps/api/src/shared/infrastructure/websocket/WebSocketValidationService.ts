@@ -14,7 +14,7 @@ export class WebSocketValidationService {
   public validateEventData<T>(
     schema: z.ZodSchema<T>,
     data: unknown,
-    eventName: string,
+    eventName: string
   ): T {
     try {
       return schema.parse(data);
@@ -27,13 +27,13 @@ export class WebSocketValidationService {
         throw new WebSocketValidationError(
           "Event data validation failed",
           details,
-          eventName,
+          eventName
         );
       }
       throw new WebSocketValidationError(
         "Event data validation failed",
         undefined,
-        eventName,
+        eventName
       );
     }
   }
@@ -45,7 +45,7 @@ export class WebSocketValidationService {
   public validateAcknowledgment<T>(
     schema: z.ZodSchema<T>,
     data: unknown,
-    eventName: string,
+    eventName: string
   ): T {
     try {
       return schema.parse(data);
@@ -58,13 +58,13 @@ export class WebSocketValidationService {
         throw new WebSocketValidationError(
           "Acknowledgment validation failed",
           details,
-          eventName,
+          eventName
         );
       }
       throw new WebSocketValidationError(
         "Acknowledgment validation failed",
         undefined,
-        eventName,
+        eventName
       );
     }
   }
@@ -102,4 +102,5 @@ export class WebSocketValidationService {
   }
 }
 
-export const webSocketValidationService = WebSocketValidationService.getInstance();
+export const webSocketValidationService =
+  WebSocketValidationService.getInstance();

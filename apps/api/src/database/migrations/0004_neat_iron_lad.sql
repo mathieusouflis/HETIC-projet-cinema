@@ -1,0 +1,3 @@
+CREATE TYPE "public"."watchlistStatus" AS ENUM('plan_to_watch', 'watching', 'completed', 'dropped', 'undecided', 'not_interested');--> statement-breakpoint
+ALTER TABLE "user_watchlist" ALTER COLUMN "status" SET DEFAULT 'plan_to_watch'::"public"."watchlistStatus";--> statement-breakpoint
+ALTER TABLE "user_watchlist" ALTER COLUMN "status" SET DATA TYPE "public"."watchlistStatus" USING "status"::"public"."watchlistStatus";

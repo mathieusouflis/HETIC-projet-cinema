@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import type { Request, Response, NextFunction, RequestHandler } from "express";
+import type { NextFunction, Request, RequestHandler, Response } from "express";
 
 const REQUIRED_HEADERS_METADATA_KEY = Symbol("route:requiredHeaders");
 const SET_HEADERS_METADATA_KEY = Symbol("route:setHeaders");
@@ -45,11 +45,11 @@ export interface CookieMetadata {
  * ```
  */
 export function RequiredHeaders(headers: string[]) {
-  return function (
+  return (
     target: object,
     propertyKey: string,
-    _descriptor?: PropertyDescriptor,
-  ): void {
+    _descriptor?: PropertyDescriptor
+  ): void => {
     const key = `${REQUIRED_HEADERS_METADATA_KEY.toString()}_${propertyKey}`;
 
     const metadata: RequiredHeadersMetadata = {
@@ -79,13 +79,13 @@ export function RequiredHeaders(headers: string[]) {
  * ```
  */
 export function SetHeaders(
-  headers: Record<string, string | ((req: Request, res: Response) => string)>,
+  headers: Record<string, string | ((req: Request, res: Response) => string)>
 ) {
-  return function (
+  return (
     target: object,
     propertyKey: string,
-    _descriptor?: PropertyDescriptor,
-  ): void {
+    _descriptor?: PropertyDescriptor
+  ): void => {
     const key = `${SET_HEADERS_METADATA_KEY.toString()}_${propertyKey}`;
 
     const metadata: SetHeadersMetadata = {
@@ -117,11 +117,11 @@ export function SetHeaders(
  * ```
  */
 export function RequiredCookie(cookieName: string) {
-  return function (
+  return (
     target: object,
     propertyKey: string,
-    _descriptor?: PropertyDescriptor,
-  ): void {
+    _descriptor?: PropertyDescriptor
+  ): void => {
     const key = `${COOKIE_METADATA_KEY.toString()}_${propertyKey}`;
 
     const metadata: CookieMetadata = {
@@ -163,13 +163,13 @@ export function RefreshTokenCookie() {
  */
 export function SetCookie(
   cookieName: string,
-  options?: CookieMetadata["options"],
+  options?: CookieMetadata["options"]
 ) {
-  return function (
+  return (
     target: object,
     propertyKey: string,
-    _descriptor?: PropertyDescriptor,
-  ): void {
+    _descriptor?: PropertyDescriptor
+  ): void => {
     const key = `${SET_HEADERS_METADATA_KEY.toString()}_cookie_${propertyKey}`;
 
     const metadata: CookieMetadata = {
@@ -186,7 +186,7 @@ export function SetCookie(
  */
 export function getRequiredHeadersMetadata(
   target: object,
-  methodName: string,
+  methodName: string
 ): RequiredHeadersMetadata | undefined {
   const key = `${REQUIRED_HEADERS_METADATA_KEY.toString()}_${methodName}`;
   return Reflect.getMetadata(key, target);
@@ -197,7 +197,7 @@ export function getRequiredHeadersMetadata(
  */
 export function getSetHeadersMetadata(
   target: object,
-  methodName: string,
+  methodName: string
 ): SetHeadersMetadata | undefined {
   const key = `${SET_HEADERS_METADATA_KEY.toString()}_${methodName}`;
   return Reflect.getMetadata(key, target);
@@ -208,7 +208,7 @@ export function getSetHeadersMetadata(
  */
 export function getRequiredCookieMetadata(
   target: object,
-  methodName: string,
+  methodName: string
 ): CookieMetadata | undefined {
   const key = `${COOKIE_METADATA_KEY.toString()}_${methodName}`;
   return Reflect.getMetadata(key, target);
@@ -219,7 +219,7 @@ export function getRequiredCookieMetadata(
  */
 export function getSetCookieMetadata(
   target: object,
-  methodName: string,
+  methodName: string
 ): CookieMetadata | undefined {
   const key = `${SET_HEADERS_METADATA_KEY.toString()}_cookie_${methodName}`;
   return Reflect.getMetadata(key, target);
@@ -229,7 +229,7 @@ export function getSetCookieMetadata(
  * Middleware factory to check required headers
  */
 export function createRequiredHeadersMiddleware(
-  headers: string[],
+  headers: string[]
 ): RequestHandler {
   return (req: Request, res: Response, next: NextFunction) => {
     const missingHeaders: string[] = [];
@@ -256,7 +256,7 @@ export function createRequiredHeadersMiddleware(
  * Middleware factory to set response headers
  */
 export function createSetHeadersMiddleware(
-  headers: SetHeadersMetadata["headers"],
+  headers: SetHeadersMetadata["headers"]
 ): RequestHandler {
   return (req: Request, res: Response, next: NextFunction) => {
     for (const header of headers) {
@@ -275,7 +275,7 @@ export function createSetHeadersMiddleware(
  * Middleware factory to check required cookies
  */
 export function createRequiredCookieMiddleware(
-  cookieName: string,
+  cookieName: string
 ): RequestHandler {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.cookies || !req.cookies[cookieName]) {
