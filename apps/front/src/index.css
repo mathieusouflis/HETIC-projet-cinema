@@ -1,4 +1,4 @@
-html {
+/*html {
   font-family:
     ui-sans-serif,
     system-ui,
@@ -19,4 +19,6 @@ html {
 
 body {
   margin: 0;
-}
+}*/
+
+@import "tailwindcss";
