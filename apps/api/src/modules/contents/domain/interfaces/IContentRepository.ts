@@ -8,7 +8,7 @@ export interface IContentRepository {
     country?: string,
     categories?: string[],
     options?: PaginationQuery
-  ) => Promise<Content[]>;
+  ) => Promise<{ data: Content[]; total: number }>;
   searchContents: (
     query: string,
     type?: string,

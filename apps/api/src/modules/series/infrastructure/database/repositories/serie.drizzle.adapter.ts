@@ -34,7 +34,7 @@ export class DrizzleSerieAdapter extends BaseDrizzleAdapter<
     categories?: string[],
     tmdbIds?: number[],
     options?: PaginationQuery
-  ): Promise<Serie[]> {
+  ): Promise<{ data: Serie[]; total: number }> {
     return this.listContent(title, country, categories, tmdbIds, options);
   }
 

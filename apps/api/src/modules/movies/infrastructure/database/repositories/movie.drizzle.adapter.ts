@@ -34,7 +34,10 @@ export class DrizzleMovieAdapter extends BaseDrizzleAdapter<
     categories?: string[],
     tmdbIds?: number[],
     options?: PaginationQuery
-  ): Promise<Content[]> {
+  ): Promise<{
+    data: Content[];
+    total: number;
+  }> {
     return this.listContent(title, country, categories, tmdbIds, options);
   }
 
