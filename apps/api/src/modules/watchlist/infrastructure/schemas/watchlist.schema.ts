@@ -63,16 +63,19 @@ export const watchlistSchema = pgTable(
   ]
 );
 
-export const watchlistRelationsSchema = relations(watchlist, ({ one }) => ({
-  user: one(users, {
-    fields: [watchlist.userId],
-    references: [users.id],
-  }),
-  content: one(content, {
-    fields: [watchlist.contentId],
-    references: [content.id],
-  }),
-}));
+export const watchlistRelationsSchema = relations(
+  watchlistSchema,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [watchlist.userId],
+      references: [users.id],
+    }),
+    content: one(content, {
+      fields: [watchlist.contentId],
+      references: [content.id],
+    }),
+  })
+);
 
 export type WatchlistRow = typeof watchlistSchema.$inferSelect;
 export type NewWatchlistRow = typeof watchlistSchema.$inferInsert;

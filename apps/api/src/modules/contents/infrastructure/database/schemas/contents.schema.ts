@@ -13,7 +13,6 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import {
-  content,
   contentCategories,
   contentCredits,
   listItems,
@@ -87,7 +86,7 @@ export const contentSchema = pgTable(
   ]
 );
 
-export const contentRelationsSchema = relations(content, ({ many }) => ({
+export const contentRelationsSchema = relations(contentSchema, ({ many }) => ({
   contentCredits: many(contentCredits),
   seasons: many(seasons),
   watchparties: many(watchparties),
