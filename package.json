@@ -12,7 +12,7 @@
     "db:shell": "docker compose -f docker-compose.dev.yaml exec db psql -U ${DB_USER:-root} -d ${DB_DATABASE:-database}",
     "db:start": "docker-compose -f docker-compose.dev.yaml up -d",
     "db:stop": "docker compose -f docker-compose.dev.yaml down",
-    "dev": "pnpm db:start && phase run turbo run dev",
+    "dev": "phase run pnpm db:start && phase run turbo run dev",
     "format": "pnpm lint --write",
     "lint": "biome check --max-diagnostics=500 --diagnostic-level=error",
     "start": "phase run turbo run start",
