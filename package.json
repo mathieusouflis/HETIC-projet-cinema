@@ -16,7 +16,8 @@
     "format": "pnpm lint --write",
     "lint": "biome check --max-diagnostics=500 --diagnostic-level=error",
     "start": "phase run turbo run start",
-    "test": "turbo run test -- --coverage"
+    "test": "turbo run test -- --coverage",
+    "setup-project": "pnpm install && phase auth"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.12",
