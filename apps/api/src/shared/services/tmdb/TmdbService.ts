@@ -35,7 +35,10 @@ export class TmdbService implements ITmdbService {
     });
 
     if (!response.ok) {
-      throw new ServerError();
+      const errorText = await response.text();
+      throw new ServerError(
+        `TMDB API request failed: ${method} ${endpoint} - Status ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ""}`
+      );
     }
     return response.json() as Promise<T>;
   }

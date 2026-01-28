@@ -25,7 +25,7 @@ export class DrizzleMovieAdapter extends BaseDrizzleAdapter<
 
   // Convenience method aliases for backward compatibility
   async createMovie(movie: CreateContentProps): Promise<Content> {
-    return this.createContent(movie);
+    return await this.createContent(movie);
   }
 
   async listMovies(
@@ -38,12 +38,12 @@ export class DrizzleMovieAdapter extends BaseDrizzleAdapter<
     data: Content[];
     total: number;
   }> {
-    return this.listContent(title, country, categories, tmdbIds, options);
+    return await this.listContent(title, country, categories, tmdbIds, options);
   }
 
   async checkMovieExistsInDb<Id extends number>(
     tmdbIds: Id[]
   ): Promise<Record<Id, boolean>> {
-    return this.checkContentExistsInDb(tmdbIds);
+    return await this.checkContentExistsInDb(tmdbIds);
   }
 }
