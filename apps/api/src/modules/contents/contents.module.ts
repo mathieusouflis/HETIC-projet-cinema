@@ -1,6 +1,7 @@
 import type { Router } from "express";
 import { RestModule } from "../../shared/infrastructure/base/modules/RestModule.js";
 import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-generator.js";
+
 import { ContentsController } from "./application/controllers/contents.controller.js";
 import { GetContentByIdUseCase } from "./application/use-cases/get-content-by-id.use-case.js";
 import { QueryContentUseCase } from "./application/use-cases/query-content.use-case.js";
@@ -34,8 +35,8 @@ class ContentsModule extends RestModule {
 
   constructor() {
     super({
-      name: "Users Module",
-      description: "Module for managing users",
+      name: "Contents Module",
+      description: "Module for managing contents",
     });
 
     this.repository = new ContentsRepository();
@@ -43,6 +44,7 @@ class ContentsModule extends RestModule {
     this.queryContentsUseCase = new QueryContentUseCase(this.repository);
     this.getContentByIdUseCase = new GetContentByIdUseCase(this.repository);
     this.searchContentsUseCase = new SearchContentsUseCase(this.repository);
+
     this.controller = new ContentsController(
       this.queryContentsUseCase,
       this.getContentByIdUseCase,
