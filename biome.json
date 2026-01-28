@@ -9,7 +9,8 @@
   "files": {
     "ignoreUnknown": false,
     "includes": [
-      "**",
+      "**/*",
+      "vite.config.ts",
       "!**/node_modules",
       "!**/dist",
       "!**/build",
