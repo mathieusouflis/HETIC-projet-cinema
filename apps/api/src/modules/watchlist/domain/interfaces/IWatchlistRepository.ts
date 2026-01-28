@@ -14,7 +14,10 @@ export interface IWatchlistRepository {
     params: {
       status?: WatchStatus;
     }
-  ): Promise<Watchlist[]>;
+  ): Promise<{
+    data: Watchlist[];
+    total: number;
+  }>;
   update(id: string, watchlist: UpdateWatchlistProps): Promise<Watchlist>;
   delete(id: string): Promise<void>;
 }
