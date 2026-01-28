@@ -1,4 +1,4 @@
-import { and, eq, or, type SQL } from "drizzle-orm";
+import { and, count, eq, or, type SQL } from "drizzle-orm";
 import { db } from "../../../../database/index.js";
 import { watchparties } from "../../../../database/schema.js";
 import { NotFoundError } from "../../../../shared/errors/NotFoundError.js";
@@ -78,7 +78,10 @@ export class WatchpartyRepository implements IWatchpartyRepository {
     status?: WatchpartyStatus;
     isPublic?: boolean;
     contentId?: string;
-  }): Promise<Watchparty[]> {
+  }): Promise<{
+    data: Watchparty[];
+    total: number;
+  }> {
     try {
       const conditions: SQL[] = [];
 
@@ -94,19 +97,30 @@ export class WatchpartyRepository implements IWatchpartyRepository {
         conditions.push(eq(watchparties.contentId, params.contentId));
       }
 
-      const query =
-        conditions.length > 0
-          ? db
-              .select()
-              .from(watchparties)
-              .where(and(...conditions))
-          : db.select().from(watchparties);
+      const whereClause =
+        conditions.length > 0 ? and(...conditions) : undefined;
 
-      const resolvedWatchparties = await query;
+      const query = whereClause
+        ? db.select().from(watchparties).where(whereClause)
+        : db.select().from(watchparties);
 
-      return resolvedWatchparties.map(
-        (watchparty) => new Watchparty(watchparty)
-      );
+      const countQuery = whereClause
+        ? db.select({ count: count() }).from(watchparties).where(whereClause)
+        : db.select({ count: count() }).from(watchparties);
+
+      const [resolvedWatchparties, countResult] = await Promise.all([
+        query,
+        countQuery,
+      ]);
+
+      const total = countResult[0]?.count ?? 0;
+
+      return {
+        data: resolvedWatchparties.map(
+          (watchparty) => new Watchparty(watchparty)
+        ),
+        total,
+      };
     } catch (error) {
       throw new ServerError(`Failed to list watchparties: ${error}`);
     }

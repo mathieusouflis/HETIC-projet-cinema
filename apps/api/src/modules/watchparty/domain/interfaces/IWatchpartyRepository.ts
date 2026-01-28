@@ -13,7 +13,7 @@ export interface IWatchpartyRepository {
     status?: WatchpartyStatus;
     isPublic?: boolean;
     contentId?: string;
-  }): Promise<Watchparty[]>;
+  }): Promise<{ data: Watchparty[]; total: number }>;
   update(id: string, watchparty: UpdateWatchpartyProps): Promise<Watchparty>;
   delete(id: string): Promise<void>;
 }
