@@ -5,6 +5,8 @@ import "./index.css";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 
 // Import the generated route tree
+// biome-ignore lint: Ts ignore needed
+// @ts-ignore: Next line is generated
 import { routeTree } from "./generated/routeTree.gen";
 
 // Create a new router instance
