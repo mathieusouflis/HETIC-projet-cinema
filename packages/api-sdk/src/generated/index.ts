@@ -16,6 +16,9 @@ import type {
   DELETEWatchlistId204,
   DELETEWatchpartyId200,
   GETAuthMe200,
+  GETCategories200,
+  GETCategoriesId200,
+  GETCategoriesParams,
   GETContents200,
   GETContentsId200,
   GETContentsParams,
@@ -46,6 +49,8 @@ import type {
   GETWatchparty200,
   GETWatchpartyId200,
   GETWatchpartyParams,
+  PATCHCategoriesId200,
+  PATCHCategoriesIdBody,
   PATCHPeoplesId200,
   PATCHPeoplesIdBody,
   PATCHUsersId200,
@@ -64,6 +69,8 @@ import type {
   POSTAuthRefresh200,
   POSTAuthRegister201,
   POSTAuthRegisterBody,
+  POSTCategories201,
+  POSTCategoriesBody,
   POSTPeoples201,
   POSTPeoplesBody,
   POSTUsersMeFriendshipsId201,
@@ -135,6 +142,71 @@ export const gETAuthMe = <TData = AxiosResponse<GETAuthMe200>>(
  ): Promise<TData> => {
     return axios.get(
       `/auth/me`,options
+    );
+  }
+
+/**
+ * Create a new category
+ * @summary Create category
+ */
+export const pOSTCategories = <TData = AxiosResponse<POSTCategories201>>(
+    pOSTCategoriesBody: POSTCategoriesBody, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/categories/`,
+      pOSTCategoriesBody,options
+    );
+  }
+
+/**
+ * Retrieve a paginated list of all categories
+ * @summary List all categories
+ */
+export const gETCategories = <TData = AxiosResponse<GETCategories200>>(
+    params?: GETCategoriesParams, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/categories/`,{
+    ...options,
+        params: {...params, ...options?.params},}
+    );
+  }
+
+/**
+ * Retrieve a category by its unique identifier
+ * @summary Get category by ID
+ */
+export const gETCategoriesId = <TData = AxiosResponse<GETCategoriesId200>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/categories/${id}`,options
+    );
+  }
+
+/**
+ * Update an existing category
+ * @summary Update category
+ */
+export const pATCHCategoriesId = <TData = AxiosResponse<PATCHCategoriesId200>>(
+    id: string,
+    pATCHCategoriesIdBody: PATCHCategoriesIdBody, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.patch(
+      `/categories/${id}`,
+      pATCHCategoriesIdBody,options
+    );
+  }
+
+/**
+ * Delete a category by its ID
+ * @summary Delete category
+ */
+export const dELETECategoriesId = <TData = AxiosResponse<void>>(
+    id: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.delete(
+      `/categories/${id}`,options
     );
   }
 
@@ -601,6 +673,11 @@ export type POSTAuthLoginResult = AxiosResponse<POSTAuthLogin200>
 export type POSTAuthRefreshResult = AxiosResponse<POSTAuthRefresh200>
 export type POSTAuthLogoutResult = AxiosResponse<POSTAuthLogout200>
 export type GETAuthMeResult = AxiosResponse<GETAuthMe200>
+export type POSTCategoriesResult = AxiosResponse<POSTCategories201>
+export type GETCategoriesResult = AxiosResponse<GETCategories200>
+export type GETCategoriesIdResult = AxiosResponse<GETCategoriesId200>
+export type PATCHCategoriesIdResult = AxiosResponse<PATCHCategoriesId200>
+export type DELETECategoriesIdResult = AxiosResponse<void>
 export type GETContentsResult = AxiosResponse<GETContents200>
 export type GETContentsSearchResult = AxiosResponse<GETContentsSearch200>
 export type GETContentsIdResult = AxiosResponse<GETContentsId200>
