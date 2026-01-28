@@ -78,7 +78,10 @@ export abstract class BaseContentRepository<
     country?: string,
     categories?: string[],
     options?: PaginationQuery
-  ): Promise<TEntity[]> {
+  ): Promise<{
+    data: TEntity[];
+    total: number;
+  }> {
     let tmdbContent: TCreateProps[] = [];
 
     logger.info(`Listing ${this.contentTypeName}`);
@@ -120,7 +123,10 @@ export abstract class BaseContentRepository<
       options
     );
 
-    return [...createdContent, ...listedContent];
+    return {
+      data: [...createdContent, ...listedContent.data],
+      total: listedContent.total,
+    };
   }
 
   /**
@@ -133,6 +139,7 @@ export abstract class BaseContentRepository<
       query,
       options?.page
     );
+
     const createdContent = await this.processContent(tmdbContent);
 
     // Note: We can also search in local database if needed

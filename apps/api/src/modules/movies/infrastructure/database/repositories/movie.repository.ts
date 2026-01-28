@@ -28,7 +28,7 @@ export class MoviesRepository
   }
 
   async createMovie(content: CreateMovieProps): Promise<Movie> {
-    return this.create(content);
+    return await this.create(content);
   }
 
   async getMovieById(id: string): Promise<Movie | null> {
@@ -40,26 +40,29 @@ export class MoviesRepository
     country?: string,
     categories?: string[],
     options?: PaginationQuery
-  ): Promise<Movie[]> {
-    return this.list(title, country, categories, options);
+  ): Promise<{
+    data: Movie[];
+    total: number;
+  }> {
+    return await this.list(title, country, categories, options);
   }
 
   async searchMovies(
     query: string,
     options?: PaginationQuery
   ): Promise<Movie[]> {
-    return this.search(query, options);
+    return await this.search(query, options);
   }
 
   async updateMovie(
     id: string,
     props: Partial<CreateMovieProps>
   ): Promise<Movie> {
-    return this.update(id, props);
+    return await this.update(id, props);
   }
 
   async deleteMovie(id: string): Promise<void> {
-    return this.delete(id);
+    await this.delete(id);
   }
 
   async getMovieCount(
@@ -67,6 +70,6 @@ export class MoviesRepository
     country?: string,
     categories?: string[]
   ): Promise<number> {
-    return this.getCount(title, country, categories);
+    return await this.getCount(title, country, categories);
   }
 }

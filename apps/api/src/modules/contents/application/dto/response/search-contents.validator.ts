@@ -2,7 +2,9 @@ import type z from "zod";
 import { createPaginatedResponse } from "../../../../../shared/schemas/base/response.schemas.js";
 import { contentSchema } from "../../schema/contents.schema.js";
 
-export const queryContentResponseSchema =
+export const searchContentsResponseSchema =
   createPaginatedResponse(contentSchema);
 
-export type QueryContentResponse = z.infer<typeof queryContentResponseSchema>;
+export type SearchContentsResponse = z.infer<
+  typeof searchContentsResponseSchema
+>;

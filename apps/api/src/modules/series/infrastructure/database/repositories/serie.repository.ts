@@ -40,8 +40,17 @@ export class SeriesRepository
     country?: string,
     categories?: string[],
     options?: PaginationQuery
-  ): Promise<Serie[]> {
-    return this.list(title, country, categories, options);
+  ): Promise<{
+    data: Serie[];
+    total: number;
+  }> {
+    const [series] = await Promise.all([
+      this.list(title, country, categories, options),
+    ]);
+    return {
+      data: series.data,
+      total: series.total,
+    };
   }
 
   async searchSeries(

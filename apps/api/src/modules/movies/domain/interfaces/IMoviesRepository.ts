@@ -8,6 +8,9 @@ export interface IMoviesRepository {
     country?: string,
     categories?: string[],
     options?: PaginationQuery
-  ) => Promise<Movie[]>;
+  ) => Promise<{
+    data: Movie[];
+    total: number;
+  }>;
   searchMovies: (query: string, options?: PaginationQuery) => Promise<Movie[]>;
 }

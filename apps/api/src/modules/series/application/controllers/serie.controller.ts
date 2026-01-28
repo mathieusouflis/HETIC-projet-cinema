@@ -8,7 +8,6 @@ import {
   ValidateQuery,
 } from "../../../../shared/infrastructure/decorators/validation.decorators.js";
 import { notFoundErrorResponseSchema } from "../../../../shared/schemas/base/error.schemas.js";
-import { createSuccessResponse } from "../../../../shared/schemas/base/response.schemas.js";
 import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
 import {
   type GetSerieByIdValidatorParams,
@@ -44,26 +43,19 @@ export class SeriesController extends BaseController {
 
   @Get({
     path: "/",
-    description: "List series by type",
+    description: "List series with pagination",
+    summary: "Query series",
   })
   @ValidateQuery(querySerieRequestSchema)
-  @ApiResponse(
-    200,
-    "Series retrieved successfully",
-    createSuccessResponse(querySerieResponseSchema)
-  )
+  @ApiResponse(200, "Series retrieved successfully", querySerieResponseSchema)
   querySeries = asyncHandler(async (req, res): Promise<QuerySerieResponse> => {
     const query = req.query as QuerySerieRequest;
 
-    const series = await this.querySeriesUseCase.execute(query);
+    const response = await this.querySeriesUseCase.execute(query);
 
-    res.status(200).json({
-      success: true,
-      message: "Series retrieved successfully",
-      data: series,
-    });
+    res.status(200).json(response);
 
-    return series;
+    return response;
   });
 
   @Get({

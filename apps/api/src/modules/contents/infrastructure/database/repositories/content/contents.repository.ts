@@ -38,10 +38,10 @@ export class ContentsRepository implements IContentRepository {
     country?: string,
     categories?: string[],
     options?: PaginationQuery
-  ): Promise<Content[]> {
+  ): Promise<{ data: Content[]; total: number }> {
     switch (type) {
       case "movie": {
-        return this.moviesRepository.listMovies(
+        return await this.moviesRepository.listMovies(
           title,
           country,
           categories,
@@ -49,7 +49,7 @@ export class ContentsRepository implements IContentRepository {
         );
       }
       case "serie": {
-        return this.seriesRepository.listSeries(
+        return await this.seriesRepository.listSeries(
           title,
           country,
           categories,
@@ -61,7 +61,10 @@ export class ContentsRepository implements IContentRepository {
           this.moviesRepository.listMovies(title, country, categories, options),
           this.seriesRepository.listSeries(title, country, categories, options),
         ]);
-        return [...movies, ...series];
+        return {
+          data: [...movies.data, ...series.data],
+          total: Math.max(movies.total, series.total),
+        };
       }
     }
   }

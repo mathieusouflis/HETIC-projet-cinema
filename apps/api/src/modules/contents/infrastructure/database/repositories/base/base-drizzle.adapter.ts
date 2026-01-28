@@ -47,7 +47,7 @@ export abstract class BaseDrizzleAdapter<
     _categories?: string[],
     tmdbIds?: number[],
     options?: PaginationQuery
-  ): Promise<TEntity[]> {
+  ): Promise<{ data: TEntity[]; total: number }> {
     const conditions: SQL[] = [eq(contentSchema.type, this.contentType)];
 
     if (title) {
@@ -62,6 +62,14 @@ export abstract class BaseDrizzleAdapter<
 
     // Note: country and categories filtering require joins with related tables
     // For now, they are accepted but not used in the query
+
+    // Get total count
+    const totalResult = await db
+      .select()
+      .from(contentSchema)
+      .where(and(...conditions));
+
+    const total = totalResult.length;
 
     const query = db
       .select()
@@ -80,7 +88,10 @@ export abstract class BaseDrizzleAdapter<
 
     const result = await query;
 
-    return result.map((row) => this.createEntity(row));
+    return {
+      data: result.map((row) => this.createEntity(row)),
+      total,
+    };
   }
 
   /**
@@ -98,7 +109,7 @@ export abstract class BaseDrizzleAdapter<
 
     const contentStatusInDatabase: Record<Id, boolean> = tmdbIds.reduce(
       (acc, id) => {
-        acc[id] = result.some((content) => content.tmdbId === id);
+        acc[id] = result.data.some((content) => content.tmdbId === id);
         return acc;
       },
       {} as Record<Id, boolean>

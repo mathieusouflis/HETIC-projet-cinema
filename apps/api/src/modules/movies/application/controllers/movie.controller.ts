@@ -8,7 +8,6 @@ import {
   ValidateQuery,
 } from "../../../../shared/infrastructure/decorators/validation.decorators.js";
 import { notFoundErrorResponseSchema } from "../../../../shared/schemas/base/error.schemas.js";
-import { createSuccessResponse } from "../../../../shared/schemas/base/response.schemas.js";
 import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
 import {
   type GetMovieByIdValidatorParams,
@@ -44,26 +43,19 @@ export class MoviesController extends BaseController {
 
   @Get({
     path: "/",
-    description: "List movies by type",
+    description: "List movies with pagination",
+    summary: "Query movies",
   })
   @ValidateQuery(queryMovieRequestSchema)
-  @ApiResponse(
-    200,
-    "Movies retrieved successfully",
-    createSuccessResponse(queryMovieResponseSchema)
-  )
+  @ApiResponse(200, "Movies retrieved successfully", queryMovieResponseSchema)
   queryMovies = asyncHandler(async (req, res): Promise<QueryMovieResponse> => {
     const query = req.query as QueryMovieRequest;
 
-    const movies = await this.queryMoviesUseCase.execute(query);
+    const response = await this.queryMoviesUseCase.execute(query);
 
-    res.status(200).json({
-      success: true,
-      message: "Movies retrieved successfully",
-      data: movies,
-    });
+    res.status(200).json(response);
 
-    return movies;
+    return response;
   });
 
   @Get({
