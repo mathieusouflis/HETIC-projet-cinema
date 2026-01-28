@@ -117,7 +117,7 @@ export abstract class BaseTMDBAdapter<
       this.discoverEndpoint,
       params
     )) as DiscoverResult<TResult>;
-
+    logger.success("OKOK");
     const content = await Promise.all(
       result.results.map(async (item) => await this.parseResult(item))
     );

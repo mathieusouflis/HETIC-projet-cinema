@@ -53,7 +53,7 @@ export class TMDBMoviesAdapter extends BaseTMDBAdapter<
 
   // Convenience method aliases for backward compatibility
   async searchMovies(query: string, page = 1): Promise<CreateMovieProps[]> {
-    return this.searchContent(query, page);
+    return await this.searchContent(query, page);
   }
 
   async listMovies(
@@ -61,6 +61,6 @@ export class TMDBMoviesAdapter extends BaseTMDBAdapter<
     categories?: string[],
     page = 1
   ): Promise<CreateMovieProps[]> {
-    return this.listContent(country, categories, page);
+    return await this.listContent(country, categories, page);
   }
 }

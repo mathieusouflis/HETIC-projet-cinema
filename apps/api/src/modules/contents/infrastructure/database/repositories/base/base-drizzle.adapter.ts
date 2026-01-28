@@ -1,5 +1,6 @@
 import { and, eq, or, type SQL } from "drizzle-orm";
 import { db } from "../../../../../../database";
+import { ServerError } from "../../../../../../shared/errors/ServerError";
 import type { PaginationQuery } from "../../../../../../shared/schemas/base/pagination.schema";
 import type {
   Content,
@@ -24,18 +25,24 @@ export abstract class BaseDrizzleAdapter<
    * Get content by ID
    */
   async getContentById(id: string): Promise<TEntity | null> {
-    const result = await db.query.content.findFirst({
-      where: and(
-        eq(contentSchema.id, id),
-        eq(contentSchema.type, this.contentType)
-      ),
-    });
+    try {
+      const result = await db.query.content.findFirst({
+        where: and(
+          eq(contentSchema.id, id),
+          eq(contentSchema.type, this.contentType)
+        ),
+      });
 
-    if (!result) {
-      return null;
+      if (!result) {
+        return null;
+      }
+
+      return this.createEntity(result);
+    } catch (error) {
+      throw new ServerError(
+        `Failed to get ${this.contentType} by id ${id}: ${error instanceof Error ? error.message : error}`
+      );
     }
-
-    return this.createEntity(result);
   }
 
   /**
@@ -48,50 +55,54 @@ export abstract class BaseDrizzleAdapter<
     tmdbIds?: number[],
     options?: PaginationQuery
   ): Promise<{ data: TEntity[]; total: number }> {
-    const conditions: SQL[] = [eq(contentSchema.type, this.contentType)];
+    try {
+      const conditions: SQL[] = [eq(contentSchema.type, this.contentType)];
 
-    if (title) {
-      conditions.push(eq(contentSchema.title, title));
-    }
+      if (title) {
+        conditions.push(eq(contentSchema.title, title));
+      }
 
-    if (tmdbIds && tmdbIds.length > 0) {
-      conditions.push(
-        or(...tmdbIds.map((id) => eq(contentSchema.tmdbId, id)))!
+      if (tmdbIds && tmdbIds.length > 0) {
+        const tmdbCondition = or(
+          ...tmdbIds.map((id) => eq(contentSchema.tmdbId, id))
+        );
+        if (tmdbCondition) {
+          conditions.push(tmdbCondition);
+        }
+      }
+
+      const totalResult = await db
+        .select()
+        .from(contentSchema)
+        .where(and(...conditions));
+
+      const total = totalResult.length;
+
+      const query = db
+        .select()
+        .from(contentSchema)
+        .where(and(...conditions));
+
+      if (options?.limit) {
+        query.limit(options.limit);
+      }
+
+      if (options?.page && options?.limit) {
+        const offset = (options.page - 1) * options.limit;
+        query.offset(offset);
+      }
+
+      const result = await query;
+
+      return {
+        data: result.map((row) => this.createEntity(row)),
+        total,
+      };
+    } catch (error) {
+      throw new ServerError(
+        `Failed to list ${this.contentType}: ${error instanceof Error ? error.message : error}`
       );
     }
-
-    // Note: country and categories filtering require joins with related tables
-    // For now, they are accepted but not used in the query
-
-    // Get total count
-    const totalResult = await db
-      .select()
-      .from(contentSchema)
-      .where(and(...conditions));
-
-    const total = totalResult.length;
-
-    const query = db
-      .select()
-      .from(contentSchema)
-      .where(and(...conditions));
-
-    // Apply pagination
-    if (options?.limit) {
-      query.limit(options.limit);
-    }
-
-    if (options?.page && options?.limit) {
-      const offset = (options.page - 1) * options.limit;
-      query.offset(offset);
-    }
-
-    const result = await query;
-
-    return {
-      data: result.map((row) => this.createEntity(row)),
-      total,
-    };
   }
 
   /**
@@ -100,43 +111,55 @@ export abstract class BaseDrizzleAdapter<
   async checkContentExistsInDb<Id extends number>(
     tmdbIds: Id[]
   ): Promise<Record<Id, boolean>> {
-    const result = await this.listContent(
-      undefined,
-      undefined,
-      undefined,
-      tmdbIds
-    );
+    try {
+      const result = await this.listContent(
+        undefined,
+        undefined,
+        undefined,
+        tmdbIds
+      );
 
-    const contentStatusInDatabase: Record<Id, boolean> = tmdbIds.reduce(
-      (acc, id) => {
-        acc[id] = result.data.some((content) => content.tmdbId === id);
-        return acc;
-      },
-      {} as Record<Id, boolean>
-    );
+      const contentStatusInDatabase: Record<Id, boolean> = tmdbIds.reduce(
+        (acc, id) => {
+          acc[id] = result.data.some((content) => content.tmdbId === id);
+          return acc;
+        },
+        {} as Record<Id, boolean>
+      );
 
-    return contentStatusInDatabase;
+      return contentStatusInDatabase;
+    } catch (error) {
+      throw new ServerError(
+        `Failed to check ${this.contentType} existence: ${error instanceof Error ? error.message : error}`
+      );
+    }
   }
 
   /**
    * Create content in the database
    */
   async createContent(props: TCreateProps): Promise<TEntity> {
-    const result = await db.insert(contentSchema).values(props).returning();
+    try {
+      const result = await db.insert(contentSchema).values(props).returning();
 
-    if (!result || result.length === 0) {
-      throw new Error(`${this.contentType} not created`);
-    }
+      if (!result || result.length === 0) {
+        throw new ServerError(`${this.contentType} not created`);
+      }
 
-    const createdContent = result[0];
+      const createdContent = result[0];
 
-    if (!createdContent) {
-      throw new Error(
-        `Unexpected error: Created ${this.contentType} is undefined`
+      if (!createdContent) {
+        throw new ServerError(
+          `Unexpected error: Created ${this.contentType} is undefined`
+        );
+      }
+
+      return this.createEntity(createdContent);
+    } catch (error) {
+      throw new ServerError(
+        `Failed to create ${this.contentType}: ${error instanceof Error ? error.message : error}`
       );
     }
-
-    return this.createEntity(createdContent);
   }
 
   /**
@@ -146,38 +169,56 @@ export abstract class BaseDrizzleAdapter<
     id: string,
     props: Partial<TCreateProps>
   ): Promise<TEntity> {
-    const result = await db
-      .update(contentSchema)
-      .set(props)
-      .where(
-        and(eq(contentSchema.id, id), eq(contentSchema.type, this.contentType))
-      )
-      .returning();
+    try {
+      const result = await db
+        .update(contentSchema)
+        .set(props)
+        .where(
+          and(
+            eq(contentSchema.id, id),
+            eq(contentSchema.type, this.contentType)
+          )
+        )
+        .returning();
 
-    if (!result || result.length === 0) {
-      throw new Error(`${this.contentType} not found or not updated`);
-    }
+      if (!result || result.length === 0) {
+        throw new ServerError(`${this.contentType} not found or not updated`);
+      }
 
-    const updatedContent = result[0];
+      const updatedContent = result[0];
 
-    if (!updatedContent) {
-      throw new Error(
-        `Unexpected error: Updated ${this.contentType} is undefined`
+      if (!updatedContent) {
+        throw new ServerError(
+          `Unexpected error: Updated ${this.contentType} is undefined`
+        );
+      }
+
+      return this.createEntity(updatedContent);
+    } catch (error) {
+      throw new ServerError(
+        `Failed to update ${this.contentType} with id ${id}: ${error instanceof Error ? error.message : error}`
       );
     }
-
-    return this.createEntity(updatedContent);
   }
 
   /**
    * Delete content from the database
    */
   async deleteContent(id: string): Promise<void> {
-    await db
-      .delete(contentSchema)
-      .where(
-        and(eq(contentSchema.id, id), eq(contentSchema.type, this.contentType))
+    try {
+      await db
+        .delete(contentSchema)
+        .where(
+          and(
+            eq(contentSchema.id, id),
+            eq(contentSchema.type, this.contentType)
+          )
+        );
+    } catch (error) {
+      throw new ServerError(
+        `Failed to delete ${this.contentType} with id ${id}: ${error instanceof Error ? error.message : error}`
       );
+    }
   }
 
   /**
@@ -188,17 +229,23 @@ export abstract class BaseDrizzleAdapter<
     _country?: string,
     _categories?: string[]
   ): Promise<number> {
-    const conditions: SQL[] = [eq(contentSchema.type, this.contentType)];
+    try {
+      const conditions: SQL[] = [eq(contentSchema.type, this.contentType)];
 
-    if (title) {
-      conditions.push(eq(contentSchema.title, title));
+      if (title) {
+        conditions.push(eq(contentSchema.title, title));
+      }
+
+      const result = await db
+        .select()
+        .from(contentSchema)
+        .where(and(...conditions));
+
+      return result.length;
+    } catch (error) {
+      throw new ServerError(
+        `Failed to get ${this.contentType} count: ${error instanceof Error ? error.message : error}`
+      );
     }
-
-    const result = await db
-      .select()
-      .from(contentSchema)
-      .where(and(...conditions));
-
-    return result.length;
   }
 }
