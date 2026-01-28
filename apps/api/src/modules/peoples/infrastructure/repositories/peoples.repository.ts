@@ -41,7 +41,7 @@ export class PeoplesRepository implements IPeoplesRepository {
     );
 
     if (peopleToCreate.length === 0) {
-      return await this.drizzleAdapter.list({ tmdbIds });
+      return (await this.drizzleAdapter.list({ tmdbIds })).data;
     }
 
     const created = await this.drizzleAdapter.bulkCreate(peopleToCreate);
@@ -49,7 +49,7 @@ export class PeoplesRepository implements IPeoplesRepository {
       tmdbIds: tmdbIds.filter((id) => existingPeopleStatus[id]),
     });
 
-    return [...created, ...existing];
+    return [...created, ...existing.data];
   }
 
   /**
@@ -74,7 +74,10 @@ export class PeoplesRepository implements IPeoplesRepository {
     name?: string;
     limit?: number;
     offset?: number;
-  }): Promise<People[]> {
+  }): Promise<{
+    data: People[];
+    total: number;
+  }> {
     return await this.drizzleAdapter.list(props);
   }
 
@@ -130,7 +133,7 @@ export class PeoplesRepository implements IPeoplesRepository {
   async getPeopleByTmdbIds(tmdbIds: number[]): Promise<People[]> {
     try {
       const existingPeople = await this.drizzleAdapter.list({ tmdbIds });
-      const existingTmdbIds = existingPeople
+      const existingTmdbIds = existingPeople.data
         .map((p) => p.tmdbId)
         .filter((id): id is number => id !== null);
 
@@ -139,14 +142,14 @@ export class PeoplesRepository implements IPeoplesRepository {
       );
 
       if (missingTmdbIds.length === 0) {
-        return existingPeople;
+        return existingPeople.data;
       }
 
       // Fetch missing people from TMDB
       const tmdbPeople = await this.tmdbAdapter.getPeopleByIds(missingTmdbIds);
       const newPeople = await this.drizzleAdapter.bulkCreate(tmdbPeople);
 
-      return [...existingPeople, ...newPeople];
+      return [...existingPeople.data, ...newPeople];
     } catch (error) {
       logger.error(`Error getting people by TMDB IDs: ${error}`);
       return [];

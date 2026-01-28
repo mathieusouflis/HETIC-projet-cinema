@@ -66,7 +66,10 @@ export class PeoplesDrizzleRepository {
     tmdbIds?: number[];
     limit?: number;
     offset?: number;
-  }): Promise<People[]> {
+  }): Promise<{
+    data: People[];
+    total: number;
+  }> {
     const conditions: SQL[] = [];
 
     if (params.nationality) {
@@ -101,7 +104,19 @@ export class PeoplesDrizzleRepository {
 
     const result = await query;
 
-    return result.map((row) => new People(row));
+    const countQuery = db.select().from(peopleSchema);
+
+    if (conditions.length > 0) {
+      countQuery.where(and(...conditions));
+    }
+
+    const countResult = await countQuery;
+    const total = countResult.length;
+
+    return {
+      data: result.map((row) => new People(row)),
+      total,
+    };
   }
 
   /**
@@ -114,7 +129,7 @@ export class PeoplesDrizzleRepository {
 
     const peopleStatusInDatabase: Record<Id, boolean> = tmdbIds.reduce(
       (acc, id) => {
-        acc[id] = result.some((person) => person.tmdbId === id);
+        acc[id] = result.data.some((person) => person.tmdbId === id);
         return acc;
       },
       {} as Record<Id, boolean>

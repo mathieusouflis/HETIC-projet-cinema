@@ -1,5 +1,8 @@
 import type z from "zod";
-import { peopleValidator } from "../../validators/people.validator";
+import { createOffsetPaginatedResponse } from "../../../../../shared/schemas/base/response.schemas.js";
+import { peopleValidator } from "../../validators/people.validator.js";
 
-export const ListPeoplesResponseValidator = peopleValidator.array();
+export const ListPeoplesResponseValidator =
+  createOffsetPaginatedResponse(peopleValidator);
+
 export type ListPeoplesResponse = z.infer<typeof ListPeoplesResponseValidator>;

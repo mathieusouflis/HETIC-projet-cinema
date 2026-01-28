@@ -88,52 +88,44 @@ export class PeoplesController extends BaseController {
   @Get({
     path: "/",
     description: "List people with optional filters and pagination",
+    summary: "Query people with offset-based pagination",
   })
   @ValidateQuery(listPeoplesParamsValidator)
   @ApiResponse(
     200,
     "People retrieved successfully",
-    createSuccessResponse(ListPeoplesResponseValidator)
+    ListPeoplesResponseValidator
   )
   listPeoples = asyncHandler(async (req, res): Promise<ListPeoplesResponse> => {
     const params = req.query as ListPeoplesParams;
 
-    const peoples = await this.listPeoplesUseCase.execute(params);
-    const jsonPeoples = peoples.map((people) => people.toJSON());
+    const response = await this.listPeoplesUseCase.execute(params);
 
-    res.status(200).json({
-      success: true,
-      message: "People retrieved successfully",
-      data: jsonPeoples,
-    });
+    res.status(200).json(response);
 
-    return jsonPeoples;
+    return response;
   });
 
   @Get({
     path: "/search",
     description: "Search people on TMDB and sync to database",
+    summary: "Search people with pagination",
   })
   @ValidateQuery(searchPeopleParamsValidator)
   @ApiResponse(
     200,
     "People search completed successfully",
-    createSuccessResponse(searchPeopleResponseValidator)
+    searchPeopleResponseValidator
   )
   searchPeople = asyncHandler(
     async (req, res): Promise<SearchPeopleResponse> => {
       const params = req.query as unknown as SearchPeopleParams;
 
-      const peoples = await this.searchPeopleUseCase.execute(params);
-      const jsonPeoples = peoples.map((people) => people.toJSON());
+      const response = await this.searchPeopleUseCase.execute(params);
 
-      res.status(200).json({
-        success: true,
-        message: "People search completed successfully",
-        data: jsonPeoples,
-      });
+      res.status(200).json(response);
 
-      return jsonPeoples;
+      return response;
     }
   );
 
