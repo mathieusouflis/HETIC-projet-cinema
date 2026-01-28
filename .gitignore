@@ -24,3 +24,6 @@ devenv.local.yaml
 
 # test coverage
 coverage
+
+# generated files
+apps/front/src/generated

@@ -13,11 +13,14 @@
   },
   "dependencies": {
     "@packages/config": "workspace:*",
+    "@tanstack/react-router": "^1.157.16",
+    "@tanstack/react-router-devtools": "^1.157.16",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
   },
   "devDependencies": {
     "@packages/typescript-config": "workspace:*",
+    "@tanstack/router-plugin": "^1.157.16",
     "@types/react": "^19.2.9",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.2",
