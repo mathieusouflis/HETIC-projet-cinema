@@ -12,7 +12,10 @@ export interface IPeoplesRepository {
     name?: string;
     limit?: number;
     offset?: number;
-  }): Promise<People[]>;
+  }): Promise<{
+    data: People[];
+    total: number;
+  }>;
   update(id: string, people: UpdatePeopleProps): Promise<People>;
   delete(id: string): Promise<void>;
   searchPeople(query: string, page?: number): Promise<People[]>;

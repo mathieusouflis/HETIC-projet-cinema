@@ -1,5 +1,7 @@
-import type { People } from "../../domain/entities/people.entity";
-import type { IPeoplesRepository } from "../../domain/interfaces/IPeoplesRepository";
+import { paginationService } from "../../../../shared/services/pagination.service.js";
+import { createOffsetPaginatedResult } from "../../../../shared/utils/pagination.utils.js";
+import { createOffsetPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
+import type { IPeoplesRepository } from "../../domain/interfaces/IPeoplesRepository.js";
 
 export type ListPeoplesParams = {
   nationality?: string;
@@ -11,22 +13,28 @@ export type ListPeoplesParams = {
 export class ListPeoplesUseCase {
   constructor(private readonly peoplesRepository: IPeoplesRepository) {}
 
-  async execute(params: ListPeoplesParams): Promise<People[]> {
-    const peoples = await this.peoplesRepository.list(params);
-    return peoples;
-  }
+  async execute(params: ListPeoplesParams) {
+    const { offset, limit } = paginationService.parseOffsetParams({
+      offset: params.offset,
+      limit: params.limit,
+    });
 
-  async executeWithCount(
-    params: ListPeoplesParams
-  ): Promise<{ peoples: People[]; total: number }> {
-    const [peoples, total] = await Promise.all([
-      this.peoplesRepository.list(params),
-      this.peoplesRepository.getCount({
-        nationality: params.nationality,
-        name: params.name,
-      }),
-    ]);
+    const peoples = await this.peoplesRepository.list({
+      nationality: params.nationality,
+      name: params.name,
+      offset,
+      limit,
+    });
 
-    return { peoples, total };
+    const peopleResponses = peoples.data.map((people) => people.toJSON());
+
+    const paginatedResult = createOffsetPaginatedResult(
+      peopleResponses,
+      offset,
+      limit,
+      peoples.total
+    );
+
+    return createOffsetPaginatedResponseFromResult(paginatedResult);
   }
 }
