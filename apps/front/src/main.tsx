@@ -1,8 +1,21 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 // import { PostHogProvider } from "posthog-js/react";
-import App from "./app";
 import "./index.css";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
+
+// Import the generated route tree
+import { routeTree } from "./generated/routeTree.gen";
+
+// Create a new router instance
+const router = createRouter({ routeTree });
+
+// Register the router instance for type safety
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}
 
 const el = document.getElementById("root");
 if (el) {
@@ -18,7 +31,7 @@ if (el) {
           debug: import.meta.env.NODE_ENV === "development",
         }}
       >*/}
-      <App />
+      <RouterProvider router={router} />
       {/*</PostHogProvider>*/}
     </React.StrictMode>
   );
