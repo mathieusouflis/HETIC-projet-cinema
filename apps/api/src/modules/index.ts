@@ -12,6 +12,7 @@ import {
   notFoundMiddleware,
 } from "../shared/middleware/error.middleware.js";
 import { authModule } from "./auth/auth.module.js";
+import { categoriesModule } from "./categories/categories.module.js";
 import { contentsModule } from "./contents/contents.module.js";
 import { moviesModule } from "./movies/movie.module.js";
 import { peoplesModule } from "./peoples/peoples.module.js";
@@ -23,6 +24,7 @@ import { watchpartyModule } from "./watchparty/watchparty.module.js";
 function registerModules(): void {
   moduleRegistry.register("auth", authModule);
   moduleRegistry.register("users", usersModule);
+  moduleRegistry.register("categories", categoriesModule);
   moduleRegistry.register("contents", contentsModule);
   moduleRegistry.register("movies", moviesModule);
   moduleRegistry.register("series", seriesModule);
