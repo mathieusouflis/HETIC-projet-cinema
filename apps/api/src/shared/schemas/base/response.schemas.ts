@@ -145,3 +145,110 @@ export type PaginatedResponse<T> = {
     };
   };
 };
+
+export type ListResponse<T> = {
+  success: true;
+  data: T[];
+};
+
+export type ExtendedPaginatedResponse<T> = {
+  success: true;
+  data: {
+    items: T[];
+    pagination: {
+      page: number;
+      total: number;
+      totalPages: number;
+      offset: number;
+      limit: number;
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+    };
+  };
+};
+
+export type OffsetPaginatedResponse<T> = {
+  success: true;
+  data: {
+    items: T[];
+    pagination: {
+      offset: number;
+      limit: number;
+      total: number;
+      hasMore: boolean;
+    };
+  };
+};
+
+/**
+ * Extended paginated response schema
+ *
+ * Includes additional pagination metadata like offset, hasNextPage, hasPreviousPage
+ */
+export const extendedPaginatedResponseSchema = <T extends z.ZodTypeAny>(
+  itemSchema: T
+) =>
+  z.object({
+    success: z.literal(true),
+    data: z.object({
+      items: z.array(itemSchema),
+      pagination: z.object({
+        page: z.number().int().positive(),
+        total: z.number().int().nonnegative(),
+        totalPages: z.number().int().nonnegative(),
+        offset: z.number().int().nonnegative(),
+        limit: z.number().int().positive(),
+        hasNextPage: z.boolean(),
+        hasPreviousPage: z.boolean(),
+      }),
+    }),
+  });
+
+/**
+ * Offset-based paginated response schema
+ *
+ * For cursor/offset-based pagination instead of page-based
+ */
+export const offsetPaginatedResponseSchema = <T extends z.ZodTypeAny>(
+  itemSchema: T
+) =>
+  z.object({
+    success: z.literal(true),
+    data: z.object({
+      items: z.array(itemSchema),
+      pagination: z.object({
+        offset: z.number().int().nonnegative(),
+        limit: z.number().int().positive(),
+        total: z.number().int().nonnegative(),
+        hasMore: z.boolean(),
+      }),
+    }),
+  });
+
+/**
+ * Helper function to create an extended paginated response
+ *
+ * @example
+ * ```ts
+ * const usersResponse = createExtendedPaginatedResponse(userSchema);
+ * ```
+ */
+export function createExtendedPaginatedResponse<T extends z.ZodTypeAny>(
+  itemSchema: T
+) {
+  return extendedPaginatedResponseSchema(itemSchema);
+}
+
+/**
+ * Helper function to create an offset paginated response
+ *
+ * @example
+ * ```ts
+ * const usersResponse = createOffsetPaginatedResponse(userSchema);
+ * ```
+ */
+export function createOffsetPaginatedResponse<T extends z.ZodTypeAny>(
+  itemSchema: T
+) {
+  return offsetPaginatedResponseSchema(itemSchema);
+}
