@@ -85,14 +85,15 @@ export class WatchpartyController extends BaseController {
 
   @Get({
     path: "/",
-    description: "Query watchparties",
+    description: "Query watchparties with pagination",
+    summary: "List watchparties",
   })
   @Protected()
   @ValidateQuery(queryWatchpartiesValidator)
   @ApiResponse(
     200,
     "Watchparties retrieved successfully",
-    createSuccessResponse(queryWatchpartiesResponseValidator)
+    queryWatchpartiesResponseValidator
   )
   queryWatchparties = asyncHandler(
     async (req, res): Promise<QueryWatchpartiesResponse> => {
@@ -102,15 +103,11 @@ export class WatchpartyController extends BaseController {
         throw new UnauthorizedError("User not found");
       }
 
-      const watchparties = await this.listWatchpartiesUseCase.execute(query);
+      const response = await this.listWatchpartiesUseCase.execute(query);
 
-      res.status(200).json({
-        success: true,
-        message: "Watchparties retrieved successfully",
-        data: watchparties,
-      });
+      res.status(200).json(response);
 
-      return watchparties;
+      return response;
     }
   );
 
