@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
 import { db } from "../../../../database";
 import { watchlist } from "../../../../database/schema";
 import { NotFoundError } from "../../../../shared/errors";
@@ -89,13 +89,27 @@ export class WatchlistRepository implements IWatchlistRepository {
     }
   }
 
-  async list(userId: string): Promise<Watchlist[]> {
+  async list(userId: string): Promise<{
+    data: Watchlist[];
+    total: number;
+  }> {
     try {
-      const resolvedContent = await db
-        .select()
-        .from(watchlist)
-        .where(eq(watchlist.userId, userId));
-      return resolvedContent.map((content) => new Watchlist(content));
+      const [resolvedContent, totalResult] = await Promise.all([
+        db.select().from(watchlist).where(eq(watchlist.userId, userId)),
+        db
+          .select({
+            total: count(),
+          })
+          .from(watchlist)
+          .where(eq(watchlist.userId, userId)),
+      ]);
+
+      const total = totalResult[0]?.total ?? 0;
+
+      return {
+        data: resolvedContent.map((content) => new Watchlist(content)),
+        total,
+      };
     } catch (error) {
       throw new ServerError(`Failed to list user watchlist: ${error}`);
     }

@@ -107,14 +107,15 @@ export class WatchlistController extends BaseController {
 
   @Get({
     path: "/",
-    description: "Query watchlist",
+    description: "Query watchlist with pagination",
+    summary: "List user's watchlist items",
   })
   @Protected()
   @ValidateQuery(queryWatchlistValidator)
   @ApiResponse(
     200,
     "Watchlist retrieved successfully",
-    createSuccessResponse(queryWatchlistResponseValidator)
+    queryWatchlistResponseValidator
   )
   queryWatchlist = asyncHandler(
     async (req, res): Promise<QueryWatchlistResponse> => {
@@ -124,18 +125,14 @@ export class WatchlistController extends BaseController {
         throw new UnauthorizedError("User not found");
       }
 
-      const watchlist = await this.queryWatchlistUseCase.execute(
+      const response = await this.queryWatchlistUseCase.execute(
         req.user.userId,
         query
       );
 
-      res.status(200).json({
-        success: true,
-        message: "Watchlist retrieved successfully",
-        data: watchlist,
-      });
+      res.status(200).json(response);
 
-      return watchlist;
+      return response;
     }
   );
 
