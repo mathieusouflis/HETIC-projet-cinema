@@ -13,11 +13,14 @@ export class QueryContentUseCase {
       limit: query.limit,
     });
 
+    const withCategory = query.withCategory === "true";
+
     const contents = await this.contentRepository.listContents(
       query.contentType,
       query.title,
       undefined,
       undefined,
+      withCategory,
       {
         page,
         limit,
@@ -26,7 +29,9 @@ export class QueryContentUseCase {
 
     const total = contents.total;
 
-    const contentFormatted = contents.data.map((content) => content.toJSON());
+    const contentFormatted = contents.data.map((content) =>
+      content.toJSONWithRelations()
+    );
 
     const paginatedResult = paginationService.createPageResult(
       contentFormatted,

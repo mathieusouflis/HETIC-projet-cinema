@@ -32,19 +32,20 @@ export class MoviesRepository
   }
 
   async getMovieById(id: string): Promise<Movie | null> {
-    return this.getById(id);
+    return await this.getById(id);
   }
 
   async listMovies(
     title?: string,
     country?: string,
     categories?: string[],
+    withCategory?: boolean,
     options?: PaginationQuery
   ): Promise<{
     data: Movie[];
     total: number;
   }> {
-    return await this.list(title, country, categories, options);
+    return await this.list(title, country, categories, withCategory, options);
   }
 
   async searchMovies(

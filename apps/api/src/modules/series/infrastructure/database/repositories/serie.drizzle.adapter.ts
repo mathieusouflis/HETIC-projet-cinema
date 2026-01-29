@@ -33,9 +33,17 @@ export class DrizzleSerieAdapter extends BaseDrizzleAdapter<
     country?: string,
     categories?: string[],
     tmdbIds?: number[],
+    withCategories?: boolean,
     options?: PaginationQuery
   ): Promise<{ data: Serie[]; total: number }> {
-    return this.listContent(title, country, categories, tmdbIds, options);
+    return this.listContent(
+      title,
+      country,
+      categories,
+      tmdbIds,
+      withCategories,
+      options
+    );
   }
 
   async checkSerieExistsInDb<Id extends number>(
