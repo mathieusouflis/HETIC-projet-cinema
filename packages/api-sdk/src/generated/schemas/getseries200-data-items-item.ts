@@ -5,6 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
+import type { GETSeries200DataItemsItemContentCategoriesItem } from './getseries200-data-items-item-content-categories-item';
 import type { GETSeries200DataItemsItemType } from './getseries200-data-items-item-type';
 
 export type GETSeries200DataItemsItem = {
@@ -47,4 +48,5 @@ export type GETSeries200DataItemsItem = {
   totalViews: number;
   createdAt: string;
   updatedAt: string;
+  contentCategories?: GETSeries200DataItemsItemContentCategoriesItem[];
 };

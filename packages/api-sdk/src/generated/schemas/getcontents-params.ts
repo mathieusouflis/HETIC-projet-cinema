@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { GETContentsContentType } from './getcontents-content-type';
+import type { GETContentsWithCategory } from './getcontents-with-category';
 
 export type GETContentsParams = {
 title?: string;
@@ -18,6 +19,7 @@ year?: number;
  * @maximum 10
  */
 averageRating?: number;
+withCategory?: GETContentsWithCategory;
 /**
  * @minimum 1
  */
