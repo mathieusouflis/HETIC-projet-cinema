@@ -7,6 +7,7 @@ export interface ISeriesRepository {
     title?: string,
     country?: string,
     categories?: string[],
+    withCategories?: boolean,
     options?: PaginationQuery
   ) => Promise<{
     data: Serie[];

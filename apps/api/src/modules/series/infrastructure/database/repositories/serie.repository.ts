@@ -28,24 +28,25 @@ export class SeriesRepository
   }
 
   async createSerie(content: CreateSerieProps): Promise<Serie> {
-    return this.create(content);
+    return await this.create(content);
   }
 
   async getSerieById(id: string): Promise<Serie | null> {
-    return this.getById(id);
+    return await this.getById(id);
   }
 
   async listSeries(
     title?: string,
     country?: string,
     categories?: string[],
+    withCategories?: boolean,
     options?: PaginationQuery
   ): Promise<{
     data: Serie[];
     total: number;
   }> {
     const [series] = await Promise.all([
-      this.list(title, country, categories, options),
+      this.list(title, country, categories, withCategories, options),
     ]);
     return {
       data: series.data,
@@ -57,18 +58,18 @@ export class SeriesRepository
     query: string,
     options?: PaginationQuery
   ): Promise<Serie[]> {
-    return this.search(query, options);
+    return await this.search(query, options);
   }
 
   async updateSerie(
     id: string,
     props: Partial<CreateSerieProps>
   ): Promise<Serie> {
-    return this.update(id, props);
+    return await this.update(id, props);
   }
 
   async deleteSerie(id: string): Promise<void> {
-    return this.delete(id);
+    return await this.delete(id);
   }
 
   async getSerieCount(
@@ -76,6 +77,6 @@ export class SeriesRepository
     country?: string,
     categories?: string[]
   ): Promise<number> {
-    return this.getCount(title, country, categories);
+    return await this.getCount(title, country, categories);
   }
 }

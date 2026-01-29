@@ -13,10 +13,13 @@ export class QueryMovieUseCase {
       limit: query.limit,
     });
 
+    const withCategory = query.withCategory === "true";
+
     const movies = await this.movieRepository.listMovies(
       query.title,
       undefined,
       undefined,
+      withCategory,
       {
         page,
         limit,
@@ -25,7 +28,7 @@ export class QueryMovieUseCase {
 
     const total = movies.total;
 
-    const movieDTOs = movies.data.map((movie) => movie.toJSON());
+    const movieDTOs = movies.data.map((movie) => movie.toJSONWithRelations());
 
     const paginatedResult = paginationService.createPageResult(
       movieDTOs,

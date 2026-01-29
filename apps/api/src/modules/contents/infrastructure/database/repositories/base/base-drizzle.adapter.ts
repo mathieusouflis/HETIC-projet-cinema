@@ -1,7 +1,8 @@
-import { and, eq, or, type SQL } from "drizzle-orm";
+import { and, count, eq, or, type SQL } from "drizzle-orm";
 import { db } from "../../../../../../database";
 import { ServerError } from "../../../../../../shared/errors/ServerError";
 import type { PaginationQuery } from "../../../../../../shared/schemas/base/pagination.schema";
+import { Category } from "../../../../../categories/domain/entities/category.entity";
 import type {
   Content,
   CreateContentProps,
@@ -53,6 +54,7 @@ export abstract class BaseDrizzleAdapter<
     _country?: string,
     _categories?: string[],
     tmdbIds?: number[],
+    withCategory?: boolean,
     options?: PaginationQuery
   ): Promise<{ data: TEntity[]; total: number }> {
     try {
@@ -71,31 +73,42 @@ export abstract class BaseDrizzleAdapter<
         }
       }
 
-      const totalResult = await db
-        .select()
-        .from(contentSchema)
-        .where(and(...conditions));
-
-      const total = totalResult.length;
-
-      const query = db
-        .select()
-        .from(contentSchema)
-        .where(and(...conditions));
-
-      if (options?.limit) {
-        query.limit(options.limit);
-      }
-
-      if (options?.page && options?.limit) {
-        const offset = (options.page - 1) * options.limit;
-        query.offset(offset);
-      }
-
-      const result = await query;
+      const [result, total] = await Promise.all([
+        db.query.content.findMany({
+          where: and(...conditions),
+          limit: options?.limit,
+          offset:
+            options?.page && options?.limit
+              ? (options.page - 1) * options.limit
+              : undefined,
+          with: {
+            contentCategories: {
+              with: {
+                category: true,
+              },
+            },
+          },
+        }),
+        db
+          .select({ count: count() })
+          .from(contentSchema)
+          .where(and(...conditions))
+          .then((res) => res[0]?.count ?? 0),
+      ]);
 
       return {
-        data: result.map((row) => this.createEntity(row)),
+        data: result.map((row) => {
+          const entity = this.createEntity(row);
+          if (withCategory) {
+            entity.setRelations(
+              "contentCategories",
+              row.contentCategories.map(
+                (category) => new Category(category.category)
+              )
+            );
+          }
+          return entity;
+        }),
         total,
       };
     } catch (error) {

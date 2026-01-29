@@ -1,9 +1,19 @@
+import { Entity } from "../../../../shared/domain/entity.js";
+import type { Content } from "../../../contents/domain/entities/content.entity.js";
 import type {
   CategoryRow,
+  categoriesRelationsSchema,
   NewCategoryRow,
 } from "../../infrastructure/database/schemas/categories.schema.js";
 
-export class Category {
+export class Category extends Entity<
+  CategoryRow,
+  typeof categoriesRelationsSchema,
+  {
+    contentCategories: Content[];
+    userStats: Content[]; //TEMP
+  }
+> {
   public readonly id: string;
   public readonly name: string;
   public readonly slug: string;
@@ -12,6 +22,7 @@ export class Category {
   public readonly createdAt: Date;
 
   constructor(props: CategoryRow) {
+    super();
     this.id = props.id;
     this.name = props.name;
     this.slug = props.slug;
