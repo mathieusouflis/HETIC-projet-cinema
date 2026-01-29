@@ -77,6 +77,7 @@ export abstract class BaseContentRepository<
     title?: string,
     country?: string,
     categories?: string[],
+    withCategory?: boolean,
     options?: PaginationQuery
   ): Promise<{
     data: TEntity[];
@@ -120,6 +121,7 @@ export abstract class BaseContentRepository<
       country,
       categories,
       undefined,
+      withCategory,
       options
     );
 

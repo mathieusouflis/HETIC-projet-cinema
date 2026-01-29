@@ -33,12 +33,20 @@ export class DrizzleMovieAdapter extends BaseDrizzleAdapter<
     country?: string,
     categories?: string[],
     tmdbIds?: number[],
+    withCategory?: boolean,
     options?: PaginationQuery
   ): Promise<{
     data: Content[];
     total: number;
   }> {
-    return await this.listContent(title, country, categories, tmdbIds, options);
+    return await this.listContent(
+      title,
+      country,
+      categories,
+      tmdbIds,
+      withCategory,
+      options
+    );
   }
 
   async checkMovieExistsInDb<Id extends number>(

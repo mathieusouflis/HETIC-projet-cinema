@@ -13,10 +13,13 @@ export class QuerySerieUseCase {
       limit: query.limit,
     });
 
+    const withCategory = query.withCategories === "true";
+
     const series = await this.serieRepository.listSeries(
       query.title,
       undefined,
       undefined,
+      withCategory,
       {
         page,
         limit,
@@ -25,7 +28,9 @@ export class QuerySerieUseCase {
 
     const total = series.total;
 
-    const seriesResponses = series.data.map((serie) => serie.toJSON());
+    const seriesResponses = series.data.map((serie) =>
+      serie.toJSONWithRelations()
+    );
 
     const paginatedResult = paginationService.createPageResult(
       seriesResponses,
