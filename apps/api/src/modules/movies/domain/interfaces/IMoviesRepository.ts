@@ -7,6 +7,7 @@ export interface IMoviesRepository {
     title?: string,
     country?: string,
     categories?: string[],
+    withCategory?: boolean,
     options?: PaginationQuery
   ) => Promise<{
     data: Movie[];

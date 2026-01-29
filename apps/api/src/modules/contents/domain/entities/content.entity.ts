@@ -1,11 +1,29 @@
+import { Entity } from "../../../../shared/domain/entity.js";
+import type { Category } from "../../../categories/domain/entities/category.entity.js";
 import type {
   ContentRow,
+  contentRelationsSchema,
   NewContentRow,
 } from "../../infrastructure/database/schemas/contents.schema.js";
 
 export type ContentType = "movie" | "serie";
 
-export class Content {
+export class Content extends Entity<
+  ContentRow,
+  typeof contentRelationsSchema,
+  {
+    contentCategories: Category[];
+    contentCredits: Category[]; //TEMP
+    listItems: Category[]; //TEMP
+    notifications: Category[]; //TEMP
+    ratings: Category[]; //TEMP
+    reviews: Category[]; //TEMP
+    seasons: Category[]; //TEMP
+    userActivityLogs: Category[]; //TEMP
+    watchlists: Category[]; //TEMP
+    watchparties: Category[]; //TEMP
+  }
+> {
   public readonly id: string;
   public readonly type: ContentType;
   public readonly title: string;
@@ -26,6 +44,7 @@ export class Content {
   public readonly updatedAt: Date;
 
   constructor(props: ContentRow) {
+    super();
     this.id = props.id;
     this.type = props.type as ContentType;
     this.title = props.title;

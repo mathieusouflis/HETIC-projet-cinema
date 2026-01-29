@@ -37,6 +37,7 @@ export class ContentsRepository implements IContentRepository {
     title?: string,
     country?: string,
     categories?: string[],
+    withCategory?: boolean,
     options?: PaginationQuery
   ): Promise<{ data: Content[]; total: number }> {
     switch (type) {
@@ -45,6 +46,7 @@ export class ContentsRepository implements IContentRepository {
           title,
           country,
           categories,
+          withCategory,
           options
         );
       }
@@ -53,13 +55,26 @@ export class ContentsRepository implements IContentRepository {
           title,
           country,
           categories,
+          withCategory,
           options
         );
       }
       default: {
         const [movies, series] = await Promise.all([
-          this.moviesRepository.listMovies(title, country, categories, options),
-          this.seriesRepository.listSeries(title, country, categories, options),
+          this.moviesRepository.listMovies(
+            title,
+            country,
+            categories,
+            withCategory,
+            options
+          ),
+          this.seriesRepository.listSeries(
+            title,
+            country,
+            categories,
+            withCategory,
+            options
+          ),
         ]);
         return {
           data: [...movies.data, ...series.data],

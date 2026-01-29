@@ -8,6 +8,7 @@ export const queryContentRequestSchema = z.object({
   releaseDate: z.date().optional(),
   year: z.number().optional(),
   averageRating: z.number().min(0).max(10).optional(),
+  withCategory: z.enum(["true", "false"]).optional(),
   ...optionalOffsetAndPagePaginationQuerySchema.shape,
 });
 
