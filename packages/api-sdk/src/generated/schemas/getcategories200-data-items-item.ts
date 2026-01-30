@@ -5,8 +5,9 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
+import type { GETCategories200DataItemsItemContentCategoriesItem } from './getcategories200-data-items-item-content-categories-item';
 
-export type GETCategories200DataCategoriesItem = {
+export type GETCategories200DataItemsItem = {
   /** @minLength 1 */
   id: string;
   name: string;
@@ -14,4 +15,5 @@ export type GETCategories200DataCategoriesItem = {
   /** @nullable */
   description: string | null;
   createdAt: string;
+  contentCategories?: GETCategories200DataItemsItemContentCategoriesItem[];
 };

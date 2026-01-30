@@ -5,12 +5,10 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { GETCategories200DataCategoriesItem } from './getcategories200-data-categories-item';
+import type { GETCategories200DataItemsItem } from './getcategories200-data-items-item';
+import type { GETCategories200DataPagination } from './getcategories200-data-pagination';
 
 export type GETCategories200Data = {
-  categories: GETCategories200DataCategoriesItem[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
+  items: GETCategories200DataItemsItem[];
+  pagination: GETCategories200DataPagination;
 };
