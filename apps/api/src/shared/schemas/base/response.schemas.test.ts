@@ -5,7 +5,7 @@ import {
   baseListResponseSchema,
   basePaginatedResponseSchema,
   createListResponse,
-  createPaginatedResponse,
+  createPaginatedResponseSchema,
   createSuccessWithMessage,
 } from "./response.schemas";
 
@@ -75,7 +75,7 @@ describe("ResponseSchema", () => {
   });
 
   it("Should create a success response with pagination", () => {
-    const schema = createPaginatedResponse(z.string());
+    const schema = createPaginatedResponseSchema(z.string());
     expect(schema).toBeDefined();
     expect(() =>
       schema.parse({

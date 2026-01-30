@@ -101,7 +101,9 @@ export function createSuccessWithMessage<T extends z.ZodTypeAny>(
  * const usersListResponse = createPaginatedResponse(userSchema);
  * ```
  */
-export function createPaginatedResponse<T extends z.ZodTypeAny>(itemSchema: T) {
+export function createPaginatedResponseSchema<T extends z.ZodTypeAny>(
+  itemSchema: T
+) {
   return basePaginatedResponseSchema(itemSchema);
 }
 

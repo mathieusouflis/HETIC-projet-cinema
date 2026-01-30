@@ -17,6 +17,8 @@ import {
   ValidateQuery,
 } from "../../../../shared/infrastructure/decorators/validation.decorators.js";
 import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
+import { createPaginatedResult } from "../../../../shared/utils/pagination.utils.js";
+import { createPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
 import {
   type CategoryIdParamsDTO,
   categoryIdParamsSchema,
@@ -143,7 +145,7 @@ export class CategoriesController extends BaseController {
   @ApiResponse(
     200,
     "Categories retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponse(categoriesListResponseSchema)
+    categoriesListResponseSchema
   )
   @ApiResponse(
     400,
@@ -159,20 +161,18 @@ export class CategoriesController extends BaseController {
         limit,
       });
 
-      const responseData = {
-        categories: result.categories.map((cat) => cat.toJSON()),
-        total: result.total,
-        page: result.page,
-        limit: result.limit,
-        totalPages: result.totalPages,
-      };
+      const response = createPaginatedResponseFromResult(
+        createPaginatedResult(
+          result.categories.map((cat) => cat.toJSONWithRelations()),
+          result.total,
+          result.page,
+          result.limit
+        )
+      );
 
-      res.status(200).json({
-        success: true,
-        data: responseData,
-      });
+      res.status(200).json(response);
 
-      return responseData;
+      return response;
     }
   );
 
