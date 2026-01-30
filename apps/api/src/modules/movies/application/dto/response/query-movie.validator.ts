@@ -1,9 +1,9 @@
 import type z from "zod";
-import { createPaginatedResponse } from "../../../../../shared/schemas/base/response.schemas.js";
+import { createPaginatedResponseSchema } from "../../../../../shared/schemas/base/response.schemas.js";
 import { categoryResponseSchema } from "../../../../categories/application/dto/response/category.response.js";
 import { movieSchema } from "../../schema/movies.schema.js";
 
-export const queryMovieResponseSchema = createPaginatedResponse(
+export const queryMovieResponseSchema = createPaginatedResponseSchema(
   movieSchema.extend({
     contentCategories: categoryResponseSchema.array().optional(),
   })

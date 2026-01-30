@@ -1,5 +1,7 @@
 import { z } from "zod";
+import { createPaginatedResponseSchema } from "../../../../../shared/schemas/base/response.schemas.js";
 import { uuidSchema } from "../../../../../shared/schemas/fields/uuid.schema.js";
+import { contentSchema } from "../../../../contents/application/schema/contents.schema.js";
 
 export const categoryResponseSchema = z.object({
   id: uuidSchema,
@@ -9,7 +11,13 @@ export const categoryResponseSchema = z.object({
   createdAt: z.date(),
 });
 
-export const categoriesListResponseSchema = z.object({
+export const categoriesListResponseSchema = createPaginatedResponseSchema(
+  categoryResponseSchema.extend({
+    contentCategories: contentSchema.array().optional(),
+  })
+);
+
+z.object({
   categories: z.array(categoryResponseSchema),
   total: z.number(),
   page: z.number(),
