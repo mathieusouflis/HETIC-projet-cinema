@@ -5,8 +5,10 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
+import type { GETCategoriesWithContent } from './getcategories-with-content';
 
 export type GETCategoriesParams = {
+withContent?: GETCategoriesWithContent;
 /**
  * @minimum 1
  */
