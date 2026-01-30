@@ -935,6 +935,18 @@
         "parameters": [
           {
             "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            },
+            "required": false,
+            "name": "withContent",
+            "in": "query"
+          },
+          {
+            "schema": {
               "type": "integer",
               "minimum": 1,
               "default": 1
@@ -983,7 +995,7 @@
                     "data": {
                       "type": "object",
                       "properties": {
-                        "categories": {
+                        "items": {
                           "type": "array",
                           "items": {
                             "type": "object",
@@ -1006,6 +1018,113 @@
                               "createdAt": {
                                 "type": "string",
                                 "format": "date-time"
+                              },
+                              "contentCategories": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "movie",
+                                        "serie"
+                                      ]
+                                    },
+                                    "title": {
+                                      "type": "string"
+                                    },
+                                    "originalTitle": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "slug": {
+                                      "type": "string"
+                                    },
+                                    "synopsis": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "posterUrl": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "format": "uri"
+                                    },
+                                    "backdropUrl": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "format": "uri"
+                                    },
+                                    "trailerUrl": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "format": "uri"
+                                    },
+                                    "releaseDate": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "format": "date-time"
+                                    },
+                                    "year": {
+                                      "type": "integer",
+                                      "nullable": true,
+                                      "minimum": 1800
+                                    },
+                                    "durationMinutes": {
+                                      "type": "integer",
+                                      "nullable": true,
+                                      "minimum": 0
+                                    },
+                                    "tmdbId": {
+                                      "type": "integer",
+                                      "nullable": true
+                                    },
+                                    "averageRating": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 10
+                                    },
+                                    "totalRatings": {
+                                      "type": "integer",
+                                      "minimum": 0
+                                    },
+                                    "totalViews": {
+                                      "type": "integer",
+                                      "minimum": 0
+                                    },
+                                    "createdAt": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
+                                    "updatedAt": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "type",
+                                    "title",
+                                    "originalTitle",
+                                    "synopsis",
+                                    "posterUrl",
+                                    "backdropUrl",
+                                    "trailerUrl",
+                                    "releaseDate",
+                                    "year",
+                                    "durationMinutes",
+                                    "tmdbId",
+                                    "averageRating",
+                                    "totalRatings",
+                                    "totalViews",
+                                    "createdAt",
+                                    "updatedAt"
+                                  ]
+                                }
                               }
                             },
                             "required": [
@@ -1017,25 +1136,33 @@
                             ]
                           }
                         },
-                        "total": {
-                          "type": "number"
-                        },
-                        "page": {
-                          "type": "number"
-                        },
-                        "limit": {
-                          "type": "number"
-                        },
-                        "totalPages": {
-                          "type": "number"
+                        "pagination": {
+                          "type": "object",
+                          "properties": {
+                            "page": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "exclusiveMinimum": true
+                            },
+                            "total": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "totalPages": {
+                              "type": "integer",
+                              "minimum": 0
+                            }
+                          },
+                          "required": [
+                            "page",
+                            "total",
+                            "totalPages"
+                          ]
                         }
                       },
                       "required": [
-                        "categories",
-                        "total",
-                        "page",
-                        "limit",
-                        "totalPages"
+                        "items",
+                        "pagination"
                       ]
                     }
                   },
