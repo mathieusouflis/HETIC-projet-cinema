@@ -13,7 +13,7 @@ const { mockVerifyAccessToken } = vi.hoisted(() => ({
   mockVerifyAccessToken: vi.fn(),
 }));
 
-vi.mock("../services/token/JWTService.js", () => ({
+vi.mock("../services/token/jwt-service.js", () => ({
   JWTService: class {
     verifyAccessToken(...args: any[]) {
       return mockVerifyAccessToken(...args);

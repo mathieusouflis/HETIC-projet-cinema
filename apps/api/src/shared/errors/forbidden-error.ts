@@ -1,4 +1,4 @@
-import { AppError } from "./AppError.js";
+import { AppError } from "./app-error.js";
 
 /**
  * Error thrown when a user doesn't have permission to access a resource

@@ -1,5 +1,5 @@
-import type { IPasswordService } from "../../../../shared/services/password/IPasswordService.js";
-import type { ITokenService } from "../../../../shared/services/token/ITokenService.js";
+import type { IPasswordService } from "../../../../shared/services/password/i-password-service.js";
+import type { ITokenService } from "../../../../shared/services/token/i-token-service.js";
 import { toUserResponseDTO } from "../../../users/application/dto/utils/to-user-response.js";
 import { EmailAlreadyExistsError } from "../../../users/domain/errors/EmailAlreadyExistsError.js";
 import { UsernameAlreadyExistsError } from "../../../users/domain/errors/UsernameAlreadyExistsError.js";

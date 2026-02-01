@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ServerError } from "./ServerError";
+import { ServerError } from "./server-error";
 
 describe("ServerError", () => {
   it("Should instanciate ServerError", () => {

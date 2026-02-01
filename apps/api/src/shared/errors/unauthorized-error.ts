@@ -1,4 +1,4 @@
-import { AppError } from "./AppError.js";
+import { AppError } from "./app-error.js";
 
 /**
  * Error thrown when authentication fails or is missing

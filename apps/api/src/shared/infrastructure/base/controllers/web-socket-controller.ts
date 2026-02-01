@@ -93,24 +93,18 @@ export abstract class WebSocketController {
         );
       const requireAuth = namespaceMetadata?.requireAuth ?? false;
 
-      // Log connection
       logger.info(
         `🔌 Client connected to ${this.constructor.name}: ${socket.id}`
       );
 
-      // Register socket events with auth requirement flag
       webSocketEventRegistrar.registerEvents(socket, events, this, requireAuth);
 
-      // Setup lifecycle handlers
       this.setupSocketLifecycle(socket);
 
-      // Setup global error handler for this socket
       this.setupGlobalErrorHandler(socket);
 
-      // Call custom connection handler
       this.onConnection(socket);
     } catch (error) {
-      // Handle authentication or connection errors
       webSocketErrorHandler.handleFatal(
         error instanceof Error ? error : new Error(String(error)),
         socket,
@@ -144,7 +138,6 @@ export abstract class WebSocketController {
       const args = packet.data || [];
       const event = args.shift();
 
-      // Wrap in try-catch to catch synchronous errors
       try {
         originalOnevent.call(this, packet);
       } catch (error) {
@@ -153,7 +146,6 @@ export abstract class WebSocketController {
           error instanceof Error ? error.message : String(error)
         );
 
-        // Emit error to client
         webSocketErrorHandler.handle(
           error instanceof Error ? error : new Error(String(error)),
           socket,

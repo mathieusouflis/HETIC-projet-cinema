@@ -1,8 +1,11 @@
 import { config } from "@packages/config";
 import jwt from "jsonwebtoken";
 import { describe, expect, it } from "vitest";
-import type { AccessTokenPayload, RefreshTokenPayload } from "./ITokenService";
-import { JWTService } from "./JWTService";
+import type {
+  AccessTokenPayload,
+  RefreshTokenPayload,
+} from "./i-token-service";
+import { JWTService } from "./jwt-service";
 
 describe("JWT service test", () => {
   const jwtService = new JWTService();

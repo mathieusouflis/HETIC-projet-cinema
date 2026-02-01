@@ -1,10 +1,10 @@
 import type { Router } from "express";
-import { RestModule } from "../../shared/infrastructure/base/modules/RestModule.js";
+import { RestModule } from "../../shared/infrastructure/base/modules/rest-module.js";
 import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-generator.js";
-import type { IPasswordService } from "../../shared/services/password/IPasswordService.js";
-import { PasswordService } from "../../shared/services/password/PasswordService.js";
-import type { ITokenService } from "../../shared/services/token/ITokenService.js";
-import { JWTService } from "../../shared/services/token/JWTService.js";
+import type { IPasswordService } from "../../shared/services/password/i-password-service.js";
+import { PasswordService } from "../../shared/services/password/password-service.js";
+import type { ITokenService } from "../../shared/services/token/i-token-service.js";
+import { JWTService } from "../../shared/services/token/jwt-service.js";
 import type { IUserRepository } from "../users/domain/interfaces/IUserRepository.js";
 import { UserRepository } from "../users/infrastructure/database/repositories/user.repository.js";
 import { AuthController } from "./application/controllers/auth.controller.js";

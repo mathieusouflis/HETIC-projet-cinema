@@ -14,7 +14,7 @@ import type {
 } from "openapi3-ts/oas30";
 import { authMiddleware } from "../../middleware/auth.middleware.js";
 import { validateRequest } from "../../middleware/validation.middleware.js";
-import type { BaseController } from "../base/controllers/BaseController.js";
+import type { BaseController } from "../base/controllers/base-controller.js";
 import { getSharedRegistry } from "../openapi/shared-registry.js";
 import { getMiddlewaresMetadata } from "./auth.decorator.js";
 import {

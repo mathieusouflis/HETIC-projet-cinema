@@ -1,7 +1,7 @@
 import { logger } from "@packages/logger";
 import { eq } from "drizzle-orm";
 import { db } from "../../../../../database";
-import type { PaginationQuery } from "../../../../../shared/schemas/base/pagination.schema";
+import type { PaginationQuery } from "../../../../../shared/services/pagination";
 import type { IMoviesRepository } from "../../../../movies/domain/interfaces/IMoviesRepository";
 import { CompositeMoviesRepository } from "../../../../movies/infrastructure/database/repositories/composite-movies.repository";
 import type { ISeriesRepository } from "../../../../series/domain/interfaces/ISeriesRepository";

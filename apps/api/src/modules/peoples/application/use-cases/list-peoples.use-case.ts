@@ -1,5 +1,4 @@
 import { paginationService } from "../../../../shared/services/pagination/index.js";
-import { createOffsetPaginatedResult } from "../../../../shared/utils/pagination.utils.js";
 import { buildOffsetPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
 import type { IPeoplesRepository } from "../../domain/interfaces/IPeoplesRepository.js";
 
@@ -28,7 +27,7 @@ export class ListPeoplesUseCase {
 
     const peopleResponses = peoples.data.map((people) => people.toJSON());
 
-    const paginatedResult = createOffsetPaginatedResult(
+    const paginatedResult = paginationService.createOffsetResult(
       peopleResponses,
       offset,
       limit,

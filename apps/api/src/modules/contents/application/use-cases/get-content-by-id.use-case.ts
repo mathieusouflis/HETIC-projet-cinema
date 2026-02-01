@@ -1,4 +1,4 @@
-import { NotFoundError } from "../../../../shared/errors/NotFoundError.js";
+import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
 import type { IContentRepository } from "../../domain/interfaces/IContentRepository.js";
 import type { GetContentByIdResponse } from "../dto/response/get-content-by-id-response.validator.js";
 

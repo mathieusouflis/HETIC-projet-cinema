@@ -1,8 +1,8 @@
 import { config } from "@packages/config";
 import { logger } from "@packages/logger";
 import type { NextFunction, Request, Response } from "express";
-import { AppError } from "../errors/AppError.js";
-import { ValidationError } from "../errors/ValidationError.js";
+import { AppError } from "../errors/app-error.js";
+import { ValidationError } from "../errors/validation-error.js";
 
 interface ErrorResponse {
   success: false;

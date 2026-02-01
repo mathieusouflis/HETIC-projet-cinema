@@ -9,7 +9,7 @@ import type {
   OffsetPaginationMeta,
   PaginatedResult,
   PaginationMeta,
-} from "./pagination.utils.js";
+} from "../services/pagination/index.js";
 
 export type ApiResponse<T = unknown> =
   | SuccessResponse<T>

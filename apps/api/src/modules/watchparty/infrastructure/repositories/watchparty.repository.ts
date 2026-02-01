@@ -1,8 +1,8 @@
 import { and, count, eq, or, type SQL } from "drizzle-orm";
 import { db } from "../../../../database/index.js";
 import { watchparties } from "../../../../database/schema.js";
-import { NotFoundError } from "../../../../shared/errors/NotFoundError.js";
-import { ServerError } from "../../../../shared/errors/ServerError.js";
+import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
+import { ServerError } from "../../../../shared/errors/server-error.js";
 import {
   type CreateWatchpartyProps,
   type UpdateWatchpartyProps,

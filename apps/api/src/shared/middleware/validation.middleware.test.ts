@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
-import { ValidationError } from "../errors/ValidationError.js";
+import { ValidationError } from "../errors/validation-error.js";
 import { validateMultiple, validateRequest } from "./validation.middleware.js";
 
 describe("validateRequest", () => {

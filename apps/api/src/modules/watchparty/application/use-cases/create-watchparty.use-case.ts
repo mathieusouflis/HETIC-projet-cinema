@@ -1,4 +1,4 @@
-import { NotFoundError } from "../../../../shared/errors/NotFoundError.js";
+import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
 import type { IContentRepository } from "../../../contents/domain/interfaces/IContentRepository.js";
 import type { Watchparty } from "../../domain/entities/watchparty.entity.js";
 import type { IWatchpartyRepository } from "../../domain/interfaces/IWatchpartyRepository.js";

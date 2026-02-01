@@ -1,5 +1,5 @@
 import { describe } from "vitest";
-import { PasswordService } from "./PasswordService";
+import { PasswordService } from "./password-service";
 
 describe("Password service test", () => {
   const PASSWORD = "password";
