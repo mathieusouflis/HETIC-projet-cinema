@@ -62,3 +62,21 @@ function Button({
 }
 
 export { Button, buttonVariants };
+
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "primary" | "secondary";
+}
+
+export default function Button2({ variant = "primary", children, ...props }: ButtonProps) {
+  const base = "px-6 py-2 rounded-full font-semibold";
+  const variants = {
+    primary: "bg-[#2E2E2E] text-white",
+    secondary: "bg-[#E4E4E4] text-black",
+  };
+  return (
+    <button className={`${base} ${variants[variant]}`} {...props}>
+      {children}
+    </button>
+  );
+}

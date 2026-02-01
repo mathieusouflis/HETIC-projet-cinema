@@ -1,6 +1,5 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-// import { PostHogProvider } from "posthog-js/react";
 import "./index.css";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { setNavigateCallback } from "./lib/api";
@@ -9,7 +8,6 @@ import { setNavigateCallback } from "./lib/api";
 // @ts-ignore: Next line is generated
 import { routeTree } from "./routeTree.gen";
 
-// Create a new router instance
 const router = createRouter({ routeTree });
 
 // Register the navigate callback with the SDK
@@ -23,23 +21,10 @@ declare module "@tanstack/react-router" {
 }
 
 const el = document.getElementById("root");
-if (el) {
-  const root = createRoot(el);
-  root.render(
-    <React.StrictMode>
-      {/*<PostHogProvider
-        apiKey={import.meta.env.VITE_PUBLIC_POSTHOG_KEY}
-        options={{
-          api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
-          defaults: "2025-05-24",
-          capture_exceptions: true,
-          debug: import.meta.env.NODE_ENV === "development",
-        }}
-      >*/}
-      <RouterProvider router={router} />
-      {/*</PostHogProvider>*/}
-    </React.StrictMode>
-  );
-} else {
-  throw new Error("Could not find root element");
-}
+if (!el) throw new Error("Could not find root element");
+
+createRoot(el).render(
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>
+);
