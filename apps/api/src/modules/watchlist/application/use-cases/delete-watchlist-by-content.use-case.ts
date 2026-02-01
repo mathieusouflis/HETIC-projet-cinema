@@ -1,4 +1,4 @@
-import { NotFoundError } from "../../../../shared/errors";
+import { NotFoundError, UnauthorizedError } from "../../../../shared/errors";
 import type { IWatchlistRepository } from "../../domain/interfaces/IWatchlistRepository";
 
 export class DeleteWatchlistByContentIdUseCase {
@@ -14,8 +14,12 @@ export class DeleteWatchlistByContentIdUseCase {
       throw new NotFoundError(`Watchlist with id ${id}`);
     }
 
-    const updatedWatchlist = await this.watchlistRepository.delete(id);
+    if (watchlist.userId !== userId) {
+      throw new UnauthorizedError(
+        "You are not authorized to delete this watchlist"
+      );
+    }
 
-    return updatedWatchlist;
+    await this.watchlistRepository.delete(watchlist.id);
   }
 }

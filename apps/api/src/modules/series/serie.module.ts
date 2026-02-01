@@ -4,14 +4,15 @@ import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-g
 import { SeriesController } from "./application/controllers/serie.controller.js";
 import { GetSerieByIdUseCase } from "./application/use-cases/get-serie-by-id.use-case.js";
 import { QuerySerieUseCase } from "./application/use-cases/query-serie.use-case.js";
-import { SeriesRepository } from "./infrastructure/database/repositories/serie.repository.js";
+import type { ISeriesRepository } from "./domain/interfaces/ISeriesRepository.js";
+import { CompositeSeriesRepository } from "./infrastructure/database/repositories/composite-series.repository.js";
 
 class SeriesModule extends RestModule {
   // ============================================
   // Infrastructure Layer (Data Access)
   // ============================================
 
-  private readonly repository: SeriesRepository;
+  private readonly repository: ISeriesRepository;
 
   // ============================================
   // Application Layer (Use Cases)
@@ -36,7 +37,7 @@ class SeriesModule extends RestModule {
       description: "Module for managing users",
     });
 
-    this.repository = new SeriesRepository();
+    this.repository = new CompositeSeriesRepository();
 
     this.querySeriesUseCase = new QuerySerieUseCase(this.repository);
     this.getSerieByIdUseCase = new GetSerieByIdUseCase(this.repository);
@@ -53,7 +54,7 @@ class SeriesModule extends RestModule {
     return this.router;
   }
 
-  public getSeriesRepository(): SeriesRepository {
+  public getSeriesRepository(): ISeriesRepository {
     return this.repository;
   }
 

@@ -13,6 +13,7 @@
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "phase run drizzle-kit migrate",
+    "db:studio": "phase run drizzle-kit studio",
     "clean": "rm -rf dist",
     "test": "vitest run"
   },

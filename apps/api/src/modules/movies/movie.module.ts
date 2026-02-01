@@ -4,14 +4,15 @@ import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-g
 import { MoviesController } from "./application/controllers/movie.controller.js";
 import { GetMovieByIdUseCase } from "./application/use-cases/get-movie-by-id.use-case.js";
 import { QueryMovieUseCase } from "./application/use-cases/query-movie.use-case.js";
-import { MoviesRepository } from "./infrastructure/database/repositories/movie.repository.js";
+import type { IMoviesRepository } from "./domain/interfaces/IMoviesRepository.js";
+import { CompositeMoviesRepository } from "./infrastructure/database/repositories/composite-movies.repository.js";
 
 class MoviesModule extends RestModule {
   // ============================================
   // Infrastructure Layer (Data Access)
   // ============================================
 
-  private readonly repository: MoviesRepository;
+  private readonly repository: IMoviesRepository;
 
   // ============================================
   // Application Layer (Use Cases)
@@ -36,7 +37,7 @@ class MoviesModule extends RestModule {
       description: "Module for managing users",
     });
 
-    this.repository = new MoviesRepository();
+    this.repository = new CompositeMoviesRepository();
 
     this.queryMoviesUseCase = new QueryMovieUseCase(this.repository);
     this.getMovieByIdUseCase = new GetMovieByIdUseCase(this.repository);
@@ -53,7 +54,7 @@ class MoviesModule extends RestModule {
     return this.router;
   }
 
-  public getMoviesRepository(): MoviesRepository {
+  public getMoviesRepository(): IMoviesRepository {
     return this.repository;
   }
 

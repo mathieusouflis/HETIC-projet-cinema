@@ -2,7 +2,7 @@ import type { Router } from "express";
 import { RestModule } from "../../shared/infrastructure/base/modules/RestModule.js";
 import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-generator.js";
 import type { IContentRepository } from "../contents/domain/interfaces/IContentRepository.js";
-import { ContentsRepository } from "../contents/infrastructure/database/repositories/content/contents.repository.js";
+import { ContentsRepository } from "../contents/infrastructure/database/repositories/contents.repository.js";
 import { WatchpartyController } from "./application/controllers/watchparty.controller.js";
 import { CreateWatchpartyUseCase } from "./application/use-cases/create-watchparty.use-case.js";
 import { DeleteWatchpartyUseCase } from "./application/use-cases/delete-watchparty.use-case.js";

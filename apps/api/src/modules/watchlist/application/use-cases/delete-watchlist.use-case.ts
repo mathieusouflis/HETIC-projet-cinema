@@ -13,12 +13,10 @@ export class DeleteWatchlistByIdUseCase {
 
     if (watchlist.userId !== userId) {
       throw new UnauthorizedError(
-        "You are not authorized to update this watchlist"
+        "You are not authorized to delete this watchlist"
       );
     }
 
-    const updatedWatchlist = await this.watchlistRepository.delete(id);
-
-    return updatedWatchlist;
+    await this.watchlistRepository.delete(id);
   }
 }
