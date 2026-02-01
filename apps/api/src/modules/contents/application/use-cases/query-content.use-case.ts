@@ -1,5 +1,5 @@
-import { paginationService } from "../../../../shared/services/pagination.service.js";
-import { createPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
+import { paginationService } from "../../../../shared/services/pagination/index.js";
+import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
 import type { IContentRepository } from "../../domain/interfaces/IContentRepository.js";
 import type { QueryContentRequest } from "../dto/requests/query-contents.validator.js";
 import type { QueryContentResponse } from "../dto/response/query-content.validator.js";
@@ -40,6 +40,6 @@ export class QueryContentUseCase {
       total
     );
 
-    return createPaginatedResponseFromResult(paginatedResult);
+    return buildPaginatedResponseFromResult(paginatedResult);
   }
 }

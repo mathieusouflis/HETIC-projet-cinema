@@ -1,5 +1,5 @@
-import { paginationService } from "../../../../shared/services/pagination.service.js";
-import { createPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
+import { paginationService } from "../../../../shared/services/pagination/index.js";
+import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
 import type { IPeoplesRepository } from "../../domain/interfaces/IPeoplesRepository.js";
 
 export type SearchPeopleParams = {
@@ -16,7 +16,7 @@ export class SearchPeopleUseCase {
 
     if (!query || query.trim().length === 0) {
       const emptyResult = paginationService.createPageResult([], 1, 25, 0);
-      return createPaginatedResponseFromResult(emptyResult);
+      return buildPaginatedResponseFromResult(emptyResult);
     }
 
     const { page, limit } = paginationService.parsePageParams({
@@ -39,6 +39,6 @@ export class SearchPeopleUseCase {
       total
     );
 
-    return createPaginatedResponseFromResult(paginatedResult);
+    return buildPaginatedResponseFromResult(paginatedResult);
   }
 }

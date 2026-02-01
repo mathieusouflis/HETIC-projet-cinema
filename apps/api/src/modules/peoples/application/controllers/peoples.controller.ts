@@ -16,7 +16,7 @@ import {
   notFoundErrorResponseSchema,
   unauthorizedErrorResponseSchema,
 } from "../../../../shared/schemas/base/error.schemas";
-import { createSuccessResponse } from "../../../../shared/schemas/base/response.schemas";
+import { createSuccessResponseSchema } from "../../../../shared/schemas/base/response.schemas";
 import { asyncHandler } from "../../../../shared/utils";
 import {
   type CreatePeopleBody,
@@ -138,7 +138,7 @@ export class PeoplesController extends BaseController {
   @ApiResponse(
     200,
     "Person retrieved successfully",
-    createSuccessResponse(getPeopleByIdResponseValidator)
+    createSuccessResponseSchema(getPeopleByIdResponseValidator)
   )
   getPeopleById = asyncHandler(
     async (req, res): Promise<GetPeopleByIdResponse> => {
@@ -165,7 +165,7 @@ export class PeoplesController extends BaseController {
   @ApiResponse(
     201,
     "Person created successfully",
-    createSuccessResponse(createPeopleResponseValidator)
+    createSuccessResponseSchema(createPeopleResponseValidator)
   )
   createPeople = asyncHandler(
     async (req, res): Promise<CreatePeopleResponse> => {
@@ -201,7 +201,7 @@ export class PeoplesController extends BaseController {
   @ApiResponse(
     200,
     "Person updated successfully",
-    createSuccessResponse(updatePeopleResponseValidator)
+    createSuccessResponseSchema(updatePeopleResponseValidator)
   )
   updatePeople = asyncHandler(
     async (_req, _res): Promise<UpdatePeopleResponse> => {

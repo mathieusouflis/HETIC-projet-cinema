@@ -1,5 +1,5 @@
-import { paginationService } from "../../../../shared/services/pagination.service.js";
-import { createPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
+import { paginationService } from "../../../../shared/services/pagination/index.js";
+import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
 import type { IMoviesRepository } from "../../domain/interfaces/IMoviesRepository.js";
 import type { QueryMovieRequest } from "../dto/requests/query-movies.validator.js";
 import type { QueryMovieResponse } from "../dto/response/query-movie.validator.js";
@@ -37,6 +37,6 @@ export class QueryMovieUseCase {
       total
     );
 
-    return createPaginatedResponseFromResult(paginatedResult);
+    return buildPaginatedResponseFromResult(paginatedResult);
   }
 }
