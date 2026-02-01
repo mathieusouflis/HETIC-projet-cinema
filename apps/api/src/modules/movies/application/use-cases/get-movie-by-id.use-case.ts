@@ -5,8 +5,11 @@ import type { GetMovieByIdResponse } from "../dto/response/get-movie-by-id-respo
 export class GetMovieByIdUseCase {
   constructor(private readonly movieRepository: IMoviesRepository) {}
 
-  async execute(id: string): Promise<GetMovieByIdResponse> {
-    const movie = await this.movieRepository.getMovieById(id);
+  async execute(
+    id: string,
+    options: { withCategories?: boolean }
+  ): Promise<GetMovieByIdResponse> {
+    const movie = await this.movieRepository.getMovieById(id, options);
 
     if (!movie) {
       throw new NotFoundError(`Movie with id ${id}`);

@@ -112,10 +112,15 @@ export class CompositeSeriesRepository implements ISeriesRepository {
    * Get series by ID
    * First checks the database, then falls back to TMDB if not found
    */
-  async getSerieById(id: string): Promise<Serie | null> {
+  async getSerieById(
+    id: string,
+    options?: {
+      withCategories?: boolean;
+    }
+  ): Promise<Serie | null> {
     try {
       // Try to get from database first
-      const serie = await this.drizzleRepository.getById(id);
+      const serie = await this.drizzleRepository.getById(id, options);
 
       if (serie) {
         return serie;
