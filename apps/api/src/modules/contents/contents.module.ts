@@ -6,7 +6,7 @@ import { ContentsController } from "./application/controllers/contents.controlle
 import { GetContentByIdUseCase } from "./application/use-cases/get-content-by-id.use-case.js";
 import { QueryContentUseCase } from "./application/use-cases/query-content.use-case.js";
 import { SearchContentsUseCase } from "./application/use-cases/search-contents.use-case.js";
-import { ContentsRepository } from "./infrastructure/database/repositories/content/contents.repository.js";
+import { ContentsRepository } from "./infrastructure/database/repositories/contents.repository.js";
 
 class ContentsModule extends RestModule {
   // ============================================

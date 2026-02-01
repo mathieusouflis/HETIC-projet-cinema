@@ -33,7 +33,7 @@ import {
   type GetQueryDTO,
   getQuerySchema,
 } from "../dto/requests/get.validator.js";
-import { getIdParamsSchema } from "../dto/requests/get-id.validatror.js";
+import { getIdParamsSchema } from "../dto/requests/get-id.validator.js";
 import {
   type GetUserFollowersParams,
   getUserFollowersParamsValidator,

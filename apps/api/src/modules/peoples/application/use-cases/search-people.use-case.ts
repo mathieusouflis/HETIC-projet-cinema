@@ -26,6 +26,8 @@ export class SearchPeopleUseCase {
 
     const peoples = await this.peoplesRepository.searchPeople(query, page);
 
+    // TODO: Repository should return { data: People[], total: number }
+    // For now, this is a known limitation - pagination shows current page size as total
     const total = peoples.length;
 
     const peopleResponses = peoples.map((people) => people.toJSON());

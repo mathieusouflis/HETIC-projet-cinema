@@ -58,7 +58,6 @@ export const returnedPaginationSchema = z.object({
 export const paginationQuerySchema = z.object({
   page: pageSchema,
   limit: limitSchema,
-  sort: sortSchema.optional(),
 });
 
 export const offsetPaginationQuerySchema = z.object({

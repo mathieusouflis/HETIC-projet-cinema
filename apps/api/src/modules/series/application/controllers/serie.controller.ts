@@ -1,4 +1,3 @@
-import { logger } from "@packages/logger";
 import { BaseController } from "../../../../shared/infrastructure/base/controllers/BaseController.js";
 import { Controller } from "../../../../shared/infrastructure/decorators/controller.decorator.js";
 import { ApiResponse } from "../../../../shared/infrastructure/decorators/response.decorator.js";
@@ -67,7 +66,6 @@ export class SeriesController extends BaseController {
   @ApiResponse(200, "Serie retrieved successfully", getSerieByIdResponseSchema)
   getSerieById = asyncHandler(
     async (req, res): Promise<GetSerieByIdResponse> => {
-      logger.info(req.params);
       const { id } = req.params as GetSerieByIdValidatorParams;
 
       const serie = await this.getSerieByIdUseCase.execute(id);
