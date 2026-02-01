@@ -18,18 +18,18 @@ export type ApiResponse<T = unknown> =
   | ErrorResponse;
 
 /**
- * Create a success response with data
+ * Build a success response with data
  *
  * @param data - The data to include in the response
  * @returns Success response object
  *
  * @example
  * ```ts
- * const response = createSuccessResponse({ id: "123", name: "John" });
+ * const response = buildSuccessResponse({ id: "123", name: "John" });
  * // { success: true, data: { id: "123", name: "John" } }
  * ```
  */
-export function createSuccessResponse<T>(data: T): SuccessResponse<T> {
+export function buildSuccessResponse<T>(data: T): SuccessResponse<T> {
   return {
     success: true,
     data,
@@ -37,7 +37,7 @@ export function createSuccessResponse<T>(data: T): SuccessResponse<T> {
 }
 
 /**
- * Create a success response with data and message
+ * Build a success response with data and message
  *
  * @param data - The data to include in the response
  * @param message - Success message
@@ -45,7 +45,7 @@ export function createSuccessResponse<T>(data: T): SuccessResponse<T> {
  *
  * @example
  * ```ts
- * const response = createSuccessWithMessage(
+ * const response = buildSuccessWithMessage(
  *   { id: "123" },
  *   "User created successfully"
  * );
@@ -56,7 +56,7 @@ export function createSuccessResponse<T>(data: T): SuccessResponse<T> {
  * // }
  * ```
  */
-export function createSuccessWithMessage<T>(
+export function buildSuccessWithMessage<T>(
   data: T,
   message: string
 ): SuccessWithMessage<T> {
@@ -68,7 +68,7 @@ export function createSuccessWithMessage<T>(
 }
 
 /**
- * Create a paginated response from items and pagination metadata
+ * Build a paginated response from items and pagination metadata
  *
  * @param items - Array of items to include
  * @param pagination - Pagination metadata
@@ -76,7 +76,7 @@ export function createSuccessWithMessage<T>(
  *
  * @example
  * ```ts
- * const response = createPaginatedResponse(users, {
+ * const response = buildPaginatedResponse(users, {
  *   page: 1,
  *   limit: 10,
  *   total: 45,
@@ -86,7 +86,7 @@ export function createSuccessWithMessage<T>(
  * });
  * ```
  */
-export function createPaginatedResponse<T>(
+export function buildPaginatedResponse<T>(
   items: T[],
   pagination: PaginationMeta
 ): PaginatedResponse<T> {
@@ -104,7 +104,7 @@ export function createPaginatedResponse<T>(
 }
 
 /**
- * Create a paginated response from a PaginatedResult
+ * Build a paginated response from a PaginatedResult
  *
  * @param result - Paginated result with items and metadata
  * @returns Paginated response object
@@ -112,17 +112,17 @@ export function createPaginatedResponse<T>(
  * @example
  * ```ts
  * const result = createPaginatedResult(users, 1, 10, 45);
- * const response = createPaginatedResponseFromResult(result);
+ * const response = buildPaginatedResponseFromResult(result);
  * ```
  */
-export function createPaginatedResponseFromResult<T>(
+export function buildPaginatedResponseFromResult<T>(
   result: PaginatedResult<T>
 ): PaginatedResponse<T> {
-  return createPaginatedResponse(result.items, result.pagination);
+  return buildPaginatedResponse(result.items, result.pagination);
 }
 
 /**
- * Create an error response
+ * Build an error response
  *
  * @param error - Error message
  * @param details - Optional error details
@@ -130,7 +130,7 @@ export function createPaginatedResponseFromResult<T>(
  *
  * @example
  * ```ts
- * const response = createErrorResponse("User not found", { userId: "123" });
+ * const response = buildErrorResponse("User not found", { userId: "123" });
  * // {
  * //   success: false,
  * //   error: "User not found",
@@ -138,7 +138,7 @@ export function createPaginatedResponseFromResult<T>(
  * // }
  * ```
  */
-export function createErrorResponse(
+export function buildErrorResponse(
   error: string,
   details?: unknown
 ): ErrorResponse {
@@ -150,34 +150,34 @@ export function createErrorResponse(
 }
 
 /**
- * Create a list response (non-paginated array)
+ * Build a list response (non-paginated array)
  *
  * @param items - Array of items
  * @returns Success response with array data
  *
  * @example
  * ```ts
- * const response = createListResponse(tags);
+ * const response = buildListResponse(tags);
  * // { success: true, data: [...tags] }
  * ```
  */
-export function createListResponse<T>(items: T[]): SuccessResponse<T[]> {
-  return createSuccessResponse(items);
+export function buildListResponse<T>(items: T[]): SuccessResponse<T[]> {
+  return buildSuccessResponse(items);
 }
 
 /**
- * Create an empty success response
+ * Build an empty success response
  *
  * @param message - Optional success message
  * @returns Success response with no data
  *
  * @example
  * ```ts
- * const response = createEmptyResponse("Operation completed");
+ * const response = buildEmptyResponse("Operation completed");
  * // { success: true, message: "Operation completed" }
  * ```
  */
-export function createEmptyResponse(message?: string): {
+export function buildEmptyResponse(message?: string): {
   success: true;
   message?: string;
 } {
@@ -214,7 +214,7 @@ export interface ExtendedPaginatedResponse<T> {
 }
 
 /**
- * Create an extended paginated response with full metadata
+ * Build an extended paginated response with full metadata
  *
  * @param items - Array of items
  * @param pagination - Extended pagination metadata
@@ -222,7 +222,7 @@ export interface ExtendedPaginatedResponse<T> {
  *
  * @example
  * ```ts
- * const response = createExtendedPaginatedResponse(users, {
+ * const response = buildExtendedPaginatedResponse(users, {
  *   page: 2,
  *   limit: 10,
  *   total: 45,
@@ -233,7 +233,7 @@ export interface ExtendedPaginatedResponse<T> {
  * });
  * ```
  */
-export function createExtendedPaginatedResponse<T>(
+export function buildExtendedPaginatedResponse<T>(
   items: T[],
   pagination: ExtendedPaginationMeta
 ): ExtendedPaginatedResponse<T> {
@@ -271,7 +271,7 @@ export interface OffsetPaginatedResponse<T> {
 }
 
 /**
- * Create an offset-based paginated response
+ * Build an offset-based paginated response
  *
  * @param items - Array of items
  * @param pagination - Offset pagination metadata
@@ -279,7 +279,7 @@ export interface OffsetPaginatedResponse<T> {
  *
  * @example
  * ```ts
- * const response = createOffsetPaginatedResponse(users, {
+ * const response = buildOffsetPaginatedResponse(users, {
  *   offset: 20,
  *   limit: 10,
  *   total: 45,
@@ -287,7 +287,7 @@ export interface OffsetPaginatedResponse<T> {
  * });
  * ```
  */
-export function createOffsetPaginatedResponse<T>(
+export function buildOffsetPaginatedResponse<T>(
   items: T[],
   pagination: OffsetPaginationMeta
 ): OffsetPaginatedResponse<T> {
@@ -306,7 +306,7 @@ export function createOffsetPaginatedResponse<T>(
 }
 
 /**
- * Create an offset paginated response from a result object
+ * Build an offset paginated response from a result object
  *
  * @param result - Offset paginated result
  * @returns Offset paginated response
@@ -314,13 +314,13 @@ export function createOffsetPaginatedResponse<T>(
  * @example
  * ```ts
  * const result = createOffsetPaginatedResult(users, 20, 10, 45);
- * const response = createOffsetPaginatedResponseFromResult(result);
+ * const response = buildOffsetPaginatedResponseFromResult(result);
  * ```
  */
-export function createOffsetPaginatedResponseFromResult<T>(
+export function buildOffsetPaginatedResponseFromResult<T>(
   result: OffsetPaginatedResult<T>
 ): OffsetPaginatedResponse<T> {
-  return createOffsetPaginatedResponse(result.items, result.pagination);
+  return buildOffsetPaginatedResponse(result.items, result.pagination);
 }
 
 /**
@@ -339,7 +339,7 @@ export function transformAndWrap<T, R>(
   data: T,
   mapper: (data: T) => R
 ): SuccessResponse<R> {
-  return createSuccessResponse(mapper(data));
+  return buildSuccessResponse(mapper(data));
 }
 
 /**
@@ -358,7 +358,7 @@ export function transformArrayAndWrap<T, R>(
   items: T[],
   mapper: (item: T) => R
 ): SuccessResponse<R[]> {
-  return createSuccessResponse(items.map(mapper));
+  return buildSuccessResponse(items.map(mapper));
 }
 
 /**
@@ -380,7 +380,7 @@ export function transformPaginatedData<T, R>(
   result: PaginatedResult<T>,
   mapper: (item: T) => R
 ): PaginatedResponse<R> {
-  return createPaginatedResponse(result.items.map(mapper), result.pagination);
+  return buildPaginatedResponse(result.items.map(mapper), result.pagination);
 }
 
 /**
@@ -402,7 +402,7 @@ export function transformOffsetPaginatedData<T, R>(
   result: OffsetPaginatedResult<T>,
   mapper: (item: T) => R
 ): OffsetPaginatedResponse<R> {
-  return createOffsetPaginatedResponse(
+  return buildOffsetPaginatedResponse(
     result.items.map(mapper),
     result.pagination
   );

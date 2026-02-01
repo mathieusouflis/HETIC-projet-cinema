@@ -1,5 +1,5 @@
-import { paginationService } from "../../../../shared/services/pagination.service.js";
-import { createPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
+import { paginationService } from "../../../../shared/services/pagination/index.js";
+import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
 import type { IWatchpartyRepository } from "../../domain/interfaces/IWatchpartyRepository.js";
 import type { QueryWatchpartiesRequest } from "../dto/request/query-watchparties.query.validator.js";
 import type { QueryWatchpartiesResponse } from "../dto/response/query-watchparties.response.validator.js";
@@ -33,6 +33,6 @@ export class ListWatchpartiesUseCase {
       watchparties.total
     );
 
-    return createPaginatedResponseFromResult(paginatedResult);
+    return buildPaginatedResponseFromResult(paginatedResult);
   }
 }

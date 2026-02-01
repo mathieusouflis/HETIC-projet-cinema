@@ -117,7 +117,7 @@ export class UsersController extends BaseController {
   @ApiResponse(
     200,
     "User retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponse(getIdResponseSchema)
+    Shared.Schemas.Base.createSuccessResponseSchema(getIdResponseSchema)
   )
   @ApiResponse(
     400,
@@ -154,7 +154,7 @@ export class UsersController extends BaseController {
   @ApiResponse(
     200,
     "Users retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponse(getResponseSchema)
+    Shared.Schemas.Base.createSuccessResponseSchema(getResponseSchema)
   )
   @ApiResponse(
     400,
@@ -196,7 +196,7 @@ export class UsersController extends BaseController {
   @ApiResponse(
     200,
     "User updated successfully",
-    Shared.Schemas.Base.createSuccessResponse(patchIdResponseSchema)
+    Shared.Schemas.Base.createSuccessResponseSchema(patchIdResponseSchema)
   )
   @ApiResponse(
     400,
@@ -279,7 +279,7 @@ export class UsersController extends BaseController {
   @ApiResponse(
     200,
     "User profile retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponse(getMeResponseSchema)
+    Shared.Schemas.Base.createSuccessResponseSchema(getMeResponseSchema)
   )
   @ApiResponse(
     401,
@@ -315,7 +315,7 @@ export class UsersController extends BaseController {
   @ApiResponse(
     200,
     "User profile updated successfully",
-    Shared.Schemas.Base.createSuccessResponse(patchMeResponseSchema)
+    Shared.Schemas.Base.createSuccessResponseSchema(patchMeResponseSchema)
   )
   @ApiResponse(
     400,
@@ -365,7 +365,9 @@ export class UsersController extends BaseController {
   @ApiResponse(
     201,
     "User followed successfully",
-    Shared.Schemas.Base.createSuccessResponse(createFriendshipResponseValidator)
+    Shared.Schemas.Base.createSuccessResponseSchema(
+      createFriendshipResponseValidator
+    )
   )
   @ApiResponse(
     400,
@@ -466,7 +468,7 @@ export class UsersController extends BaseController {
   @ApiResponse(
     200,
     "Following list retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponse(
+    Shared.Schemas.Base.createSuccessResponseSchema(
       getFollowersFollowingResponseValidator
     )
   )
@@ -507,7 +509,7 @@ export class UsersController extends BaseController {
   @ApiResponse(
     200,
     "Following list retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponse(
+    Shared.Schemas.Base.createSuccessResponseSchema(
       getFollowersFollowingResponseValidator
     )
   )
@@ -549,7 +551,7 @@ export class UsersController extends BaseController {
   @ApiResponse(
     200,
     "Followers list retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponse(
+    Shared.Schemas.Base.createSuccessResponseSchema(
       getFollowersFollowingResponseValidator
     )
   )

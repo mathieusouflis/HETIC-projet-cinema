@@ -68,37 +68,42 @@ export const emptySuccessResponseSchema = z.object({
 });
 
 /**
- * Helper function to create a success response with data
+ * Helper function to create a success response schema
+ * USE THIS FOR ZOD SCHEMAS / OPENAPI DOCUMENTATION
  *
  * @example
  * ```ts
- * const userResponseSchema = createSuccessResponse(userSchema);
+ * const userResponseSchema = createSuccessResponseSchema(userSchema);
  * ```
  */
-export function createSuccessResponse<T extends z.ZodTypeAny>(dataSchema: T) {
+export function createSuccessResponseSchema<T extends z.ZodTypeAny>(
+  dataSchema: T
+) {
   return baseDataResponseSchema(dataSchema);
 }
 
 /**
- * Helper function to create a success response with data and message
+ * Helper function to create a success response schema with message
+ * USE THIS FOR ZOD SCHEMAS / OPENAPI DOCUMENTATION
  *
  * @example
  * ```ts
- * const createdUserResponse = createSuccessWithMessage(userSchema);
+ * const createdUserResponse = createSuccessWithMessageSchema(userSchema);
  * ```
  */
-export function createSuccessWithMessage<T extends z.ZodTypeAny>(
+export function createSuccessWithMessageSchema<T extends z.ZodTypeAny>(
   dataSchema: T
 ) {
   return baseDataWithMessageResponseSchema(dataSchema);
 }
 
 /**
- * Helper function to create a paginated response
+ * Helper function to create a paginated response schema
+ * USE THIS FOR ZOD SCHEMAS / OPENAPI DOCUMENTATION
  *
  * @example
  * ```ts
- * const usersListResponse = createPaginatedResponse(userSchema);
+ * const usersListResponse = createPaginatedResponseSchema(userSchema);
  * ```
  */
 export function createPaginatedResponseSchema<T extends z.ZodTypeAny>(
@@ -108,15 +113,48 @@ export function createPaginatedResponseSchema<T extends z.ZodTypeAny>(
 }
 
 /**
- * Helper function to create a list response
+ * Helper function to create a list response schema
+ * USE THIS FOR ZOD SCHEMAS / OPENAPI DOCUMENTATION
  *
  * @example
  * ```ts
- * const tagsListResponse = createListResponse(tagSchema);
+ * const tagsListResponse = createListResponseSchema(tagSchema);
  * ```
  */
-export function createListResponse<T extends z.ZodTypeAny>(itemSchema: T) {
+export function createListResponseSchema<T extends z.ZodTypeAny>(
+  itemSchema: T
+) {
   return baseListResponseSchema(itemSchema);
+}
+
+/**
+ * Helper function to create an extended paginated response schema
+ * USE THIS FOR ZOD SCHEMAS / OPENAPI DOCUMENTATION
+ *
+ * @example
+ * ```ts
+ * const usersResponse = createExtendedPaginatedResponseSchema(userSchema);
+ * ```
+ */
+export function createExtendedPaginatedResponseSchema<T extends z.ZodTypeAny>(
+  itemSchema: T
+) {
+  return extendedPaginatedResponseSchema(itemSchema);
+}
+
+/**
+ * Helper function to create an offset paginated response schema
+ * USE THIS FOR ZOD SCHEMAS / OPENAPI DOCUMENTATION
+ *
+ * @example
+ * ```ts
+ * const usersResponse = createOffsetPaginatedResponseSchema(userSchema);
+ * ```
+ */
+export function createOffsetPaginatedResponseSchema<T extends z.ZodTypeAny>(
+  itemSchema: T
+) {
+  return offsetPaginatedResponseSchema(itemSchema);
 }
 
 export type SuccessResponse<T> = {
@@ -226,31 +264,3 @@ export const offsetPaginatedResponseSchema = <T extends z.ZodTypeAny>(
       }),
     }),
   });
-
-/**
- * Helper function to create an extended paginated response
- *
- * @example
- * ```ts
- * const usersResponse = createExtendedPaginatedResponse(userSchema);
- * ```
- */
-export function createExtendedPaginatedResponse<T extends z.ZodTypeAny>(
-  itemSchema: T
-) {
-  return extendedPaginatedResponseSchema(itemSchema);
-}
-
-/**
- * Helper function to create an offset paginated response
- *
- * @example
- * ```ts
- * const usersResponse = createOffsetPaginatedResponse(userSchema);
- * ```
- */
-export function createOffsetPaginatedResponse<T extends z.ZodTypeAny>(
-  itemSchema: T
-) {
-  return offsetPaginatedResponseSchema(itemSchema);
-}

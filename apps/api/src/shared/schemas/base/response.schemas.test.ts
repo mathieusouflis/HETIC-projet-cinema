@@ -4,9 +4,9 @@ import {
   baseDataWithMessageResponseSchema,
   baseListResponseSchema,
   basePaginatedResponseSchema,
-  createListResponse,
+  createListResponseSchema,
   createPaginatedResponseSchema,
-  createSuccessWithMessage,
+  createSuccessWithMessageSchema,
 } from "./response.schemas";
 
 describe("ResponseSchema", () => {
@@ -52,7 +52,7 @@ describe("ResponseSchema", () => {
   });
 
   it("Should create a success response with a message", () => {
-    const schema = createSuccessWithMessage(z.string());
+    const schema = createSuccessWithMessageSchema(z.string());
     expect(schema).toBeDefined();
     expect(() =>
       schema.parse({
@@ -64,7 +64,7 @@ describe("ResponseSchema", () => {
   });
 
   it("Should create a success response with a list of item", () => {
-    const schema = createListResponse(z.string());
+    const schema = createListResponseSchema(z.string());
     expect(schema).toBeDefined();
     expect(() =>
       schema.parse({

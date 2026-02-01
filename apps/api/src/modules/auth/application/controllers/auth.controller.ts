@@ -20,7 +20,7 @@ import {
   validationErrorResponseSchema,
 } from "../../../../shared/schemas/base/error.schemas.js";
 import {
-  createSuccessResponse,
+  createSuccessResponseSchema,
   successResponseSchema,
 } from "../../../../shared/schemas/base/response.schemas.js";
 import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
@@ -66,7 +66,7 @@ export class AuthController extends BaseController {
   @ApiResponse(
     201,
     "User registered successfully",
-    createSuccessResponse(authResponseDataValidator)
+    createSuccessResponseSchema(authResponseDataValidator)
   )
   @ApiResponse(400, "Invalid input data", validationErrorResponseSchema)
   @ApiResponse(
@@ -109,7 +109,7 @@ export class AuthController extends BaseController {
   @ApiResponse(
     200,
     "Login successful",
-    createSuccessResponse(authResponseDataValidator)
+    createSuccessResponseSchema(authResponseDataValidator)
   )
   @ApiResponse(400, "Invalid credentials", validationErrorResponseSchema)
   @ApiResponse(
@@ -149,7 +149,7 @@ export class AuthController extends BaseController {
   @ApiResponse(
     200,
     "Tokens refreshed successfully",
-    createSuccessResponse(authResponseDataValidator)
+    createSuccessResponseSchema(authResponseDataValidator)
   )
   @ApiResponse(
     401,
@@ -202,7 +202,7 @@ export class AuthController extends BaseController {
   @ApiResponse(
     200,
     "User profile retrieved successfully",
-    createSuccessResponse(userProfileValidator)
+    createSuccessResponseSchema(userProfileValidator)
   )
   @ApiResponse(
     401,

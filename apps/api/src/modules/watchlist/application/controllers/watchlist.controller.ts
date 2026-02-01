@@ -21,7 +21,7 @@ import {
   unauthorizedErrorResponseSchema,
 } from "../../../../shared/schemas/base/error.schemas.js";
 import {
-  createSuccessResponse,
+  createSuccessResponseSchema,
   emptySuccessResponseSchema,
 } from "../../../../shared/schemas/base/response.schemas.js";
 import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
@@ -155,7 +155,7 @@ export class WatchlistController extends BaseController {
   @ApiResponse(
     200,
     "Content retrieved successfully",
-    createSuccessResponse(getWatchlistByContentIdResponseValidator)
+    createSuccessResponseSchema(getWatchlistByContentIdResponseValidator)
   )
   getMovieById = asyncHandler(
     async (req, res): Promise<GetWatchlistByContentIdResponse> => {
@@ -199,7 +199,7 @@ export class WatchlistController extends BaseController {
   @ApiResponse(
     201,
     "Content added to watchlist successfully",
-    createSuccessResponse(addWatchlistContentResponseValidator)
+    createSuccessResponseSchema(addWatchlistContentResponseValidator)
   )
   addContentToWatchlist = asyncHandler(
     async (req, res): Promise<AddWatchlistContentResponse> => {
@@ -243,7 +243,7 @@ export class WatchlistController extends BaseController {
   @ApiResponse(
     200,
     "Watchlist retrieved successfully",
-    createSuccessResponse(getWatchlistByIdResponseValidator)
+    createSuccessResponseSchema(getWatchlistByIdResponseValidator)
   )
   getWatchlistById = asyncHandler(
     async (req, res): Promise<GetWatchlistByIdResponse> => {
@@ -297,7 +297,7 @@ export class WatchlistController extends BaseController {
   @ApiResponse(
     200,
     "Watchlist updated successfully",
-    createSuccessResponse(patchWatchlistResponseValidator)
+    createSuccessResponseSchema(patchWatchlistResponseValidator)
   )
   patchWatchlistById = asyncHandler(
     async (req, res): Promise<PatchWatchlistResponse> => {
@@ -352,7 +352,7 @@ export class WatchlistController extends BaseController {
   @ApiResponse(
     200,
     "Watchlist updated successfully",
-    createSuccessResponse(patchWatchlistResponseValidator)
+    createSuccessResponseSchema(patchWatchlistResponseValidator)
   )
   patchWatchlistByContentId = asyncHandler(
     async (req, res): Promise<PatchWatchlistResponse> => {
