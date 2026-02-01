@@ -2,7 +2,10 @@ import type { PagePaginationQuery } from "../../../../shared/services/pagination
 import type { Movie } from "../entities/movie.entity";
 
 export interface IMoviesRepository {
-  getMovieById: (id: string) => Promise<Movie | null>;
+  getMovieById: (
+    id: string,
+    options?: { withCategories?: boolean }
+  ) => Promise<Movie | null>;
   listMovies: (
     title?: string,
     country?: string,

@@ -144,9 +144,12 @@ export class CompositeMoviesRepository implements IMoviesRepository {
    * Get movie by ID
    * First checks the database, then falls back to TMDB if not found
    */
-  async getMovieById(id: string): Promise<Movie | null> {
+  async getMovieById(
+    id: string,
+    options?: { withCategories?: boolean }
+  ): Promise<Movie | null> {
     try {
-      const movie = await this.drizzleRepository.getById(id);
+      const movie = await this.drizzleRepository.getById(id, options);
 
       if (movie) {
         return movie;

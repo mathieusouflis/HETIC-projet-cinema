@@ -26,6 +26,7 @@ import type {
   GETContentsSearchParams,
   GETMovies200,
   GETMoviesId200,
+  GETMoviesIdParams,
   GETMoviesParams,
   GETPeoples200,
   GETPeoplesId200,
@@ -34,6 +35,7 @@ import type {
   GETPeoplesSearchParams,
   GETSeries200,
   GETSeriesId200,
+  GETSeriesIdParams,
   GETSeriesParams,
   GETUsers200,
   GETUsersId200,
@@ -267,10 +269,13 @@ export const gETMovies = <TData = AxiosResponse<GETMovies200>>(
  * Get movie by id
  */
 export const gETMoviesId = <TData = AxiosResponse<GETMoviesId200>>(
-    id: string, options?: AxiosRequestConfig
+    id: string,
+    params?: GETMoviesIdParams, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
-      `/movies/${id}`,options
+      `/movies/${id}`,{
+    ...options,
+        params: {...params, ...options?.params},}
     );
   }
 
@@ -367,10 +372,13 @@ export const gETSeries = <TData = AxiosResponse<GETSeries200>>(
  * Get serie by id
  */
 export const gETSeriesId = <TData = AxiosResponse<GETSeriesId200>>(
-    id: string, options?: AxiosRequestConfig
+    id: string,
+    params?: GETSeriesIdParams, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
-      `/series/${id}`,options
+      `/series/${id}`,{
+    ...options,
+        params: {...params, ...options?.params},}
     );
   }
 

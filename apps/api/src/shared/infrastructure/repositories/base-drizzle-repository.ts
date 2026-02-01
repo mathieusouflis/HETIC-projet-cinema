@@ -89,7 +89,10 @@ export abstract class BaseDrizzleRepository<
   /**
    * Get content by ID
    */
-  async getById(id: string): Promise<TEntity | null> {
+  async getById(
+    id: string,
+    options?: { withCategories?: boolean }
+  ): Promise<TEntity | null> {
     try {
       const result = await db.query.content.findFirst({
         where: and(
@@ -110,7 +113,7 @@ export abstract class BaseDrizzleRepository<
       }
 
       const entity = this.createEntity(result as TProps);
-      if (result.contentCategories) {
+      if (result.contentCategories && options?.withCategories) {
         entity.setRelations(
           "contentCategories",
           result.contentCategories.map((cc) => new Category(cc.category))

@@ -13,6 +13,10 @@ import {
   getMovieByIdValidatorParams,
 } from "../dto/requests/get-movie-by-id-params.validator.js";
 import {
+  type GetMovieByIdValidatorQuery,
+  getMovieByIdValidatorQuery,
+} from "../dto/requests/get-movie-by-id-query.validator.js";
+import {
   type QueryMovieRequest,
   queryMovieRequestSchema,
 } from "../dto/requests/query-movies.validator.js";
@@ -62,13 +66,17 @@ export class MoviesController extends BaseController {
     description: "Get movie by id",
   })
   @ValidateParams(getMovieByIdValidatorParams)
+  @ValidateQuery(getMovieByIdValidatorQuery)
   @ApiResponse(404, "Movie not found", notFoundErrorResponseSchema)
   @ApiResponse(200, "Movie retrieved successfully", getMovieByIdResponseSchema)
   getMovieById = asyncHandler(
     async (req, res): Promise<GetMovieByIdResponse> => {
       const { id } = req.params as GetMovieByIdValidatorParams;
+      const { ...options } = req.query as GetMovieByIdValidatorQuery;
 
-      const movie = await this.getMovieByIdUseCase.execute(id);
+      const movie = await this.getMovieByIdUseCase.execute(id, {
+        withCategories: options.withCategories === "true",
+      });
 
       res.status(200).json({
         success: true,
