@@ -1,10 +1,10 @@
 import z from "zod";
-import { optionalOffsetAndPagePaginationQuerySchema } from "../../../../../shared/schemas/base/pagination.schema.js";
+import { optionalFlexiblePaginationQuerySchema } from "../../../../../shared/services/pagination";
 import { watchlistStatusSchema } from "../../validators/watchlist.validators";
 
 export const queryWatchlistValidator = z.object({
   status: watchlistStatusSchema.optional(),
-  ...optionalOffsetAndPagePaginationQuerySchema.shape,
+  ...optionalFlexiblePaginationQuerySchema.shape,
 });
 
 export type QueryWatchlistRequest = z.infer<typeof queryWatchlistValidator>;

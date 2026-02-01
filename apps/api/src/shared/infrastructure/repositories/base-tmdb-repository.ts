@@ -1,5 +1,5 @@
 import { logger } from "@packages/logger";
-import { TmdbService } from "../../services/tmdb/TmdbService";
+import { TmdbService } from "../../services/tmdb/tmdb-service";
 
 /**
  * Common video type from TMDB API

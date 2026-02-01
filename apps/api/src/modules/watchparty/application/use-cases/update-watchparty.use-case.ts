@@ -1,5 +1,5 @@
-import { NotFoundError } from "../../../../shared/errors/NotFoundError.js";
-import { UnauthorizedError } from "../../../../shared/errors/UnauthorizedError.js";
+import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
+import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error.js";
 import type { Watchparty } from "../../domain/entities/watchparty.entity.js";
 import type { IWatchpartyRepository } from "../../domain/interfaces/IWatchpartyRepository.js";
 import type { UpdateWatchpartyBody } from "../dto/request/update-watchparty.body.validator.js";

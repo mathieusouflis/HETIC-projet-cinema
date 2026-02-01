@@ -1,5 +1,5 @@
 import type { Router } from "express";
-import { BaseModule } from "./BaseModule";
+import { BaseModule } from "./base-module";
 
 export interface RestModuleInterface {
   getRouter(): Router;

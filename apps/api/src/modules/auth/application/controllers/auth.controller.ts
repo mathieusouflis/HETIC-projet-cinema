@@ -1,7 +1,7 @@
 import { config } from "@packages/config";
 import type { Request, Response } from "express";
 import { UnauthorizedError } from "../../../../shared/errors/index.js";
-import { BaseController } from "../../../../shared/infrastructure/base/controllers/BaseController.js";
+import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller.js";
 import { Protected } from "../../../../shared/infrastructure/decorators/auth.decorator.js";
 import { Controller } from "../../../../shared/infrastructure/decorators/controller.decorator.js";
 import {

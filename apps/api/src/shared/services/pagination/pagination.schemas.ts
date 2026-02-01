@@ -103,6 +103,19 @@ export const flexiblePaginationQuerySchema = z
   );
 
 /**
+ * Optional flexible pagination schema (legacy compatibility)
+ * All fields are optional with defaults. Doesn't enforce XOR logic.
+ * Use this for backward compatibility where pagination params may not be provided.
+ *
+ * @deprecated Prefer using flexiblePaginationQuerySchema for stricter validation
+ */
+export const optionalFlexiblePaginationQuerySchema = z.object({
+  page: pageSchema.optional(),
+  offset: offsetSchema.optional(),
+  limit: limitSchema.optional(),
+});
+
+/**
  * Search query schema
  */
 export const searchQuerySchema = z
@@ -145,12 +158,25 @@ export const offsetPaginationMetaResponseSchema = z.object({
 });
 
 /**
+ * Simple returned pagination schema (legacy)
+ * Used for simplified pagination responses with just page, total, and totalPages
+ */
+export const returnedPaginationSchema = z.object({
+  page: pageSchema,
+  total: z.number().min(0),
+  totalPages: z.number().min(0),
+});
+
+/**
  * Type exports
  */
 export type PagePaginationQuery = z.infer<typeof pagePaginationQuerySchema>;
 export type OffsetPaginationQuery = z.infer<typeof offsetPaginationQuerySchema>;
 export type FlexiblePaginationQuery = z.infer<
   typeof flexiblePaginationQuerySchema
+>;
+export type OptionalFlexiblePaginationQuery = z.infer<
+  typeof optionalFlexiblePaginationQuerySchema
 >;
 export type SortQuery = z.infer<typeof sortSchema>;
 export type SearchQuery = z.infer<typeof searchQuerySchema>;
@@ -168,5 +194,5 @@ export type PaginationQuery = PagePaginationQuery;
  * @deprecated Use FlexiblePaginationQuery with proper validation instead
  */
 export type OffsetAndPagePaginationQuery = z.infer<
-  typeof flexiblePaginationQuerySchema
+  typeof optionalFlexiblePaginationQuerySchema
 >;

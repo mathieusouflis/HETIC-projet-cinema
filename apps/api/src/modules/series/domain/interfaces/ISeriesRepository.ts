@@ -1,4 +1,4 @@
-import type { PaginationQuery } from "../../../../shared/schemas/base/pagination.schema";
+import type { PaginationQuery } from "../../../../shared/services/pagination";
 import type { CreateSerieProps, Serie } from "../entities/serie.entity";
 
 export interface ISeriesRepository {

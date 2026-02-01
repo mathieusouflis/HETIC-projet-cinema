@@ -1,6 +1,6 @@
 import { config } from "@packages/config";
-import { ServerError } from "../../errors/ServerError";
-import type { ITmdbService } from "./ITmdbService";
+import { ServerError } from "../../errors/server-error";
+import type { ITmdbService } from "./i-tmdb-service";
 
 export class TmdbService implements ITmdbService {
   private apiKey = config.env.externalApi.tmdbApiKey;

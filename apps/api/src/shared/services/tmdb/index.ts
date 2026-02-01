@@ -1,2 +1,2 @@
-export * from "./ITmdbService";
-export * from "./TmdbService";
+export * from "./i-tmdb-service";
+export * from "./tmdb-service";

@@ -1,4 +1,4 @@
-import { NotFoundError } from "../../../../shared/errors/NotFoundError.js";
+import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
 import type { ISeriesRepository } from "../../domain/interfaces/ISeriesRepository.js";
 import type { GetSerieByIdResponse } from "../dto/response/get-serie-by-id-response.validator.js";
 

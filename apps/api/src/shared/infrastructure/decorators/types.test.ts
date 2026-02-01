@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BaseController } from "../base/controllers/BaseController.js";
+import { BaseController } from "../base/controllers/base-controller.js";
 import {
   AUTH_MIDDLEWARE_MARKER,
   type AuthMiddlewareMarker,

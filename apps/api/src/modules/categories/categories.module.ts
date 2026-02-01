@@ -1,5 +1,5 @@
 import type { Router } from "express";
-import { RestModule } from "../../shared/infrastructure/base/modules/RestModule.js";
+import { RestModule } from "../../shared/infrastructure/base/modules/rest-module.js";
 import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-generator.js";
 import { CategoriesController } from "./application/controllers/categories.controller.js";
 // import { CreateCategoryUseCase } from "./application/use-cases/category/create-category.use-case.js";

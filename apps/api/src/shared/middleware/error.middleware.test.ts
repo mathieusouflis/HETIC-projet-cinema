@@ -20,12 +20,12 @@ vi.mock("@packages/logger", () => ({
   },
 }));
 
-import { AppError } from "../errors/AppError.js";
-import { ConflictError } from "../errors/ConflictError.js";
-import { ForbiddenError } from "../errors/ForbiddenError.js";
-import { NotFoundError } from "../errors/NotFoundError.js";
-import { UnauthorizedError } from "../errors/UnauthorizedError.js";
-import { ValidationError } from "../errors/ValidationError.js";
+import { AppError } from "../errors/app-error.js";
+import { ConflictError } from "../errors/conflict-error.js";
+import { ForbiddenError } from "../errors/forbidden-error.js";
+import { NotFoundError } from "../errors/not-found-error.js";
+import { UnauthorizedError } from "../errors/unauthorized-error.js";
+import { ValidationError } from "../errors/validation-error.js";
 import { errorMiddleware, notFoundMiddleware } from "./error.middleware.js";
 
 describe("errorMiddleware", () => {

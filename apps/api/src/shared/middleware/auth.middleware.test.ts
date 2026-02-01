@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { beforeEach, describe, expect, it } from "vitest";
 import { UnauthorizedError } from "../errors/index.js";
-import { JWTService } from "../services/token/JWTService.js";
+import { JWTService } from "../services/token/jwt-service.js";
 import {
   authMiddleware,
   optionalAuthMiddleware,

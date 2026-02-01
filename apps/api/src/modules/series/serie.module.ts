@@ -1,5 +1,5 @@
 import type { Router } from "express";
-import { RestModule } from "../../shared/infrastructure/base/modules/RestModule.js";
+import { RestModule } from "../../shared/infrastructure/base/modules/rest-module.js";
 import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-generator.js";
 import { SeriesController } from "./application/controllers/serie.controller.js";
 import { GetSerieByIdUseCase } from "./application/use-cases/get-serie-by-id.use-case.js";

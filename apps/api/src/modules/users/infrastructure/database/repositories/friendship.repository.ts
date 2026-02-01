@@ -2,7 +2,7 @@ import { and, eq } from "drizzle-orm";
 import { db } from "../../../../../database";
 import { friendships } from "../../../../../database/schema";
 import { NotFoundError } from "../../../../../shared/errors";
-import { ServerError } from "../../../../../shared/errors/ServerError";
+import { ServerError } from "../../../../../shared/errors/server-error";
 import { User } from "../../../domain/entities";
 import { Friendship } from "../../../domain/entities/friendship.entity";
 import type { IFriendshipsRepository } from "../../../domain/interfaces/IFriendshipsRepository";

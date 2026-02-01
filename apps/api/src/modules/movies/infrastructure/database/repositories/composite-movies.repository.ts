@@ -1,5 +1,5 @@
 import { logger } from "@packages/logger";
-import type { PaginationQuery } from "../../../../../shared/schemas/base/pagination.schema";
+import type { PaginationQuery } from "../../../../../shared/services/pagination";
 import { CategoryRepository } from "../../../../categories/infrastructure/database/repositories/category/category.repository";
 import type {
   CreateMovieProps,

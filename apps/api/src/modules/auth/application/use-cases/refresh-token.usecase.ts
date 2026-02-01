@@ -1,8 +1,8 @@
-import { UnauthorizedError } from "../../../../shared/errors/UnauthorizedError.js";
+import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error.js";
 import type {
   ITokenService,
   RefreshTokenPayload,
-} from "../../../../shared/services/token/ITokenService.js";
+} from "../../../../shared/services/token/i-token-service.js";
 import type { RefreshToken } from "../../../../shared/services/token/schemas/tokens.schema.js";
 import { UserNotFoundError } from "../../../users/domain/errors/UserNotFoundError.js";
 import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";

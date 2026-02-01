@@ -1,6 +1,6 @@
-import { UnauthorizedError } from "../../../../shared/errors/UnauthorizedError.js";
-import type { IPasswordService } from "../../../../shared/services/password/IPasswordService.js";
-import type { ITokenService } from "../../../../shared/services/token/ITokenService.js";
+import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error.js";
+import type { IPasswordService } from "../../../../shared/services/password/i-password-service.js";
+import type { ITokenService } from "../../../../shared/services/token/i-token-service.js";
 import type { RefreshToken } from "../../../../shared/services/token/schemas/tokens.schema.js";
 import { toUserResponseDTO } from "../../../users/application/dto/utils/to-user-response.js";
 import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";
