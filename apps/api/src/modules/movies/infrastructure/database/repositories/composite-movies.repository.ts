@@ -127,19 +127,9 @@ export class CompositeMoviesRepository implements IMoviesRepository {
         total: await this.drizzleRepository.getCount(),
       };
 
-      if (withCategories && newlyCreatedMovies.length > 0) {
-        // Batch load categories for all newly created movies
-        const categoryPromises = newlyCreatedMovies.map((movie) =>
-          this.categoryRepository.findByContentId(movie.id)
-        );
-        const categoriesResults = await Promise.all(categoryPromises);
-
-        // Set relations
-        newlyCreatedMovies.forEach((movie, index) => {
-          const categoriesData = categoriesResults[index];
-          if (categoriesData) {
-            movie.setRelations("contentCategories", categoriesData);
-          }
+      if (!withCategories) {
+        data.forEach((movie) => {
+          movie.removeRelations("contentCategories");
         });
       }
 

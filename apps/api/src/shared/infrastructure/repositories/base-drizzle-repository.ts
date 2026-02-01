@@ -4,7 +4,7 @@ import { contentCategories } from "../../../database/schema";
 import { Category } from "../../../modules/categories/domain/entities/category.entity";
 import { contentSchema } from "../../../modules/contents/infrastructure/database/schemas/contents.schema";
 import { ServerError } from "../../errors/server-error";
-import type { PaginationQuery } from "../../services/pagination";
+import type { PagePaginationQuery } from "../../services/pagination";
 
 /**
  * Base interface for entities that can be created
@@ -133,13 +133,17 @@ export abstract class BaseDrizzleRepository<
     _country?: string,
     categories?: string[],
     withCategory?: boolean,
-    options?: PaginationQuery
+    options?: PagePaginationQuery
   ): Promise<{ data: TEntity[]; total: number }> {
     try {
       const conditions: SQL[] = [eq(contentSchema.type, this.contentType)];
 
       if (title) {
         conditions.push(eq(contentSchema.title, title));
+      }
+
+      if (categories && categories.length > 0) {
+        conditions.push(inArray(contentCategories.categoryId, categories));
       }
 
       // TODO: Add country filter
@@ -167,18 +171,8 @@ export abstract class BaseDrizzleRepository<
           .then((res) => res[0]?.count ?? 0),
       ]);
 
-      // Filter by categories if needed
-      let filteredResult = result;
-      if (categories && categories.length > 0) {
-        filteredResult = result.filter((item) =>
-          item.contentCategories.some((cc) =>
-            categories.includes(cc.category.id)
-          )
-        );
-      }
-
       return {
-        data: filteredResult.map((row) => {
+        data: result.map((row) => {
           const entity = this.createEntity(row as TProps);
           if (withCategory && row.contentCategories) {
             entity.setRelations(
