@@ -1,5 +1,5 @@
-import { paginationService } from "../../../../shared/services/pagination.service.js";
-import { createPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
+import { paginationService } from "../../../../shared/services/pagination/index.js";
+import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
 import type { IWatchlistRepository } from "../../domain/interfaces/IWatchlistRepository.js";
 import type { QueryWatchlistRequest } from "../dto/request/query-watchlist.query.validator.js";
 import type { QueryWatchlistResponse } from "../dto/response/query-watchlist.response.validator.js";
@@ -33,6 +33,6 @@ export class ListWatchlistUseCase {
       total
     );
 
-    return createPaginatedResponseFromResult(paginatedResult);
+    return buildPaginatedResponseFromResult(paginatedResult);
   }
 }

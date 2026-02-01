@@ -1,4 +1,4 @@
-import { paginationService } from "../../../../shared/services/pagination.service.js";
+import { paginationService } from "../../../../shared/services/pagination/index.js";
 import type { IUserRepository } from "../../domain/interfaces/IUserRepository.js";
 import type { GetQueryDTO } from "../dto/requests/get.validator.js";
 import type { GetResponseDTO } from "../dto/responses/get-response.js";

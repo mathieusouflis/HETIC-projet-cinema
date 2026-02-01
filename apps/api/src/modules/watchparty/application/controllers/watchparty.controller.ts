@@ -21,7 +21,7 @@ import {
   unauthorizedErrorResponseSchema,
 } from "../../../../shared/schemas/base/error.schemas.js";
 import {
-  createSuccessResponse,
+  createSuccessResponseSchema,
   emptySuccessResponseSchema,
 } from "../../../../shared/schemas/base/response.schemas.js";
 import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
@@ -126,7 +126,7 @@ export class WatchpartyController extends BaseController {
   @ApiResponse(
     200,
     "Watchparty retrieved successfully",
-    createSuccessResponse(getWatchpartyResponseValidator)
+    createSuccessResponseSchema(getWatchpartyResponseValidator)
   )
   getWatchpartyById = asyncHandler(
     async (req, res): Promise<GetWatchpartyResponse> => {
@@ -167,7 +167,7 @@ export class WatchpartyController extends BaseController {
   @ApiResponse(
     201,
     "Watchparty created successfully",
-    createSuccessResponse(createWatchpartyResponseValidator)
+    createSuccessResponseSchema(createWatchpartyResponseValidator)
   )
   createWatchparty = asyncHandler(
     async (req, res): Promise<CreateWatchpartyResponse> => {
@@ -214,7 +214,7 @@ export class WatchpartyController extends BaseController {
   @ApiResponse(
     200,
     "Watchparty updated successfully",
-    createSuccessResponse(updateWatchpartyResponseValidator)
+    createSuccessResponseSchema(updateWatchpartyResponseValidator)
   )
   updateWatchparty = asyncHandler(
     async (req, res): Promise<UpdateWatchpartyResponse> => {

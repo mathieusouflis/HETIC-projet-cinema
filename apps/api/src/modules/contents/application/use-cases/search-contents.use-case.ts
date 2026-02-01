@@ -1,5 +1,5 @@
-import { paginationService } from "../../../../shared/services/pagination.service.js";
-import { createPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
+import { paginationService } from "../../../../shared/services/pagination/index.js";
+import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
 import type { IContentRepository } from "../../domain/interfaces/IContentRepository.js";
 import type { SearchContentsRequest } from "../dto/requests/search-contents.validator.js";
 import type { SearchContentsResponse } from "../dto/response/search-contents.validator.js";
@@ -14,7 +14,7 @@ export class SearchContentsUseCase {
 
     if (!query || query.trim().length === 0) {
       const emptyResult = paginationService.createPageResult([], 1, 25, 0);
-      return createPaginatedResponseFromResult(emptyResult);
+      return buildPaginatedResponseFromResult(emptyResult);
     }
 
     const { page, limit } = paginationService.parsePageParams({
@@ -40,6 +40,6 @@ export class SearchContentsUseCase {
       total
     );
 
-    return createPaginatedResponseFromResult(paginatedResult);
+    return buildPaginatedResponseFromResult(paginatedResult);
   }
 }

@@ -18,7 +18,7 @@ import {
 } from "../../../../shared/infrastructure/decorators/validation.decorators.js";
 import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
 import { createPaginatedResult } from "../../../../shared/utils/pagination.utils.js";
-import { createPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
+import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
 import {
   type CategoryIdParamsDTO,
   categoryIdParamsSchema,
@@ -74,7 +74,7 @@ export class CategoriesController extends BaseController {
   @ApiResponse(
     201,
     "Category created successfully",
-    Shared.Schemas.Base.createSuccessResponse(categoryResponseSchema)
+    Shared.Schemas.Base.createSuccessResponseSchema(categoryResponseSchema)
   )
   @ApiResponse(
     400,
@@ -109,7 +109,7 @@ export class CategoriesController extends BaseController {
   @ApiResponse(
     200,
     "Category retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponse(categoryResponseSchema)
+    Shared.Schemas.Base.createSuccessResponseSchema(categoryResponseSchema)
   )
   @ApiResponse(
     400,
@@ -161,7 +161,7 @@ export class CategoriesController extends BaseController {
         limit,
       });
 
-      const response = createPaginatedResponseFromResult(
+      const response = buildPaginatedResponseFromResult(
         createPaginatedResult(
           result.categories.map((cat) => cat.toJSONWithRelations()),
           result.total,
@@ -187,7 +187,7 @@ export class CategoriesController extends BaseController {
   @ApiResponse(
     200,
     "Category updated successfully",
-    Shared.Schemas.Base.createSuccessResponse(categoryResponseSchema)
+    Shared.Schemas.Base.createSuccessResponseSchema(categoryResponseSchema)
   )
   @ApiResponse(
     400,

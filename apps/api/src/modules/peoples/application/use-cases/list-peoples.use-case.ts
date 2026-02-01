@@ -1,6 +1,6 @@
-import { paginationService } from "../../../../shared/services/pagination.service.js";
+import { paginationService } from "../../../../shared/services/pagination/index.js";
 import { createOffsetPaginatedResult } from "../../../../shared/utils/pagination.utils.js";
-import { createOffsetPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
+import { buildOffsetPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
 import type { IPeoplesRepository } from "../../domain/interfaces/IPeoplesRepository.js";
 
 export type ListPeoplesParams = {
@@ -35,6 +35,6 @@ export class ListPeoplesUseCase {
       peoples.total
     );
 
-    return createOffsetPaginatedResponseFromResult(paginatedResult);
+    return buildOffsetPaginatedResponseFromResult(paginatedResult);
   }
 }
