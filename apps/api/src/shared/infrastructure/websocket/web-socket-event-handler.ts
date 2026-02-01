@@ -4,10 +4,10 @@ import { WebSocketAckValidationError } from "../../errors/websocket/websocket-ac
 import { WebSocketHandlerNotFoundError } from "../../errors/websocket/websocket-handler-error.js";
 import type { EventListenerMetadata } from "../decorators/web-socket/websocket.metadata.js";
 import { WebSocketMetadataStorage } from "../decorators/web-socket/websocket.metadata.js";
-import { globalAuthEventMiddleware } from "./WebSocketAuthMiddleware.js";
-import { webSocketErrorHandler } from "./WebSocketErrorHandler.js";
-import { webSocketMiddlewareRunner } from "./WebSocketMiddlewareRunner.js";
-import { webSocketValidationService } from "./WebSocketValidationService.js";
+import { webSocketAuthService } from "./web-socket-auth-service.js";
+import { webSocketErrorHandler } from "./web-socket-error-handler.js";
+import { webSocketMiddlewareRunner } from "./web-socket-middleware-runner.js";
+import { webSocketValidationService } from "./web-socket-validation-service.js";
 
 /**
  * Acknowledgment callback type
@@ -67,7 +67,12 @@ export class WebSocketEventHandler {
         [];
 
       if (requireAuth) {
-        middlewares = [globalAuthEventMiddleware, ...middlewares];
+        middlewares = [
+          webSocketAuthService.globalAuthEventMiddleware.bind(
+            webSocketAuthService
+          ),
+          ...middlewares,
+        ];
       }
 
       if (middlewares.length > 0) {

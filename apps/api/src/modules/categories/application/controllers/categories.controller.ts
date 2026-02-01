@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
-import { UnauthorizedError } from "../../../../shared/errors/UnauthorizedError.js";
+import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error.js";
 import { Shared } from "../../../../shared/index.js";
-import { BaseController } from "../../../../shared/infrastructure/base/controllers/BaseController.js";
+import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller.js";
 import { Controller } from "../../../../shared/infrastructure/decorators/controller.decorator.js";
 import { Protected } from "../../../../shared/infrastructure/decorators/index.js";
 import { ApiResponse } from "../../../../shared/infrastructure/decorators/response.decorator.js";
@@ -16,8 +16,8 @@ import {
   ValidateParams,
   ValidateQuery,
 } from "../../../../shared/infrastructure/decorators/validation.decorators.js";
+import { paginationService } from "../../../../shared/services/pagination/index.js";
 import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
-import { createPaginatedResult } from "../../../../shared/utils/pagination.utils.js";
 import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
 import {
   type CategoryIdParamsDTO,
@@ -162,7 +162,7 @@ export class CategoriesController extends BaseController {
       });
 
       const response = buildPaginatedResponseFromResult(
-        createPaginatedResult(
+        paginationService.createPageResult(
           result.categories.map((cat) => cat.toJSONWithRelations()),
           result.total,
           result.page,

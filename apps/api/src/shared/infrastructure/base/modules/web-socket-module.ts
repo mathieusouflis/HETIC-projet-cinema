@@ -1,5 +1,5 @@
 import type { Server as SocketIOServer } from "socket.io";
-import { BaseModule } from "./BaseModule";
+import { BaseModule } from "./base-module";
 
 export interface WebSocketModuleInterface {
   registerEvents(io: SocketIOServer): void;

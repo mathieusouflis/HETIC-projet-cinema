@@ -1,4 +1,4 @@
-import { BaseController } from "../../../../shared/infrastructure/base/controllers/BaseController.js";
+import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller.js";
 import { Controller } from "../../../../shared/infrastructure/decorators/controller.decorator.js";
 import { ApiResponse } from "../../../../shared/infrastructure/decorators/response.decorator.js";
 import { Get } from "../../../../shared/infrastructure/decorators/route.decorators.js";

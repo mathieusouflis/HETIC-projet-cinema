@@ -1,7 +1,7 @@
 import { logger as log } from "@packages/logger";
 import type { Socket } from "socket.io";
-import type { AccessTokenPayload } from "../services/token/ITokenService.js";
-import { JWTService } from "../services/token/JWTService.js";
+import type { AccessTokenPayload } from "../services/token/i-token-service.js";
+import { JWTService } from "../services/token/jwt-service.js";
 
 declare module "socket.io" {
   interface Socket {

@@ -3,8 +3,8 @@ import { db } from "../../../database";
 import { contentCategories } from "../../../database/schema";
 import { Category } from "../../../modules/categories/domain/entities/category.entity";
 import { contentSchema } from "../../../modules/contents/infrastructure/database/schemas/contents.schema";
-import { ServerError } from "../../errors/ServerError";
-import type { PaginationQuery } from "../../schemas/base/pagination.schema";
+import { ServerError } from "../../errors/server-error";
+import type { PaginationQuery } from "../../services/pagination";
 
 /**
  * Base interface for entities that can be created

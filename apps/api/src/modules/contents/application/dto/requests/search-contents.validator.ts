@@ -2,7 +2,7 @@ import z from "zod";
 import {
   limitSchema,
   pageSchema,
-} from "../../../../../shared/schemas/base/pagination.schema.js";
+} from "../../../../../shared/services/pagination";
 
 export const searchContentsRequestSchema = z.object({
   query: z.string().min(1, "Search query must not be empty"),

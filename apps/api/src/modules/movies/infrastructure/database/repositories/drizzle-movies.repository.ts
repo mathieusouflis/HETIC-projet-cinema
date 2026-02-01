@@ -1,4 +1,4 @@
-import { BaseDrizzleRepository } from "../../../../../shared/infrastructure/repositories/BaseDrizzleRepository";
+import { BaseDrizzleRepository } from "../../../../../shared/infrastructure/repositories/base-drizzle-repository";
 import {
   type CreateMovieProps,
   Movie,

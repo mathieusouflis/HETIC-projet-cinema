@@ -1,2 +1,2 @@
-export * from "./IPasswordService.js";
-export * from "./PasswordService.js";
+export * from "./i-password-service.js";
+export * from "./password-service.js";

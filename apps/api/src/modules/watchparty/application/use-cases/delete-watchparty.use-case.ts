@@ -1,5 +1,5 @@
-import { NotFoundError } from "../../../../shared/errors/NotFoundError.js";
-import { UnauthorizedError } from "../../../../shared/errors/UnauthorizedError.js";
+import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
+import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error.js";
 import type { IWatchpartyRepository } from "../../domain/interfaces/IWatchpartyRepository.js";
 
 export class DeleteWatchpartyUseCase {

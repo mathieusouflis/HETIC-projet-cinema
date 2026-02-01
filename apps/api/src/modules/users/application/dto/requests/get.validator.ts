@@ -1,6 +1,6 @@
 import type z from "zod";
-import { optionalOffsetAndPagePaginationQuerySchema } from "../../../../../shared/schemas/base/pagination.schema";
+import { optionalFlexiblePaginationQuerySchema } from "../../../../../shared/services/pagination";
 
-export const getQuerySchema = optionalOffsetAndPagePaginationQuerySchema;
+export const getQuerySchema = optionalFlexiblePaginationQuerySchema;
 
 export type GetQueryDTO = z.infer<typeof getQuerySchema>;

@@ -1,4 +1,4 @@
-import { NotFoundError } from "../../../../shared/errors/NotFoundError.js";
+import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
 import type { IMoviesRepository } from "../../domain/interfaces/IMoviesRepository.js";
 import type { GetMovieByIdResponse } from "../dto/response/get-movie-by-id-response.validator.js";
 

@@ -1,5 +1,5 @@
 import { logger } from "@packages/logger";
-import { BaseTMDBRepository } from "../../../../../shared/infrastructure/repositories/BaseTMDBRepository";
+import { BaseTMDBRepository } from "../../../../../shared/infrastructure/repositories/base-tmdb-repository";
 import type { CreateSerieProps } from "../../../domain/entities/serie.entity";
 
 export type SerieWithGenres = CreateSerieProps & {

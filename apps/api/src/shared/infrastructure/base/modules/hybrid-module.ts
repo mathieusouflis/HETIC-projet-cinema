@@ -1,8 +1,8 @@
 import type { Router } from "express";
 import type { Server as SocketIOServer } from "socket.io";
-import { BaseModule } from "./BaseModule";
-import type { RestModuleInterface } from "./RestModule";
-import type { WebSocketModuleInterface } from "./WebSocketModule";
+import { BaseModule } from "./base-module";
+import type { RestModuleInterface } from "./rest-module";
+import type { WebSocketModuleInterface } from "./web-socket-module";
 
 export abstract class HybridModule
   extends BaseModule
