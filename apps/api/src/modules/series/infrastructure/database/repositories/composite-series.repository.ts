@@ -95,17 +95,9 @@ export class CompositeSeriesRepository implements ISeriesRepository {
         total: await this.drizzleRepository.getCount(),
       };
 
-      if (withCategories && newlySeries.length > 0) {
-        const categoryPromises = newlySeries.map((serie) =>
-          this.categoryRepository.findByContentId(serie.id)
-        );
-        const categoriesResults = await Promise.all(categoryPromises);
-
-        newlySeries.forEach((serie, index) => {
-          const categoriesData = categoriesResults[index];
-          if (categoriesData) {
-            serie.setRelations("contentCategories", categoriesData);
-          }
+      if (!withCategories) {
+        data.forEach((serie) => {
+          serie.removeRelations("contentCategories");
         });
       }
 
