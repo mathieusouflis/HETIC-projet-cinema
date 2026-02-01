@@ -5,8 +5,11 @@ import type { GetSerieByIdResponse } from "../dto/response/get-serie-by-id-respo
 export class GetSerieByIdUseCase {
   constructor(private readonly serieRepository: ISeriesRepository) {}
 
-  async execute(id: string): Promise<GetSerieByIdResponse> {
-    const serie = await this.serieRepository.getSerieById(id);
+  async execute(
+    id: string,
+    options: { withCategories?: boolean } = {}
+  ): Promise<GetSerieByIdResponse> {
+    const serie = await this.serieRepository.getSerieById(id, options);
 
     if (!serie) {
       throw new NotFoundError(`Serie with id ${id}`);

@@ -13,6 +13,10 @@ import {
   getSerieByIdValidatorParams,
 } from "../dto/requests/get-serie-by-id-params.validator.js";
 import {
+  type GetSerieByIdValidatorQuery,
+  getSerieByIdValidatorQuery,
+} from "../dto/requests/get-serie-by-id-query.validator.js";
+import {
   type QuerySerieRequest,
   querySerieRequestSchema,
 } from "../dto/requests/query-serie.validator.js";
@@ -62,13 +66,17 @@ export class SeriesController extends BaseController {
     description: "Get serie by id",
   })
   @ValidateParams(getSerieByIdValidatorParams)
+  @ValidateQuery(getSerieByIdValidatorQuery)
   @ApiResponse(404, "Serie not found", notFoundErrorResponseSchema)
   @ApiResponse(200, "Serie retrieved successfully", getSerieByIdResponseSchema)
   getSerieById = asyncHandler(
     async (req, res): Promise<GetSerieByIdResponse> => {
       const { id } = req.params as GetSerieByIdValidatorParams;
+      const { ...options } = req.query as GetSerieByIdValidatorQuery;
 
-      const serie = await this.getSerieByIdUseCase.execute(id);
+      const serie = await this.getSerieByIdUseCase.execute(id, {
+        withCategories: options.withCategories === "true",
+      });
 
       res.status(200).json({
         success: true,
