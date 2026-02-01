@@ -1,4 +1,4 @@
-import type { PaginationQuery } from "../../../../shared/services/pagination";
+import type { PagePaginationQuery } from "../../../../shared/services/pagination";
 import type { Movie } from "../entities/movie.entity";
 
 export interface IMoviesRepository {
@@ -8,10 +8,13 @@ export interface IMoviesRepository {
     country?: string,
     categories?: string[],
     withCategory?: boolean,
-    options?: PaginationQuery
+    options?: PagePaginationQuery
   ) => Promise<{
     data: Movie[];
     total: number;
   }>;
-  searchMovies: (query: string, options?: PaginationQuery) => Promise<Movie[]>;
+  searchMovies: (
+    query: string,
+    options?: PagePaginationQuery
+  ) => Promise<Movie[]>;
 }
