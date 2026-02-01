@@ -1,7 +1,10 @@
 import { logger } from "@packages/logger";
 import { eq } from "drizzle-orm";
 import { db } from "../../../../../database";
-import type { PaginationQuery } from "../../../../../shared/services/pagination";
+import type {
+  PagePaginationQuery,
+  PaginationQuery,
+} from "../../../../../shared/services/pagination";
 import type { IMoviesRepository } from "../../../../movies/domain/interfaces/IMoviesRepository";
 import { CompositeMoviesRepository } from "../../../../movies/infrastructure/database/repositories/composite-movies.repository";
 import type { ISeriesRepository } from "../../../../series/domain/interfaces/ISeriesRepository";
@@ -49,7 +52,7 @@ export class ContentsRepository implements IContentRepository {
     country?: string,
     categories?: string[],
     withCategory?: boolean,
-    options?: PaginationQuery
+    options?: PagePaginationQuery
   ): Promise<{ data: Content[]; total: number }> {
     try {
       if (type === "movie") {

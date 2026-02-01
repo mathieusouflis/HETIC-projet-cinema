@@ -1,5 +1,5 @@
 import { logger } from "@packages/logger";
-import type { PaginationQuery } from "../../../../../shared/services/pagination";
+import type { PagePaginationQuery } from "../../../../../shared/services/pagination";
 import { CategoryRepository } from "../../../../categories/infrastructure/database/repositories/category/category.repository";
 import type {
   CreateMovieProps,
@@ -60,7 +60,7 @@ export class CompositeMoviesRepository implements IMoviesRepository {
     _country?: string,
     categories?: string[],
     withCategories?: boolean,
-    options?: PaginationQuery
+    options?: PagePaginationQuery
   ): Promise<{
     data: Movie[];
     total: number;
@@ -69,7 +69,7 @@ export class CompositeMoviesRepository implements IMoviesRepository {
       const page = options?.page || 1;
 
       // Step 1: Get movie IDs from TMDB using discover or search
-      let tmdbResult: { ids: number[]; results: any[] };
+      let tmdbResult: { ids: number[]; results: any[]; total: number };
 
       if (title) {
         tmdbResult = await this.tmdbRepository.search({
@@ -122,11 +122,10 @@ export class CompositeMoviesRepository implements IMoviesRepository {
 
       const allMovies = [...existingMovies, ...newlyCreatedMovies];
 
-      const { data, total } = this.applyPaginationAndFilters(
-        allMovies,
-        title,
-        options
-      );
+      const { data, total } = {
+        data: allMovies,
+        total: await this.drizzleRepository.getCount(),
+      };
 
       if (withCategories && newlyCreatedMovies.length > 0) {
         // Batch load categories for all newly created movies
@@ -176,7 +175,7 @@ export class CompositeMoviesRepository implements IMoviesRepository {
    */
   async searchMovies(
     query: string,
-    options?: PaginationQuery
+    options?: PagePaginationQuery
   ): Promise<Movie[]> {
     try {
       const page = options?.page || 1;
@@ -435,34 +434,5 @@ export class CompositeMoviesRepository implements IMoviesRepository {
       .replace(/[^\w\s-]/g, "")
       .replace(/[\s_-]+/g, "-")
       .replace(/^-+|-+$/g, "");
-  }
-
-  private applyPaginationAndFilters(
-    movies: Movie[],
-    title?: string,
-    options?: PaginationQuery
-  ): { data: Movie[]; total: number } {
-    let filtered = movies;
-
-    // Filter by title if provided
-    if (title) {
-      const lowerTitle = title.toLowerCase();
-      filtered = filtered.filter(
-        (movie) =>
-          movie.title.toLowerCase().includes(lowerTitle) ||
-          (movie.originalTitle?.toLowerCase().includes(lowerTitle) ?? false)
-      );
-    }
-
-    const total = filtered.length;
-
-    // Apply pagination
-    if (options?.page && options?.limit) {
-      const start = (options.page - 1) * options.limit;
-      const end = start + options.limit;
-      filtered = filtered.slice(start, end);
-    }
-
-    return { data: filtered, total };
   }
 }

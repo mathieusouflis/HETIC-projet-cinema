@@ -88,7 +88,7 @@ export abstract class BaseTMDBRepository<
   async discover(params: {
     page: number;
     withCategories?: string[];
-  }): Promise<{ ids: number[]; results: TDiscoverResult[] }> {
+  }): Promise<{ ids: number[]; results: TDiscoverResult[]; total: number }> {
     try {
       const queryParams: Record<string, string> = {
         page: params.page.toString(),
@@ -109,6 +109,7 @@ export abstract class BaseTMDBRepository<
       return {
         ids: result.results.map((item) => item.id),
         results: result.results,
+        total: result.total_results,
       };
     } catch (error) {
       logger.error(
@@ -125,7 +126,7 @@ export abstract class BaseTMDBRepository<
     query: string;
     page: number;
     withCategories?: string[];
-  }): Promise<{ ids: number[]; results: TDiscoverResult[] }> {
+  }): Promise<{ ids: number[]; results: TDiscoverResult[]; total: number }> {
     try {
       const queryParams: Record<string, string> = {
         query: params.query,
@@ -156,6 +157,7 @@ export abstract class BaseTMDBRepository<
       return {
         ids: filteredResults.map((item) => item.id),
         results: filteredResults,
+        total: result.total_results,
       };
     } catch (error) {
       logger.error(

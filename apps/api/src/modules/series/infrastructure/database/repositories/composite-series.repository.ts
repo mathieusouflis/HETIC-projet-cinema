@@ -90,12 +90,10 @@ export class CompositeSeriesRepository implements ISeriesRepository {
 
       const allSeries = [...existingSeries, ...newlySeries];
 
-      const { data, total } = this.applyPaginationAndFilters(
-        allSeries,
-        title,
-        categories,
-        options
-      );
+      const { data, total } = {
+        data: allSeries,
+        total: await this.drizzleRepository.getCount(),
+      };
 
       if (withCategories && newlySeries.length > 0) {
         const categoryPromises = newlySeries.map((serie) =>
@@ -361,38 +359,5 @@ export class CompositeSeriesRepository implements ISeriesRepository {
       .replace(/[^\w\s-]/g, "")
       .replace(/[\s_-]+/g, "-")
       .replace(/^-+|-+$/g, "");
-  }
-
-  /**
-   * Apply pagination and filters to series list
-   */
-  private applyPaginationAndFilters(
-    series: Serie[],
-    title?: string,
-    _categories?: string[],
-    options?: PaginationQuery
-  ): { data: Serie[]; total: number } {
-    let filtered = series;
-
-    // Filter by title if provided
-    if (title) {
-      const lowerTitle = title.toLowerCase();
-      filtered = filtered.filter(
-        (serie) =>
-          serie.title.toLowerCase().includes(lowerTitle) ||
-          (serie.originalTitle?.toLowerCase().includes(lowerTitle) ?? false)
-      );
-    }
-
-    const total = filtered.length;
-
-    // Apply pagination
-    if (options?.page && options?.limit) {
-      const start = (options.page - 1) * options.limit;
-      const end = start + options.limit;
-      filtered = filtered.slice(start, end);
-    }
-
-    return { data: filtered, total };
   }
 }
