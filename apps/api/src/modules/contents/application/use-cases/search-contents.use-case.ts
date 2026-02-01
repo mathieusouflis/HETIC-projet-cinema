@@ -27,6 +27,8 @@ export class SearchContentsUseCase {
       limit,
     });
 
+    // TODO: Repository should return { data: Content[], total: number }
+    // For now, this is a known limitation - pagination shows current page size as total
     const total = contents.length;
 
     const contentResponses = contents.map((content) => content.toJSON());

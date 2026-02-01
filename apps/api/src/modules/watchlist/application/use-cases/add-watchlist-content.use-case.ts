@@ -1,4 +1,8 @@
-import { ConflictError, NotFoundError } from "../../../../shared/errors";
+import {
+  ConflictError,
+  NotFoundError,
+  ServerError,
+} from "../../../../shared/errors";
 import type { IContentRepository } from "../../../contents/domain/interfaces/IContentRepository";
 import type { Watchlist } from "../../domain/entities/watchlist.entity";
 import type { IWatchlistRepository } from "../../domain/interfaces/IWatchlistRepository";
@@ -30,13 +34,33 @@ export class AddWatchlistContentUseCase {
       });
 
       if (!createdWatchlistContent) {
-        throw new NotFoundError("Watchlist not found");
+        throw new ServerError("Failed to create watchlist entry");
       }
 
       return createdWatchlistContent;
     } catch (error) {
-      throw new ConflictError(
-        `Content ${body.contentId} already exists in watchlist: ${error}`
+      if (
+        error instanceof NotFoundError ||
+        error instanceof ConflictError ||
+        error instanceof ServerError
+      ) {
+        throw error;
+      }
+
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      if (
+        errorMessage.includes("unique") ||
+        errorMessage.includes("duplicate") ||
+        errorMessage.includes("already exists")
+      ) {
+        throw new ConflictError(
+          `Content ${body.contentId} already exists in watchlist`
+        );
+      }
+
+      throw new ServerError(
+        `Failed to add content to watchlist: ${errorMessage}`
       );
     }
   }

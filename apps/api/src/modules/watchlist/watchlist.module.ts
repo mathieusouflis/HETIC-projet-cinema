@@ -2,7 +2,7 @@ import type { Router } from "express";
 import { RestModule } from "../../shared/infrastructure/base/modules/RestModule.js";
 import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-generator.js";
 import type { IContentRepository } from "../contents/domain/interfaces/IContentRepository.js";
-import { ContentsRepository } from "../contents/infrastructure/database/repositories/content/contents.repository.js";
+import { ContentsRepository } from "../contents/infrastructure/database/repositories/contents.repository.js";
 import { WatchlistController } from "./application/controllers/watchlist.controller.js";
 import { AddWatchlistContentUseCase } from "./application/use-cases/add-watchlist-content.use-case.js";
 import { DeleteWatchlistByIdUseCase } from "./application/use-cases/delete-watchlist.use-case.js";

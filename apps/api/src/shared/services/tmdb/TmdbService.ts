@@ -19,27 +19,38 @@ export class TmdbService implements ITmdbService {
     endpoint: string,
     params?: Record<string, string>
   ): Promise<T> {
-    const url = `${this.baseUrl}${this.version}/${endpoint}${endpoint.includes("?") ? "&" : "?"}api_key=${this.apiKey}&language=${this.lang}`;
-    let paramsUrl = "";
-    if (params) {
-      paramsUrl = Object.keys(params).reduce((acc, key) => {
-        return `${acc}&${key}=${params[key]}`;
-      }, "");
-    }
-    const response = await fetch(url + paramsUrl, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${this.apiKey}`,
-      },
-    });
+    try {
+      const url = new URL(`${this.version}/${endpoint}`, this.baseUrl);
+      url.searchParams.set("language", this.lang);
 
-    if (!response.ok) {
-      const errorText = await response.text();
+      if (params) {
+        for (const [key, value] of Object.entries(params)) {
+          url.searchParams.set(key, value);
+        }
+      }
+
+      const response = await fetch(url.toString(), {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.apiKey}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new ServerError(
+          `TMDB API request failed: ${method} ${endpoint} - Status ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ""}`
+        );
+      }
+      return response.json() as Promise<T>;
+    } catch (error) {
+      if (error instanceof ServerError) {
+        throw error;
+      }
       throw new ServerError(
-        `TMDB API request failed: ${method} ${endpoint} - Status ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ""}`
+        `TMDB API request failed: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
-    return response.json() as Promise<T>;
   }
 }

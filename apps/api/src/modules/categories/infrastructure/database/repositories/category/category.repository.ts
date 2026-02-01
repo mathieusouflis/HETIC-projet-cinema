@@ -88,6 +88,7 @@ export class CategoryRepository implements ICategoryRepository {
         name: data.name,
         slug: data.slug,
         description: data.description ?? null,
+        tmdbId: data.tmdbId ?? null,
       })
       .returning();
 
