@@ -8,9 +8,13 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 // biome-ignore lint: Ts ignore needed
 // @ts-ignore: Next line is generated
 import { routeTree } from "./generated/routeTree.gen";
+import { setNavigateCallback } from "./lib/api";
 
 // Create a new router instance
 const router = createRouter({ routeTree });
+
+// Register the navigate callback with the SDK
+setNavigateCallback(() => router.navigate({ to: "/login" }));
 
 // Register the router instance for type safety
 declare module "@tanstack/react-router" {

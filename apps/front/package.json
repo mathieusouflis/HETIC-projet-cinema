@@ -12,12 +12,14 @@
     "dev": "vite --host 0.0.0.0 --port 3001 --clearScreen false"
   },
   "dependencies": {
+    "@packages/api-sdk": "workspace:*",
     "@packages/config": "workspace:*",
     "@radix-ui/react-slot": "^1.2.4",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-query": "^5.90.20",
     "@tanstack/react-router": "^1.157.16",
     "@tanstack/react-router-devtools": "^1.157.16",
+    "axios": "^1.13.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.563.0",
