@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { createPaginatedResponseSchema } from "../../../../../shared/schemas/base/response.schemas.js";
 import { uuidSchema } from "../../../../../shared/schemas/fields/uuid.schema.js";
+import { contentPlatformsValidator } from "../../../../content-platforms/application/validators/content-platforms.validator.js";
 import { contentSchema } from "../../../../contents/application/schema/contents.schema.js";
 
 export const categoryResponseSchema = z.object({
@@ -14,6 +15,7 @@ export const categoryResponseSchema = z.object({
 export const categoriesListResponseSchema = createPaginatedResponseSchema(
   categoryResponseSchema.extend({
     contentCategories: contentSchema.array().optional(),
+    contentPlatforms: contentPlatformsValidator.array().optional(),
   })
 );
 

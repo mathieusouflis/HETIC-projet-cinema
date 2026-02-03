@@ -1,5 +1,6 @@
 import { Entity } from "../../../../shared/domain/entity.js";
 import type { Category } from "../../../categories/domain/entities/category.entity.js";
+import type { Platform } from "../../../platforms/domain/entities/platforms.entity.js";
 import type {
   ContentRow,
   contentRelationsSchema,
@@ -8,21 +9,48 @@ import type {
 
 export type ContentType = "movie" | "serie";
 
+export interface ContentJSON {
+  id: string;
+  type: ContentType;
+  title: string;
+  originalTitle: string | null;
+  slug: string;
+  synopsis: string | null;
+  posterUrl: string | null;
+  backdropUrl: string | null;
+  trailerUrl: string | null;
+  releaseDate: Date | null;
+  year: number | null;
+  durationMinutes: number | null;
+  tmdbId: number | null;
+  averageRating: number;
+  totalRatings: number;
+  totalViews: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * Relation types for Content entity
+ */
+export interface ContentRelations {
+  contentCategories: Category[];
+  contentCredits: Category[]; //TEMP
+  listItems: Category[]; //TEMP
+  notifications: Category[]; //TEMP
+  ratings: Category[]; //TEMP
+  reviews: Category[]; //TEMP
+  seasons: Category[]; //TEMP
+  userActivityLogs: Category[]; //TEMP
+  watchlists: Category[]; //TEMP
+  watchparties: Category[]; //TEMP
+  contentPlatform: Platform;
+}
+
 export class Content extends Entity<
-  ContentRow,
+  ContentJSON,
   typeof contentRelationsSchema,
-  {
-    contentCategories: Category[];
-    contentCredits: Category[]; //TEMP
-    listItems: Category[]; //TEMP
-    notifications: Category[]; //TEMP
-    ratings: Category[]; //TEMP
-    reviews: Category[]; //TEMP
-    seasons: Category[]; //TEMP
-    userActivityLogs: Category[]; //TEMP
-    watchlists: Category[]; //TEMP
-    watchparties: Category[]; //TEMP
-  }
+  ContentRelations
 > {
   public readonly id: string;
   public readonly type: ContentType;
@@ -215,7 +243,7 @@ export class Content extends Entity<
    *
    * @returns Plain object representation without methods
    */
-  public toJSON() {
+  public toJSON(): ContentJSON {
     return {
       id: this.id,
       type: this.type,

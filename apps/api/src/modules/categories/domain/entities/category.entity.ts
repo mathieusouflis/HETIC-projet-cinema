@@ -6,13 +6,30 @@ import type {
   NewCategoryRow,
 } from "../../infrastructure/database/schemas/categories.schema.js";
 
+/**
+ * JSON representation of a Category entity
+ */
+export interface CategoryJSON {
+  id: string;
+  name: string;
+  slug: string;
+  tmdbId: number | null;
+  description: string | null;
+  createdAt: Date;
+}
+
+/**
+ * Relation types for Category entity
+ */
+export interface CategoryRelations {
+  contentCategories: Content[];
+  userStats: Content[]; //TEMP
+}
+
 export class Category extends Entity<
-  CategoryRow,
+  CategoryJSON,
   typeof categoriesRelationsSchema,
-  {
-    contentCategories: Content[];
-    userStats: Content[]; //TEMP
-  }
+  CategoryRelations
 > {
   public readonly id: string;
   public readonly name: string;
@@ -57,7 +74,7 @@ export class Category extends Entity<
    * Convert entity to a plain object (for serialization)
    * @returns Plain object representation without methods
    */
-  public toJSON() {
+  public toJSON(): CategoryJSON {
     return {
       id: this.id,
       name: this.name,

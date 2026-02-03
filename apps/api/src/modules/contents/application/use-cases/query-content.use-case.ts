@@ -29,9 +29,11 @@ export class QueryContentUseCase {
 
     const total = contents.total;
 
-    const contentFormatted = contents.data.map((content) =>
-      content.toJSONWithRelations()
-    );
+    const contentFormatted = contents.data.map((content) => {
+      const a = content.toJSONWithRelations();
+      a.contentPlatform;
+      return content.toJSONWithRelations();
+    });
 
     const paginatedResult = paginationService.createPageResult(
       contentFormatted,
