@@ -1,3 +1,7 @@
+import type { watchpartiesRelations } from "../../../../database/schema.js";
+import { Entity } from "../../../../shared/domain/entity.js";
+import type { Content } from "../../../contents/domain/entities/content.entity.js";
+import type { Platform } from "../../../platforms/domain/entities/platforms.entity.js";
 import type {
   NewWatchpartyRow,
   WatchpartyRow,
@@ -5,10 +9,40 @@ import type {
 
 export type WatchpartyStatus = "scheduled" | "active" | "ended" | "cancelled";
 
+export type WatchpartyJSON = {
+  id: string;
+  createdBy: string;
+  contentId: string;
+  seasonId: string | null;
+  episodeId: string | null;
+  name: string;
+  description: string | null;
+  isPublic: boolean;
+  maxParticipants: number | null;
+  platformId: string | null;
+  platformUrl: string | null;
+  scheduledAt: Date | null;
+  startedAt: Date | null;
+  endedAt: Date | null;
+  status: WatchpartyStatus;
+  currentPositionTimestamp: number | null;
+  isPlaying: boolean;
+  leaderUserId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 /**
  * Represents a watchparty session for watching content together.
  */
-export class Watchparty {
+export class Watchparty extends Entity<
+  WatchpartyJSON,
+  typeof watchpartiesRelations,
+  {
+    content: Content;
+    streamingPlatform: Platform;
+  }
+> {
   public readonly id: string;
   public readonly createdBy: string;
   public readonly contentId: string;
@@ -31,6 +65,7 @@ export class Watchparty {
   public readonly updatedAt: Date;
 
   constructor(props: WatchpartyRow) {
+    super();
     this.id = props.id;
     this.createdBy = props.createdBy;
     this.contentId = props.contentId;
@@ -115,7 +150,7 @@ export class Watchparty {
   /**
    * Convenience method: returns a plain object suitable for serialization.
    */
-  public toJSON() {
+  public toJSON(): WatchpartyJSON {
     return {
       id: this.id,
       createdBy: this.createdBy,
