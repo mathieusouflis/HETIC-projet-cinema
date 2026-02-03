@@ -15,6 +15,7 @@ import {
 import {
   contentCategories,
   contentCredits,
+  contentPlatforms,
   listItems,
   notifications,
   ratings,
@@ -86,18 +87,22 @@ export const contentSchema = pgTable(
   ]
 );
 
-export const contentRelationsSchema = relations(contentSchema, ({ many }) => ({
-  contentCredits: many(contentCredits),
-  seasons: many(seasons),
-  watchparties: many(watchparties),
-  ratings: many(ratings),
-  reviews: many(reviews),
-  watchlists: many(watchlist),
-  listItems: many(listItems),
-  userActivityLogs: many(userActivityLogs),
-  notifications: many(notifications),
-  contentCategories: many(contentCategories),
-}));
+export const contentRelationsSchema = relations(
+  contentSchema,
+  ({ many, one }) => ({
+    contentCredits: many(contentCredits),
+    seasons: many(seasons),
+    watchparties: many(watchparties),
+    ratings: many(ratings),
+    reviews: many(reviews),
+    watchlists: many(watchlist),
+    listItems: many(listItems),
+    userActivityLogs: many(userActivityLogs),
+    notifications: many(notifications),
+    contentCategories: many(contentCategories),
+    contentPlatform: one(contentPlatforms),
+  })
+);
 
 export type ContentRow = typeof contentSchema.$inferSelect;
 export type NewContentRow = typeof contentSchema.$inferInsert;
