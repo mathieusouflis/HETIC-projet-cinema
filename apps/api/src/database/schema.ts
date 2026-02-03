@@ -24,6 +24,10 @@ import {
   categorySchema,
 } from "../modules/categories/infrastructure/database/schemas/categories.schema";
 import {
+  contentPlatformsRelationsSchema,
+  contentPlatformsSchema,
+} from "../modules/content-platforms/infrastructure/database/content-platforms.schema";
+import {
   contentRelationsSchema,
   contentSchema,
 } from "../modules/contents/infrastructure/database/schemas/contents.schema";
@@ -32,6 +36,10 @@ import {
   peopleRelationSchema,
   peopleSchema,
 } from "../modules/peoples/infrastructure/schemas/people.schema";
+import {
+  streamingPlatformsRelationsSchema,
+  streamingPlatformsSchema,
+} from "../modules/platforms/infrastructure/database/platforms.schema";
 import {
   friendshipsRelationsSchema,
   friendshipsSchema,
@@ -258,25 +266,7 @@ export const conversationParticipants = pgTable(
 
 export const watchparties = watchpartySchema;
 
-export const streamingPlatforms = pgTable(
-  "streaming_platforms",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    name: varchar({ length: 100 }).notNull(),
-    slug: varchar({ length: 100 }).notNull(),
-    logoUrl: text("logo_url"),
-    baseUrl: text("base_url"),
-    isSupported: boolean("is_supported").default(true),
-    createdAt: timestamp("created_at", {
-      withTimezone: true,
-      mode: "string",
-    }).defaultNow(),
-  },
-  (table) => [
-    unique("streaming_platforms_name_key").on(table.name),
-    unique("streaming_platforms_slug_key").on(table.slug),
-  ]
-);
+export const streamingPlatforms = streamingPlatformsSchema;
 
 export const messages = pgTable(
   "messages",
@@ -689,6 +679,8 @@ export const notifications = pgTable(
   ]
 );
 
+export const contentPlatforms = contentPlatformsSchema;
+
 export const contentCategories = pgTable(
   "content_categories",
   {
@@ -963,12 +955,7 @@ export const watchpartiesRelations = relations(
   })
 );
 
-export const streamingPlatformsRelations = relations(
-  streamingPlatforms,
-  ({ many }) => ({
-    watchparties: many(watchparties),
-  })
-);
+export const streamingPlatformsRelations = streamingPlatformsRelationsSchema;
 
 export const messagesRelations = relations(messages, ({ one }) => ({
   conversation: one(conversations, {
@@ -1137,6 +1124,8 @@ export const contentCategoriesRelations = relations(
     }),
   })
 );
+
+export const contentPlatformsRelations = contentPlatformsRelationsSchema;
 
 export const reviewLikesRelations = relations(reviewLikes, ({ one }) => ({
   user: one(users, {
