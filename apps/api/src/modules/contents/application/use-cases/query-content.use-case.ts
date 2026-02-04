@@ -14,6 +14,7 @@ export class QueryContentUseCase {
     });
 
     const withCategory = query.withCategory === "true";
+    const withPlatform = query.withPlatform === "true";
 
     const contents = await this.contentRepository.listContents(
       query.contentType,
@@ -21,6 +22,7 @@ export class QueryContentUseCase {
       undefined,
       undefined,
       withCategory,
+      withPlatform,
       {
         page,
         limit,
@@ -30,8 +32,6 @@ export class QueryContentUseCase {
     const total = contents.total;
 
     const contentFormatted = contents.data.map((content) => {
-      const a = content.toJSONWithRelations();
-      a.contentPlatform;
       return content.toJSONWithRelations();
     });
 

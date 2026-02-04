@@ -44,7 +44,7 @@ export interface ContentRelations {
   userActivityLogs: Category[]; //TEMP
   watchlists: Category[]; //TEMP
   watchparties: Category[]; //TEMP
-  contentPlatform: Platform;
+  contentPlatforms: Platform[];
 }
 
 export class Content extends Entity<

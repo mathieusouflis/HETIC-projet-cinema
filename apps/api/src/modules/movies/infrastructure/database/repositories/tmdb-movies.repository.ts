@@ -2,9 +2,17 @@ import { logger } from "@packages/logger";
 import { BaseTMDBRepository } from "../../../../../shared/infrastructure/repositories/base-tmdb-repository";
 import type { CreateMovieProps } from "../../../domain/entities/movie.entity";
 
-export type MovieWithGenres = CreateMovieProps & {
-  genres?: Array<{ id: number; name: string }>;
+export type MovieTMDBGenre = {
+  id: number;
+  name: string;
 };
+
+export type MovieTMDBRelations = {
+  genres?: Array<MovieTMDBGenre>;
+  providers?: Array<ProviderData>;
+};
+
+export type MovieWithRelations = CreateMovieProps & MovieTMDBRelations;
 
 export type TMDBMovieDiscoverResult = {
   adult: boolean;
@@ -71,13 +79,32 @@ export type TMDBMovieDetail = {
   vote_count: number;
 };
 
+export interface TMDBMovieProviders {
+  results: {
+    [countryCode in "FR" | "US"]: ProvidersList;
+  };
+}
+
+type ProvidersList = {
+  buy: Array<ProviderData>;
+  flatrate: Array<ProviderData>;
+  rent: Array<ProviderData>;
+};
+
+export type ProviderData = {
+  display_priority: number;
+  logo_path: string | null;
+  provider_id: number;
+  provider_name: string;
+};
+
 /**
  * TMDB Movies Repository
  * Handles fetching movie data from TMDB API
  */
 export class TMDBMoviesRepository extends BaseTMDBRepository<
   TMDBMovieDiscoverResult,
-  MovieWithGenres
+  MovieWithRelations
 > {
   protected readonly discoverEndpoint = "discover/movie";
   protected readonly searchEndpoint = "search/movie";
@@ -88,16 +115,21 @@ export class TMDBMoviesRepository extends BaseTMDBRepository<
   /**
    * Get detailed information about a movie from TMDB
    */
-  async detail(id: number): Promise<MovieWithGenres> {
+  async detail(id: number): Promise<MovieWithRelations> {
     try {
       const result = await this.tmdbService.request<TMDBMovieDetail>(
         "GET",
         `${this.detailEndpoint}/${id}`
       );
 
+      const providers = await this.tmdbService.request<TMDBMovieProviders>(
+        "GET",
+        `${this.detailEndpoint}/${id}/watch/providers`
+      );
+
       const trailerUrl = await this.getTrailerUrl(id);
 
-      const movieProps: MovieWithGenres = {
+      const movieProps: MovieWithRelations = {
         type: "movie",
         slug: result.id.toString(),
         title: result.title,
@@ -118,6 +150,7 @@ export class TMDBMoviesRepository extends BaseTMDBRepository<
         durationMinutes: result.runtime,
         // Store genres as metadata to be processed by the composite repository
         genres: result.genres,
+        providers: providers.results.FR?.flatrate ?? [],
       };
 
       logger.info(

@@ -8,6 +8,7 @@ export const querySerieRequestSchema = z.object({
   year: z.number().optional(),
   averageRating: z.number().min(0).max(10).optional(),
   withCategories: z.enum(["true", "false"]).optional(),
+  withPlatforms: z.enum(["true", "false"]).optional(),
   ...optionalFlexiblePaginationQuerySchema.shape,
 });
 
