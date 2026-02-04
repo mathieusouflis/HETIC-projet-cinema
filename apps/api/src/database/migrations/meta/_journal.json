@@ -64,6 +64,13 @@
       "when": 1770150402770,
       "tag": "0008_luxuriant_firebrand",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1770161741269,
+      "tag": "0009_shallow_the_hand",
+      "breakpoints": true
     }
   ]
 }
