@@ -23,7 +23,8 @@
       "!**/*.config.ts",
       "!**/pnpm-lock.yaml",
       "!**/.devenv",
-      "!**/.direnv"
+      "!**/.direnv",
+      "!**/*.gen.ts"
     ]
   },
   "formatter": {
