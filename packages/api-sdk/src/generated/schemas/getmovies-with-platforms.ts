@@ -6,10 +6,10 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GETMoviesWithCategory = typeof GETMoviesWithCategory[keyof typeof GETMoviesWithCategory];
+export type GETMoviesWithPlatforms = typeof GETMoviesWithPlatforms[keyof typeof GETMoviesWithPlatforms];
 
 
-export const GETMoviesWithCategory = {
+export const GETMoviesWithPlatforms = {
   true: 'true',
   false: 'false',
 } as const;

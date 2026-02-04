@@ -11,7 +11,7 @@ export interface ISeriesRepository {
     country?: string,
     categories?: string[],
     withCategories?: boolean,
-    withPlatform?: boolean,
+    withPlatforms?: boolean,
     options?: PagePaginationQuery
   ) => Promise<{
     data: Serie[];
@@ -19,7 +19,10 @@ export interface ISeriesRepository {
   }>;
   searchSeries: (
     query: string,
-    options?: PagePaginationQuery
+    options?: PagePaginationQuery & {
+      withCategories?: boolean;
+      withPlatforms?: boolean;
+    }
   ) => Promise<Serie[]>;
   createSerie: (content: CreateSerieProps) => Promise<Serie>;
 }
