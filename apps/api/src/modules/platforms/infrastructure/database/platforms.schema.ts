@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import {
   boolean,
+  integer,
   pgTable,
   text,
   timestamp,
@@ -19,6 +20,7 @@ export const streamingPlatformsSchema = pgTable(
     logoUrl: text("logo_url"),
     baseUrl: text("base_url"),
     isSupported: boolean("is_supported").default(true),
+    tmdbId: integer("tmdb_id"),
     createdAt: timestamp("created_at", {
       withTimezone: true,
       mode: "string",
