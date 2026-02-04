@@ -14,12 +14,14 @@ export class QueryMovieUseCase {
     });
 
     const withCategory = query.withCategory === "true";
+    const withPlatform = query.withPlatform === "true";
 
     const movies = await this.movieRepository.listMovies(
       query.title,
       undefined,
       undefined,
       withCategory,
+      withPlatform,
       {
         page,
         limit,

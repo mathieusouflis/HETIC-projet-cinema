@@ -14,12 +14,14 @@ export class QuerySerieUseCase {
     });
 
     const withCategory = query.withCategories === "true";
+    const withPlatforms = query.withPlatforms === "true";
 
     const series = await this.serieRepository.listSeries(
       query.title,
       undefined,
       undefined,
       withCategory,
+      withPlatforms,
       {
         page,
         limit,

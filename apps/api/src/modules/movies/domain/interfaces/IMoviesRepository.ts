@@ -11,6 +11,7 @@ export interface IMoviesRepository {
     country?: string,
     categories?: string[],
     withCategory?: boolean,
+    withPlatform?: boolean,
     options?: PagePaginationQuery
   ) => Promise<{
     data: Movie[];

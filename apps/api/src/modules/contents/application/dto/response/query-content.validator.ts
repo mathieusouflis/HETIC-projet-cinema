@@ -7,7 +7,7 @@ import { contentSchema } from "../../schema/contents.schema.js";
 export const queryContentResponseSchema = createPaginatedResponseSchema(
   contentSchema.extend({
     contentCategories: categoryResponseSchema.array().optional(),
-    contentPlatforms: platformValidator.optional(),
+    contentPlatforms: platformValidator.array().optional(),
   })
 );
 

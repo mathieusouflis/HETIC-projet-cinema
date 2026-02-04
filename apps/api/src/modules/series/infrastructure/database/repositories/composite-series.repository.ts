@@ -1,6 +1,7 @@
 import { logger } from "@packages/logger";
-import type { PaginationQuery } from "../../../../../shared/services/pagination";
+import type { PagePaginationQuery } from "../../../../../shared/services/pagination";
 import { CategoryRepository } from "../../../../categories/infrastructure/database/repositories/category/category.repository";
+import { PlatformsRepository } from "../../../../platforms/infrastructure/database/platforms.repository";
 import type {
   CreateSerieProps,
   Serie,
@@ -9,15 +10,51 @@ import type { ISeriesRepository } from "../../../domain/interfaces/ISeriesReposi
 import { DrizzleSeriesRepository } from "./drizzle-series.repository";
 import { TMDBSeriesRepository } from "./tmdb-series.repository";
 
-const categoryCache = new Map<number, string>();
+/**
+ * TMDB Genre type for series
+ */
+export type SerieTMDBGenre = {
+  id: number;
+  name: string;
+};
 
-export function clearCategoryCache(): void {
-  categoryCache.clear();
-  logger.info("Category cache cleared");
+/**
+ * Provider data from TMDB
+ */
+export type ProviderData = {
+  display_priority: number;
+  logo_path: string | null;
+  provider_id: number;
+  provider_name: string;
+};
+
+/**
+ * TMDB relations type for series
+ */
+export type SerieTMDBRelations = {
+  genres?: Array<SerieTMDBGenre>;
+  providers?: Array<ProviderData>;
+};
+
+/**
+ * Cache for category lookups to avoid duplicate database queries
+ * Shared across series requests for better performance
+ */
+const categoryCache = new Map<number, string>();
+const providerCache = new Map<number, string>();
+
+/**
+ * Clear the cache
+ */
+export function clearCache(cache: Map<number, string>): void {
+  cache.clear();
 }
 
-export function getCategoryCacheSize(): number {
-  return categoryCache.size;
+/**
+ * Get cache size
+ */
+export function getCacheSize(cache: Map<number, string>): number {
+  return cache.size;
 }
 
 /**
@@ -29,19 +66,30 @@ export class CompositeSeriesRepository implements ISeriesRepository {
   private readonly tmdbRepository: TMDBSeriesRepository;
   private readonly drizzleRepository: DrizzleSeriesRepository;
   private readonly categoryRepository: CategoryRepository;
+  private readonly platformRepository: PlatformsRepository;
 
   constructor() {
     this.tmdbRepository = new TMDBSeriesRepository();
     this.drizzleRepository = new DrizzleSeriesRepository();
     this.categoryRepository = new CategoryRepository();
+    this.platformRepository = new PlatformsRepository();
   }
 
+  /**
+   * List series with the following flow:
+   * 1. Use discover to retrieve series IDs from TMDB
+   * 2. List in the DB all series with the IDs retrieved
+   * 3. Find all the IDs not found in the DB
+   * 4. For all IDs not found, use tmdb.detail to retrieve the series
+   * 5. Create all series with proper relations (categories)
+   */
   async listSeries(
     title?: string,
     _country?: string,
     categories?: string[],
     withCategories?: boolean,
-    options?: PaginationQuery
+    withPlatform?: boolean,
+    options?: PagePaginationQuery
   ): Promise<{
     data: Serie[];
     total: number;
@@ -49,7 +97,8 @@ export class CompositeSeriesRepository implements ISeriesRepository {
     try {
       const page = options?.page || 1;
 
-      let tmdbResult: { ids: number[]; results: any[] };
+      // Step 1: Get series IDs from TMDB using discover or search
+      let tmdbResult: { ids: number[]; results: unknown[]; total: number };
 
       if (title) {
         tmdbResult = await this.tmdbRepository.search({
@@ -57,11 +106,17 @@ export class CompositeSeriesRepository implements ISeriesRepository {
           page,
           withCategories: categories,
         });
+        logger.info(
+          `Found ${tmdbResult.ids.length} series IDs from TMDB search for "${title}"`
+        );
       } else {
         tmdbResult = await this.tmdbRepository.discover({
           page,
           withCategories: categories,
         });
+        logger.info(
+          `Found ${tmdbResult.ids.length} series IDs from TMDB discover (page ${page})`
+        );
       }
 
       const tmdbIds = tmdbResult.ids;
@@ -70,8 +125,18 @@ export class CompositeSeriesRepository implements ISeriesRepository {
         return { data: [], total: 0 };
       }
 
-      const existingSeries = await this.drizzleRepository.getByTmdbIds(tmdbIds);
+      // Step 2: List in the DB all series with the IDs retrieved (no limit)
+      // Already load categories if requested to avoid N+1 queries
+      const existingSeries = await this.drizzleRepository.getByTmdbIds(
+        tmdbIds,
+        {
+          withCategories: withCategories,
+          withPlatform: withPlatform,
+        }
+      );
+      logger.info(`Found ${existingSeries.length} existing series in database`);
 
+      // Step 3: Find all the IDs not found in the DB
       const existingTmdbIds = existingSeries
         .map((serie) => serie.tmdbId)
         .filter((id): id is number => id !== null && id !== undefined);
@@ -80,15 +145,21 @@ export class CompositeSeriesRepository implements ISeriesRepository {
         (id) => !existingTmdbIds.includes(id)
       );
 
-      let newlySeries: Serie[] = [];
+      // Step 4 & 5: For all IDs not found, fetch and create with relations
+      let newlyCreatedSeries: Serie[] = [];
       if (missingTmdbIds.length > 0) {
+        logger.info(
+          `Fetching ${missingTmdbIds.length} missing series from TMDB`
+        );
         const seriesDetails =
           await this.tmdbRepository.getMultipleDetails(missingTmdbIds);
 
-        newlySeries = await this.createSeriesWithRelations(seriesDetails);
+        // Create all series with proper relations (categories) - optimized batch operation
+        newlyCreatedSeries =
+          await this.createSeriesWithRelations(seriesDetails);
       }
 
-      const allSeries = [...existingSeries, ...newlySeries];
+      const allSeries = [...existingSeries, ...newlyCreatedSeries];
 
       const { data, total } = {
         data: allSeries,
@@ -98,6 +169,12 @@ export class CompositeSeriesRepository implements ISeriesRepository {
       if (!withCategories) {
         data.forEach((serie) => {
           serie.removeRelations("contentCategories");
+        });
+      }
+
+      if (!withPlatform) {
+        data.forEach((serie) => {
+          serie.removeRelations("contentPlatforms");
         });
       }
 
@@ -114,12 +191,9 @@ export class CompositeSeriesRepository implements ISeriesRepository {
    */
   async getSerieById(
     id: string,
-    options?: {
-      withCategories?: boolean;
-    }
+    options?: { withCategories?: boolean; withPlatform?: boolean }
   ): Promise<Serie | null> {
     try {
-      // Try to get from database first
       const serie = await this.drizzleRepository.getById(id, options);
 
       if (serie) {
@@ -139,33 +213,42 @@ export class CompositeSeriesRepository implements ISeriesRepository {
    */
   async searchSeries(
     query: string,
-    options?: PaginationQuery
+    options?: PagePaginationQuery
   ): Promise<Serie[]> {
     try {
       const page = options?.page || 1;
 
+      // Step 1: Search in TMDB
       const tmdbResult = await this.tmdbRepository.search({
         query,
         page,
       });
 
       const tmdbIds = tmdbResult.ids;
+      logger.info(
+        `Found ${tmdbIds.length} series from TMDB search for "${query}"`
+      );
 
       if (tmdbIds.length === 0) {
         return [];
       }
 
+      // Step 2: Check which series exist in DB
       const existingSeries = await this.drizzleRepository.getByTmdbIds(tmdbIds);
       const existingTmdbIds = existingSeries
         .map((serie) => serie.tmdbId)
         .filter((id): id is number => id !== null && id !== undefined);
 
+      // Step 3: Fetch missing series from TMDB and create them
       const missingTmdbIds = tmdbIds.filter(
         (id) => !existingTmdbIds.includes(id)
       );
 
       let newSeries: Serie[] = [];
       if (missingTmdbIds.length > 0) {
+        logger.info(
+          `Fetching ${missingTmdbIds.length} missing series from TMDB`
+        );
         const seriesDetails =
           await this.tmdbRepository.getMultipleDetails(missingTmdbIds);
         newSeries = await this.createSeriesWithRelations(seriesDetails);
@@ -181,9 +264,47 @@ export class CompositeSeriesRepository implements ISeriesRepository {
   async createSerie(content: CreateSerieProps): Promise<Serie> {
     try {
       const serie = await this.drizzleRepository.create(content);
+      logger.info(`Created series ${serie.id}`);
       return serie;
     } catch (error) {
       logger.error(`Error creating series: ${error}`);
+      throw error;
+    }
+  }
+
+  async updateSerie(
+    id: string,
+    props: Partial<CreateSerieProps>
+  ): Promise<Serie> {
+    try {
+      const serie = await this.drizzleRepository.update(id, props);
+      logger.info(`Updated series ${id}`);
+      return serie;
+    } catch (error) {
+      logger.error(`Error updating series ${id}: ${error}`);
+      throw error;
+    }
+  }
+
+  async deleteSerie(id: string): Promise<void> {
+    try {
+      await this.drizzleRepository.delete(id);
+      logger.info(`Deleted series ${id}`);
+    } catch (error) {
+      logger.error(`Error deleting series ${id}: ${error}`);
+      throw error;
+    }
+  }
+
+  async getSerieCount(
+    title?: string,
+    country?: string,
+    categories?: string[]
+  ): Promise<number> {
+    try {
+      return await this.drizzleRepository.getCount(title, country, categories);
+    } catch (error) {
+      logger.error(`Error getting series count: ${error}`);
       throw error;
     }
   }
@@ -194,14 +315,22 @@ export class CompositeSeriesRepository implements ISeriesRepository {
    * Optimized to batch process all categories first
    */
   private async createSeriesWithRelations(
-    seriesProps: CreateSerieProps[]
+    seriesProps: Array<CreateSerieProps & SerieTMDBRelations>
   ): Promise<Serie[]> {
-    const allGenresMap = new Map<number, { id: number; name: string }>();
+    // Step 1: Collect all unique genres from all series
+    const allGenresMap = new Map<number, SerieTMDBGenre>();
+    const allProvidersMap = new Map<number, ProviderData>();
 
     for (const props of seriesProps) {
-      const { genres } = props as CreateSerieProps & {
-        genres?: Array<{ id: number; name: string }>;
-      };
+      const { genres, providers } = props;
+
+      if (providers) {
+        for (const provider of providers) {
+          if (!allProvidersMap.has(provider.provider_id)) {
+            allProvidersMap.set(provider.provider_id, provider);
+          }
+        }
+      }
 
       if (genres) {
         for (const genre of genres) {
@@ -218,22 +347,21 @@ export class CompositeSeriesRepository implements ISeriesRepository {
       await this.ensureCategoriesExist(allGenres);
     }
 
+    const allProviders = Array.from(allProvidersMap.values());
+    if (allProviders.length > 0) {
+      await this.ensureProvidersExist(allProviders);
+    }
+
     // Step 3: Create all series with their category links
     const createdSeries: Serie[] = [];
 
-    for (const serieProps of seriesProps) {
+    for (const serieProp of seriesProps) {
       try {
-        // Extract genres from props
-        const { genres, ...serieData } = serieProps as CreateSerieProps & {
-          genres?: Array<{ id: number; name: string }>;
-        };
+        const { genres, providers, ...serieData } = serieProp;
 
-        // Create the series
         const serie = await this.drizzleRepository.create(serieData);
 
-        // Handle category relations
         if (genres && genres.length > 0) {
-          // Get category IDs from cache (they were already created/fetched)
           const categoryIds: string[] = [];
           for (const genre of genres) {
             const categoryId = categoryCache.get(genre.id);
@@ -250,7 +378,7 @@ export class CompositeSeriesRepository implements ISeriesRepository {
         createdSeries.push(serie);
       } catch (error) {
         logger.error(
-          `Error creating series with TMDB ID ${serieProps.tmdbId}: ${error}`
+          `Error creating series with TMDB ID ${serieProp.tmdbId}: ${error}`
         );
         // Continue with other series even if one fails
       }
@@ -265,7 +393,7 @@ export class CompositeSeriesRepository implements ISeriesRepository {
    * Optimized to handle batch operations and prevent duplicates
    */
   private async ensureCategoriesExist(
-    genres: Array<{ id: number; name: string }>
+    genres: Array<SerieTMDBGenre>
   ): Promise<void> {
     // Check cache first
     const uncachedGenres = genres.filter(
@@ -319,6 +447,7 @@ export class CompositeSeriesRepository implements ISeriesRepository {
         if (existingBySlug) {
           // Category exists but might not have tmdbId, update cache
           categoryCache.set(genre.id, existingBySlug.id);
+          logger.info(`Found existing category by slug: ${genre.name}`);
           continue;
         }
 
@@ -332,7 +461,6 @@ export class CompositeSeriesRepository implements ISeriesRepository {
         categoryCache.set(genre.id, newCategory.id);
       } catch (error) {
         logger.error(`Error creating category ${genre.name}: ${error}`);
-
         // Try to find it again in case another request created it
         try {
           const retryFind = await this.categoryRepository.findByTmdbIds([
@@ -345,6 +473,75 @@ export class CompositeSeriesRepository implements ISeriesRepository {
         } catch (retryError) {
           logger.error(`Retry also failed for ${genre.name}: ${retryError}`);
         }
+      }
+    }
+  }
+
+  /**
+   * Ensure providers exist in the database
+   * Creates providers if they don't exist, populates the cache
+   */
+  private async ensureProvidersExist(providers: ProviderData[]): Promise<void> {
+    const uncachedProviders = providers.filter(
+      (provider) => !providerCache.has(provider.provider_id)
+    );
+
+    if (uncachedProviders.length === 0) {
+      return;
+    }
+
+    const providersId = uncachedProviders.map(
+      (provider) => provider.provider_id
+    );
+    const existingProviders =
+      await this.platformRepository.findByTmdbIds(providersId);
+
+    // Update cache with existing provider
+    for (const provider of existingProviders) {
+      const jsonProvider = provider.toJSON();
+      if (jsonProvider.tmdbId !== null) {
+        providerCache.set(jsonProvider.tmdbId, jsonProvider.id);
+      }
+    }
+
+    // Identify missing providers that need to be created
+    const existingTmdbIds = new Set(
+      existingProviders
+        .map((provider) => provider.toJSON().tmdbId)
+        .filter((id): id is number => id !== null)
+    );
+
+    const missingProviders = uncachedProviders.filter(
+      (provider) => !existingTmdbIds.has(provider.provider_id)
+    );
+
+    if (missingProviders.length === 0) {
+      return;
+    }
+
+    // Create all missing providers with error handling
+    for (const provider of missingProviders) {
+      // Double-check cache to avoid race conditions
+      if (providerCache.has(provider.provider_id)) {
+        continue;
+      }
+
+      try {
+        const slug = this.generateSlug(provider.provider_name);
+
+        // Create new provider
+        const newProvider = await this.platformRepository.create({
+          name: provider.provider_name,
+          slug,
+          tmdbId: provider.provider_id,
+        });
+
+        providerCache.set(provider.provider_id, newProvider.toJSON().id);
+        logger.info(`Created provider: ${provider.provider_name}`);
+      } catch (error) {
+        logger.error(
+          `Error creating provider ${provider.provider_name}: ${error}`
+        );
       }
     }
   }

@@ -1,13 +1,13 @@
 import type z from "zod";
 import { createPaginatedResponseSchema } from "../../../../../shared/schemas/base/response.schemas.js";
 import { categoryResponseSchema } from "../../../../categories/application/dto/response/category.response.js";
-import { contentPlatformsValidator } from "../../../../content-platforms/application/validators/content-platforms.validator.js";
+import { platformValidator } from "../../../../platforms/application/validators/platforms.validator.js";
 import { serieSchema } from "../../schema/series.schema.js";
 
 export const querySerieResponseSchema = createPaginatedResponseSchema(
   serieSchema.extend({
     contentCategories: categoryResponseSchema.array().optional(),
-    contentPlatforms: contentPlatformsValidator.optional(),
+    contentPlatforms: platformValidator.array().optional(),
   })
 );
 
