@@ -1,6 +1,7 @@
 import type { streamingPlatformsRelations } from "../../../../database/schema";
 import { Entity } from "../../../../shared/domain/entity";
 import type { Content } from "../../../contents/domain/entities/content.entity";
+import type { Watchparty } from "../../../watchparty";
 import type {
   NewStreamingPlatformRow,
   StreamingPlatformRow,
@@ -15,6 +16,7 @@ export interface PlatformJSON {
   slug: string;
   logoUrl: string | null;
   baseUrl: string | null;
+  tmdbId: number | null;
   isSupported: boolean | null;
   createdAt: Date | null;
 }
@@ -24,7 +26,7 @@ export interface PlatformJSON {
  */
 export interface PlatformRelations {
   contents: Content[];
-  watchparties: Content[]; // TEMP
+  watchparties: Watchparty[]; // TEMP
 }
 
 /**
@@ -42,6 +44,7 @@ export class Platform extends Entity<
   private readonly slug: string;
   private readonly logoUrl: string | null;
   private readonly baseUrl: string | null;
+  private readonly tmdbId: number | null;
   private readonly isSupported: boolean | null;
   private readonly createdAt: Date | null;
 
@@ -56,6 +59,7 @@ export class Platform extends Entity<
     this.slug = props.slug;
     this.logoUrl = props.logoUrl;
     this.baseUrl = props.baseUrl;
+    this.tmdbId = props.tmdbId;
     this.isSupported = props.isSupported;
     this.createdAt = props.createdAt ? new Date(props.createdAt) : new Date();
   }
@@ -87,6 +91,7 @@ export class Platform extends Entity<
       slug: this.slug,
       logoUrl: this.logoUrl,
       baseUrl: this.baseUrl,
+      tmdbId: this.tmdbId,
       isSupported: this.isSupported,
       createdAt: this.createdAt,
     };
