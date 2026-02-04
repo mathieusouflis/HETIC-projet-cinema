@@ -56,7 +56,7 @@ export abstract class BaseDrizzleRepository<
    */
   async getByTmdbIds(
     tmdbIds: number[],
-    options?: { withCategories?: boolean; withPlatform?: boolean }
+    options?: { withCategories?: boolean; withPlatforms?: boolean }
   ): Promise<TEntity[]> {
     try {
       if (tmdbIds.length === 0) {
@@ -90,7 +90,7 @@ export abstract class BaseDrizzleRepository<
             row.contentCategories.map((cc) => new Category(cc.category))
           );
         }
-        if (row.contentPlatforms && options?.withPlatform) {
+        if (row.contentPlatforms && options?.withPlatforms) {
           entity.setRelations(
             "contentPlatforms",
             row.contentPlatforms.map((cp) => new Platform(cp.platform))
@@ -110,7 +110,7 @@ export abstract class BaseDrizzleRepository<
    */
   async getById(
     id: string,
-    options?: { withCategories?: boolean; withPlatform?: boolean }
+    options?: { withCategories?: boolean; withPlatforms?: boolean }
   ): Promise<TEntity | null> {
     try {
       const result = await db.query.content.findFirst({
@@ -145,7 +145,7 @@ export abstract class BaseDrizzleRepository<
         );
       }
 
-      if (resultAny.contentPlatforms && options?.withPlatform) {
+      if (resultAny.contentPlatforms && options?.withPlatforms) {
         entity.setRelations(
           "contentPlatforms",
           resultAny.contentPlatforms.map((cp: any) => new Platform(cp.platform))

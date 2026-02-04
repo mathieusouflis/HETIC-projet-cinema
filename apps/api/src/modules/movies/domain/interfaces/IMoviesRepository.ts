@@ -10,8 +10,8 @@ export interface IMoviesRepository {
     title?: string,
     country?: string,
     categories?: string[],
-    withCategory?: boolean,
-    withPlatform?: boolean,
+    withCategories?: boolean,
+    withPlatforms?: boolean,
     options?: PagePaginationQuery
   ) => Promise<{
     data: Movie[];
@@ -19,6 +19,9 @@ export interface IMoviesRepository {
   }>;
   searchMovies: (
     query: string,
-    options?: PagePaginationQuery
+    options?: PagePaginationQuery & {
+      withCategories?: boolean;
+      withPlatforms?: boolean;
+    }
   ) => Promise<Movie[]>;
 }

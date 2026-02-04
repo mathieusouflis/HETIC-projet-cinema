@@ -5,8 +5,8 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { GETMoviesWithCategory } from './getmovies-with-category';
-import type { GETMoviesWithPlatform } from './getmovies-with-platform';
+import type { GETMoviesWithCategories } from './getmovies-with-categories';
+import type { GETMoviesWithPlatforms } from './getmovies-with-platforms';
 
 export type GETMoviesParams = {
 title?: string;
@@ -18,8 +18,8 @@ year?: number;
  * @maximum 10
  */
 averageRating?: number;
-withCategory?: GETMoviesWithCategory;
-withPlatform?: GETMoviesWithPlatform;
+withCategories?: GETMoviesWithCategories;
+withPlatforms?: GETMoviesWithPlatforms;
 /**
  * @minimum 1
  */
