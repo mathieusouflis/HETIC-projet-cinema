@@ -7,6 +7,7 @@
  */
 import type { GETContentsContentType } from './getcontents-content-type';
 import type { GETContentsWithCategory } from './getcontents-with-category';
+import type { GETContentsWithPlatform } from './getcontents-with-platform';
 
 export type GETContentsParams = {
 title?: string;
@@ -20,6 +21,7 @@ year?: number;
  */
 averageRating?: number;
 withCategory?: GETContentsWithCategory;
+withPlatform?: GETContentsWithPlatform;
 /**
  * @minimum 1
  */

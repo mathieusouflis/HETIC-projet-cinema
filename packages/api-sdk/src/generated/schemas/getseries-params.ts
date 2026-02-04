@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { GETSeriesWithCategories } from './getseries-with-categories';
+import type { GETSeriesWithPlatforms } from './getseries-with-platforms';
 
 export type GETSeriesParams = {
 title?: string;
@@ -18,6 +19,7 @@ year?: number;
  */
 averageRating?: number;
 withCategories?: GETSeriesWithCategories;
+withPlatforms?: GETSeriesWithPlatforms;
 /**
  * @minimum 1
  */

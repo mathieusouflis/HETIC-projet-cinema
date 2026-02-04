@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { GETCategories200DataItemsItemContentCategoriesItem } from './getcategories200-data-items-item-content-categories-item';
+import type { GETCategories200DataItemsItemContentPlatformsItem } from './getcategories200-data-items-item-content-platforms-item';
 
 export type GETCategories200DataItemsItem = {
   /** @minLength 1 */
@@ -16,4 +17,5 @@ export type GETCategories200DataItemsItem = {
   description: string | null;
   createdAt: string;
   contentCategories?: GETCategories200DataItemsItemContentCategoriesItem[];
+  contentPlatforms?: GETCategories200DataItemsItemContentPlatformsItem[];
 };
