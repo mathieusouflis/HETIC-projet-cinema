@@ -1,34 +1,39 @@
 import { logger } from "@packages/logger";
 import type { PagePaginationQuery } from "../../../../../shared/services/pagination";
 import { CategoryRepository } from "../../../../categories/infrastructure/database/repositories/category/category.repository";
+import { PlatformsRepository } from "../../../../platforms/infrastructure/database/platforms.repository";
 import type {
   CreateMovieProps,
   Movie,
 } from "../../../domain/entities/movie.entity";
 import type { IMoviesRepository } from "../../../domain/interfaces/IMoviesRepository";
 import { DrizzleMoviesRepository } from "./drizzle-movies.repository";
-import { TMDBMoviesRepository } from "./tmdb-movies.repository";
+import {
+  type MovieTMDBGenre,
+  type MovieTMDBRelations,
+  type ProviderData,
+  TMDBMoviesRepository,
+} from "./tmdb-movies.repository";
 
 /**
  * Cache for category lookups to avoid duplicate database queries
  * Shared across movie requests for better performance
  */
 const categoryCache = new Map<number, string>();
+const providerCache = new Map<number, string>();
 
 /**
- * Clear the category cache
- * Useful for testing or when categories are updated externally
+ * Clear the cache
  */
-export function clearMovieCategoryCache(): void {
-  categoryCache.clear();
-  logger.info("Movie category cache cleared");
+export function clearCache(cache: Map<number, string>): void {
+  cache.clear();
 }
 
 /**
- * Get category cache size
+ * Get cache size
  */
-export function getMovieCategoryCacheSize(): number {
-  return categoryCache.size;
+export function getCacheSize(cache: Map<number, string>): number {
+  return cache.size;
 }
 
 /**
@@ -40,11 +45,13 @@ export class CompositeMoviesRepository implements IMoviesRepository {
   private readonly tmdbRepository: TMDBMoviesRepository;
   private readonly drizzleRepository: DrizzleMoviesRepository;
   private readonly categoryRepository: CategoryRepository;
+  private readonly platformRepository: PlatformsRepository;
 
   constructor() {
     this.tmdbRepository = new TMDBMoviesRepository();
     this.drizzleRepository = new DrizzleMoviesRepository();
     this.categoryRepository = new CategoryRepository();
+    this.platformRepository = new PlatformsRepository();
   }
 
   /**
@@ -60,6 +67,7 @@ export class CompositeMoviesRepository implements IMoviesRepository {
     _country?: string,
     categories?: string[],
     withCategories?: boolean,
+    withPlatform?: boolean,
     options?: PagePaginationQuery
   ): Promise<{
     data: Movie[];
@@ -98,7 +106,13 @@ export class CompositeMoviesRepository implements IMoviesRepository {
 
       // Step 2: List in the DB all movies with the IDs retrieved (no limit)
       // Already load categories if requested to avoid N+1 queries
-      const existingMovies = await this.drizzleRepository.getByTmdbIds(tmdbIds);
+      const existingMovies = await this.drizzleRepository.getByTmdbIds(
+        tmdbIds,
+        {
+          withCategories: withCategories,
+          withPlatform: withPlatform,
+        }
+      );
       logger.info(`Found ${existingMovies.length} existing movies in database`);
 
       // Step 3: Find all the IDs not found in the DB
@@ -133,6 +147,12 @@ export class CompositeMoviesRepository implements IMoviesRepository {
         });
       }
 
+      if (!withPlatform) {
+        data.forEach((movie) => {
+          movie.removeRelations("contentPlatforms");
+        });
+      }
+
       return { data, total };
     } catch (error) {
       logger.error(`Error listing movies: ${error}`);
@@ -146,7 +166,7 @@ export class CompositeMoviesRepository implements IMoviesRepository {
    */
   async getMovieById(
     id: string,
-    options?: { withCategories?: boolean }
+    options?: { withCategories?: boolean; withPlatform?: boolean }
   ): Promise<Movie | null> {
     try {
       const movie = await this.drizzleRepository.getById(id, options);
@@ -270,15 +290,22 @@ export class CompositeMoviesRepository implements IMoviesRepository {
    * Optimized to batch process all categories first
    */
   private async createMoviesWithRelations(
-    movieProps: Array<
-      CreateMovieProps & { genres?: Array<{ id: number; name: string }> }
-    >
+    movieProps: Array<CreateMovieProps & MovieTMDBRelations>
   ): Promise<Movie[]> {
     // Step 1: Collect all unique genres from all movies
-    const allGenresMap = new Map<number, { id: number; name: string }>();
+    const allGenresMap = new Map<number, MovieTMDBGenre>();
+    const allProvidersMap = new Map<number, ProviderData>();
 
     for (const props of movieProps) {
-      const { genres } = props;
+      const { genres, providers } = props;
+
+      if (providers) {
+        for (const provider of providers) {
+          if (!allProvidersMap.has(provider.provider_id)) {
+            allProvidersMap.set(provider.provider_id, provider);
+          }
+        }
+      }
 
       if (genres) {
         for (const genre of genres) {
@@ -295,12 +322,17 @@ export class CompositeMoviesRepository implements IMoviesRepository {
       await this.ensureCategoriesExist(allGenres);
     }
 
+    const allProviders = Array.from(allProvidersMap.values());
+    if (allProviders.length > 0) {
+      await this.ensureProvidersExist(allProviders);
+    }
+
     // Step 3: Create all movies with their category links
     const createdMovies: Movie[] = [];
 
     for (const movieProp of movieProps) {
       try {
-        const { genres, ...movieData } = movieProp;
+        const { genres, providers, ...movieData } = movieProp;
 
         const movie = await this.drizzleRepository.create(movieData);
 
@@ -315,6 +347,20 @@ export class CompositeMoviesRepository implements IMoviesRepository {
 
           if (categoryIds.length > 0) {
             await this.drizzleRepository.linkCategories(movie.id, categoryIds);
+          }
+        }
+
+        if (providers && providers.length > 0) {
+          const providerIds: string[] = [];
+          for (const provider of providers) {
+            const providerId = providerCache.get(provider.provider_id);
+            if (providerId) {
+              providerIds.push(providerId);
+            }
+          }
+
+          if (providerIds.length > 0) {
+            await this.drizzleRepository.linkProviders(movie.id, providerIds);
           }
         }
 
@@ -336,7 +382,7 @@ export class CompositeMoviesRepository implements IMoviesRepository {
    * Optimized to handle batch operations and prevent duplicates
    */
   private async ensureCategoriesExist(
-    genres: Array<{ id: number; name: string }>
+    genres: Array<MovieTMDBGenre>
   ): Promise<void> {
     // Check cache first
     const uncachedGenres = genres.filter(
@@ -416,6 +462,70 @@ export class CompositeMoviesRepository implements IMoviesRepository {
         } catch (retryError) {
           logger.error(`Retry also failed for ${genre.name}: ${retryError}`);
         }
+      }
+    }
+  }
+
+  private async ensureProvidersExist(providers: ProviderData[]) {
+    const uncachedProviders = providers.filter(
+      (provider) => !providerCache.has(provider.provider_id)
+    );
+
+    if (uncachedProviders.length === 0) {
+      return;
+    }
+
+    const providersId = uncachedProviders.map(
+      (provider) => provider.provider_id
+    );
+    const existingProviders =
+      await this.platformRepository.findByTmdbIds(providersId);
+
+    // Update cache with existing provider
+    for (const provider of existingProviders) {
+      const jsonProvider = provider.toJSON();
+      if (jsonProvider.tmdbId !== null) {
+        providerCache.set(jsonProvider.tmdbId, jsonProvider.id);
+      }
+    }
+
+    // Identify missing genres that need to be created
+    const existingTmdbIds = new Set(
+      existingProviders
+        .map((provider) => provider.toJSON().tmdbId)
+        .filter((id): id is number => id !== null)
+    );
+
+    const missingProviders = uncachedProviders.filter(
+      (provider) => !existingTmdbIds.has(provider.provider_id)
+    );
+
+    if (missingProviders.length === 0) {
+      return;
+    }
+
+    // Create all missing provider with error handling
+    for (const provider of missingProviders) {
+      // Double-check cache to avoid race conditions
+      if (providerCache.has(provider.provider_id)) {
+        continue;
+      }
+
+      try {
+        const slug = this.generateSlug(provider.provider_name);
+
+        // Create new provider
+        const newProvider = await this.platformRepository.create({
+          name: provider.provider_name,
+          slug,
+          tmdbId: provider.provider_id,
+        });
+
+        providerCache.set(provider.provider_id, newProvider.toJSON().id);
+      } catch (error) {
+        logger.error(
+          `Error creating plaform ${provider.provider_name}: ${error}`
+        );
       }
     }
   }

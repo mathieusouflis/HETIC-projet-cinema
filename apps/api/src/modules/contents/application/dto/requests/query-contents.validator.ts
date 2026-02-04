@@ -9,6 +9,7 @@ export const queryContentRequestSchema = z.object({
   year: z.number().optional(),
   averageRating: z.number().min(0).max(10).optional(),
   withCategory: z.enum(["true", "false"]).optional(),
+  withPlatform: z.enum(["true", "false"]).optional(),
   ...optionalFlexiblePaginationQuerySchema.shape,
 });
 

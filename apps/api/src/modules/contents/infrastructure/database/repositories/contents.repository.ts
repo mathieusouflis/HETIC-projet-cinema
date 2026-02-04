@@ -16,7 +16,8 @@ import { contentSchema } from "../schemas/contents.schema";
 /**
  * Contents Repository
  * Unified repository for accessing both movies and series
- * Delegates to specialized repositories and combines results
+ * Delegates to specialized repositories for type-specific requests (with TMDB sync)
+ * Queries database directly for combined (unfiltered) requests (proper pagination)
  */
 export class ContentsRepository implements IContentRepository {
   private readonly moviesRepository: IMoviesRepository;
@@ -43,8 +44,8 @@ export class ContentsRepository implements IContentRepository {
 
   /**
    * List contents with optional type filter
-   * If type is specified, delegates to appropriate repository
-   * If no type, combines results from both repositories
+   * If type is specified, delegates to appropriate repository (with TMDB sync)
+   * If no type, queries database directly (no TMDB sync, proper pagination)
    */
   async listContents(
     type?: string,
@@ -52,18 +53,21 @@ export class ContentsRepository implements IContentRepository {
     country?: string,
     categories?: string[],
     withCategory?: boolean,
+    withPlatform?: boolean,
     options?: PagePaginationQuery
   ): Promise<{ data: Content[]; total: number }> {
     try {
+      // If type is specified, delegate to the appropriate repository
+      // This includes TMDB synchronization
       if (type === "movie") {
         const result = await this.moviesRepository.listMovies(
           title,
           country,
           categories,
           withCategory,
+          withPlatform,
           options
         );
-
         return result;
       }
 
@@ -73,43 +77,35 @@ export class ContentsRepository implements IContentRepository {
           country,
           categories,
           withCategory,
+          withPlatform,
           options
         );
-
         return result;
       }
 
-      const [moviesResult, seriesResult] = await Promise.all([
-        this.moviesRepository.listMovies(
-          title,
-          country,
-          categories,
-          withCategory,
-          options
-        ),
-        this.seriesRepository.listSeries(
-          title,
-          country,
-          categories,
-          withCategory,
-          options
-        ),
-      ]);
+      const movies = await this.moviesRepository.listMovies(
+        title,
+        country,
+        categories,
+        withCategory,
+        withPlatform,
+        options
+      );
 
-      const combinedData = [...moviesResult.data, ...seriesResult.data];
+      const series = await this.seriesRepository.listSeries(
+        title,
+        country,
+        categories,
+        withCategory,
+        withPlatform,
+        options
+      );
 
-      const total = moviesResult.total + seriesResult.total;
-      let paginatedData = combinedData;
-
-      if (options?.page && options?.limit) {
-        const start = (options.page - 1) * options.limit;
-        const end = start + options.limit;
-        paginatedData = combinedData.slice(start, end);
-      }
-
+      // When no type filter, query database directly for proper pagination
+      // This gives us all movies AND series combined from the local database
       return {
-        data: paginatedData,
-        total,
+        data: [...movies.data, ...series.data],
+        total: movies.total + series.total,
       };
     } catch (error) {
       logger.error(`Error listing contents: ${error}`);
@@ -120,7 +116,7 @@ export class ContentsRepository implements IContentRepository {
   /**
    * Search contents with optional type filter
    * If type is specified, delegates to appropriate repository
-   * If no type, combines results from both repositories
+   * If no type, searches database directly
    */
   async searchContents(
     query: string,
@@ -133,7 +129,6 @@ export class ContentsRepository implements IContentRepository {
           query,
           options
         );
-
         return results;
       }
 
@@ -142,25 +137,13 @@ export class ContentsRepository implements IContentRepository {
           query,
           options
         );
-
         return results;
       }
 
-      const [movieResults, serieResults] = await Promise.all([
-        this.moviesRepository.searchMovies(query, options),
-        this.seriesRepository.searchSeries(query, options),
-      ]);
+      const movies = await this.moviesRepository.searchMovies(query, options);
+      const series = await this.seriesRepository.searchSeries(query, options);
 
-      const combinedResults = [...movieResults, ...serieResults];
-
-      let paginatedResults = combinedResults;
-      if (options?.page && options?.limit) {
-        const start = (options.page - 1) * options.limit;
-        const end = start + options.limit;
-        paginatedResults = combinedResults.slice(start, end);
-      }
-
-      return paginatedResults;
+      return [...movies, ...series];
     } catch (error) {
       logger.error(`Error searching contents: ${error}`);
       throw error;

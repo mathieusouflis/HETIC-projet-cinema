@@ -1,19 +1,24 @@
 import { and, count, eq, inArray, type SQL } from "drizzle-orm";
 import { db } from "../../../database";
-import { contentCategories } from "../../../database/schema";
+import { contentCategories, contentPlatforms } from "../../../database/schema";
 import { Category } from "../../../modules/categories/domain/entities/category.entity";
-import { contentSchema } from "../../../modules/contents/infrastructure/database/schemas/contents.schema";
+import {
+  contentSchema,
+  type NewContentRow,
+} from "../../../modules/contents/infrastructure/database/schemas/contents.schema";
+import type { ProviderData } from "../../../modules/movies/infrastructure/database/repositories/tmdb-movies.repository";
+import { Platform } from "../../../modules/platforms/domain/entities/platforms.entity";
 import { ServerError } from "../../errors/server-error";
 import type { PagePaginationQuery } from "../../services/pagination";
 
 /**
  * Base interface for entities that can be created
  */
-export interface BaseContentProps {
+export type BaseContentProps = NewContentRow & {
   type: "movie" | "serie";
   genres?: Array<{ id: number; name: string }>;
-  [key: string]: any;
-}
+  providers?: ProviderData[];
+};
 
 /**
  * Base interface for entities
@@ -49,7 +54,10 @@ export abstract class BaseDrizzleRepository<
   /**
    * Get content by TMDB IDs
    */
-  async getByTmdbIds(tmdbIds: number[]): Promise<TEntity[]> {
+  async getByTmdbIds(
+    tmdbIds: number[],
+    options?: { withCategories?: boolean; withPlatform?: boolean }
+  ): Promise<TEntity[]> {
     try {
       if (tmdbIds.length === 0) {
         return [];
@@ -66,15 +74,26 @@ export abstract class BaseDrizzleRepository<
               category: true,
             },
           },
+          contentPlatforms: {
+            with: {
+              platform: true,
+            },
+          },
         },
       });
 
       return result.map((row) => {
         const entity = this.createEntity(row as TProps);
-        if (row.contentCategories) {
+        if (row.contentCategories && options?.withCategories !== false) {
           entity.setRelations(
             "contentCategories",
             row.contentCategories.map((cc) => new Category(cc.category))
+          );
+        }
+        if (row.contentPlatforms && options?.withPlatform) {
+          entity.setRelations(
+            "contentPlatforms",
+            row.contentPlatforms.map((cp) => new Platform(cp.platform))
           );
         }
         return entity;
@@ -91,7 +110,7 @@ export abstract class BaseDrizzleRepository<
    */
   async getById(
     id: string,
-    options?: { withCategories?: boolean }
+    options?: { withCategories?: boolean; withPlatform?: boolean }
   ): Promise<TEntity | null> {
     try {
       const result = await db.query.content.findFirst({
@@ -105,6 +124,11 @@ export abstract class BaseDrizzleRepository<
               category: true,
             },
           },
+          contentPlatforms: {
+            with: {
+              platform: true,
+            },
+          },
         },
       });
 
@@ -113,10 +137,18 @@ export abstract class BaseDrizzleRepository<
       }
 
       const entity = this.createEntity(result as TProps);
-      if (result.contentCategories && options?.withCategories) {
+      const resultAny = result;
+      if (resultAny.contentCategories && options?.withCategories) {
         entity.setRelations(
           "contentCategories",
-          result.contentCategories.map((cc) => new Category(cc.category))
+          resultAny.contentCategories.map((cc) => new Category(cc.category))
+        );
+      }
+
+      if (resultAny.contentPlatforms && options?.withPlatform) {
+        entity.setRelations(
+          "contentPlatforms",
+          resultAny.contentPlatforms.map((cp: any) => new Platform(cp.platform))
         );
       }
 
@@ -199,11 +231,11 @@ export abstract class BaseDrizzleRepository<
    */
   async create(props: TCreateProps): Promise<TEntity> {
     try {
-      const { genres, ...contentData } = props;
+      const { genres, providers, ...contentData } = props;
 
       const result = await db
         .insert(contentSchema)
-        .values(contentData as any) // Type assertion needed for generic Drizzle operation
+        .values(contentData) // Type assertion needed for generic Drizzle operation
         .returning();
 
       if (!result || result.length === 0) {
@@ -229,7 +261,10 @@ export abstract class BaseDrizzleRepository<
   /**
    * Update content
    */
-  async update(id: string, props: Partial<TCreateProps>): Promise<TEntity> {
+  async update(
+    id: string,
+    props: Partial<Omit<TCreateProps, "genres" | "providers">>
+  ): Promise<TEntity> {
     try {
       const result = await db
         .update(contentSchema)
@@ -331,6 +366,29 @@ export abstract class BaseDrizzleRepository<
     } catch (error) {
       throw new ServerError(
         `Failed to link categories to ${this.entityName} ${contentId}: ${error instanceof Error ? error.message : error}`
+      );
+    }
+  }
+
+  /**
+   * Link categories to content
+   */
+  async linkProviders(contentId: string, providerIds: string[]): Promise<void> {
+    try {
+      if (providerIds.length === 0) {
+        return;
+      }
+
+      const values = providerIds.map((providerId) => ({
+        contentId,
+        platformId: providerId,
+        key: "",
+      }));
+
+      await db.insert(contentPlatforms).values(values).onConflictDoNothing();
+    } catch (error) {
+      throw new ServerError(
+        `Failed to link providers to ${this.entityName} ${contentId}: ${error instanceof Error ? error.message : error}`
       );
     }
   }
