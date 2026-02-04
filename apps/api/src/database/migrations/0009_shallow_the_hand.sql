@@ -1,0 +1,1 @@
+ALTER TABLE "streaming_platforms" ADD COLUMN "tmdb_id" integer;
