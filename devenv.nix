@@ -7,7 +7,7 @@ let
 in
 {
   # https://devenv.sh/basics/
-  env.GREET = "devenv";
+  # env.GREET = "devenv";
 
   # https://devenv.sh/packages/
   packages = [
@@ -31,9 +31,9 @@ in
   # services.postgres.enable = true;
 
   # https://devenv.sh/scripts/
-  scripts.hello.exec = ''
-    echo hello from $GREET
-  '';
+  # scripts.hello.exec = ''
+  #   echo hello from $GREET
+  # '';
 
   # https://devenv.sh/basics/
   enterShell = ''
@@ -54,10 +54,10 @@ in
   # };
 
   # https://devenv.sh/tests/
-  enterTest = ''
-    echo "Running tests"
-    git --version | grep --color=auto "${pkgs.git.version}"
-  '';
+  # enterTest = ''
+  #   echo "Running tests"
+  #   git --version | grep --color=auto "${pkgs.git.version}"
+  # '';
 
   # dotenv.enable = true;
   # dotenv.filename = ".env.local";
