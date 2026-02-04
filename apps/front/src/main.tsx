@@ -3,12 +3,11 @@ import { createRoot } from "react-dom/client";
 // import { PostHogProvider } from "posthog-js/react";
 import "./index.css";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
-
+import { setNavigateCallback } from "./lib/api";
 // Import the generated route tree
 // biome-ignore lint: Ts ignore needed
 // @ts-ignore: Next line is generated
-import { routeTree } from "./generated/routeTree.gen";
-import { setNavigateCallback } from "./lib/api";
+import { routeTree } from "./routeTree.gen";
 
 // Create a new router instance
 const router = createRouter({ routeTree });
