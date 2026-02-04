@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { GETMoviesWithCategory } from './getmovies-with-category';
+import type { GETMoviesWithPlatform } from './getmovies-with-platform';
 
 export type GETMoviesParams = {
 title?: string;
@@ -18,6 +19,7 @@ year?: number;
  */
 averageRating?: number;
 withCategory?: GETMoviesWithCategory;
+withPlatform?: GETMoviesWithPlatform;
 /**
  * @minimum 1
  */

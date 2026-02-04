@@ -1125,6 +1125,33 @@
                                     "updatedAt"
                                   ]
                                 }
+                              },
+                              "contentPlatforms": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "contentId": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "format": "uuid"
+                                    },
+                                    "platformId": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "format": "uuid"
+                                    },
+                                    "key": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    }
+                                  },
+                                  "required": [
+                                    "contentId",
+                                    "platformId",
+                                    "key"
+                                  ]
+                                }
                               }
                             },
                             "required": [
@@ -1768,6 +1795,18 @@
           },
           {
             "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            },
+            "required": false,
+            "name": "withPlatform",
+            "in": "query"
+          },
+          {
+            "schema": {
               "type": "integer",
               "minimum": 1,
               "default": 1
@@ -1931,6 +1970,69 @@
                                     "name",
                                     "slug",
                                     "description",
+                                    "createdAt"
+                                  ]
+                                }
+                              },
+                              "contentPlatforms": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "format": "uuid"
+                                    },
+                                    "name": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100
+                                    },
+                                    "slug": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100,
+                                      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                                    },
+                                    "logoUrl": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "format": "uri"
+                                    },
+                                    "baseUrl": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "format": "uri"
+                                    },
+                                    "isSupported": {
+                                      "type": "boolean",
+                                      "nullable": true,
+                                      "default": true
+                                    },
+                                    "createdAt": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "nullable": true,
+                                          "format": "date-time"
+                                        },
+                                        {
+                                          "type": "string",
+                                          "format": "date-time"
+                                        },
+                                        {
+                                          "nullable": true
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name",
+                                    "slug",
+                                    "logoUrl",
+                                    "baseUrl",
                                     "createdAt"
                                   ]
                                 }
@@ -2436,6 +2538,18 @@
             },
             "required": false,
             "name": "withCategory",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            },
+            "required": false,
+            "name": "withPlatform",
             "in": "query"
           },
           {
@@ -3768,6 +3882,18 @@
           },
           {
             "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            },
+            "required": false,
+            "name": "withPlatforms",
+            "in": "query"
+          },
+          {
+            "schema": {
               "type": "integer",
               "minimum": 1,
               "default": 1
@@ -3930,6 +4056,69 @@
                                     "name",
                                     "slug",
                                     "description",
+                                    "createdAt"
+                                  ]
+                                }
+                              },
+                              "contentPlatforms": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "format": "uuid"
+                                    },
+                                    "name": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100
+                                    },
+                                    "slug": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100,
+                                      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                                    },
+                                    "logoUrl": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "format": "uri"
+                                    },
+                                    "baseUrl": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "format": "uri"
+                                    },
+                                    "isSupported": {
+                                      "type": "boolean",
+                                      "nullable": true,
+                                      "default": true
+                                    },
+                                    "createdAt": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "nullable": true,
+                                          "format": "date-time"
+                                        },
+                                        {
+                                          "type": "string",
+                                          "format": "date-time"
+                                        },
+                                        {
+                                          "nullable": true
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name",
+                                    "slug",
+                                    "logoUrl",
+                                    "baseUrl",
                                     "createdAt"
                                   ]
                                 }
