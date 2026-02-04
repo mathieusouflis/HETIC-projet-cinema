@@ -2537,7 +2537,7 @@
               ]
             },
             "required": false,
-            "name": "withCategory",
+            "name": "withCategories",
             "in": "query"
           },
           {
@@ -2549,7 +2549,7 @@
               ]
             },
             "required": false,
-            "name": "withPlatform",
+            "name": "withPlatforms",
             "in": "query"
           },
           {

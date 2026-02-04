@@ -13,15 +13,15 @@ export class QueryMovieUseCase {
       limit: query.limit,
     });
 
-    const withCategory = query.withCategory === "true";
-    const withPlatform = query.withPlatform === "true";
+    const withCategories = query.withCategories === "true";
+    const withPlatforms = query.withPlatforms === "true";
 
     const movies = await this.movieRepository.listMovies(
       query.title,
       undefined,
       undefined,
-      withCategory,
-      withPlatform,
+      withCategories,
+      withPlatforms,
       {
         page,
         limit,
