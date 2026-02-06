@@ -5,6 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
+import type { GETSeriesWithCast } from './getseries-with-cast';
 import type { GETSeriesWithCategories } from './getseries-with-categories';
 import type { GETSeriesWithPlatforms } from './getseries-with-platforms';
 
@@ -20,6 +21,7 @@ year?: number;
 averageRating?: number;
 withCategories?: GETSeriesWithCategories;
 withPlatforms?: GETSeriesWithPlatforms;
+withCast?: GETSeriesWithCast;
 /**
  * @minimum 1
  */

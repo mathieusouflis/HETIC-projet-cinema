@@ -1,4 +1,4 @@
-import { and, eq, ilike, or, type SQL } from "drizzle-orm";
+import { and, eq, ilike, inArray, or, type SQL } from "drizzle-orm";
 import { db } from "../../../../database";
 import {
   type CreatePeopleProps,
@@ -55,6 +55,15 @@ export class PeoplesDrizzleRepository {
     }
 
     return new People(result);
+  }
+
+  async findByTmdbIds(tmdbIds: number[]) {
+    const response = await db
+      .select()
+      .from(peopleSchema)
+      .where(inArray(peopleSchema.tmdbId, tmdbIds));
+
+    return response.map((row) => new People(row));
   }
 
   /**

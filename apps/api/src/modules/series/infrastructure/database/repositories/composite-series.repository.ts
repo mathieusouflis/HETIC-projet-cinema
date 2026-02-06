@@ -34,17 +34,19 @@ export class CompositeSeriesRepository
     categories?: string[],
     withCategories?: boolean,
     withPlatforms?: boolean,
+    withCast?: boolean,
     options?: PagePaginationQuery
   ): Promise<{
     data: Serie[];
     total: number;
   }> {
-    return this.baseList(
+    return await this.baseList(
       title,
       country,
       categories,
       withCategories,
       withPlatforms,
+      withCast,
       options
     );
   }

@@ -15,6 +15,7 @@ export class QueryMovieUseCase {
 
     const withCategories = query.withCategories === "true";
     const withPlatforms = query.withPlatforms === "true";
+    const withCast = query.withCast === "true";
 
     const movies = await this.movieRepository.listMovies(
       query.title,
@@ -22,6 +23,7 @@ export class QueryMovieUseCase {
       undefined,
       withCategories,
       withPlatforms,
+      withCast,
       {
         page,
         limit,

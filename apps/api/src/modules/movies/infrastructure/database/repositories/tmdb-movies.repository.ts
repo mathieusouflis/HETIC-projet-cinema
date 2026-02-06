@@ -10,6 +10,7 @@ export type MovieTMDBGenre = {
 export type MovieTMDBRelations = {
   genres?: Array<MovieTMDBGenre>;
   providers?: Array<ProviderData>;
+  cast?: CastData[];
 };
 
 export type MovieWithRelations = CreateMovieProps & MovieTMDBRelations;
@@ -85,6 +86,10 @@ export interface TMDBMovieProviders {
   };
 }
 
+export interface TMDBMovieCast {
+  cast: CastData[];
+}
+
 type ProvidersList = {
   buy: Array<ProviderData>;
   flatrate: Array<ProviderData>;
@@ -96,6 +101,16 @@ export type ProviderData = {
   logo_path: string | null;
   provider_id: number;
   provider_name: string;
+};
+
+export type CastData = {
+  id: number;
+  known_for_department: string;
+  name: string;
+  original_name: string;
+  cast_id: number;
+  character: string;
+  order: number;
 };
 
 /**
@@ -127,6 +142,11 @@ export class TMDBMoviesRepository extends BaseTMDBRepository<
         `${this.detailEndpoint}/${id}/watch/providers`
       );
 
+      const credits = await this.tmdbService.request<TMDBMovieCast>(
+        "GET",
+        `${this.detailEndpoint}/${id}/credits`
+      );
+
       const trailerUrl = await this.getTrailerUrl(id);
 
       const movieProps: MovieWithRelations = {
@@ -151,6 +171,7 @@ export class TMDBMoviesRepository extends BaseTMDBRepository<
         // Store genres as metadata to be processed by the composite repository
         genres: result.genres,
         providers: providers.results.FR?.flatrate ?? [],
+        cast: credits.cast,
       };
 
       logger.info(
