@@ -54,6 +54,7 @@ export class ContentsRepository implements IContentRepository {
     categories?: string[],
     withCategory?: boolean,
     withPlatform?: boolean,
+    withCast?: boolean,
     options?: PagePaginationQuery
   ): Promise<{ data: Content[]; total: number }> {
     try {
@@ -66,6 +67,7 @@ export class ContentsRepository implements IContentRepository {
           categories,
           withCategory,
           withPlatform,
+          withCast,
           options
         );
         return result;
@@ -78,6 +80,7 @@ export class ContentsRepository implements IContentRepository {
           categories,
           withCategory,
           withPlatform,
+          withCast,
           options
         );
         return result;
@@ -89,6 +92,7 @@ export class ContentsRepository implements IContentRepository {
         categories,
         withCategory,
         withPlatform,
+        withCast,
         options
       );
 
@@ -98,6 +102,7 @@ export class ContentsRepository implements IContentRepository {
         categories,
         withCategory,
         withPlatform,
+        withCast,
         options
       );
 

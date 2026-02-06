@@ -1,5 +1,6 @@
 import { Entity } from "../../../../shared/domain/entity.js";
 import type { Category } from "../../../categories/domain/entities/category.entity.js";
+import type { People } from "../../../peoples/domain/entities/people.entity.js";
 import type { Platform } from "../../../platforms/domain/entities/platforms.entity.js";
 import type {
   ContentRow,
@@ -35,7 +36,7 @@ export interface ContentJSON {
  */
 export interface ContentRelations {
   contentCategories: Category[];
-  contentCredits: Category[]; //TEMP
+  contentCredits: People[]; //TEMP
   listItems: Category[]; //TEMP
   notifications: Category[]; //TEMP
   ratings: Category[]; //TEMP

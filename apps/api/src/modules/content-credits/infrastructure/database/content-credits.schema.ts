@@ -48,7 +48,7 @@ export type ContentCreditsRow = typeof contentCreditsSchema.$inferSelect;
 export type NewContentCreditsRow = typeof contentCreditsSchema.$inferInsert;
 
 export const contentCreditsRelationsSchema = relations(
-  contentCredits,
+  contentCreditsSchema,
   ({ one }) => ({
     content: one(content, {
       fields: [contentCredits.contentId],

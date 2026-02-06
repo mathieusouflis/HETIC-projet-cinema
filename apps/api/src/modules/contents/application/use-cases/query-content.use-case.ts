@@ -15,6 +15,7 @@ export class QueryContentUseCase {
 
     const withCategory = query.withCategory === "true";
     const withPlatform = query.withPlatform === "true";
+    const withCast = query.withCast === "true";
 
     const contents = await this.contentRepository.listContents(
       query.contentType,
@@ -23,6 +24,7 @@ export class QueryContentUseCase {
       undefined,
       withCategory,
       withPlatform,
+      withCast,
       {
         page,
         limit,

@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { GETContentsContentType } from './getcontents-content-type';
+import type { GETContentsWithCast } from './getcontents-with-cast';
 import type { GETContentsWithCategory } from './getcontents-with-category';
 import type { GETContentsWithPlatform } from './getcontents-with-platform';
 
@@ -22,6 +23,7 @@ year?: number;
 averageRating?: number;
 withCategory?: GETContentsWithCategory;
 withPlatform?: GETContentsWithPlatform;
+withCast?: GETContentsWithCast;
 /**
  * @minimum 1
  */
