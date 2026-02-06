@@ -1,5 +1,7 @@
 import { logger } from "@packages/logger";
 import { CategoryRepository } from "../../../modules/categories/infrastructure/database/repositories/category/category.repository";
+import type { CastData } from "../../../modules/movies/infrastructure/database/repositories/tmdb-movies.repository";
+import { PeoplesRepository } from "../../../modules/peoples/infrastructure/repositories/peoples.repository";
 import { PlatformsRepository } from "../../../modules/platforms/infrastructure/database/platforms.repository";
 import type { PagePaginationQuery } from "../../../shared/services/pagination";
 import type {
@@ -17,6 +19,7 @@ import {
 
 const categoryCache = new Map<number, string>();
 const providerCache = new Map<number, string>();
+const castCache = new Map<number, string>();
 
 export { CacheManager };
 
@@ -39,6 +42,7 @@ export abstract class BaseCompositeRepository<
   protected readonly drizzleRepository: TDrizzleRepository;
   protected readonly categoryRepository: CategoryRepository;
   protected readonly platformRepository: PlatformsRepository;
+  protected readonly peoplesRepository: PeoplesRepository;
   protected abstract readonly entityType: string;
 
   constructor(
@@ -49,6 +53,7 @@ export abstract class BaseCompositeRepository<
     this.drizzleRepository = drizzleRepository;
     this.categoryRepository = new CategoryRepository();
     this.platformRepository = new PlatformsRepository();
+    this.peoplesRepository = new PeoplesRepository();
   }
 
   protected async baseSearch(
@@ -56,6 +61,7 @@ export abstract class BaseCompositeRepository<
     options?: PagePaginationQuery & {
       withCategories?: boolean;
       withPlatforms?: boolean;
+      withCast?: boolean;
     }
   ): Promise<TEntity[]> {
     try {
@@ -80,6 +86,7 @@ export abstract class BaseCompositeRepository<
         {
           withCategories: options?.withCategories,
           withPlatforms: options?.withPlatforms,
+          withCast: options?.withCast,
         }
       );
       const existingTmdbIds = existingEntities
@@ -114,6 +121,12 @@ export abstract class BaseCompositeRepository<
         });
       }
 
+      if (!options?.withCast) {
+        allEntities.forEach((entity) => {
+          entity.removeRelations("contentCredits");
+        });
+      }
+
       return allEntities;
     } catch (error) {
       logger.error(`Error searching ${this.entityType}: ${error}`);
@@ -127,6 +140,7 @@ export abstract class BaseCompositeRepository<
     categories?: string[],
     withCategories?: boolean,
     withPlatforms?: boolean,
+    withCast?: boolean,
     options?: PagePaginationQuery
   ): Promise<{ data: TEntity[]; total: number }> {
     try {
@@ -164,6 +178,7 @@ export abstract class BaseCompositeRepository<
         {
           withCategories: withCategories,
           withPlatforms: withPlatforms,
+          withCast: withCast,
         }
       );
       logger.info(
@@ -208,6 +223,12 @@ export abstract class BaseCompositeRepository<
         });
       }
 
+      if (!withCast) {
+        data.forEach((entity) => {
+          entity.removeRelations("contentCredits");
+        });
+      }
+
       return { data, total };
     } catch (error) {
       logger.error(`Error listing ${this.entityType}: ${error}`);
@@ -220,9 +241,10 @@ export abstract class BaseCompositeRepository<
   ): Promise<TEntity[]> {
     const allGenresMap = new Map<number, TMDBGenre>();
     const allProvidersMap = new Map<number, ProviderData>();
+    const allCastMap = new Map<number, CastData>();
 
     for (const props of entityProps) {
-      const { genres, providers } = props;
+      const { genres, providers, cast } = props;
 
       if (providers) {
         for (const provider of providers) {
@@ -239,6 +261,14 @@ export abstract class BaseCompositeRepository<
           }
         }
       }
+
+      if (cast) {
+        for (const credit of cast) {
+          if (!allCastMap.has(credit.id)) {
+            allCastMap.set(credit.id, credit);
+          }
+        }
+      }
     }
 
     const allGenres = Array.from(allGenresMap.values());
@@ -251,11 +281,14 @@ export abstract class BaseCompositeRepository<
       await this.ensureProvidersExist(allProviders);
     }
 
-    const createdEntities: TEntity[] = [];
+    const allCast = Array.from(allCastMap.values());
+    if (allCast.length > 0) {
+      await this.ensureCastsExist(allCast);
+    }
 
     for (const entityProp of entityProps) {
       try {
-        const { genres, providers, ...entityData } = entityProp;
+        const { genres, providers, cast, ...entityData } = entityProp;
 
         const entity = await this.drizzleRepository.create(
           entityData as TCreateProps
@@ -289,15 +322,40 @@ export abstract class BaseCompositeRepository<
           }
         }
 
-        createdEntities.push(entity);
+        if (cast && cast.length > 0) {
+          const newCastList: (CastData & {
+            dbId: string;
+          })[] = cast
+            .map((credit) => {
+              const dbId = castCache.get(credit.cast_id);
+              if (!dbId) {
+                return undefined;
+              }
+
+              return {
+                ...credit,
+                dbId,
+              };
+            })
+            .filter((c) => c !== undefined);
+
+          await this.drizzleRepository.linkCasts(entity.id, newCastList);
+        }
       } catch (error) {
         logger.error(
           `Error creating ${this.entityType} with TMDB ID ${entityProp.tmdbId}: ${error}`
         );
       }
     }
+    const allTmdbIds = entityProps
+      .map((prop) => prop.tmdbId)
+      .filter((el) => el !== undefined && el !== null);
 
-    return createdEntities;
+    return await this.drizzleRepository.getByTmdbIds(allTmdbIds, {
+      withCast: true,
+      withCategories: true,
+      withPlatforms: true,
+    });
   }
 
   private async ensureCategoriesExist(genres: Array<TMDBGenre>): Promise<void> {
@@ -429,6 +487,58 @@ export abstract class BaseCompositeRepository<
         logger.error(
           `Error creating provider ${provider.provider_name}: ${error}`
         );
+      }
+    }
+  }
+
+  private async ensureCastsExist(casts: CastData[]): Promise<void> {
+    const uncachedCasts = casts.filter((cast) => !castCache.has(cast.cast_id));
+
+    if (uncachedCasts.length === 0) {
+      return;
+    }
+
+    const castsId = uncachedCasts.map((cast) => cast.cast_id);
+    const existingCasts = await this.peoplesRepository.getByTMDBIds(castsId);
+
+    for (const cast of existingCasts) {
+      const jsonCast = cast.toJSON();
+      if (jsonCast.tmdbId !== null) {
+        castCache.set(jsonCast.tmdbId, jsonCast.id);
+      }
+    }
+
+    const existingTmdbIds = new Set(
+      existingCasts
+        .map((cast) => cast.toJSON().tmdbId)
+        .filter((id): id is number => id !== null)
+    );
+
+    const missingCasts = uncachedCasts.filter(
+      (cast) => !existingTmdbIds.has(cast.cast_id)
+    );
+
+    if (missingCasts.length === 0) {
+      return;
+    }
+
+    for (const cast of missingCasts) {
+      if (castCache.has(cast.cast_id)) {
+        continue;
+      }
+
+      try {
+        // const slug = CacheManager.generateSlug(cast.cast_id);
+
+        const newCast = await this.peoplesRepository.create({
+          name: cast.original_name,
+          tmdbId: cast.cast_id,
+        });
+
+        castCache.set(cast.cast_id, newCast.toJSON().id);
+        logger.info(`Created cast ${newCast.toJSON().name}`);
+      } catch (error) {
+        logger.error(`Error creating provider ${cast.original_name}: ${error}`);
       }
     }
   }

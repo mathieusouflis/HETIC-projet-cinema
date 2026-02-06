@@ -1,12 +1,21 @@
 import { and, count, eq, inArray, type SQL } from "drizzle-orm";
 import { db } from "../../../database";
-import { contentCategories, contentPlatforms } from "../../../database/schema";
+import {
+  contentCategories,
+  contentCredits,
+  contentPlatforms,
+} from "../../../database/schema";
 import { Category } from "../../../modules/categories/domain/entities/category.entity";
+import type { NewContentCreditsRow } from "../../../modules/content-credits/infrastructure/database/content-credits.schema";
 import {
   contentSchema,
   type NewContentRow,
 } from "../../../modules/contents/infrastructure/database/schemas/contents.schema";
-import type { ProviderData } from "../../../modules/movies/infrastructure/database/repositories/tmdb-movies.repository";
+import type {
+  CastData,
+  ProviderData,
+} from "../../../modules/movies/infrastructure/database/repositories/tmdb-movies.repository";
+import { People } from "../../../modules/peoples/domain/entities/people.entity";
 import { Platform } from "../../../modules/platforms/domain/entities/platforms.entity";
 import { ServerError } from "../../errors/server-error";
 import type { PagePaginationQuery } from "../../services/pagination";
@@ -56,7 +65,11 @@ export abstract class BaseDrizzleRepository<
    */
   async getByTmdbIds(
     tmdbIds: number[],
-    options?: { withCategories?: boolean; withPlatforms?: boolean }
+    options?: {
+      withCategories?: boolean;
+      withPlatforms?: boolean;
+      withCast?: boolean;
+    }
   ): Promise<TEntity[]> {
     try {
       if (tmdbIds.length === 0) {
@@ -79,6 +92,11 @@ export abstract class BaseDrizzleRepository<
               platform: true,
             },
           },
+          contentCredits: {
+            with: {
+              person: true,
+            },
+          },
         },
       });
 
@@ -94,6 +112,13 @@ export abstract class BaseDrizzleRepository<
           entity.setRelations(
             "contentPlatforms",
             row.contentPlatforms.map((cp) => new Platform(cp.platform))
+          );
+        }
+
+        if (row.contentCredits && options?.withCast) {
+          entity.setRelations(
+            "contentCredits",
+            row.contentCredits.map((cc) => new People(cc.person))
           );
         }
         return entity;
@@ -389,6 +414,34 @@ export abstract class BaseDrizzleRepository<
     } catch (error) {
       throw new ServerError(
         `Failed to link providers to ${this.entityName} ${contentId}: ${error instanceof Error ? error.message : error}`
+      );
+    }
+  }
+
+  /**
+   * Link casts to content
+   */
+  async linkCasts(
+    contentId: string,
+    casts: (CastData & { dbId: string })[]
+  ): Promise<void> {
+    try {
+      if (casts.length === 0) {
+        return;
+      }
+
+      const values: NewContentCreditsRow[] = casts.map((cast) => ({
+        contentId,
+        personId: cast.dbId,
+        role: cast.known_for_department,
+        characterName: cast.character,
+        orderIndex: cast.order,
+      }));
+
+      await db.insert(contentCredits).values(values).onConflictDoNothing();
+    } catch (error) {
+      throw new ServerError(
+        `Failed to link credits to ${this.entityName} ${contentId}: ${error instanceof Error ? error.message : error}`
       );
     }
   }

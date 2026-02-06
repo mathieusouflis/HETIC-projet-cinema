@@ -34,17 +34,19 @@ export class CompositeMoviesRepository
     categories?: string[],
     withCategories?: boolean,
     withPlatforms?: boolean,
+    withCast?: boolean,
     options?: PagePaginationQuery
   ): Promise<{
     data: Movie[];
     total: number;
   }> {
-    return this.baseList(
+    return await this.baseList(
       title,
       country,
       categories,
       withCategories,
       withPlatforms,
+      withCast,
       options
     );
   }
@@ -72,7 +74,7 @@ export class CompositeMoviesRepository
       withPlatforms?: boolean;
     }
   ): Promise<Movie[]> {
-    return this.baseSearch(query, options);
+    return await this.baseSearch(query, options);
   }
 
   async createMovie(content: CreateMovieProps): Promise<Movie> {

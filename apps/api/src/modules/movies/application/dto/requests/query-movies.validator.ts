@@ -9,6 +9,7 @@ export const queryMovieRequestSchema = z.object({
   averageRating: z.number().min(0).max(10).optional(),
   withCategories: z.enum(["true", "false"]).optional(),
   withPlatforms: z.enum(["true", "false"]).optional(),
+  withCast: z.enum(["true", "false"]).optional(),
   ...optionalFlexiblePaginationQuerySchema.shape,
 });
 

@@ -165,4 +165,8 @@ export class PeoplesRepository implements IPeoplesRepository {
   }): Promise<number> {
     return await this.drizzleAdapter.getCount(params);
   }
+
+  async getByTMDBIds(tmdbIds: number[]) {
+    return await this.drizzleAdapter.findByTmdbIds(tmdbIds);
+  }
 }

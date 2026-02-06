@@ -10,6 +10,7 @@ export const queryContentRequestSchema = z.object({
   averageRating: z.number().min(0).max(10).optional(),
   withCategory: z.enum(["true", "false"]).optional(),
   withPlatform: z.enum(["true", "false"]).optional(),
+  withCast: z.enum(["true", "false"]).optional(),
   ...optionalFlexiblePaginationQuerySchema.shape,
 });
 
