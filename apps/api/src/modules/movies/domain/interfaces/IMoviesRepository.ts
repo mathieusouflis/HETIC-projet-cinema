@@ -23,6 +23,7 @@ export interface IMoviesRepository {
     options?: PagePaginationQuery & {
       withCategories?: boolean;
       withPlatforms?: boolean;
+      withCast?: boolean;
     }
   ) => Promise<Movie[]>;
 }

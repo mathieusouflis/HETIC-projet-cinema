@@ -72,9 +72,10 @@ export class CompositeSeriesRepository
     options?: PagePaginationQuery & {
       withCategories?: boolean;
       withPlatforms?: boolean;
+      withCast?: boolean;
     }
   ): Promise<Serie[]> {
-    return this.baseSearch(query, options);
+    return await this.baseSearch(query, options);
   }
 
   async createSerie(content: CreateSerieProps): Promise<Serie> {
