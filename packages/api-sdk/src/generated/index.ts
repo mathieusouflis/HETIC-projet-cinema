@@ -22,8 +22,6 @@ import type {
   GETContents200,
   GETContentsId200,
   GETContentsParams,
-  GETContentsSearch200,
-  GETContentsSearchParams,
   GETMovies200,
   GETMoviesId200,
   GETMoviesIdParams,
@@ -221,20 +219,6 @@ export const gETContents = (
  ): Promise<AxiosResponse<GETContents200>> => {
     return axios.get(
       `/contents/`,{
-    ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
-
-/**
- * Search contents with pagination
- * @summary Search contents
- */
-export const gETContentsSearch = (
-    params: GETContentsSearchParams, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<GETContentsSearch200>> => {
-    return axios.get(
-      `/contents/search`,{
     ...options,
         params: {...params, ...options?.params},}
     );
@@ -687,7 +671,6 @@ export type GETCategoriesIdResult = AxiosResponse<GETCategoriesId200>
 export type PATCHCategoriesIdResult = AxiosResponse<PATCHCategoriesId200>
 export type DELETECategoriesIdResult = AxiosResponse<void>
 export type GETContentsResult = AxiosResponse<GETContents200>
-export type GETContentsSearchResult = AxiosResponse<GETContentsSearch200>
 export type GETContentsIdResult = AxiosResponse<GETContentsId200>
 export type GETMoviesResult = AxiosResponse<GETMovies200>
 export type GETMoviesIdResult = AxiosResponse<GETMoviesId200>

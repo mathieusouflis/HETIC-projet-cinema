@@ -72,6 +72,7 @@ export class CompositeMoviesRepository
     options?: PagePaginationQuery & {
       withCategories?: boolean;
       withPlatforms?: boolean;
+      withCast?: boolean;
     }
   ): Promise<Movie[]> {
     return await this.baseSearch(query, options);
