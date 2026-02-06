@@ -24,6 +24,10 @@ import {
   categorySchema,
 } from "../modules/categories/infrastructure/database/schemas/categories.schema";
 import {
+  contentCreditsRelationsSchema,
+  contentCreditsSchema,
+} from "../modules/content-credits/infrastructure/database/content-credits.schema";
+import {
   contentPlatformsRelationsSchema,
   contentPlatformsSchema,
 } from "../modules/content-platforms/infrastructure/database/content-platforms.schema";
@@ -107,39 +111,7 @@ export const content = contentSchema;
 
 export const categories = categorySchema;
 
-export const contentCredits = pgTable(
-  "content_credits",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    contentId: uuid("content_id").notNull(),
-    personId: uuid("person_id").notNull(),
-    role: varchar({ length: 50 }).notNull(),
-    characterName: varchar("character_name", { length: 255 }),
-    orderIndex: integer("order_index"),
-  },
-  (table) => [
-    index("idx_credits_content").using(
-      "btree",
-      table.contentId.asc().nullsLast()
-    ),
-    index("idx_credits_person").using(
-      "btree",
-      table.personId.asc().nullsLast(),
-      table.role.asc().nullsLast()
-    ),
-    foreignKey({
-      columns: [table.contentId],
-      foreignColumns: [content.id],
-      name: "content_credits_content_id_fkey",
-    }).onDelete("cascade"),
-    foreignKey({
-      columns: [table.personId],
-      foreignColumns: [people.id],
-      name: "content_credits_person_id_fkey",
-    }).onDelete("cascade"),
-    unique("unique_credit").on(table.role, table.personId, table.contentId),
-  ]
-);
+export const contentCredits = contentCreditsSchema;
 
 export const people = peopleSchema;
 
@@ -860,16 +832,7 @@ export const usersRelations = usersRelationSchema;
 
 export const friendshipsRelations = friendshipsRelationsSchema;
 
-export const contentCreditsRelations = relations(contentCredits, ({ one }) => ({
-  content: one(content, {
-    fields: [contentCredits.contentId],
-    references: [content.id],
-  }),
-  person: one(people, {
-    fields: [contentCredits.personId],
-    references: [people.id],
-  }),
-}));
+export const contentCreditsRelations = contentCreditsRelationsSchema;
 
 export const contentRelations = contentRelationsSchema;
 
