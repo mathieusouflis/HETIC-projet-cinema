@@ -200,7 +200,9 @@ export abstract class BaseCompositeRepository<
           withPlatforms: withPlatforms,
           withCast: withCast,
           withSeasons: this.drizzleRepository.contentType && withSeasons,
-          withEpisodes: this.drizzleRepository.contentType && withEpisodes,
+          withEpisodes: title
+            ? this.drizzleRepository.contentType && withEpisodes
+            : false,
         }
       );
       logger.info(
