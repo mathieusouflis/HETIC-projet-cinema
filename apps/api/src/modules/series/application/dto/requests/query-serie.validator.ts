@@ -10,6 +10,10 @@ export const querySerieRequestSchema = z.object({
   withCategories: z.enum(["true", "false"]).optional(),
   withPlatforms: z.enum(["true", "false"]).optional(),
   withCast: z.enum(["true", "false"]).optional(),
+  withSeasons: z.enum(["true", "false"]).optional(),
+  withEpisodes: z.enum(["true", "false"]).optional(),
+  seasonNumber: z.string().uuid().optional(),
+  episodeNumber: z.string().uuid().optional(),
   ...optionalFlexiblePaginationQuerySchema.shape,
 });
 

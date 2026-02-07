@@ -2,13 +2,13 @@ import { logger } from "@packages/logger";
 import { BaseTMDBRepository } from "../../../../../shared/infrastructure/repositories/base-tmdb-repository";
 import type { CreateMovieProps } from "../../../domain/entities/movie.entity";
 
-export type MovieTMDBGenre = {
+export type TMDBGenre = {
   id: number;
   name: string;
 };
 
 export type MovieTMDBRelations = {
-  genres?: Array<MovieTMDBGenre>;
+  genres?: Array<TMDBGenre>;
   providers?: Array<TMDBProvider>;
   cast?: TMDBPeople[];
 };

@@ -1,8 +1,12 @@
 import { logger } from "@packages/logger";
 import { CategoryRepository } from "../../../modules/categories/infrastructure/database/repositories/category/category.repository";
+import { EpisodesDatabaseRepository } from "../../../modules/episodes/infrastructure/database/episodes.database.repository";
+import type { TMDBEpisode } from "../../../modules/episodes/infrastructure/tmdb/episodes.tmdb.repository";
 import type { TMDBPeople } from "../../../modules/movies/infrastructure/database/repositories/tmdb-movies.repository";
 import { PeoplesRepository } from "../../../modules/peoples/infrastructure/repositories/peoples.repository";
 import { PlatformsRepository } from "../../../modules/platforms/infrastructure/database/platforms.repository";
+import { SeasonsDatabaseRepository } from "../../../modules/seasons/infrastructure/database/seasons.database.repository";
+import type { TMDBSeason } from "../../../modules/seasons/infrastructure/tmdb/seasons.tmdb.repository";
 import type { PagePaginationQuery } from "../../../shared/services/pagination";
 import type {
   BaseContentProps,
@@ -20,6 +24,8 @@ import {
 const categoryCache = new Map<number, string>();
 const providerCache = new Map<number, string>();
 const castCache = new Map<number, string>();
+const seasonCache = new Map<number, string>();
+const episodeCache = new Map<number, string>();
 
 export { CacheManager };
 
@@ -43,6 +49,8 @@ export abstract class BaseCompositeRepository<
   protected readonly categoryRepository: CategoryRepository;
   protected readonly platformRepository: PlatformsRepository;
   protected readonly peoplesRepository: PeoplesRepository;
+  protected readonly seasonsRepository: SeasonsDatabaseRepository;
+  protected readonly episodesRepository: EpisodesDatabaseRepository;
   protected abstract readonly entityType: string;
 
   constructor(
@@ -54,6 +62,8 @@ export abstract class BaseCompositeRepository<
     this.categoryRepository = new CategoryRepository();
     this.platformRepository = new PlatformsRepository();
     this.peoplesRepository = new PeoplesRepository();
+    this.seasonsRepository = new SeasonsDatabaseRepository();
+    this.episodesRepository = new EpisodesDatabaseRepository();
   }
 
   protected async baseSearch(
@@ -62,6 +72,8 @@ export abstract class BaseCompositeRepository<
       withCategories?: boolean;
       withPlatforms?: boolean;
       withCast?: boolean;
+      withSeasons?: boolean;
+      withEpisodes?: boolean;
     }
   ): Promise<TEntity[]> {
     try {
@@ -127,6 +139,12 @@ export abstract class BaseCompositeRepository<
         });
       }
 
+      if (!options?.withSeasons) {
+        allEntities.forEach((entity) => {
+          entity.removeRelations("seasons");
+        });
+      }
+
       return allEntities;
     } catch (error) {
       logger.error(`Error searching ${this.entityType}: ${error}`);
@@ -141,6 +159,8 @@ export abstract class BaseCompositeRepository<
     withCategories?: boolean,
     withPlatforms?: boolean,
     withCast?: boolean,
+    withSeasons?: boolean,
+    withEpisodes?: boolean,
     options?: PagePaginationQuery
   ): Promise<{ data: TEntity[]; total: number }> {
     try {
@@ -179,6 +199,8 @@ export abstract class BaseCompositeRepository<
           withCategories: withCategories,
           withPlatforms: withPlatforms,
           withCast: withCast,
+          withSeasons: this.drizzleRepository.contentType && withSeasons,
+          withEpisodes: this.drizzleRepository.contentType && withEpisodes,
         }
       );
       logger.info(
@@ -198,6 +220,7 @@ export abstract class BaseCompositeRepository<
         logger.info(
           `Fetching ${missingTmdbIds.length} missing ${this.entityType} from TMDB`
         );
+
         const entityDetails =
           await this.tmdbRepository.getMultipleDetails(missingTmdbIds);
         newlyCreatedEntities =
@@ -226,6 +249,12 @@ export abstract class BaseCompositeRepository<
       if (!withCast) {
         data.forEach((entity) => {
           entity.removeRelations("contentCredits");
+        });
+      }
+
+      if (!withSeasons) {
+        data.forEach((entity) => {
+          entity.removeRelations("seasons");
         });
       }
 
@@ -288,7 +317,7 @@ export abstract class BaseCompositeRepository<
 
     for (const entityProp of entityProps) {
       try {
-        const { genres, providers, cast, ...entityData } = entityProp;
+        const { genres, providers, cast, seasons, ...entityData } = entityProp;
 
         const entity = await this.drizzleRepository.create(
           entityData as TCreateProps
@@ -341,12 +370,17 @@ export abstract class BaseCompositeRepository<
 
           await this.drizzleRepository.linkCasts(entity.id, newCastList);
         }
+
+        if (seasons && seasons.length > 0) {
+          await this.ensureSeasonsExist(seasons, entity.id);
+        }
       } catch (error) {
         logger.error(
           `Error creating ${this.entityType} with TMDB ID ${entityProp.tmdbId}: ${error}`
         );
       }
     }
+
     const allTmdbIds = entityProps
       .map((prop) => prop.tmdbId)
       .filter((el) => el !== undefined && el !== null);
@@ -355,6 +389,8 @@ export abstract class BaseCompositeRepository<
       withCast: true,
       withCategories: true,
       withPlatforms: true,
+      withEpisodes: true,
+      withSeasons: true,
     });
   }
 
@@ -539,6 +575,139 @@ export abstract class BaseCompositeRepository<
         logger.info(`Created cast ${newCast.toJSON().name}`);
       } catch (error) {
         logger.error(`Error creating provider ${cast.original_name}: ${error}`);
+      }
+    }
+  }
+
+  private async ensureSeasonsExist(
+    seasons: TMDBSeason[],
+    entityId: string
+  ): Promise<void> {
+    if (this.drizzleRepository.contentType !== "serie") {
+      return;
+    }
+
+    const uncachedSeasons = seasons.filter(
+      (season) => !seasonCache.has(season.id)
+    );
+
+    if (uncachedSeasons.length === 0) {
+      return;
+    }
+
+    const seasonsId = uncachedSeasons.map((season) => season.id);
+    const existingSeasons =
+      await this.peoplesRepository.getByTMDBIds(seasonsId);
+
+    for (const season of existingSeasons) {
+      const jsonSeason = season.toJSON();
+      if (jsonSeason.tmdbId !== null) {
+        seasonCache.set(jsonSeason.tmdbId, jsonSeason.id);
+      }
+    }
+
+    const existingTmdbIds = new Set(
+      existingSeasons
+        .map((season) => season.toJSON().tmdbId)
+        .filter((id): id is number => id !== null)
+    );
+
+    const missingSeasons = uncachedSeasons.filter(
+      (season) => !existingTmdbIds.has(season.id)
+    );
+
+    if (missingSeasons.length === 0) {
+      return;
+    }
+
+    for (const season of missingSeasons) {
+      if (seasonCache.has(season.id)) {
+        continue;
+      }
+
+      try {
+        const newSeason = await this.seasonsRepository.createSeason({
+          name: season.name,
+          seasonNumber: season.season_number,
+          seriesId: entityId,
+          airDate: season.air_date,
+          episodeCount: season.episodes.length,
+          overview: season.overview,
+          posterUrl: season.poster_path,
+        });
+
+        seasonCache.set(season.id, newSeason.toJSON().id);
+        logger.info(`Created season ${newSeason.toJSON().name}`);
+
+        await this.ensureEpisodesExist(season.episodes, newSeason.id);
+      } catch (error) {
+        logger.error(`Error creating season ${season.id}: ${error}`);
+      }
+    }
+  }
+
+  private async ensureEpisodesExist(
+    episodes: TMDBEpisode[],
+    seasonId: string
+  ): Promise<void> {
+    if (this.drizzleRepository.contentType !== "serie") {
+      return;
+    }
+
+    const uncachedEpisodes = episodes.filter(
+      (episode) => !episodeCache.has(episode.id)
+    );
+
+    if (uncachedEpisodes.length === 0) {
+      return;
+    }
+
+    const episodesId = uncachedEpisodes.map((episode) => episode.id);
+    const existingEpisodes =
+      await this.peoplesRepository.getByTMDBIds(episodesId);
+
+    for (const episode of existingEpisodes) {
+      const jsonEpisode = episode.toJSON();
+      if (jsonEpisode.tmdbId !== null) {
+        episodeCache.set(jsonEpisode.tmdbId, jsonEpisode.id);
+      }
+    }
+
+    const existingTmdbIds = new Set(
+      existingEpisodes
+        .map((episode) => episode.toJSON().tmdbId)
+        .filter((id): id is number => id !== null)
+    );
+
+    const missingEpisodes = uncachedEpisodes.filter(
+      (episode) => !existingTmdbIds.has(episode.id)
+    );
+
+    if (missingEpisodes.length === 0) {
+      return;
+    }
+
+    for (const episode of missingEpisodes) {
+      if (episodeCache.has(episode.id)) {
+        continue;
+      }
+
+      try {
+        const newEpisode = await this.episodesRepository.createEpisode({
+          name: episode.name,
+          seasonId: seasonId,
+          episodeNumber: episode.episode_number,
+          overview: episode.overview,
+          airDate: episode.air_date,
+          durationMinutes: episode.runtime,
+          stillUrl: episode.still_path,
+          tmdbId: episode.id,
+        });
+
+        episodeCache.set(episode.id, newEpisode.toJSON().id);
+        logger.info(`Created Episode ${newEpisode.toJSON().name}`);
+      } catch (error) {
+        logger.error(`Error creating episode ${episode.id}: ${error}`);
       }
     }
   }

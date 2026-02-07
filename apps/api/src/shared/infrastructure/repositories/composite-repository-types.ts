@@ -3,6 +3,7 @@
  */
 
 import type { TMDBPeople } from "../../../modules/movies/infrastructure/database/repositories/tmdb-movies.repository";
+import type { TMDBSeason } from "../../../modules/seasons/infrastructure/tmdb/seasons.tmdb.repository";
 
 /**
  * TMDB Genre type (shared between movies and series)
@@ -29,6 +30,7 @@ export type TMDBRelations = {
   genres?: Array<TMDBGenre>;
   providers?: Array<ProviderData>;
   cast?: Array<TMDBPeople>;
+  seasons?: Array<TMDBSeason>;
 };
 
 /**

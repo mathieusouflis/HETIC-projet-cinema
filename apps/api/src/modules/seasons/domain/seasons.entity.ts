@@ -1,8 +1,5 @@
 import { Entity } from "../../../shared/domain/entity";
-import type {
-  Content,
-  ContentRelations,
-} from "../../contents/domain/entities/content.entity";
+import type { Content } from "../../contents/domain/entities/content.entity";
 import type { Episode } from "../../episodes/domain/episode.entity";
 import type { Watchparty } from "../../watchparty";
 import type {
@@ -19,7 +16,7 @@ export interface SeasonsRelations {
 export class Season extends Entity<
   SeasonRow,
   typeof seasonsRelationsSchema,
-  ContentRelations
+  SeasonsRelations
 > {
   public readonly id: string;
   public readonly seriesId: string;
@@ -29,6 +26,7 @@ export class Season extends Entity<
   public readonly overview: string | null;
   public readonly posterUrl: string | null;
   public readonly airDate: string | null;
+  public readonly tmdbId: number | null;
 
   constructor(props: SeasonRow) {
     super();
@@ -40,6 +38,7 @@ export class Season extends Entity<
     this.overview = props.overview;
     this.posterUrl = props.posterUrl;
     this.airDate = props.airDate;
+    this.tmdbId = props.tmdbId;
   }
 
   public hasPoster(): boolean {
@@ -59,6 +58,7 @@ export class Season extends Entity<
       overview: this.overview ?? null,
       posterUrl: this.posterUrl ?? null,
       airDate: this.airDate ?? null,
+      tmdbId: this.tmdbId ?? null,
     };
   }
 }

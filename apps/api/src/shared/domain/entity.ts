@@ -87,6 +87,21 @@ function isJSONSerializable(value: unknown): value is JSONSerializable {
 }
 
 /**
+ * Type guard to check if a value is an Entity with relations support
+ */
+function isEntityWithRelations(
+  value: unknown
+): value is Entity<unknown, Relations, RelationsMap> {
+  return (
+    value !== null &&
+    typeof value === "object" &&
+    "toJSONWithRelations" in value &&
+    typeof (value as Entity<unknown, Relations, RelationsMap>)
+      .toJSONWithRelations === "function"
+  );
+}
+
+/**
  * Base Entity class that provides relation management capabilities for domain entities.
  * This abstract class manages relationships between entities using a type-safe approach,
  * ensuring that relations are properly typed and can be serialized to JSON.
@@ -394,14 +409,17 @@ export abstract class Entity<
 
   /**
    * Converts a single relation entity to its JSON representation.
-   * Handles both entities with toJSON methods and plain objects.
+   * If the entity is also an Entity with relations, recursively includes its relations.
    *
    * @param entity - The entity to convert
-   * @returns The JSON representation of the entity
+   * @returns The JSON representation of the entity (including nested relations if applicable)
    */
   protected entityToJSON<E extends JSONSerializable>(
     entity: E
   ): ReturnType<E["toJSON"]> {
+    if (isEntityWithRelations(entity)) {
+      return entity.toJSONWithRelations() as ReturnType<E["toJSON"]>;
+    }
     if (isJSONSerializable(entity)) {
       return entity.toJSON() as ReturnType<E["toJSON"]>;
     }

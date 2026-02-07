@@ -55,6 +55,8 @@ export class ContentsRepository implements IContentRepository {
     withCategory?: boolean,
     withPlatform?: boolean,
     withCast?: boolean,
+    withSeason?: boolean,
+    withEpisode?: boolean,
     options?: PagePaginationQuery
   ): Promise<{ data: Content[]; total: number }> {
     try {
@@ -81,6 +83,8 @@ export class ContentsRepository implements IContentRepository {
           withCategory,
           withPlatform,
           withCast,
+          withSeason,
+          withEpisode,
           options
         );
         return result;
@@ -103,6 +107,8 @@ export class ContentsRepository implements IContentRepository {
         withCategory,
         withPlatform,
         withCast,
+        withSeason,
+        withEpisode,
         options
       );
 

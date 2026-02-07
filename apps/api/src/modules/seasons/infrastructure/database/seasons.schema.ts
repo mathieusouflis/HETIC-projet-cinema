@@ -23,6 +23,7 @@ export const seasonsSchema = pgTable(
     overview: text(),
     posterUrl: text("poster_url"),
     airDate: date("air_date"),
+    tmdbId: integer("tmdb_id"),
     episodeCount: integer("episode_count").default(0),
   },
   (table) => [

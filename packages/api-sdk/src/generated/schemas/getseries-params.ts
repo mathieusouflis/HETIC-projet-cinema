@@ -7,7 +7,9 @@
  */
 import type { GETSeriesWithCast } from './getseries-with-cast';
 import type { GETSeriesWithCategories } from './getseries-with-categories';
+import type { GETSeriesWithEpisodes } from './getseries-with-episodes';
 import type { GETSeriesWithPlatforms } from './getseries-with-platforms';
+import type { GETSeriesWithSeasons } from './getseries-with-seasons';
 
 export type GETSeriesParams = {
 title?: string;
@@ -22,6 +24,10 @@ averageRating?: number;
 withCategories?: GETSeriesWithCategories;
 withPlatforms?: GETSeriesWithPlatforms;
 withCast?: GETSeriesWithCast;
+withSeasons?: GETSeriesWithSeasons;
+withEpisodes?: GETSeriesWithEpisodes;
+seasonNumber?: string;
+episodeNumber?: string;
 /**
  * @minimum 1
  */

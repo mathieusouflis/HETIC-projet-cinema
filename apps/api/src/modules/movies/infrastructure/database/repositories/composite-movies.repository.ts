@@ -47,6 +47,8 @@ export class CompositeMoviesRepository
       withCategories,
       withPlatforms,
       withCast,
+      false,
+      false,
       options
     );
   }

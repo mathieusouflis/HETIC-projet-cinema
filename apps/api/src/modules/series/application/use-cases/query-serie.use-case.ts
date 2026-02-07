@@ -16,6 +16,8 @@ export class QuerySerieUseCase {
     const withCategories = query.withCategories === "true";
     const withPlatforms = query.withPlatforms === "true";
     const withCast = query.withCast === "true";
+    const withSeasons = query.withSeasons === "true";
+    const withEpisodes = query.withEpisodes === "true";
 
     const series = await this.serieRepository.listSeries(
       query.title,
@@ -24,6 +26,8 @@ export class QuerySerieUseCase {
       withCategories,
       withPlatforms,
       withCast,
+      withSeasons,
+      withEpisodes,
       {
         page,
         limit,

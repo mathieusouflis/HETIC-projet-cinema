@@ -35,6 +35,8 @@ export class CompositeSeriesRepository
     withCategories?: boolean,
     withPlatforms?: boolean,
     withCast?: boolean,
+    withSeasons?: boolean,
+    withEpisodes?: boolean,
     options?: PagePaginationQuery
   ): Promise<{
     data: Serie[];
@@ -47,6 +49,8 @@ export class CompositeSeriesRepository
       withCategories,
       withPlatforms,
       withCast,
+      withSeasons,
+      withEpisodes,
       options
     );
   }
