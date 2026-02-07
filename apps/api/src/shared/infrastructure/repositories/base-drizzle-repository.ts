@@ -12,8 +12,8 @@ import {
   type NewContentRow,
 } from "../../../modules/contents/infrastructure/database/schemas/contents.schema";
 import type {
-  ProviderData,
   TMDBPeople,
+  TMDBProvider,
 } from "../../../modules/movies/infrastructure/database/repositories/tmdb-movies.repository";
 import { People } from "../../../modules/peoples/domain/entities/people.entity";
 import { Platform } from "../../../modules/platforms/domain/entities/platforms.entity";
@@ -26,7 +26,7 @@ import type { PagePaginationQuery } from "../../services/pagination";
 export type BaseContentProps = NewContentRow & {
   type: "movie" | "serie";
   genres?: Array<{ id: number; name: string }>;
-  providers?: ProviderData[];
+  providers?: TMDBProvider[];
 };
 
 /**
