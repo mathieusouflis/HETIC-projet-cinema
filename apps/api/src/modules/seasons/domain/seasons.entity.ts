@@ -3,6 +3,7 @@ import type {
   Content,
   ContentRelations,
 } from "../../contents/domain/entities/content.entity";
+import type { Episode } from "../../episodes/domain/episode.entity";
 import type { Watchparty } from "../../watchparty";
 import type {
   SeasonRow,
@@ -11,7 +12,7 @@ import type {
 
 export interface SeasonsRelations {
   content: Content;
-  episodes: Content[];
+  episodes: Episode[];
   watchparties: Watchparty;
 }
 
