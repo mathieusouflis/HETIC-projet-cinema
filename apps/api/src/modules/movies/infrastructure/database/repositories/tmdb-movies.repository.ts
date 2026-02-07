@@ -10,7 +10,7 @@ export type MovieTMDBGenre = {
 export type MovieTMDBRelations = {
   genres?: Array<MovieTMDBGenre>;
   providers?: Array<ProviderData>;
-  cast?: CastData[];
+  cast?: TMDBPeople[];
 };
 
 export type MovieWithRelations = CreateMovieProps & MovieTMDBRelations;
@@ -87,7 +87,7 @@ export interface TMDBMovieProviders {
 }
 
 export interface TMDBMovieCast {
-  cast: CastData[];
+  cast: TMDBPeople[];
 }
 
 type ProvidersList = {
@@ -103,7 +103,7 @@ export type ProviderData = {
   provider_name: string;
 };
 
-export type CastData = {
+export type TMDBPeople = {
   id: number;
   known_for_department: string;
   name: string;

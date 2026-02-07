@@ -12,8 +12,8 @@ import {
   type NewContentRow,
 } from "../../../modules/contents/infrastructure/database/schemas/contents.schema";
 import type {
-  CastData,
   ProviderData,
+  TMDBPeople,
 } from "../../../modules/movies/infrastructure/database/repositories/tmdb-movies.repository";
 import { People } from "../../../modules/peoples/domain/entities/people.entity";
 import { Platform } from "../../../modules/platforms/domain/entities/platforms.entity";
@@ -423,7 +423,7 @@ export abstract class BaseDrizzleRepository<
    */
   async linkCasts(
     contentId: string,
-    casts: (CastData & { dbId: string })[]
+    casts: (TMDBPeople & { dbId: string })[]
   ): Promise<void> {
     try {
       if (casts.length === 0) {

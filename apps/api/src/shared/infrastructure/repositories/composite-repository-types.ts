@@ -2,7 +2,7 @@
  * Shared types for composite repositories
  */
 
-import type { CastData } from "../../../modules/movies/infrastructure/database/repositories/tmdb-movies.repository";
+import type { TMDBPeople } from "../../../modules/movies/infrastructure/database/repositories/tmdb-movies.repository";
 
 /**
  * TMDB Genre type (shared between movies and series)
@@ -28,7 +28,7 @@ export type ProviderData = {
 export type TMDBRelations = {
   genres?: Array<TMDBGenre>;
   providers?: Array<ProviderData>;
-  cast?: Array<CastData>;
+  cast?: Array<TMDBPeople>;
 };
 
 /**

@@ -1,6 +1,6 @@
 import { logger } from "@packages/logger";
 import { CategoryRepository } from "../../../modules/categories/infrastructure/database/repositories/category/category.repository";
-import type { CastData } from "../../../modules/movies/infrastructure/database/repositories/tmdb-movies.repository";
+import type { TMDBPeople } from "../../../modules/movies/infrastructure/database/repositories/tmdb-movies.repository";
 import { PeoplesRepository } from "../../../modules/peoples/infrastructure/repositories/peoples.repository";
 import { PlatformsRepository } from "../../../modules/platforms/infrastructure/database/platforms.repository";
 import type { PagePaginationQuery } from "../../../shared/services/pagination";
@@ -241,7 +241,7 @@ export abstract class BaseCompositeRepository<
   ): Promise<TEntity[]> {
     const allGenresMap = new Map<number, TMDBGenre>();
     const allProvidersMap = new Map<number, ProviderData>();
-    const allCastMap = new Map<number, CastData>();
+    const allCastMap = new Map<number, TMDBPeople>();
 
     for (const props of entityProps) {
       const { genres, providers, cast } = props;
@@ -323,7 +323,7 @@ export abstract class BaseCompositeRepository<
         }
 
         if (cast && cast.length > 0) {
-          const newCastList: (CastData & {
+          const newCastList: (TMDBPeople & {
             dbId: string;
           })[] = cast
             .map((credit) => {
@@ -491,7 +491,7 @@ export abstract class BaseCompositeRepository<
     }
   }
 
-  private async ensureCastsExist(casts: CastData[]): Promise<void> {
+  private async ensureCastsExist(casts: TMDBPeople[]): Promise<void> {
     const uncachedCasts = casts.filter((cast) => !castCache.has(cast.cast_id));
 
     if (uncachedCasts.length === 0) {
