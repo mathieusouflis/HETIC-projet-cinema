@@ -49,6 +49,10 @@ import {
   streamingPlatformsSchema,
 } from "../modules/platforms/infrastructure/database/platforms.schema";
 import {
+  seasonsRelationsSchema,
+  seasonsSchema,
+} from "../modules/seasons/infrastructure/database/seasons.schema";
+import {
   friendshipsRelationsSchema,
   friendshipsSchema,
   friendshipsStatusEnum,
@@ -119,33 +123,7 @@ export const contentCredits = contentCreditsSchema;
 
 export const people = peopleSchema;
 
-export const seasons = pgTable(
-  "seasons",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    seriesId: uuid("series_id").notNull(),
-    seasonNumber: integer("season_number").notNull(),
-    name: varchar({ length: 255 }),
-    overview: text(),
-    posterUrl: text("poster_url"),
-    airDate: date("air_date"),
-    episodeCount: integer("episode_count").default(0),
-  },
-  (table) => [
-    index("idx_seasons_series").using(
-      "btree",
-      table.seriesId.asc().nullsLast(),
-      table.seasonNumber.asc().nullsLast()
-    ),
-    foreignKey({
-      columns: [table.seriesId],
-      foreignColumns: [content.id],
-      name: "seasons_series_id_fkey",
-    }).onDelete("cascade"),
-    unique("unique_season").on(table.seriesId, table.seasonNumber),
-    check("valid_series", sql`season_number > 0`),
-  ]
-);
+export const seasons = seasonsSchema;
 
 export const episodes = episodesSchema;
 
@@ -816,14 +794,7 @@ export const contentRelations = contentRelationsSchema;
 
 export const peopleRelations = peopleRelationSchema;
 
-export const seasonsRelations = relations(seasons, ({ one, many }) => ({
-  content: one(content, {
-    fields: [seasons.seriesId],
-    references: [content.id],
-  }),
-  episodes: many(episodes),
-  watchparties: many(watchparties),
-}));
+export const seasonsRelations = seasonsRelationsSchema;
 
 export const episodesRelations = episodesRelationsSchema;
 
