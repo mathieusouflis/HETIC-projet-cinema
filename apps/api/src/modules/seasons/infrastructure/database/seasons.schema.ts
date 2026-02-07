@@ -41,6 +41,9 @@ export const seasonsSchema = pgTable(
   ]
 );
 
+export type NewSeasonRow = typeof seasonsSchema.$inferInsert;
+export type SeasonRow = typeof seasonsSchema.$inferSelect;
+
 export const seasonsRelationsSchema = relations(
   seasonsSchema,
   ({ one, many }) => ({

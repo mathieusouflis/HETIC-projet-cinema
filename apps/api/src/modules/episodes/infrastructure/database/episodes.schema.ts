@@ -41,6 +41,9 @@ export const episodesSchema = pgTable(
   ]
 );
 
+export type EpisodeRow = typeof episodesSchema.$inferSelect;
+export type NewEpisodeRow = typeof episodesSchema.$inferInsert;
+
 export const episodesRelationsSchema = relations(
   episodesSchema,
   ({ one, many }) => ({
