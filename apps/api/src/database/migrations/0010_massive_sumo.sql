@@ -1,0 +1,1 @@
+ALTER TABLE "seasons" ADD COLUMN "tmdb_id" integer;

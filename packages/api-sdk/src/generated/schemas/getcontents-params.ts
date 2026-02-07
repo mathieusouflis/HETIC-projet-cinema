@@ -8,7 +8,9 @@
 import type { GETContentsContentType } from './getcontents-content-type';
 import type { GETContentsWithCast } from './getcontents-with-cast';
 import type { GETContentsWithCategory } from './getcontents-with-category';
+import type { GETContentsWithEpisodes } from './getcontents-with-episodes';
 import type { GETContentsWithPlatform } from './getcontents-with-platform';
+import type { GETContentsWithSeasons } from './getcontents-with-seasons';
 
 export type GETContentsParams = {
 title?: string;
@@ -24,6 +26,8 @@ averageRating?: number;
 withCategory?: GETContentsWithCategory;
 withPlatform?: GETContentsWithPlatform;
 withCast?: GETContentsWithCast;
+withSeasons?: GETContentsWithSeasons;
+withEpisodes?: GETContentsWithEpisodes;
 /**
  * @minimum 1
  */

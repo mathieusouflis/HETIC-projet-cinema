@@ -24,6 +24,7 @@ export class Episode extends Entity<
   public readonly stillUrl: string | null;
   public readonly airDate: string | null;
   public readonly durationMinutes: number | null;
+  public readonly tmdbId: number | null;
 
   constructor(props: EpisodeRow) {
     super();
@@ -35,6 +36,7 @@ export class Episode extends Entity<
     this.stillUrl = props.stillUrl;
     this.airDate = props.airDate;
     this.durationMinutes = props.durationMinutes;
+    this.tmdbId = props.tmdbId;
   }
 
   public isOut(): boolean {
@@ -51,6 +53,7 @@ export class Episode extends Entity<
       stillUrl: this.stillUrl ?? null,
       airDate: this.airDate ?? null,
       durationMinutes: this.durationMinutes ?? null,
+      tmdbId: this.tmdbId ?? null,
     };
   }
 }

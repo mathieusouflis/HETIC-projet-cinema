@@ -13,6 +13,8 @@ export interface ISeriesRepository {
     withCategories?: boolean,
     withPlatforms?: boolean,
     withCast?: boolean,
+    withSeasons?: boolean,
+    withEpisodes?: boolean,
     options?: PagePaginationQuery
   ) => Promise<{
     data: Serie[];

@@ -1,3 +1,4 @@
+import { TmdbService } from "../../../../shared/services/tmdb";
 import type { TMDBPeople } from "../../../movies/infrastructure/database/repositories/tmdb-movies.repository";
 
 export type TMDBEpisode = {
@@ -14,4 +15,21 @@ export type TMDBEpisode = {
   crew: TMDBPeople[];
 };
 
-export class EpisodeTmdbRepository {}
+export class EpisodeTmdbRepository {
+  private readonly tmdbService: TmdbService;
+
+  constructor() {
+    this.tmdbService = new TmdbService();
+  }
+
+  async getEpisode(
+    TmdbSerieId: number,
+    seasonNumber: number,
+    episodeNumber: number
+  ) {
+    return (await this.tmdbService.request(
+      "GET",
+      `/tv/${TmdbSerieId}/season/${seasonNumber}/episode/${episodeNumber}`
+    )) as TMDBEpisode;
+  }
+}

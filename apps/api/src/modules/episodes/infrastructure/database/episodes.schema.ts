@@ -24,6 +24,7 @@ export const episodesSchema = pgTable(
     stillUrl: text("still_url"),
     airDate: date("air_date"),
     durationMinutes: integer("duration_minutes"),
+    tmdbId: integer("tmdb_id"),
   },
   (table) => [
     index("idx_episodes_season").using(

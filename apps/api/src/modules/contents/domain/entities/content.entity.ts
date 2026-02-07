@@ -2,6 +2,7 @@ import { Entity } from "../../../../shared/domain/entity.js";
 import type { Category } from "../../../categories/domain/entities/category.entity.js";
 import type { People } from "../../../peoples/domain/entities/people.entity.js";
 import type { Platform } from "../../../platforms/domain/entities/platforms.entity.js";
+import type { Season } from "../../../seasons/domain/seasons.entity.js";
 import type {
   ContentRow,
   contentRelationsSchema,
@@ -41,7 +42,7 @@ export interface ContentRelations {
   notifications: Category[]; //TEMP
   ratings: Category[]; //TEMP
   reviews: Category[]; //TEMP
-  seasons: Category[]; //TEMP
+  seasons: Season[];
   userActivityLogs: Category[]; //TEMP
   watchlists: Category[]; //TEMP
   watchparties: Category[]; //TEMP

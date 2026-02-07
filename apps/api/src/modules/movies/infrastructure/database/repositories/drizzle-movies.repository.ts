@@ -14,7 +14,7 @@ export class DrizzleMoviesRepository extends BaseDrizzleRepository<
   MovieProps,
   CreateMovieProps
 > {
-  protected readonly contentType = "movie" as const;
+  public readonly contentType = "movie" as const;
   protected readonly entityName = "movie";
 
   protected createEntity(row: MovieProps): Movie {

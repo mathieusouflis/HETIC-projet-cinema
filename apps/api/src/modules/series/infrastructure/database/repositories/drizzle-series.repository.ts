@@ -14,7 +14,7 @@ export class DrizzleSeriesRepository extends BaseDrizzleRepository<
   SerieProps,
   CreateSerieProps
 > {
-  protected readonly contentType = "serie" as const;
+  public readonly contentType = "serie" as const;
   protected readonly entityName = "series";
 
   protected createEntity(row: SerieProps): Serie {

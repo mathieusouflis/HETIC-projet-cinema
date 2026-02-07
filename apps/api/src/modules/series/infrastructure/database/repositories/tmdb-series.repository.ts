@@ -1,9 +1,23 @@
 import { logger } from "@packages/logger";
 import { BaseTMDBRepository } from "../../../../../shared/infrastructure/repositories/base-tmdb-repository";
+import type { TMDBGenre } from "../../../../../shared/infrastructure/repositories/composite-repository-types";
+import type {
+  TMDBMovieCast,
+  TMDBMovieProviders,
+  TMDBPeople,
+  TMDBProvider,
+} from "../../../../movies/infrastructure/database/repositories/tmdb-movies.repository";
+import {
+  SeasonTmdbRepository,
+  type TMDBSeason,
+} from "../../../../seasons/infrastructure/tmdb/seasons.tmdb.repository";
 import type { CreateSerieProps } from "../../../domain/entities/serie.entity";
 
 export type SerieWithGenres = CreateSerieProps & {
-  genres?: Array<{ id: number; name: string }>;
+  genres?: Array<TMDBGenre>;
+  providers?: TMDBProvider[];
+  cast?: TMDBPeople[];
+  seasons?: TMDBSeason[];
 };
 
 export type TMDBSerieDiscoverResult = {
@@ -103,6 +117,12 @@ export class TMDBSeriesRepository extends BaseTMDBRepository<
   protected readonly detailEndpoint = "tv";
   protected readonly videoEndpoint = "tv/{id}/videos";
   protected readonly contentTypeName = "series";
+  private readonly seasonsTmdbRepository: SeasonTmdbRepository;
+
+  constructor() {
+    super();
+    this.seasonsTmdbRepository = new SeasonTmdbRepository();
+  }
 
   /**
    * Get detailed information about a series from TMDB
@@ -112,6 +132,21 @@ export class TMDBSeriesRepository extends BaseTMDBRepository<
       const result = await this.tmdbService.request<TMDBSerieDetail>(
         "GET",
         `${this.detailEndpoint}/${id}`
+      );
+
+      const providers = await this.tmdbService.request<TMDBMovieProviders>(
+        "GET",
+        `${this.detailEndpoint}/${id}/watch/providers`
+      );
+
+      const credits = await this.tmdbService.request<TMDBMovieCast>(
+        "GET",
+        `${this.detailEndpoint}/${id}/credits`
+      );
+
+      const seasons = await this.seasonsTmdbRepository.getAllSeasons(
+        id,
+        Array.from({ length: result.number_of_seasons }, (_, i) => i + 1)
       );
 
       const trailerUrl = await this.getTrailerUrl(id);
@@ -136,6 +171,9 @@ export class TMDBSeriesRepository extends BaseTMDBRepository<
         totalViews: 0,
         // Store genres as metadata to be processed by the composite repository
         genres: result.genres,
+        providers: providers.results.FR?.flatrate ?? [],
+        cast: credits.cast,
+        seasons: seasons,
       };
 
       return serieProps;

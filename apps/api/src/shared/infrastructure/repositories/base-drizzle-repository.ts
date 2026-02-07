@@ -11,12 +11,14 @@ import {
   contentSchema,
   type NewContentRow,
 } from "../../../modules/contents/infrastructure/database/schemas/contents.schema";
+import { Episode } from "../../../modules/episodes/domain/episode.entity";
 import type {
   TMDBPeople,
   TMDBProvider,
 } from "../../../modules/movies/infrastructure/database/repositories/tmdb-movies.repository";
 import { People } from "../../../modules/peoples/domain/entities/people.entity";
 import { Platform } from "../../../modules/platforms/domain/entities/platforms.entity";
+import { Season } from "../../../modules/seasons/domain/seasons.entity";
 import { ServerError } from "../../errors/server-error";
 import type { PagePaginationQuery } from "../../services/pagination";
 
@@ -51,7 +53,7 @@ export abstract class BaseDrizzleRepository<
   TProps,
   TCreateProps extends BaseContentProps,
 > {
-  protected abstract readonly contentType: "movie" | "serie";
+  public abstract readonly contentType: "movie" | "serie";
   protected abstract readonly entityName: string; // "movie", "series" for error messages
 
   /**
@@ -69,6 +71,8 @@ export abstract class BaseDrizzleRepository<
       withCategories?: boolean;
       withPlatforms?: boolean;
       withCast?: boolean;
+      withSeasons?: boolean;
+      withEpisodes?: boolean;
     }
   ): Promise<TEntity[]> {
     try {
@@ -97,6 +101,11 @@ export abstract class BaseDrizzleRepository<
               person: true,
             },
           },
+          seasons: {
+            with: {
+              episodes: true,
+            },
+          },
         },
       });
 
@@ -108,6 +117,7 @@ export abstract class BaseDrizzleRepository<
             row.contentCategories.map((cc) => new Category(cc.category))
           );
         }
+
         if (row.contentPlatforms && options?.withPlatforms) {
           entity.setRelations(
             "contentPlatforms",
@@ -121,6 +131,20 @@ export abstract class BaseDrizzleRepository<
             row.contentCredits.map((cc) => new People(cc.person))
           );
         }
+
+        if (row.seasons && options?.withSeasons) {
+          entity.setRelations(
+            "seasons",
+            row.seasons.map((s) => {
+              const episodes = s.episodes.map((e) => new Episode(e));
+              const season = new Season(s);
+
+              season.setRelations("episodes", episodes);
+              return season;
+            })
+          );
+        }
+
         return entity;
       });
     } catch (error) {
@@ -445,6 +469,37 @@ export abstract class BaseDrizzleRepository<
       );
     }
   }
+
+  // /**
+  //  * Link casts to content
+  //  */
+  // async linkSeasons(
+  //   serieId: string,
+  //   seasons: (TMDBSeason & { dbId: string })[]
+  // ): Promise<void> {
+  //   try {
+  //     if (seasons.length === 0) {
+  //       return;
+  //     }
+
+  //     const values: NewSeasonRow[] = seasons.map((season) => ({
+  //       seriesId: serieId,
+  //       seasonNumber: season.season_number,
+  //       airDate: season.air_date,
+  //       episodeCount: season.episodes.length,
+  //       name: season.name,
+  //       overview: season.overview,
+  //       posterUrl: season.poster_path,
+  //       tmdbId: season.id,
+  //     }));
+
+  //     await db.insert(contentCredits).values(values).onConflictDoNothing();
+  //   } catch (error) {
+  //     throw new ServerError(
+  //       `Failed to link credits to ${this.entityName} ${contentId}: ${error instanceof Error ? error.message : error}`
+  //     );
+  //   }
+  // }
 
   /**
    * Check if content exists by TMDB IDs

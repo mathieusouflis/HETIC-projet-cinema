@@ -1,0 +1,1 @@
+ALTER TABLE "episodes" ADD COLUMN "tmdb_id" integer;
