@@ -9,4 +9,4 @@ export const getMeResponseSchema = z.object({
   username: usernameSchema,
 });
 
-export type GetMeDTO = z.infer<typeof getMeResponseSchema>;
+export type GetMeResponse = z.infer<typeof getMeResponseSchema>;

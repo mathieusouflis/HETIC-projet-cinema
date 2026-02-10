@@ -37,11 +37,11 @@ import {
   updateCategoryParamsSchema,
 } from "../dto/requests/update-category.validator.js";
 import {
-  type CategoriesListResponseDTO,
-  type CategoryResponseDTO,
+  type CategoriesListResponse,
+  type CategoryResponse,
   categoriesListResponseSchema,
   categoryResponseSchema,
-} from "../dto/response/category.response.js";
+} from "../dto/response/category.response.validator.js";
 // import type { CreateCategoryUseCase } from "../use-cases/category/create-category.use-case.js";
 // import type { DeleteCategoryUseCase } from "../use-cases/category/delete-category.use-case.js";
 import type { GetCategoryByIdUseCase } from "../use-cases/category/get-category-by-id.use-case.js";
@@ -122,7 +122,7 @@ export class CategoriesController extends BaseController {
     Shared.Schemas.Base.notFoundErrorResponseSchema
   )
   getCategoryById = asyncHandler(
-    async (req: Request, res: Response): Promise<CategoryResponseDTO> => {
+    async (req: Request, res: Response): Promise<CategoryResponse> => {
       const { id } = req.params as CategoryIdParamsDTO;
 
       const category = await this.getCategoryByIdUseCase.execute(id);
@@ -153,7 +153,7 @@ export class CategoriesController extends BaseController {
     Shared.Schemas.Base.validationErrorResponseSchema
   )
   listCategories = asyncHandler(
-    async (req: Request, res: Response): Promise<CategoriesListResponseDTO> => {
+    async (req: Request, res: Response): Promise<CategoriesListResponse> => {
       const { page = 1, limit = 10 } = req.query as ListCategoriesQueryDTO;
 
       const result = await this.listCategoriesUseCase.execute({

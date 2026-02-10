@@ -19,15 +19,7 @@ export const categoriesListResponseSchema = createPaginatedResponseSchema(
   })
 );
 
-z.object({
-  categories: z.array(categoryResponseSchema),
-  total: z.number(),
-  page: z.number(),
-  limit: z.number(),
-  totalPages: z.number(),
-});
-
-export type CategoryResponseDTO = z.infer<typeof categoryResponseSchema>;
-export type CategoriesListResponseDTO = z.infer<
+export type CategoryResponse = z.infer<typeof categoryResponseSchema>;
+export type CategoriesListResponse = z.infer<
   typeof categoriesListResponseSchema
 >;

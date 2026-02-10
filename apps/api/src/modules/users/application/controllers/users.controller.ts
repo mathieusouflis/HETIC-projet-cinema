@@ -39,7 +39,6 @@ import {
   getUserFollowersParamsValidator,
 } from "../dto/requests/get-user-followers.params.validator.js";
 import {
-  type PatchIdRequestDTO,
   patchIdBodySchema,
   patchIdParamsSchema,
 } from "../dto/requests/patch-id.validator.js";
@@ -47,28 +46,28 @@ import { patchMeBodySchema } from "../dto/requests/patch-me.validator.js";
 import {
   type CreateFriendshipResponse,
   createFriendshipResponseValidator,
-} from "../dto/responses/create-friendship.response.validator.js";
+} from "../dto/response/create-friendship.response.validator.js";
+import {
+  type GetAllUsersResponse,
+  getResponseSchema,
+} from "../dto/response/get.response.validator.js";
 import {
   type GetFollowersFollowingResponse,
   getFollowersFollowingResponseValidator,
-} from "../dto/responses/get-followers-following.response.validator.js";
+} from "../dto/response/get-followers-following.response.validator.js";
 import {
-  type GetIdResponseDTO,
+  type GetIdResponse,
   getIdResponseSchema,
-} from "../dto/responses/get-id-response.js";
+} from "../dto/response/get-id.response.validator.js";
 import {
-  type GetMeDTO,
+  type GetMeResponse,
   getMeResponseSchema,
-} from "../dto/responses/get-me-response.js";
+} from "../dto/response/get-me.response.validator.js";
 import {
-  type GetResponseDTO,
-  getResponseSchema,
-} from "../dto/responses/get-response.js";
-import {
-  type PatchIdResponseDTO,
+  type PatchIdResponse,
   patchIdResponseSchema,
-} from "../dto/responses/patch-id-response.js";
-import { patchMeResponseSchema } from "../dto/responses/patch-me-response.js";
+} from "../dto/response/patch-id.response.validator.js";
+import { patchMeResponseSchema } from "../dto/response/patch-me.response.validator.js";
 import { toUserResponseDTO } from "../dto/utils/to-user-response.js";
 import type { CreateFriendshipUseCase } from "../use-cases/create-friendship.use-case.js";
 import type { DeleteUserUseCase } from "../use-cases/DeleteUser.usecase.js";
@@ -130,7 +129,7 @@ export class UsersController extends BaseController {
     Shared.Schemas.Base.notFoundErrorResponseSchema
   )
   getById = asyncHandler(
-    async (req: Request, res: Response): Promise<GetIdResponseDTO> => {
+    async (req: Request, res: Response): Promise<GetIdResponse> => {
       const id = req.params.id!;
 
       const user = await this.getUserByIdUseCase.execute(id);
@@ -167,7 +166,7 @@ export class UsersController extends BaseController {
     Shared.Schemas.Base.unauthorizedErrorResponseSchema
   )
   getAll = asyncHandler(
-    async (req: Request, res: Response): Promise<GetResponseDTO> => {
+    async (req: Request, res: Response): Promise<GetAllUsersResponse> => {
       const { page, limit, offset } = req.query as GetQueryDTO;
 
       const result = await this.getUsersUseCase.execute({
@@ -219,7 +218,7 @@ export class UsersController extends BaseController {
     Shared.Schemas.Base.notFoundErrorResponseSchema
   )
   update = asyncHandler(
-    async (req: Request, res: Response): Promise<PatchIdRequestDTO> => {
+    async (req: Request, res: Response): Promise<PatchIdResponse> => {
       const id = req.params.id!;
       const updateData = req.body;
 
@@ -287,7 +286,7 @@ export class UsersController extends BaseController {
     Shared.Schemas.Base.unauthorizedErrorResponseSchema
   )
   getMe = asyncHandler(
-    async (req: Request, res: Response): Promise<GetMeDTO> => {
+    async (req: Request, res: Response): Promise<GetMeResponse> => {
       const userId = req.user?.userId;
 
       if (!userId) {
@@ -328,7 +327,7 @@ export class UsersController extends BaseController {
     Shared.Schemas.Base.unauthorizedErrorResponseSchema
   )
   updateMe = asyncHandler(
-    async (req: Request, res: Response): Promise<PatchIdResponseDTO> => {
+    async (req: Request, res: Response): Promise<PatchIdResponse> => {
       const userId = req.user?.userId;
 
       if (!userId) {

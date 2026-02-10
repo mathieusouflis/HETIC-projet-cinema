@@ -1,5 +1,6 @@
 import z from "zod";
 import { uuidSchema } from "../../../../shared/schemas/fields";
+import { contentCreditsValidator } from "../../../content-credits/application/validators/content-credits.validator.js";
 
 export const peopleValidator = z.object({
   id: uuidSchema,
@@ -11,4 +12,5 @@ export const peopleValidator = z.object({
   tmdbId: z.number().int().nullable(),
   createdAt: z.date(),
   updatedAt: z.date(),
+  contentCredits: contentCreditsValidator.array().optional(),
 });
