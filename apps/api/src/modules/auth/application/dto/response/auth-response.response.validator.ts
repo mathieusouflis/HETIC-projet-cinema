@@ -7,4 +7,4 @@ export const authResponseDataValidator = z.object({
   accessToken: Shared.Services.Token.Schemas.tokenSchema,
 });
 
-export type AuthResponseDTO = z.infer<typeof authResponseDataValidator>;
+export type AuthResponse = z.infer<typeof authResponseDataValidator>;

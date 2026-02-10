@@ -5,7 +5,7 @@ import type { RefreshToken } from "../../../../shared/services/token/schemas/tok
 import { toUserResponseDTO } from "../../../users/application/dto/utils/to-user-response.js";
 import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";
 import type { LoginDTO } from "../dto/request/login.dto.js";
-import type { AuthResponseDTO } from "../dto/response/auth-response.dto.js";
+import type { AuthResponse } from "../dto/response/auth-response.response.validator.js";
 import { toAuthResponseDTO } from "../dto/utils/to-auth-response-dto.js";
 
 /**
@@ -25,7 +25,7 @@ export class LoginUseCase {
    * @returns Promise resolving to AuthResponseDTO with user and tokens
    * @throws UnauthorizedError if credentials are invalid
    */
-  async execute(data: LoginDTO): Promise<[AuthResponseDTO, RefreshToken]> {
+  async execute(data: LoginDTO): Promise<[AuthResponse, RefreshToken]> {
     const user = await this.userRepository.findByEmail(data.email);
 
     if (!user) {

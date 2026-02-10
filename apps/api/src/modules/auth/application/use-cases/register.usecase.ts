@@ -5,7 +5,7 @@ import { EmailAlreadyExistsError } from "../../../users/domain/errors/EmailAlrea
 import { UsernameAlreadyExistsError } from "../../../users/domain/errors/UsernameAlreadyExistsError.js";
 import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";
 import type { RegisterDTO } from "../dto/request/register.dto.js";
-import type { AuthResponseDTO } from "../dto/response/auth-response.dto.js";
+import type { AuthResponse } from "../dto/response/auth-response.response.validator.js";
 import { toAuthResponseDTO } from "../dto/utils/to-auth-response-dto.js";
 
 /**
@@ -26,7 +26,7 @@ export class RegisterUseCase {
    * @throws EmailAlreadyExistsError if email is already registered
    * @throws UsernameAlreadyExistsError if username is already taken
    */
-  async execute(data: RegisterDTO): Promise<[AuthResponseDTO, string]> {
+  async execute(data: RegisterDTO): Promise<[AuthResponse, string]> {
     const emailExists = await this.userRepository.existsByEmail(data.email);
 
     if (emailExists) {
