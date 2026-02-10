@@ -6,4 +6,4 @@ export const getResponseSchema = z.object({
   pagination: returnedPaginationSchema,
 });
 
-export type GetResponseDTO = z.infer<typeof getResponseSchema>;
+export type GetAllUsersResponse = z.infer<typeof getResponseSchema>;

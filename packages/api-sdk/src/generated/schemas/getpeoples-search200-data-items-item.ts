@@ -5,6 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
+import type { GETPeoplesSearch200DataItemsItemContentCreditsItem } from './getpeoples-search200-data-items-item-content-credits-item';
 
 export type GETPeoplesSearch200DataItemsItem = {
   /** @minLength 1 */
@@ -26,4 +27,5 @@ export type GETPeoplesSearch200DataItemsItem = {
   tmdbId: number | null;
   createdAt: string;
   updatedAt: string;
+  contentCredits?: GETPeoplesSearch200DataItemsItemContentCreditsItem[];
 };

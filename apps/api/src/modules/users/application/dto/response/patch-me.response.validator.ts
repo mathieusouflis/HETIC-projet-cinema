@@ -8,3 +8,5 @@ export const patchMeResponseSchema = z.object({
   email: emailSchema,
   username: usernameSchema,
 });
+
+export type PatchMeResponse = z.infer<typeof patchMeResponseSchema>;

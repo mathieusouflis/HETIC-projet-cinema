@@ -1,6 +1,6 @@
 import { UserNotFoundError } from "../../domain/errors/UserNotFoundError.js";
 import type { IUserRepository } from "../../domain/interfaces/IUserRepository.js";
-import type { GetIdResponseDTO } from "../dto/responses/get-id-response.js";
+import type { GetIdResponse } from "../dto/response/get-id.response.validator.js";
 import { toUserResponseDTO } from "../dto/utils/to-user-response.js";
 
 export class GetUserByIdUseCase {
@@ -11,7 +11,7 @@ export class GetUserByIdUseCase {
    * @returns Promise resolving to UserResponseDTO
    * @throws UserNotFoundError if user doesn't exist
    */
-  async execute(id: string): Promise<GetIdResponseDTO> {
+  async execute(id: string): Promise<GetIdResponse> {
     const user = await this.userRepository.findById(id);
 
     if (!user) {

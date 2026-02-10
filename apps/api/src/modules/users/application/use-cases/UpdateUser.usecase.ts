@@ -2,7 +2,7 @@ import { UserNotFoundError } from "../../domain/errors/UserNotFoundError.js";
 import { UsernameAlreadyExistsError } from "../../domain/errors/UsernameAlreadyExistsError.js";
 import type { IUserRepository } from "../../domain/interfaces/IUserRepository.js";
 import type { PatchIdRequestDTO } from "../dto/requests/patch-id.validator.js";
-import type { PatchIdResponseDTO } from "../dto/responses/patch-id-response.js";
+import type { PatchIdResponse } from "../dto/response/patch-id.response.validator.js";
 import { toUserResponseDTO } from "../dto/utils/to-user-response.js";
 
 export class UpdateUserUseCase {
@@ -15,10 +15,7 @@ export class UpdateUserUseCase {
    * @throws UserNotFoundError if user doesn't exist
    * @throws UsernameAlreadyExistsError if new username is already taken
    */
-  async execute(
-    id: string,
-    data: PatchIdRequestDTO
-  ): Promise<PatchIdResponseDTO> {
+  async execute(id: string, data: PatchIdRequestDTO): Promise<PatchIdResponse> {
     const existingUser = await this.userRepository.findById(id);
 
     if (!existingUser) {

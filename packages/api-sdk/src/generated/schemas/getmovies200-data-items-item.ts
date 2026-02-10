@@ -6,6 +6,9 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { GETMovies200DataItemsItemContentCategoriesItem } from './getmovies200-data-items-item-content-categories-item';
+import type { GETMovies200DataItemsItemContentCreditsItem } from './getmovies200-data-items-item-content-credits-item';
+import type { GETMovies200DataItemsItemContentPlatformsItem } from './getmovies200-data-items-item-content-platforms-item';
+import type { GETMovies200DataItemsItemSeasonsItem } from './getmovies200-data-items-item-seasons-item';
 import type { GETMovies200DataItemsItemType } from './getmovies200-data-items-item-type';
 
 export type GETMovies200DataItemsItem = {
@@ -49,4 +52,7 @@ export type GETMovies200DataItemsItem = {
   createdAt: string;
   updatedAt: string;
   contentCategories?: GETMovies200DataItemsItemContentCategoriesItem[];
+  contentPlatforms?: GETMovies200DataItemsItemContentPlatformsItem[];
+  contentCredits?: GETMovies200DataItemsItemContentCreditsItem[];
+  seasons?: GETMovies200DataItemsItemSeasonsItem[];
 };

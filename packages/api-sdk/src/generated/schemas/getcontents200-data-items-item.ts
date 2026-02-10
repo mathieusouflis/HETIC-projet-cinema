@@ -6,7 +6,9 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { GETContents200DataItemsItemContentCategoriesItem } from './getcontents200-data-items-item-content-categories-item';
+import type { GETContents200DataItemsItemContentCreditsItem } from './getcontents200-data-items-item-content-credits-item';
 import type { GETContents200DataItemsItemContentPlatformsItem } from './getcontents200-data-items-item-content-platforms-item';
+import type { GETContents200DataItemsItemSeasonsItem } from './getcontents200-data-items-item-seasons-item';
 import type { GETContents200DataItemsItemType } from './getcontents200-data-items-item-type';
 
 export type GETContents200DataItemsItem = {
@@ -51,4 +53,6 @@ export type GETContents200DataItemsItem = {
   updatedAt: string;
   contentCategories?: GETContents200DataItemsItemContentCategoriesItem[];
   contentPlatforms?: GETContents200DataItemsItemContentPlatformsItem[];
+  contentCredits?: GETContents200DataItemsItemContentCreditsItem[];
+  seasons?: GETContents200DataItemsItemSeasonsItem[];
 };

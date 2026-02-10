@@ -5,9 +5,9 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { PATCHPeoplesId200DataContentCreditsItem } from './patchpeoples-id200-data-content-credits-item';
+import type { GETSeries200DataItemsItemContentCreditsItemContentCreditsItem } from './getseries200-data-items-item-content-credits-item-content-credits-item';
 
-export type PATCHPeoplesId200Data = {
+export type GETSeries200DataItemsItemContentCreditsItem = {
   /** @minLength 1 */
   id: string;
   /**
@@ -27,5 +27,5 @@ export type PATCHPeoplesId200Data = {
   tmdbId: number | null;
   createdAt: string;
   updatedAt: string;
-  contentCredits?: PATCHPeoplesId200DataContentCreditsItem[];
+  contentCredits?: GETSeries200DataItemsItemContentCreditsItemContentCreditsItem[];
 };

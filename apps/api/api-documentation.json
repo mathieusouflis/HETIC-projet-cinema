@@ -2072,6 +2072,167 @@
                                     "createdAt"
                                   ]
                                 }
+                              },
+                              "contentCredits": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "format": "uuid"
+                                    },
+                                    "name": {
+                                      "type": "string",
+                                      "minLength": 2,
+                                      "maxLength": 100
+                                    },
+                                    "bio": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "photoUrl": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "format": "uri"
+                                    },
+                                    "nationality": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "birthDate": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "format": "date-time"
+                                    },
+                                    "tmdbId": {
+                                      "type": "integer",
+                                      "nullable": true
+                                    },
+                                    "createdAt": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
+                                    "updatedAt": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
+                                    "contentCredits": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "format": "uuid"
+                                          },
+                                          "contentId": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "format": "uuid"
+                                          },
+                                          "personId": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "format": "uuid"
+                                          },
+                                          "role": {
+                                            "type": "string",
+                                            "maxLength": 50
+                                          },
+                                          "characterName": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 255
+                                          },
+                                          "orderIndex": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 100
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "contentId",
+                                          "personId",
+                                          "role",
+                                          "characterName",
+                                          "orderIndex"
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name",
+                                    "bio",
+                                    "photoUrl",
+                                    "nationality",
+                                    "birthDate",
+                                    "tmdbId",
+                                    "createdAt",
+                                    "updatedAt"
+                                  ]
+                                }
+                              },
+                              "seasons": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "format": "uuid"
+                                    },
+                                    "seriesId": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "format": "uuid"
+                                    },
+                                    "name": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "seasonNumber": {
+                                      "type": "integer"
+                                    },
+                                    "episodeCount": {
+                                      "type": "integer",
+                                      "nullable": true
+                                    },
+                                    "overview": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "posterUrl": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "format": "uri"
+                                    },
+                                    "airDate": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "tmdbId": {
+                                      "type": "integer",
+                                      "nullable": true
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "seriesId",
+                                    "name",
+                                    "seasonNumber",
+                                    "episodeCount",
+                                    "overview",
+                                    "posterUrl",
+                                    "airDate",
+                                    "tmdbId"
+                                  ]
+                                }
                               }
                             },
                             "required": [
@@ -2550,6 +2711,230 @@
                                     "createdAt"
                                   ]
                                 }
+                              },
+                              "contentPlatforms": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "format": "uuid"
+                                    },
+                                    "name": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100
+                                    },
+                                    "slug": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100,
+                                      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                                    },
+                                    "logoUrl": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "format": "uri"
+                                    },
+                                    "baseUrl": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "format": "uri"
+                                    },
+                                    "isSupported": {
+                                      "type": "boolean",
+                                      "nullable": true,
+                                      "default": true
+                                    },
+                                    "createdAt": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "nullable": true,
+                                          "format": "date-time"
+                                        },
+                                        {
+                                          "type": "string",
+                                          "format": "date-time"
+                                        },
+                                        {
+                                          "nullable": true
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name",
+                                    "slug",
+                                    "logoUrl",
+                                    "baseUrl",
+                                    "createdAt"
+                                  ]
+                                }
+                              },
+                              "contentCredits": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "format": "uuid"
+                                    },
+                                    "name": {
+                                      "type": "string",
+                                      "minLength": 2,
+                                      "maxLength": 100
+                                    },
+                                    "bio": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "photoUrl": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "format": "uri"
+                                    },
+                                    "nationality": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "birthDate": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "format": "date-time"
+                                    },
+                                    "tmdbId": {
+                                      "type": "integer",
+                                      "nullable": true
+                                    },
+                                    "createdAt": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
+                                    "updatedAt": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
+                                    "contentCredits": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "format": "uuid"
+                                          },
+                                          "contentId": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "format": "uuid"
+                                          },
+                                          "personId": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "format": "uuid"
+                                          },
+                                          "role": {
+                                            "type": "string",
+                                            "maxLength": 50
+                                          },
+                                          "characterName": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 255
+                                          },
+                                          "orderIndex": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 100
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "contentId",
+                                          "personId",
+                                          "role",
+                                          "characterName",
+                                          "orderIndex"
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name",
+                                    "bio",
+                                    "photoUrl",
+                                    "nationality",
+                                    "birthDate",
+                                    "tmdbId",
+                                    "createdAt",
+                                    "updatedAt"
+                                  ]
+                                }
+                              },
+                              "seasons": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "format": "uuid"
+                                    },
+                                    "seriesId": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "format": "uuid"
+                                    },
+                                    "name": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "seasonNumber": {
+                                      "type": "integer"
+                                    },
+                                    "episodeCount": {
+                                      "type": "integer",
+                                      "nullable": true
+                                    },
+                                    "overview": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "posterUrl": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "format": "uri"
+                                    },
+                                    "airDate": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "tmdbId": {
+                                      "type": "integer",
+                                      "nullable": true
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "seriesId",
+                                    "name",
+                                    "seasonNumber",
+                                    "episodeCount",
+                                    "overview",
+                                    "posterUrl",
+                                    "airDate",
+                                    "tmdbId"
+                                  ]
+                                }
                               }
                             },
                             "required": [
@@ -2903,6 +3288,51 @@
                               "updatedAt": {
                                 "type": "string",
                                 "format": "date-time"
+                              },
+                              "contentCredits": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "format": "uuid"
+                                    },
+                                    "contentId": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "format": "uuid"
+                                    },
+                                    "personId": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "format": "uuid"
+                                    },
+                                    "role": {
+                                      "type": "string",
+                                      "maxLength": 50
+                                    },
+                                    "characterName": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 255
+                                    },
+                                    "orderIndex": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 100
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "contentId",
+                                    "personId",
+                                    "role",
+                                    "characterName",
+                                    "orderIndex"
+                                  ]
+                                }
                               }
                             },
                             "required": [
@@ -3066,6 +3496,51 @@
                         "updatedAt": {
                           "type": "string",
                           "format": "date-time"
+                        },
+                        "contentCredits": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "contentId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "personId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "role": {
+                                "type": "string",
+                                "maxLength": 50
+                              },
+                              "characterName": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 255
+                              },
+                              "orderIndex": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 100
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "contentId",
+                              "personId",
+                              "role",
+                              "characterName",
+                              "orderIndex"
+                            ]
+                          }
                         }
                       },
                       "required": [
@@ -3193,6 +3668,51 @@
                               "updatedAt": {
                                 "type": "string",
                                 "format": "date-time"
+                              },
+                              "contentCredits": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "format": "uuid"
+                                    },
+                                    "contentId": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "format": "uuid"
+                                    },
+                                    "personId": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "format": "uuid"
+                                    },
+                                    "role": {
+                                      "type": "string",
+                                      "maxLength": 50
+                                    },
+                                    "characterName": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 255
+                                    },
+                                    "orderIndex": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 100
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "contentId",
+                                    "personId",
+                                    "role",
+                                    "characterName",
+                                    "orderIndex"
+                                  ]
+                                }
                               }
                             },
                             "required": [
@@ -3324,6 +3844,51 @@
                         "updatedAt": {
                           "type": "string",
                           "format": "date-time"
+                        },
+                        "contentCredits": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "contentId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "personId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "role": {
+                                "type": "string",
+                                "maxLength": 50
+                              },
+                              "characterName": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 255
+                              },
+                              "orderIndex": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 100
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "contentId",
+                              "personId",
+                              "role",
+                              "characterName",
+                              "orderIndex"
+                            ]
+                          }
                         }
                       },
                       "required": [
@@ -3492,6 +4057,51 @@
                         "updatedAt": {
                           "type": "string",
                           "format": "date-time"
+                        },
+                        "contentCredits": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "contentId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "personId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "format": "uuid"
+                              },
+                              "role": {
+                                "type": "string",
+                                "maxLength": 50
+                              },
+                              "characterName": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 255
+                              },
+                              "orderIndex": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 100
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "contentId",
+                              "personId",
+                              "role",
+                              "characterName",
+                              "orderIndex"
+                            ]
+                          }
                         }
                       },
                       "required": [
@@ -4007,6 +4617,167 @@
                                     "createdAt"
                                   ]
                                 }
+                              },
+                              "contentCredits": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "format": "uuid"
+                                    },
+                                    "name": {
+                                      "type": "string",
+                                      "minLength": 2,
+                                      "maxLength": 100
+                                    },
+                                    "bio": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "photoUrl": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "format": "uri"
+                                    },
+                                    "nationality": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "birthDate": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "format": "date-time"
+                                    },
+                                    "tmdbId": {
+                                      "type": "integer",
+                                      "nullable": true
+                                    },
+                                    "createdAt": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
+                                    "updatedAt": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
+                                    "contentCredits": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "format": "uuid"
+                                          },
+                                          "contentId": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "format": "uuid"
+                                          },
+                                          "personId": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "format": "uuid"
+                                          },
+                                          "role": {
+                                            "type": "string",
+                                            "maxLength": 50
+                                          },
+                                          "characterName": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 255
+                                          },
+                                          "orderIndex": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 100
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "contentId",
+                                          "personId",
+                                          "role",
+                                          "characterName",
+                                          "orderIndex"
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name",
+                                    "bio",
+                                    "photoUrl",
+                                    "nationality",
+                                    "birthDate",
+                                    "tmdbId",
+                                    "createdAt",
+                                    "updatedAt"
+                                  ]
+                                }
+                              },
+                              "seasons": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "format": "uuid"
+                                    },
+                                    "seriesId": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "format": "uuid"
+                                    },
+                                    "name": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "seasonNumber": {
+                                      "type": "integer"
+                                    },
+                                    "episodeCount": {
+                                      "type": "integer",
+                                      "nullable": true
+                                    },
+                                    "overview": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "posterUrl": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "format": "uri"
+                                    },
+                                    "airDate": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "tmdbId": {
+                                      "type": "integer",
+                                      "nullable": true
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "seriesId",
+                                    "name",
+                                    "seasonNumber",
+                                    "episodeCount",
+                                    "overview",
+                                    "posterUrl",
+                                    "airDate",
+                                    "tmdbId"
+                                  ]
+                                }
                               }
                             },
                             "required": [
@@ -4188,6 +4959,264 @@
                     "updatedAt": {
                       "type": "string",
                       "format": "date-time"
+                    },
+                    "contentCategories": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "format": "uuid"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "slug": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "slug",
+                          "description",
+                          "createdAt"
+                        ]
+                      }
+                    },
+                    "contentPlatforms": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "format": "uuid"
+                          },
+                          "name": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                          },
+                          "slug": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100,
+                            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                          },
+                          "logoUrl": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "uri"
+                          },
+                          "baseUrl": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "uri"
+                          },
+                          "isSupported": {
+                            "type": "boolean",
+                            "nullable": true,
+                            "default": true
+                          },
+                          "createdAt": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "date-time"
+                              },
+                              {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              {
+                                "nullable": true
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "slug",
+                          "logoUrl",
+                          "baseUrl",
+                          "createdAt"
+                        ]
+                      }
+                    },
+                    "contentCredits": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "format": "uuid"
+                          },
+                          "name": {
+                            "type": "string",
+                            "minLength": 2,
+                            "maxLength": 100
+                          },
+                          "bio": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "photoUrl": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "uri"
+                          },
+                          "nationality": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "birthDate": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "date-time"
+                          },
+                          "tmdbId": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "contentCredits": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "format": "uuid"
+                                },
+                                "contentId": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "format": "uuid"
+                                },
+                                "personId": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "format": "uuid"
+                                },
+                                "role": {
+                                  "type": "string",
+                                  "maxLength": 50
+                                },
+                                "characterName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 255
+                                },
+                                "orderIndex": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 100
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "contentId",
+                                "personId",
+                                "role",
+                                "characterName",
+                                "orderIndex"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "bio",
+                          "photoUrl",
+                          "nationality",
+                          "birthDate",
+                          "tmdbId",
+                          "createdAt",
+                          "updatedAt"
+                        ]
+                      }
+                    },
+                    "seasons": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "format": "uuid"
+                          },
+                          "seriesId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "format": "uuid"
+                          },
+                          "name": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "seasonNumber": {
+                            "type": "integer"
+                          },
+                          "episodeCount": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "overview": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "posterUrl": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "uri"
+                          },
+                          "airDate": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "tmdbId": {
+                            "type": "integer",
+                            "nullable": true
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "seriesId",
+                          "name",
+                          "seasonNumber",
+                          "episodeCount",
+                          "overview",
+                          "posterUrl",
+                          "airDate",
+                          "tmdbId"
+                        ]
+                      }
                     }
                   },
                   "required": [

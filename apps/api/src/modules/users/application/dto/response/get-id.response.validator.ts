@@ -3,4 +3,4 @@ import { publicUserValidator } from "../../validators/user.validator";
 
 export const getIdResponseSchema = publicUserValidator;
 
-export type GetIdResponseDTO = z.infer<typeof getIdResponseSchema>;
+export type GetIdResponse = z.infer<typeof getIdResponseSchema>;
