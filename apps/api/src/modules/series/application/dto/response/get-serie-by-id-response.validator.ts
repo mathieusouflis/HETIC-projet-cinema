@@ -1,5 +1,5 @@
 import type z from "zod";
-import { serieSchema } from "../../schema/series.schema";
+import { serieSchema } from "../../schema/series.schema.js";
 
 export const getSerieByIdResponseSchema = serieSchema;
 
