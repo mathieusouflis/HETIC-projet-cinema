@@ -1,4 +1,8 @@
 import z from "zod";
+import { categoryResponseSchema } from "../../../../categories/application/dto/response/category.response.validator.js";
+import { peopleValidator } from "../../../../peoples/application/validators/people.validator.js";
+import { platformValidator } from "../../../../platforms/application/validators/platforms.validator.js";
+import { seasonValidator } from "../../../../seasons/application/validators/seasons.validator.js";
 
 export const movieSchema = z.object({
   id: z.uuid("Invalid UUID format for id"),
@@ -26,6 +30,10 @@ export const movieSchema = z.object({
   totalViews: z.number().int().min(0, "Total views must be 0 or higher"),
   createdAt: z.date("Invalid date-time format for createdAt"),
   updatedAt: z.date("Invalid date-time format for updatedAt"),
+  contentCategories: categoryResponseSchema.array().optional(),
+  contentPlatforms: platformValidator.array().optional(),
+  contentCredits: peopleValidator.array().optional(),
+  seasons: seasonValidator.array().optional(),
 });
 
 export type MovieSchemaType = z.infer<typeof movieSchema>;
