@@ -30,7 +30,7 @@ import {
 } from "../../../users/application/validators/user.validator.js";
 import { loginValidator } from "../dto/request/login.dto.js";
 import { registerValidator } from "../dto/request/register.dto.js";
-import { authResponseDataValidator } from "../dto/response/auth-response.dto.js";
+import { authResponseDataValidator } from "../dto/response/auth-response.response.validator.js";
 import type { LoginUseCase } from "../use-cases/login.usecase.js";
 import type { RefreshTokenUseCase } from "../use-cases/refresh-token.usecase.js";
 import type { RegisterUseCase } from "../use-cases/register.usecase.js";

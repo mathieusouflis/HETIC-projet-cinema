@@ -7,7 +7,7 @@ import type { RefreshToken } from "../../../../shared/services/token/schemas/tok
 import { UserNotFoundError } from "../../../users/domain/errors/UserNotFoundError.js";
 import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";
 import type { RefreshTokenDTO } from "../dto/request/refresh-token.dto.js";
-import type { RefreshTokenResponseDTO } from "../dto/response/refresh-token-response.dto.js";
+import type { RefreshTokenResponse } from "../dto/response/refresh-token.response.validator.js";
 
 export class RefreshTokenUseCase {
   constructor(
@@ -23,7 +23,7 @@ export class RefreshTokenUseCase {
    */
   async execute(
     data: RefreshTokenDTO
-  ): Promise<[RefreshTokenResponseDTO, RefreshToken]> {
+  ): Promise<[RefreshTokenResponse, RefreshToken]> {
     let payload: RefreshTokenPayload;
 
     try {
