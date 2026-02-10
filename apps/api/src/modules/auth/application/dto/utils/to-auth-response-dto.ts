@@ -1,18 +1,18 @@
-import type { AuthResponseDTO } from "../response/auth-response.dto";
-import type { UserProfileResponseDTO } from "../response/user-profile-respose.dto";
+import type { AuthResponse } from "../response/auth-response.response.validator";
+import type { UserProfileResponse } from "../response/user-profile.response.validator";
 
 /**
- * Transform user and tokens to AuthResponseDTO
+ * Transform user and tokens to AuthResponse
  *
  * @param user - User response data
  * @param accessToken - JWT access token
  * @param refreshToken - JWT refresh token
- * @returns AuthResponseDTO
+ * @returns AuthResponse
  */
 export function toAuthResponseDTO(
-  user: UserProfileResponseDTO,
+  user: UserProfileResponse,
   accessToken: string
-): AuthResponseDTO {
+): AuthResponse {
   return {
     user,
     accessToken,
