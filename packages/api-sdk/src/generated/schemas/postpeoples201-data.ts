@@ -5,6 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
+import type { POSTPeoples201DataContentCreditsItem } from './postpeoples201-data-content-credits-item';
 
 export type POSTPeoples201Data = {
   /** @minLength 1 */
@@ -26,4 +27,5 @@ export type POSTPeoples201Data = {
   tmdbId: number | null;
   createdAt: string;
   updatedAt: string;
+  contentCredits?: POSTPeoples201DataContentCreditsItem[];
 };

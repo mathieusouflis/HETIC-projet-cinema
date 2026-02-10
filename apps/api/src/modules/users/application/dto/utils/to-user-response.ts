@@ -1,5 +1,5 @@
 import type { User } from "../../../domain/entities";
-import type { GetIdResponseDTO } from "../responses/get-id-response";
+import type { GetIdResponse } from "../response/get-id.response.validator";
 
 /**
  * Transform a User entity to a UserResponseDTO
@@ -7,7 +7,7 @@ import type { GetIdResponseDTO } from "../responses/get-id-response";
  * @param user - User entity or user-like object
  * @returns UserResponseDTO without sensitive data
  */
-export function toUserResponseDTO(user: User): GetIdResponseDTO {
+export function toUserResponseDTO(user: User): GetIdResponse {
   return {
     id: user.id,
     username: user.username,

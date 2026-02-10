@@ -5,6 +5,10 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
+import type { GETSeriesId200ContentCategoriesItem } from './getseries-id200-content-categories-item';
+import type { GETSeriesId200ContentCreditsItem } from './getseries-id200-content-credits-item';
+import type { GETSeriesId200ContentPlatformsItem } from './getseries-id200-content-platforms-item';
+import type { GETSeriesId200SeasonsItem } from './getseries-id200-seasons-item';
 import type { GETSeriesId200Type } from './getseries-id200-type';
 
 export type GETSeriesId200 = {
@@ -47,4 +51,8 @@ export type GETSeriesId200 = {
   totalViews: number;
   createdAt: string;
   updatedAt: string;
+  contentCategories?: GETSeriesId200ContentCategoriesItem[];
+  contentPlatforms?: GETSeriesId200ContentPlatformsItem[];
+  contentCredits?: GETSeriesId200ContentCreditsItem[];
+  seasons?: GETSeriesId200SeasonsItem[];
 };

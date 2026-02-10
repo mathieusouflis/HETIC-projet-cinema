@@ -1,7 +1,7 @@
 import { paginationService } from "../../../../shared/services/pagination/index.js";
 import type { IUserRepository } from "../../domain/interfaces/IUserRepository.js";
 import type { GetQueryDTO } from "../dto/requests/get.validator.js";
-import type { GetResponseDTO } from "../dto/responses/get-response.js";
+import type { GetAllUsersResponse } from "../dto/response/get.response.validator.js";
 import { toUserResponseDTO } from "../dto/utils/to-user-response.js";
 
 export class GetUsersUseCase {
@@ -13,7 +13,7 @@ export class GetUsersUseCase {
    * @param pagination - Pagination options (page and limit)
    * @returns Promise resolving to paginated user response
    */
-  async execute(pagination: GetQueryDTO): Promise<GetResponseDTO> {
+  async execute(pagination: GetQueryDTO): Promise<GetAllUsersResponse> {
     const { page, limit } = paginationService.parsePageParams({
       page: pagination.page,
       limit: pagination.limit,

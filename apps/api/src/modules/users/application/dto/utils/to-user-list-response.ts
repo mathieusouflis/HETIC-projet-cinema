@@ -1,5 +1,5 @@
 import type { User } from "../../../domain/entities";
-import type { GetResponseDTO } from "../responses/get-response";
+import type { GetAllUsersResponse } from "../response/get.response.validator";
 import { toUserResponseDTO } from "./to-user-response";
 
 /**
@@ -16,7 +16,7 @@ export function toUserListResponseDTO(
   total: number,
   page: number,
   limit: number
-): GetResponseDTO {
+): GetAllUsersResponse {
   return {
     users: users.map((user) => toUserResponseDTO(user)),
     pagination: {
