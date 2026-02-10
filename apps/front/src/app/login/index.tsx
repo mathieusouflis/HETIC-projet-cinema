@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Login } from "@/features/auth";
-/*import type * as React from "react";
+import type * as React from "react";
 import { useForm } from "@tanstack/react-form"
 import { toast } from "sonner"
-import * as z from "zod"*/
+import * as z from "zod"
 
 export const Route = createFileRoute("/login/")({
   component: RouteComponent,
@@ -13,28 +13,28 @@ function RouteComponent() {
   return <Login />;
 }
 
-/*"use client"
+"use client"
 
-import type {
+import {
   Button,
 } from "@/components/ui/button"
-import type {
+import {
   Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
 } from "@/components/ui/card"
-import type {
+import {
   Field,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
-import type { Input } from "@/components/ui/input"
-import type {
+import { Input } from "@/components/ui/input"
+import {
   InputGroup,
   InputGroupAddon,
   InputGroupText,
@@ -62,6 +62,7 @@ export function BugReportForm() {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
+      await Promise.resolve()
       toast("You submitted the following values:", {
         description: (
           <pre className="bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4">
@@ -96,69 +97,75 @@ export function BugReportForm() {
           }}
         >
           <FieldGroup>
-            <form.Field
-              name="title"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Bug Title</FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      aria-invalid={isInvalid}
-                      placeholder="Login button not working on mobile"
-                      autoComplete="off"
-                    />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                )
-              }}
+  <form.Field name="title">
+    {(field) => {
+      const isInvalid =
+        field.state.meta.isTouched && !field.state.meta.isValid
+
+      return (
+        <Field data-invalid={isInvalid}>
+          <FieldLabel htmlFor={field.name}>Bug Title</FieldLabel>
+
+          <Input
+            id={field.name}
+            name={field.name}
+            value={field.state.value}
+            onBlur={field.handleBlur}
+            onChange={(e) => field.handleChange(e.target.value)}
+            aria-invalid={isInvalid}
+            placeholder="Login button not working on mobile"
+            autoComplete="off"
+          />
+
+          {isInvalid && (
+            <FieldError errors={field.state.meta.errors} />
+          )}
+        </Field>
+      )
+    }}
+  </form.Field>
+
+  <form.Field name="description">
+    {(field) => {
+      const isInvalid =
+        field.state.meta.isTouched && !field.state.meta.isValid
+
+      return (
+        <Field data-invalid={isInvalid}>
+          <FieldLabel htmlFor={field.name}>Description</FieldLabel>
+
+          <InputGroup>
+            <InputGroupTextarea
+              id={field.name}
+              name={field.name}
+              value={field.state.value}
+              onBlur={field.handleBlur}
+              onChange={(e) => field.handleChange(e.target.value)}
+              placeholder="I'm having an issue with the login button on mobile."
+              rows={6}
+              className="min-h-24 resize-none"
+              aria-invalid={isInvalid}
             />
-            <form.Field
-              name="description"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Description</FieldLabel>
-                    <InputGroup>
-                      <InputGroupTextarea
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        placeholder="I'm having an issue with the login button on mobile."
-                        rows={6}
-                        className="min-h-24 resize-none"
-                        aria-invalid={isInvalid}
-                      />
-                      <InputGroupAddon align="block-end">
-                        <InputGroupText className="tabular-nums">
-                          {field.state.value.length}/100 characters
-                        </InputGroupText>
-                      </InputGroupAddon>
-                    </InputGroup>
-                    <FieldDescription>
-                      Include steps to reproduce, expected behavior, and what
-                      actually happened.
-                    </FieldDescription>
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                )
-              }}
-            />
-          </FieldGroup>
+
+            <InputGroupAddon align="block-end">
+              <InputGroupText className="tabular-nums">
+                {field.state.value.length}/100 characters
+              </InputGroupText>
+            </InputGroupAddon>
+          </InputGroup>
+
+          <FieldDescription>
+            Include steps to reproduce, expected behavior, and what actually happened.
+          </FieldDescription>
+
+          {isInvalid && (
+            <FieldError errors={field.state.meta.errors} />
+          )}
+        </Field>
+      )
+    }}
+  </form.Field>
+</FieldGroup>
         </form>
       </CardContent>
       <CardFooter>
@@ -173,4 +180,4 @@ export function BugReportForm() {
       </CardFooter>
     </Card>
   )
-}*/
+}
