@@ -4,8 +4,8 @@ import { AssideNav } from "./asside-nav";
 
 export const MainLayout = () => {
   return (
-    <div className="flex flex-row-reverse min-h-screen overflow-hidden">
-      <main className="flex-1 my-5 mr-5 overflow-hidden">
+    <div className="flex flex-row-reverse min-h-screen">
+      <main className="flex-1 my-5 mr-5 overflow-x-hidden overflow-y-auto">
         <Outlet />
       </main>
       <AssideNav />
