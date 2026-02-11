@@ -4,12 +4,12 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getApi } from "@/lib/api/services";
 import { DisplayMovie, DisplayMovieSkeleton } from "./components/display-movie";
+import { MovieCard, MovieCardSkeleton } from "./components/movie-card";
 
 export const HomePage = () => {
   const services = getApi();
 
   const { data, isLoading } = services.contents.discover({
-    title: "spiderman",
     withCategory: "true",
   });
 
@@ -35,8 +35,8 @@ export const HomePage = () => {
       ) : (
         <div>Loading...</div>
       )}
-      <div className="flex flex-col gap-4 font-medium">
-        <h1 className="text-3xl">Genres</h1>
+      <div className="flex flex-col gap-4 ">
+        <h1 className="text-3xl font-semibold">Genres</h1>
         {isCategoriesLoading ? (
           <div className="flex gap-3">
             {[...Array(5)].map((_, index) => (
@@ -63,6 +63,21 @@ export const HomePage = () => {
             <ScrollBar orientation="horizontal" className="opacity-0" />
           </ScrollArea>
         )}
+      </div>
+      <div className="flex flex-col gap-4 ">
+        <h1 className="text-3xl font-semibold">Trends</h1>
+        <ScrollArea className="w-full">
+          <div className="flex gap-5">
+            {isLoading
+              ? [...Array(5)].map((_, index) => (
+                  <MovieCardSkeleton key={`trends-skeleton-${index}`} />
+                ))
+              : contents?.map((content) => (
+                  <MovieCard key={`trends-${content.id}`} movie={content} />
+                ))}
+          </div>
+          <ScrollBar orientation="horizontal" className="opacity-0" />
+        </ScrollArea>
       </div>
     </div>
   );
