@@ -20,7 +20,7 @@ export const SearchProvider = () => {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedQuery(query);
-    }, 1000);
+    }, 500);
 
     return () => {
       clearTimeout(handler);
