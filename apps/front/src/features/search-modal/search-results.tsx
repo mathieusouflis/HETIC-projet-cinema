@@ -1,31 +1,28 @@
 import type { GETContents200DataItemsItem } from "@packages/api-sdk";
-import { useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getApi } from "@/lib/api/services";
 import { ContentCard, ContentCardSkeleton } from "./components/content-card";
 
 export const SearchResults = ({ query }: { query: string }) => {
-  const [contents, setContents] = useState<GETContents200DataItemsItem[]>([]);
   const { contents: contentService } = getApi();
-  const [loading, setLoading] = useState(false);
+  const { data, isLoading } = contentService.discover({
+    title: query,
+    withCategory: "true",
+  });
 
-  useMemo(async () => {
-    setLoading(true);
-    const data = await contentService.discover({
-      title: query,
-      withCategory: "true",
-    });
-    setContents(data.items ?? []);
-    setLoading(false);
-  }, [query, contentService]);
+  const contents = data?.items;
 
-  const movies = contents.filter((content) => content.type === "movie");
-  const series = contents.filter((content) => content.type === "serie");
+  if (!contents && !isLoading) {
+    return <div>No results found</div>;
+  }
+
+  const movies = contents?.filter((content) => content.type === "movie") ?? [];
+  const series = contents?.filter((content) => content.type === "serie") ?? [];
 
   const loadingSkeleton = (
     <>
       {[...Array(10)].map((_, index) => (
-        <ContentCardSkeleton key={index} />
+        <ContentCardSkeleton key={`skeleton-${index}`} />
       ))}
     </>
   );
@@ -42,7 +39,7 @@ export const SearchResults = ({ query }: { query: string }) => {
       <TabGrid value="all">
         <div className="col-span-full flex flex-col gap-6">
           <TabGridSection title="Movies">
-            {loading ? (
+            {isLoading ? (
               loadingSkeleton
             ) : movies.length > 0 ? (
               renderContentsComponents(movies)
@@ -53,7 +50,7 @@ export const SearchResults = ({ query }: { query: string }) => {
             )}
           </TabGridSection>
           <TabGridSection title="Series">
-            {loading ? (
+            {isLoading ? (
               loadingSkeleton
             ) : series.length > 0 ? (
               renderContentsComponents(series)
@@ -66,10 +63,10 @@ export const SearchResults = ({ query }: { query: string }) => {
         </div>
       </TabGrid>
       <TabGrid value="movies">
-        {loading ? loadingSkeleton : renderContentsComponents(movies)}
+        {isLoading ? loadingSkeleton : renderContentsComponents(movies)}
       </TabGrid>
       <TabGrid value="series">
-        {loading ? loadingSkeleton : renderContentsComponents(series)}
+        {isLoading ? loadingSkeleton : renderContentsComponents(series)}
       </TabGrid>
     </Tabs>
   );
