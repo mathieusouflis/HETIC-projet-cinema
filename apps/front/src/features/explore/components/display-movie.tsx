@@ -14,13 +14,13 @@ export const DisplayMovie = (props: DisplayMovieProps) => {
   const routes = useRoutes();
 
   return (
-    <div className="relative flex flex-col items-end w-full aspect-13/6 ">
+    <div className="relative flex flex-col w-full">
       {movie.backdropUrl ? (
-        <div className="relative w-full h-full rounded-[28px] overflow-hidden">
+        <div className="relative w-full h-auto rounded-[28px] overflow-hidden aspect-13/6">
           <img
             src={movie.backdropUrl}
             alt={movie.title}
-            className="w-full h-full object-cover"
+            className="w-full h-auto object-cover"
           />
           <div className="absolute inset-0 bg-linear-to-tr from-black/80 to-black/0" />
         </div>
@@ -39,7 +39,7 @@ export const DisplayMovie = (props: DisplayMovieProps) => {
           <h2 className="text-6xl font-bold text-white">{movie.title}</h2>
           <p className="text-white max-w-1/3 line-clamp-4">{movie.synopsis}</p>
         </span>
-        <Link to={routes.contents.detail(movie.id)}>
+        <Link to={routes.contents.detail(movie.id)} className="w-fit">
           <Button variant={"glass"} size={"2xl"} className="w-fit">
             Discover {movie.type}
           </Button>
