@@ -16,7 +16,7 @@ export const NavLink = ({
     pathname === "/" ? pathname === href : href.startsWith(pathname);
 
   return (
-    <Link to={href}>
+    <Link to={href} className="w-fit">
       <Button variant={pathnameMatch ? "default" : "ghost"} size={"2xl"}>
         {pathnameMatch ? <StartIcon fill="currentColor" /> : <StartIcon />}
         {children}
