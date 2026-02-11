@@ -2,6 +2,7 @@ import type { GETContents200DataItemsItem } from "@packages/api-sdk";
 import { Link } from "@tanstack/react-router";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useRoutes } from "@/lib/routes";
 
 export interface DisplayMovieProps {
@@ -46,4 +47,8 @@ export const DisplayMovie = (props: DisplayMovieProps) => {
       </div>
     </div>
   );
+};
+
+export const DisplayMovieSkeleton = () => {
+  return <Skeleton className="w-full aspect-13/6" />;
 };

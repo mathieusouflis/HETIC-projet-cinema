@@ -47,10 +47,10 @@ export const ContentCard = ({
 export const ContentCardSkeleton = () => {
   return (
     <div className="grid grid-cols-2 gap-2.5 col-span-2">
-      <Skeleton className="bg-muted-foreground w-full h-auto aspect-3/4 rounded-md" />
+      <Skeleton className="w-full h-auto aspect-3/4 rounded-md" />
       <div className="flex flex-col gap-3 w-full">
-        <Skeleton className="bg-muted-foreground w-full h-8 rounded-md" />
-        <Skeleton className="bg-muted-foreground w-full h-4 rounded-md" />
+        <Skeleton className="w-full h-8 rounded-md" />
+        <Skeleton className="w-full h-4 rounded-md" />
       </div>
     </div>
   );
