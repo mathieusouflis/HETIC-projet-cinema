@@ -50,5 +50,5 @@ export const DisplayMovie = (props: DisplayMovieProps) => {
 };
 
 export const DisplayMovieSkeleton = () => {
-  return <Skeleton className="w-full aspect-13/6" />;
+  return <Skeleton className="w-full aspect-13/6 rounded-[28px]" />;
 };
