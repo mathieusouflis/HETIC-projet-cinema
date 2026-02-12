@@ -7,7 +7,10 @@ export function Login() {
   const api = getApi();
 
   const login = async () => {
-    const response = await api.auth.login("user@example.com", "Password123:)");
+    const response = await api.auth.login({
+      email: "user@example.com",
+      password: "Password123:)",
+    });
     setAccessToken(response.data.accessToken);
     setUser(response.data.user);
   };

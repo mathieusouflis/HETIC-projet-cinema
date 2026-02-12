@@ -38,11 +38,22 @@ export class RefreshTokenUseCase {
       throw new UserNotFoundError(payload.userId);
     }
 
-    const { accessToken, refreshToken } = this.tokenService.generateTokenPair(
-      user.id,
-      user.email
-    );
+    const userJSON = user.toJSON();
 
-    return [accessToken, refreshToken];
+    const { accessToken: responseData, refreshToken } =
+      this.tokenService.generateTokenPair(user.id, user.email);
+
+    return [
+      {
+        user: {
+          id: userJSON.id,
+          username: userJSON.username,
+          avatarUrl: userJSON.avatarUrl,
+          createdAt: userJSON.createdAt,
+        },
+        accessToken: responseData,
+      },
+      refreshToken,
+    ];
   }
 }
