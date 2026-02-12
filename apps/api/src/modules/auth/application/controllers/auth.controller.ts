@@ -31,6 +31,7 @@ import {
 import { loginValidator } from "../dto/request/login.dto.js";
 import { registerValidator } from "../dto/request/register.dto.js";
 import { authResponseDataValidator } from "../dto/response/auth-response.response.validator.js";
+import type { RefreshTokenResponse } from "../dto/response/refresh-token.response.validator.js";
 import type { LoginUseCase } from "../use-cases/login.usecase.js";
 import type { RefreshTokenUseCase } from "../use-cases/refresh-token.usecase.js";
 import type { RegisterUseCase } from "../use-cases/register.usecase.js";
@@ -157,25 +158,29 @@ export class AuthController extends BaseController {
     unauthorizedErrorResponseSchema
   )
   @SetCookie(REFRESH_TOKEN_COOKIE_NAME, REFRESH_TOKEN_COOKIE_OPTIONS)
-  refresh = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const { refreshToken: _refreshToken } = req.cookies;
+  refresh = asyncHandler(
+    async (req: Request, res: Response): Promise<RefreshTokenResponse> => {
+      const { refreshToken: _refreshToken } = req.cookies;
 
-    const [accessToken, refreshToken] = await this.refreshTokenUseCase.execute({
-      refreshToken: _refreshToken,
-    });
+      const [responseData, refreshToken] =
+        await this.refreshTokenUseCase.execute({
+          refreshToken: _refreshToken,
+        });
 
-    res.cookie(
-      REFRESH_TOKEN_COOKIE_NAME,
-      refreshToken,
-      REFRESH_TOKEN_COOKIE_OPTIONS
-    );
+      res.cookie(
+        REFRESH_TOKEN_COOKIE_NAME,
+        refreshToken,
+        REFRESH_TOKEN_COOKIE_OPTIONS
+      );
 
-    res.status(200).json({
-      success: true,
-      message: "Tokens refreshed successfully",
-      data: accessToken,
-    });
-  });
+      res.status(200).json({
+        success: true,
+        message: "Tokens refreshed successfully",
+        data: responseData,
+      });
+      return responseData;
+    }
+  );
 
   @Post({
     path: "/logout",
