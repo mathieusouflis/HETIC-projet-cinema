@@ -1,7 +1,16 @@
 import { Link } from "@tanstack/react-router";
-import { Bell } from "lucide-react";
+import { Bell, Settings, User2 } from "lucide-react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/features/auth/stores/auth.store";
 import { useRoutes } from "@/lib/routes";
 import { navConfig } from "./common";
@@ -42,15 +51,37 @@ export const AssideNav = () => {
               <Button variant={"ghost"} size={"icon-2xl"}>
                 <Bell />
               </Button>
-              <Link to={routes.profile}>
-                <Avatar size="2xl">
-                  {user?.avatarUrl ? (
-                    <AvatarImage src={user.avatarUrl} alt="Avatar" />
-                  ) : (
-                    <span className="w-full h-full bg-neutral-400" />
-                  )}
-                </Avatar>
-              </Link>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Avatar size="2xl">
+                    {user?.avatarUrl ? (
+                      <AvatarImage src={user.avatarUrl} alt="Avatar" />
+                    ) : (
+                      <span className="w-full h-full bg-neutral-400" />
+                    )}
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel className="text-muted-foreground">
+                      {user.username}
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <Link to={routes.profile}>
+                      <DropdownMenuItem>
+                        <User2 />
+                        Profile
+                      </DropdownMenuItem>
+                    </Link>
+                    <Link to={routes.settings}>
+                      <DropdownMenuItem>
+                        <Settings />
+                        Settings
+                      </DropdownMenuItem>
+                    </Link>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </>
           )}
         </div>
