@@ -7,22 +7,30 @@ type User = POSTAuthLogin200["data"]["user"];
 type AuthStore = {
   user: User | null;
   accessToken: string | null;
-
-  setUser: (user: User) => void;
-  setAccessToken: (token: string) => void;
+  isLoading: boolean;
+  error: string | null;
+  setUser: (user: POSTAuthLogin200DataUser) => void;
+  setAccessToken: (accessToken: string) => void;
+  setLoading: (isLoading: boolean) => void;
+  setError: (error: string | null) => void;
   clear: () => void;
 };
 
 export const useAuth = create<AuthStore>((set) => ({
   user: null,
   accessToken: null,
-
-  setUser: (user) => set({ user }),
-  setAccessToken: (accessToken) => set({ accessToken }),
-
-  clear: () =>
-    set({
+  isLoading: false,
+  error: null,
+  setUser: (user) => set(() => ({ user })),
+  setAccessToken: (accessToken) => set(() => ({ accessToken })),
+  setLoading: (isLoading) => set(() => ({ isLoading })),
+  setError: (error) => set(() => ({ error })),
+  clear: () => {
+    set(() => ({
       user: null,
       accessToken: null,
-    }),
+      isLoading: false,
+      error: null,
+    }));
+  },
 }));

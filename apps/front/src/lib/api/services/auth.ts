@@ -1,4 +1,7 @@
 import {
+  gETAuthMe,
+  type POSTAuthLoginBody,
+  type POSTAuthRegisterBody,
   pOSTAuthLogin,
   pOSTAuthLogout,
   pOSTAuthRefresh,
@@ -18,12 +21,8 @@ export const authService = {
     return response.data.data;
   },
 
-  login: async (email: string, password: string) => {
-    const response = await pOSTAuthLogin({
-      email,
-      password,
-    });
-
+  login: async (params: POSTAuthLoginBody) => {
+    const response = await pOSTAuthLogin(params);
     return response.data;
   },
 
@@ -36,6 +35,8 @@ export const authService = {
 
   refresh: async () => {
     const response = await pOSTAuthRefresh();
+    return response.data;
+  },
 
     useAuth.getState().setAccessToken(response.data.data.accessToken);
   },
