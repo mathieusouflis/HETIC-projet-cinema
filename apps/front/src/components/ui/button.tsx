@@ -37,6 +37,9 @@ const buttonVariants = cva(
         "icon-lg": "size-10",
         "icon-2xl": "size-12 [&_svg:not([class*='size-'])]:size-5",
       },
+      color: {
+        blue: "bg-blue-600 text-white",
+      },
     },
     defaultVariants: {
       variant: "default",
@@ -49,6 +52,7 @@ function Button({
   className,
   variant = "default",
   size = "default",
+  color,
   asChild = false,
   ...props
 }: React.ComponentProps<"button"> &
@@ -62,7 +66,7 @@ function Button({
       data-slot="button"
       data-variant={variant}
       data-size={size}
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size, className, color }))}
       {...props}
     >
       <GlassFilter>{props.children}</GlassFilter>

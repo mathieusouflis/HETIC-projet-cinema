@@ -1,13 +1,28 @@
 import {
   Calendar1,
   ListTodo,
+  type LucideIcon,
   MessageSquare,
   Search,
   Telescope,
 } from "lucide-react";
 import { baseRoutes } from "@/lib/routes";
 
-export const navConfig = {
+type NavConfig = Record<
+  string,
+  {
+    name: string;
+    path: string;
+    icon: LucideIcon;
+    devices: {
+      mobile: boolean;
+      desktop: boolean;
+    };
+    requireAuth?: boolean;
+  }
+>;
+
+export const navConfig: NavConfig = {
   home: {
     name: "Home",
     path: baseRoutes.home,
@@ -39,6 +54,7 @@ export const navConfig = {
     name: "Messages",
     path: baseRoutes.messages,
     icon: MessageSquare,
+    requireAuth: true,
     devices: {
       mobile: true,
       desktop: true,
@@ -48,6 +64,7 @@ export const navConfig = {
     name: "Watchlist",
     path: baseRoutes.watchlist,
     icon: ListTodo,
+    requireAuth: true,
     devices: {
       mobile: true,
       desktop: true,
