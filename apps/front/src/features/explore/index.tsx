@@ -58,7 +58,7 @@ export const HomePage = () => {
                   key={category.id}
                   variant={"secondary"}
                   size={"2xl"}
-                  className="py-9"
+                  className="py-7 sm:py-9"
                 >
                   {category.name}
                 </Button>
