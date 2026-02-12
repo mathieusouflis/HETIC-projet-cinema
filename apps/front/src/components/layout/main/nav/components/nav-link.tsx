@@ -8,7 +8,7 @@ export const NavLink = ({
   variant = "desktop",
   children,
 }: {
-  startIcon: LucideIcon;
+  startIcon?: LucideIcon;
   href: string;
   variant?: "mobile" | "desktop";
   children: React.ReactNode;
@@ -23,7 +23,8 @@ export const NavLink = ({
         variant={pathnameMatch ? "default" : "ghost"}
         size={variant === "mobile" ? "xl" : "2xl"}
       >
-        {pathnameMatch ? <StartIcon fill="currentColor" /> : <StartIcon />}
+        {StartIcon &&
+          (pathnameMatch ? <StartIcon fill="currentColor" /> : <StartIcon />)}
         {variant === "desktop" && children}
       </Button>
     </Link>

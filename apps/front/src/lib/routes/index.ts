@@ -11,6 +11,8 @@ export const baseRoutes = {
     root: "/search",
     query: (query: string) => `/search?q=${query}`,
   },
+  login: "/login",
+  register: "/register",
 };
 
 export const useRoutes = () => {
