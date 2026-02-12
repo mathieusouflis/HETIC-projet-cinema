@@ -32,12 +32,7 @@ export const AssideNav = () => {
         <div className="flex flex-col gap-3 h-full justify-end items-center w-fit pl-4">
           {!user && (
             <Link to={routes.login} className="w-full">
-              <Button
-                size={"2xl"}
-                variant={"default"}
-                color="blue"
-                className="w-full font-bold"
-              >
+              <Button size={"2xl"} color="blue" className="w-full font-bold">
                 Login
               </Button>
             </Link>

@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { GlassFilter } from "./filters/glass-filter";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium transition-all duration-300 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer",
   {
     variants: {
       variant: {
@@ -38,9 +38,33 @@ const buttonVariants = cva(
         "icon-2xl": "size-12 [&_svg:not([class*='size-'])]:size-5",
       },
       color: {
-        blue: "bg-blue-600 text-white",
+        blue: "bg-blue-600 hover:bg-blue-700",
       },
     },
+    compoundVariants: [
+      {
+        variant: "default",
+        color: "blue",
+        className: "bg-blue-600 text-white hover:bg-blue-700",
+      },
+      {
+        variant: "outline",
+        color: "blue",
+        className:
+          "border-blue-600 text-blue-600 bg-transparent hover:text-blue-600 hover:bg-blue-50",
+      },
+      {
+        variant: "secondary",
+        color: "blue",
+        className:
+          "bg-blue-100 text-blue-600 hover:bg-blue-200 dark:bg-blue-950 dark:text-blue-400 dark:hover:bg-blue-900",
+      },
+      {
+        variant: "ghost",
+        color: "blue",
+        className: "hover:text-blue-600 hover:bg-blue-50 bg-transparent",
+      },
+    ],
     defaultVariants: {
       variant: "default",
       size: "default",
