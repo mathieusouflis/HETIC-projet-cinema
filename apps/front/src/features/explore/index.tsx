@@ -48,7 +48,7 @@ export const HomePage = () => {
           </div>
         ) : (
           <ScrollArea className="w-full">
-            <div className="flex gap-3 pb-4">
+            <div className="flex gap-3 p-2 items-center">
               {categories?.map((category) => (
                 <Button
                   key={category.id}
