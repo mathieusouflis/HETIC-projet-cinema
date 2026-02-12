@@ -6,6 +6,10 @@ import { getApi } from "@/lib/api/services";
 import { DisplayMovie, DisplayMovieSkeleton } from "./components/display-movie";
 import { MovieCard, MovieCardSkeleton } from "./components/movie-card";
 
+const SectionTitle = ({ children }: { children: React.ReactNode }) => {
+  return <h2 className="text-2xl sm:text-3xl font-semibold">{children}</h2>;
+};
+
 export const HomePage = () => {
   const services = getApi();
 
@@ -36,7 +40,7 @@ export const HomePage = () => {
         <div>Loading...</div>
       )}
       <div className="flex flex-col gap-4 ">
-        <h1 className="text-3xl font-semibold">Genres</h1>
+        <SectionTitle>Genres</SectionTitle>
         {isCategoriesLoading ? (
           <div className="flex gap-3">
             {[...Array(5)].map((_, index) => (
@@ -65,7 +69,7 @@ export const HomePage = () => {
         )}
       </div>
       <div className="flex flex-col gap-4 ">
-        <h1 className="text-3xl font-semibold">Trends</h1>
+        <SectionTitle>Trends</SectionTitle>
         <ScrollArea className="w-full">
           <div className="flex gap-5">
             {isLoading
