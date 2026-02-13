@@ -35,8 +35,6 @@ export const authService = {
 
   refresh: async () => {
     const response = await pOSTAuthRefresh();
-    return response.data;
-  },
 
     useAuth.getState().setAccessToken(response.data.data.accessToken);
   },
