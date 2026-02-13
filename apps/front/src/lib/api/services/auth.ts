@@ -4,6 +4,7 @@ import {
   pOSTAuthRefresh,
   pOSTAuthRegister,
 } from "@packages/api-sdk";
+
 import { useAuth } from "@/features/auth/stores/auth.store";
 
 export const authService = {
@@ -13,6 +14,7 @@ export const authService = {
       password,
       username,
     });
+
     return response.data.data;
   },
 
@@ -26,16 +28,15 @@ export const authService = {
   },
 
   logout: async () => {
-    const { clear } = useAuth();
-
     await pOSTAuthLogout();
-    clear();
+
+    // ⚠️ getState = OK dans un service
+    useAuth.getState().clear();
   },
 
   refresh: async () => {
-    const { setAccessToken } = useAuth();
     const response = await pOSTAuthRefresh();
 
-    setAccessToken(response.data.data.accessToken);
+    useAuth.getState().setAccessToken(response.data.data.accessToken);
   },
 };

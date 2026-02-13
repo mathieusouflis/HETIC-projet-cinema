@@ -1,183 +1,160 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Login } from "@/features/auth";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Eye, EyeOff } from "lucide-react";
+/*import { Login } from "@/features/auth";*/
 import type * as React from "react";
-import { useForm } from "@tanstack/react-form"
-import { toast } from "sonner"
-import * as z from "zod"
+import { useState } from "react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useAuth } from "@/features/auth/stores/auth.store";
+import { getApi } from "@/lib/api/services";
+
+/*function RouteComponent() {
+  return <Login />;
+}*/
 
 export const Route = createFileRoute("/login/")({
-  component: RouteComponent,
+  component: IndexPage,
 });
 
-function RouteComponent() {
-  return <Login />;
-}
+function IndexPage() {
+  const services = getApi();
+  const navigate = useNavigate();
 
-"use client"
+  const { setUser, setAccessToken } = useAuth();
 
-import {
-  Button,
-} from "@/components/ui/button"
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card"
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroupTextarea,
-} from "@/components/ui/input-group"
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-const formSchema = z.object({
-  title: z
-    .string()
-    .min(5, "Bug title must be at least 5 characters.")
-    .max(32, "Bug title must be at most 32 characters."),
-  description: z
-    .string()
-    .min(20, "Description must be at least 20 characters.")
-    .max(100, "Description must be at most 100 characters."),
-})
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
 
-export function BugReportForm() {
-  const form = useForm({
-    defaultValues: {
-      title: "",
-      description: "",
-    },
-    validators: {
-      onSubmit: formSchema,
-    },
-    onSubmit: async ({ value }) => {
-      await Promise.resolve()
-      toast("You submitted the following values:", {
-        description: (
-          <pre className="bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4">
-            <code>{JSON.stringify(value, null, 2)}</code>
-          </pre>
-        ),
-        position: "bottom-right",
-        classNames: {
-          content: "flex flex-col gap-2",
-        },
-        style: {
-          "--border-radius": "calc(var(--radius)  + 4px)",
-        } as React.CSSProperties,
-      })
-    },
-  })
+    try {
+      const response = await services.auth.login(email, password);
+
+      setAccessToken(response.data.accessToken);
+      setUser(response.data.user);
+
+      toast.success("Welcome back 👋");
+
+      navigate({ to: "/register" }); // change plus tard
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+        return;
+      }
+
+      toast.error("Login failed");
+    }
+  }
 
   return (
-    <Card className="w-full sm:max-w-md">
-      <CardHeader>
-        <CardTitle>Bug Report</CardTitle>
-        <CardDescription>
-          Help us improve by reporting bugs you encounter.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form
-          id="bug-report-form"
-          onSubmit={(e) => {
-            e.preventDefault()
-            form.handleSubmit()
-          }}
-        >
-          <FieldGroup>
-  <form.Field name="title">
-    {(field) => {
-      const isInvalid =
-        field.state.meta.isTouched && !field.state.meta.isValid
+    <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
+      {/* LEFT */}
+      <div className="flex items-center justify-center bg-white px-8">
+        <form onSubmit={handleLogin} className="w-full max-w-md space-y-6">
+          {/* TITLE */}
+          <div className="space-y-2 text-center">
+            <h1 className="text-2xl font-bold">Login</h1>
 
-      return (
-        <Field data-invalid={isInvalid}>
-          <FieldLabel htmlFor={field.name}>Bug Title</FieldLabel>
+            <p className="text-sm text-muted-foreground">
+              or{" "}
+              <Link to="/register" className="underline font-medium">
+                Create an account
+              </Link>
+            </p>
+          </div>
 
-          <Input
-            id={field.name}
-            name={field.name}
-            value={field.state.value}
-            onBlur={field.handleBlur}
-            onChange={(e) => field.handleChange(e.target.value)}
-            aria-invalid={isInvalid}
-            placeholder="Login button not working on mobile"
-            autoComplete="off"
-          />
+          {/* EMAIL */}
+          <div className="space-y-2">
+            <Label className="text-xs font-medium">Email</Label>
 
-          {isInvalid && (
-            <FieldError errors={field.state.meta.errors} />
-          )}
-        </Field>
-      )
-    }}
-  </form.Field>
-
-  <form.Field name="description">
-    {(field) => {
-      const isInvalid =
-        field.state.meta.isTouched && !field.state.meta.isValid
-
-      return (
-        <Field data-invalid={isInvalid}>
-          <FieldLabel htmlFor={field.name}>Description</FieldLabel>
-
-          <InputGroup>
-            <InputGroupTextarea
-              id={field.name}
-              name={field.name}
-              value={field.state.value}
-              onBlur={field.handleBlur}
-              onChange={(e) => field.handleChange(e.target.value)}
-              placeholder="I'm having an issue with the login button on mobile."
-              rows={6}
-              className="min-h-24 resize-none"
-              aria-invalid={isInvalid}
+            <Input
+              type="email"
+              placeholder="you@email.com"
+              className="
+                border-0 
+                border-b 
+                rounded-none
+                focus-visible:ring-0
+                px-0
+                py-5
+                text-base
+                placeholder:text-[#868686]
+              "
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
+          </div>
 
-            <InputGroupAddon align="block-end">
-              <InputGroupText className="tabular-nums">
-                {field.state.value.length}/100 characters
-              </InputGroupText>
-            </InputGroupAddon>
-          </InputGroup>
+          {/* PASSWORD */}
+          <div className="space-y-2">
+            <Label className="text-xs font-medium">Password</Label>
 
-          <FieldDescription>
-            Include steps to reproduce, expected behavior, and what actually happened.
-          </FieldDescription>
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                className="
+                  border-0 
+                  border-b 
+                  rounded-none
+                  focus-visible:ring-0
+                  px-0
+                  py-5
+                "
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
 
-          {isInvalid && (
-            <FieldError errors={field.state.meta.errors} />
-          )}
-        </Field>
-      )
-    }}
-  </form.Field>
-</FieldGroup>
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-0 top-1/2 -translate-y-1/2"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+          </div>
+
+          {/* FORGOT */}
+          <div className="text-sm">
+            <Link to="/forgot-password" className="hover:underline">
+              Forgot password?
+            </Link>
+          </div>
+
+          {/* BUTTONS */}
+          <div className="flex gap-3">
+            <Button
+              type="button"
+              variant="secondary"
+              className="flex-1 rounded-full bg-[#E4E4E4] text-black hover:bg-[#d5d5d5]"
+            >
+              Create Account
+            </Button>
+
+            <Button
+              type="submit"
+              className="flex-1 rounded-full bg-[#2E2E2E] hover:bg-black"
+            >
+              Sign In
+            </Button>
+          </div>
         </form>
-      </CardContent>
-      <CardFooter>
-        <Field orientation="horizontal">
-          <Button type="button" variant="outline" onClick={() => form.reset()}>
-            Reset
-          </Button>
-          <Button type="submit" form="bug-report-form">
-            Submit
-          </Button>
-        </Field>
-      </CardFooter>
-    </Card>
-  )
+      </div>
+
+      {/* RIGHT */}
+      <div className="hidden md:flex items-center justify-center bg-[#313131] text-white p-12">
+        <div className="max-w-md text-center space-y-6">
+          <p className="font-serif text-4xl leading-tight">
+            “Le lorem ipsum est, en imprimerie”
+          </p>
+
+          <span className="text-base opacity-80">— Albert Einstein</span>
+        </div>
+      </div>
+    </div>
+  );
 }
