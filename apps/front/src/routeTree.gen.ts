@@ -12,7 +12,7 @@ import { Route as rootRouteImport } from './app/__root'
 import { Route as RegisterIndexRouteImport } from './app/register/index'
 import { Route as MainRouteImport } from './app/_main'
 import { Route as LoginIndexRouteImport } from './app/login/index'
-import { Route as MainIndexRouteImport } from './app/_main/index'
+import { Route as ForgotPasswordIndexRouteImport } from './app/forgot-password/index'
 
 const RegisterIndexRoute = RegisterIndexRouteImport.update({
   id: '/register/',
@@ -21,6 +21,11 @@ const RegisterIndexRoute = RegisterIndexRouteImport.update({
 } as any)
 const MainRoute = MainRouteImport.update({
   id: '/_main',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterIndexRoute = RegisterIndexRouteImport.update({
+  id: '/register/',
+  path: '/register/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginIndexRoute = LoginIndexRouteImport.update({
@@ -79,6 +84,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof MainRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register/': {
+      id: '/register/'
+      path: '/register'
+      fullPath: '/register/'
+      preLoaderRoute: typeof RegisterIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login/': {
