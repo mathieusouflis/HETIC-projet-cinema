@@ -29,6 +29,7 @@ function IndexPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   async function handleLogin(e: React.FormEvent) {
+    console.log("SUBMIT TRIGGERED");
     e.preventDefault();
 
     try {
@@ -131,6 +132,7 @@ function IndexPage() {
               type="button"
               variant="secondary"
               className="flex-1 rounded-full bg-[#E4E4E4] text-black hover:bg-[#d5d5d5]"
+              onClick={() => navigate({ to: "/register" })}
             >
               Create Account
             </Button>
