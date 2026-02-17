@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,7 +25,9 @@ export function RegisterForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!isFormValid) return;
+    if (!isFormValid) {
+      return;
+    }
 
     setLoading(true);
     await register(email, username, password);
@@ -114,7 +116,11 @@ export function RegisterForm() {
               className="flex-1 rounded-full bg-[#2E2E2E] hover:bg-black"
               disabled={!isFormValid || loading}
             >
-              {loading ? <Loader2 className="animate-spin" size={18} /> : "Sign Up"}
+              {loading ? (
+                <Loader2 className="animate-spin" size={18} />
+              ) : (
+                "Sign Up"
+              )}
             </Button>
           </div>
         </form>

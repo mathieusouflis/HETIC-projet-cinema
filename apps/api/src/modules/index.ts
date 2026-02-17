@@ -70,7 +70,6 @@ export function apiVersion1Router(): Router {
     JSON.stringify(openApiSpec, null, 2),
     (err) => {
       if (err) {
-        console.error("Error writing OpenAPI spec:", err);
       }
     }
   );

@@ -69,11 +69,7 @@ describe("Types tests", () => {
 
   describe("isController", () => {
     it("should return true for BaseController instance", () => {
-      class TestController extends BaseController {
-        constructor() {
-          super();
-        }
-      }
+      class TestController extends BaseController {}
 
       const controller = new TestController();
 

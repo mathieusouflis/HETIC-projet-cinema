@@ -364,15 +364,11 @@ export class AsyncAPIGenerator {
   /**
    * Convert Zod schema to JSON Schema (custom implementation for Zod v4)
    */
-  private zodToJsonSchema(zodSchema: any, name: string): any {
+  private zodToJsonSchema(zodSchema: any, _name: string): any {
     try {
       // Custom converter for Zod v4 compatibility
       return this.convertZodToJsonSchema(zodSchema);
-    } catch (error) {
-      console.error(
-        `Error converting Zod schema to JSON Schema for ${name}:`,
-        error
-      );
+    } catch (_error) {
       return { type: "object" };
     }
   }

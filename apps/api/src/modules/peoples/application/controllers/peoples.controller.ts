@@ -77,10 +77,8 @@ export class PeoplesController extends BaseController {
     private readonly searchPeopleUseCase: SearchPeopleUseCase,
     private readonly getPeopleUseCase: GetPeopleUseCase,
     private readonly createPeopleUseCase: CreatePeopleUseCase,
-    // @ts-expect-error
-    private readonly updatePeopleUseCase: UpdatePeopleUseCase,
-    // @ts-expect-error
-    private readonly deletePeopleUseCase: DeletePeopleUseCase
+    readonly _updatePeopleUseCase: UpdatePeopleUseCase,
+    readonly _deletePeopleUseCase: DeletePeopleUseCase
   ) {
     super();
   }
