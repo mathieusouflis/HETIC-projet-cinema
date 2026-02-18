@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './app/__root'
 import { Route as RegisterIndexRouteImport } from './app/register/index'
 import { Route as MainRouteImport } from './app/_main'
 import { Route as LoginIndexRouteImport } from './app/login/index'
-import { Route as ForgotPasswordIndexRouteImport } from './app/forgot-password/index'
 
 const RegisterIndexRoute = RegisterIndexRouteImport.update({
   id: '/register/',
