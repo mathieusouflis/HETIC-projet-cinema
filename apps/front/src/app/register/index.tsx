@@ -1,5 +1,10 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { RegisterForm } from "@/features/auth/components/RegisterForm";
 
-export default function RegisterPage() {
+export const Route = createFileRoute("/register/")({
+  component: RegisterPage,
+});
+
+function RegisterPage() {
   return <RegisterForm />;
 }

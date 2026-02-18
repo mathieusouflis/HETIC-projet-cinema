@@ -1,138 +1,205 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "@tanstack/react-router";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useId, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { useRegister } from "../hooks/useRegister";
 
+const schema = z
+  .object({
+    email: z.string().email("Invalid email address"),
+    username: z.string().min(3, "Username must be at least 3 characters"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+type FormValues = z.infer<typeof schema>;
+
 export function RegisterForm() {
-  const { register } = useRegister();
+  const { register: registerUser } = useRegister();
 
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
-  const isFormValid =
-    email.length > 3 &&
-    username.length > 2 &&
-    password.length >= 6 &&
-    password === confirmPassword;
+  // IDs accessibles
+  const emailId = useId();
+  const usernameId = useId();
+  const passwordId = useId();
+  const confirmPasswordId = useId();
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  const form = useForm<FormValues>({
+    resolver: zodResolver(schema),
+  });
 
-    if (!isFormValid) {
-      return;
+  async function onSubmit(values: FormValues) {
+    try {
+      await registerUser(values.email, values.username, values.password);
+    } catch (error: unknown) {
+      form.setError("root", {
+        message: error instanceof Error ? error.message : "Registration failed",
+      });
     }
-
-    setLoading(true);
-    await register(email, username, password);
-    setLoading(false);
   }
 
   return (
-    <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
+    <div className="split-layout">
       {/* LEFT */}
-      <div className="flex items-center justify-center bg-white px-8">
-        <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
-          <div className="space-y-2 text-center">
-            <h1 className="text-2xl font-bold">Create an account</h1>
-            <p className="text-sm text-muted-foreground">
+      <div className="split-left">
+        <div className="form-stack">
+          <div className="text-center">
+            <h1>Create an account</h1>
+            <p className="text-sm mt-2">
               or{" "}
-              <Link to="/login" className="underline font-medium">
+              <Link to="/login" className="underline">
                 Sign in
               </Link>
             </p>
           </div>
 
-          <div className="space-y-2">
-            <Label className="text-xs font-medium">Email</Label>
-            <Input
-              type="email"
-              placeholder="you@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="border-0 border-b rounded-none focus-visible:ring-0 px-0 py-5"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label className="text-xs font-medium">Username</Label>
-            <Input
-              type="text"
-              placeholder="Your username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="border-0 border-b rounded-none focus-visible:ring-0 px-0 py-5"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label className="text-xs font-medium">Password</Label>
-            <div className="relative">
-              <Input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="border-0 border-b rounded-none focus-visible:ring-0 px-0 py-5"
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            {/* EMAIL */}
+            <div>
+              <label htmlFor={emailId} className="form-label block mb-2">
+                Email
+              </label>
+              <input
+                id={emailId}
+                type="email"
+                placeholder="you@email.com"
+                className="form-input"
+                {...form.register("email")}
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-0 top-1/2 -translate-y-1/2"
+              {form.formState.errors.email && (
+                <p className="text-sm text-destructive mt-2">
+                  {form.formState.errors.email.message}
+                </p>
+              )}
+            </div>
+
+            {/* USERNAME */}
+            <div>
+              <label htmlFor={usernameId} className="form-label block mb-2">
+                Username
+              </label>
+              <input
+                id={usernameId}
+                type="text"
+                placeholder="yourusername"
+                className="form-input"
+                {...form.register("username")}
+              />
+              {form.formState.errors.username && (
+                <p className="text-sm text-destructive mt-2">
+                  {form.formState.errors.username.message}
+                </p>
+              )}
+            </div>
+
+            {/* PASSWORD */}
+            <div>
+              <label htmlFor={passwordId} className="form-label block mb-2">
+                Password
+              </label>
+
+              <div className="relative">
+                <input
+                  id={passwordId}
+                  type={showPassword ? "text" : "password"}
+                  className="form-input pr-10"
+                  {...form.register("password")}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-0 top-1/2 -translate-y-1/2"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+
+              {form.formState.errors.password && (
+                <p className="text-sm text-destructive mt-2">
+                  {form.formState.errors.password.message}
+                </p>
+              )}
+            </div>
+
+            {/* CONFIRM PASSWORD */}
+            <div>
+              <label
+                htmlFor={confirmPasswordId}
+                className="form-label block mb-2"
               >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                Confirm password
+              </label>
+
+              <div className="relative">
+                <input
+                  id={confirmPasswordId}
+                  type={showConfirm ? "text" : "password"}
+                  className="form-input pr-10"
+                  {...form.register("confirmPassword")}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowConfirm(!showConfirm)}
+                  className="absolute right-0 top-1/2 -translate-y-1/2"
+                >
+                  {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+
+              {form.formState.errors.confirmPassword && (
+                <p className="text-sm text-destructive mt-2">
+                  {form.formState.errors.confirmPassword.message}
+                </p>
+              )}
+            </div>
+
+            {/* SERVER ERROR */}
+            {form.formState.errors.root && (
+              <p className="text-sm text-destructive">
+                {form.formState.errors.root.message}
+              </p>
+            )}
+
+            {/* BUTTONS */}
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <Link
+                to="/login"
+                className="btn-secondary text-center rounded-full"
+              >
+                Sign In
+              </Link>
+
+              <button
+                type="submit"
+                disabled={form.formState.isSubmitting}
+                className="btn-primary flex items-center justify-center rounded-full"
+              >
+                {form.formState.isSubmitting ? (
+                  <Loader2 className="animate-spin" size={18} />
+                ) : (
+                  "Create Account"
+                )}
               </button>
             </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label className="text-xs font-medium">Confirm Password</Label>
-            <Input
-              type={showPassword ? "text" : "password"}
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="border-0 border-b rounded-none focus-visible:ring-0 px-0 py-5"
-            />
-          </div>
-
-          <div className="flex gap-3">
-            <Button
-              type="button"
-              variant="secondary"
-              className="flex-1 rounded-full bg-[#E4E4E4] text-black hover:bg-[#d5d5d5]"
-              disabled={loading}
-              onClick={() => {} /* optionnel: navigate login */}
-            >
-              Sign In
-            </Button>
-
-            <Button
-              type="submit"
-              className="flex-1 rounded-full bg-[#2E2E2E] hover:bg-black"
-              disabled={!isFormValid || loading}
-            >
-              {loading ? (
-                <Loader2 className="animate-spin" size={18} />
-              ) : (
-                "Sign Up"
-              )}
-            </Button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
 
-      {/* RIGHT */}
-      <div className="hidden md:flex items-center justify-center bg-[#313131] text-white p-12">
-        <div className="max-w-md text-center space-y-6">
-          <p className="font-serif text-4xl leading-tight">
-            “Le succès appartient à ceux qui osent.”
-          </p>
-          <span className="text-base opacity-80">— Unknown</span>
+      {/* RIGHT PANEL */}
+      <div className="split-right">
+        <div>
+          <p className="display-quote">“Le lorem ipsum est, en imprimerie”</p>
+          <p className="quote-author">- Albert Einstein</p>
         </div>
       </div>
     </div>

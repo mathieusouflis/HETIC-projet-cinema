@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './app/__root'
 import { Route as RegisterIndexRouteImport } from './app/register/index'
 import { Route as LoginIndexRouteImport } from './app/login/index'
-import { Route as ForgotPasswordIndexRouteImport } from './app/forgot-password/index'
 
 const RegisterIndexRoute = RegisterIndexRouteImport.update({
   id: '/register/',
@@ -23,38 +22,29 @@ const LoginIndexRoute = LoginIndexRouteImport.update({
   path: '/login/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ForgotPasswordIndexRoute = ForgotPasswordIndexRouteImport.update({
-  id: '/forgot-password/',
-  path: '/forgot-password/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
-  '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
 }
 export interface FileRoutesByTo {
-  '/forgot-password': typeof ForgotPasswordIndexRoute
   '/login': typeof LoginIndexRoute
   '/register': typeof RegisterIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/forgot-password/' | '/login/' | '/register/'
+  fullPaths: '/login/' | '/register/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/forgot-password' | '/login' | '/register'
-  id: '__root__' | '/forgot-password/' | '/login/' | '/register/'
+  to: '/login' | '/register'
+  id: '__root__' | '/login/' | '/register/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
 }
@@ -75,18 +65,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/forgot-password/': {
-      id: '/forgot-password/'
-      path: '/forgot-password'
-      fullPath: '/forgot-password/'
-      preLoaderRoute: typeof ForgotPasswordIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
 }

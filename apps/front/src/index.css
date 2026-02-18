@@ -2,6 +2,8 @@
 
 @import "tw-animate-css";
 
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400&display=swap");
+
 /*---break---*/
 
 @custom-variant dark (&:is(.dark *));
@@ -22,6 +24,8 @@
   --radius-3xl: calc(var(--radius) + 12px);
 
   --radius-4xl: calc(var(--radius) + 16px);
+
+  --radius-full: 9999px;
 
   --color-background: var(--background);
 
@@ -84,6 +88,23 @@
   --color-sidebar-border: var(--sidebar-border);
 
   --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/*---break---*/
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Inter", sans-serif;
+  }
+
+  h1 {
+    @apply text-2xl font-bold;
+    font-family: "Lora", sans-serif;
+  }
 }
 
 /*---break---*/
@@ -152,6 +173,15 @@
   --sidebar-border: oklch(0.922 0 0);
 
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Brand extensions */
+  --brand-dark: #2e2e2e;
+
+  --brand-light: #e4e4e4;
+
+  --brand-muted: #868686;
+
+  --panel-dark: #313131;
 }
 
 /*---break---*/
@@ -218,15 +248,68 @@
   --sidebar-border: oklch(1 0 0 / 10%);
 
   --sidebar-ring: oklch(0.556 0 0);
+
+  --brand-dark: #ffffff;
+
+  --brand-light: #3a3a3a;
+
+  --brand-muted: #a1a1a1;
+
+  --panel-dark: #111111;
 }
 
-/*---break---*/
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
+@layer components {
+  /* Layout */
+  .split-layout {
+    @apply flex min-h-screen;
   }
-  body {
-    @apply bg-background text-foreground;
+
+  .split-left {
+    @apply flex w-full lg:w-1/2 items-center justify-center px-6 sm:px-12 lg:px-20;
+  }
+
+  .split-right {
+    @apply hidden lg:flex lg:w-1/2 items-center justify-center text-white text-center px-16;
+    background: var(--panel-dark);
+  }
+
+  /* Form */
+  .form-stack {
+    @apply w-full max-w-md space-y-8;
+  }
+
+  .form-label {
+    @apply text-xs font-medium;
+  }
+
+  .form-input {
+    @apply w-full bg-transparent border-b border-foreground py-2.5 text-base outline-none;
+  }
+
+  .form-input::placeholder {
+    color: var(--brand-muted);
+  }
+
+  /* Buttons */
+  .btn-primary {
+    background: var(--brand-dark);
+    border-radius: var(--radius-pill);
+    @apply text-white font-semibold px-6 py-3 w-full;
+  }
+
+  .btn-secondary {
+    background: var(--brand-light);
+    border-radius: var(--radius-pill);
+    @apply text-foreground font-semibold px-6 py-3 w-full;
+  }
+
+  /* Quote */
+  .display-quote {
+    font-family: "Lora", serif;
+    @apply text-3xl lg:text-4xl;
+  }
+
+  .quote-author {
+    @apply text-base mt-6;
   }
 }
