@@ -1,5 +1,7 @@
-import type { POSTAuthLogin200 } from "@packages/api-sdk";
-import type { POSTAuthLogin200DataUser } from "@packages/api-sdk";
+import type {
+  POSTAuthLogin200,
+  POSTAuthLogin200DataUser,
+} from "@packages/api-sdk";
 import { create } from "zustand";
 
 type User = POSTAuthLogin200["data"]["user"];
