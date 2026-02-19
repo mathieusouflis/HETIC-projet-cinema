@@ -1,0 +1,25 @@
+{
+  "name": "@biomejs/cli-win32-x64",
+  "version": "2.3.14",
+  "requiresBuild": false,
+  "files": {
+    "biome.exe": {
+      "checkedAt": 1771497284673,
+      "integrity": "sha512-7+cQR0UH4ujiR5MYnp73WohfEr12wC9iZKAYSt35SbxJPH3Qsrm/WkndFqKA4J/5sgi6gmtz+4mN4ujDOnB8dA==",
+      "mode": 493,
+      "size": 60895744
+    },
+    "package.json": {
+      "checkedAt": 1771497284676,
+      "integrity": "sha512-/Lr3ObMyTyULHUXEYzN+ISsY0SdS02OIegDkUihg48HhAhYt0y4BQSUs+qhkLOWk6VjFZngbz2RJNTFQRxxQWw==",
+      "mode": 420,
+      "size": 369
+    },
+    "CHANGELOG.md": {
+      "checkedAt": 1771497284680,
+      "integrity": "sha512-uYO3e8lZ1KeAPRvgUkAZl6FBUkykfgMC605K/MDB5S8WkK6qhJwShf800Hc4QGhKRJK2/+FNiaixsxAsDas35w==",
+      "mode": 420,
+      "size": 390
+    }
+  }
+}

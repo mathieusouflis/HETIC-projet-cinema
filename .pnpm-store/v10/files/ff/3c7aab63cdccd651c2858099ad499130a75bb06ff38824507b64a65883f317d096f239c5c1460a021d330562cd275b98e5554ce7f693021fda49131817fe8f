@@ -1,0 +1,1319 @@
+import path from "node:path";
+import { FormDataArrayHandling, GetterPropType, NamingConvention, OutputClient, OutputHttpClient, OutputMode, PropertySortOrder, RefComponentSuffix, asyncReduce, conventionName, createLogger, createSuccessMessage, dynamicImport, fixCrossDirectoryImports, fixRegularSchemaImports, generateComponentDefinition, generateDependencyImports, generateParameterDefinition, generateSchemasDefinition, generateVerbsOptions, getFileInfo, getFullRoute, getMockFileExtensionByTypeName, getRoute, isBoolean, isFunction, isObject, isReference, isString, isUndefined, isUrl, jsDoc, log, logError, pascal, removeFilesAndEmptyFolders, resolveRef, splitSchemasByType, upath, writeSchemas, writeSingleMode, writeSplitMode, writeSplitTagsMode, writeTagsMode } from "@orval/core";
+import { bundle } from "@scalar/json-magic/bundle";
+import { fetchUrls, parseJson, parseYaml, readFiles } from "@scalar/json-magic/bundle/plugins/node";
+import { upgrade, validate } from "@scalar/openapi-parser";
+import * as mock from "@orval/mock";
+import { DEFAULT_MOCK_OPTIONS, generateMockImports } from "@orval/mock";
+import angular from "@orval/angular";
+import axios from "@orval/axios";
+import fetchClient from "@orval/fetch";
+import hono from "@orval/hono";
+import mcp from "@orval/mcp";
+import query from "@orval/query";
+import solidStart from "@orval/solid-start";
+import swr from "@orval/swr";
+import zod, { dereference, generateZodValidationSchemaDefinition, isZodVersionV4, parseZodValidationSchemaDefinition } from "@orval/zod";
+import chalk from "chalk";
+import { ExecaError, execa } from "execa";
+import fs from "fs-extra";
+import { unique } from "remeda";
+import { parseArgsStringToArgv } from "string-argv";
+import { findUp, findUpMultiple } from "find-up";
+import yaml from "js-yaml";
+import { parse } from "tsconfck";
+import fs$1 from "node:fs";
+import { createJiti } from "jiti";
+
+//#region package.json
+var name = "orval";
+var description = "A swagger client generator for typescript";
+var version = "8.2.0";
+
+//#endregion
+//#region src/client.ts
+const DEFAULT_CLIENT = OutputClient.AXIOS;
+const getGeneratorClient = (outputClient, output) => {
+	const GENERATOR_CLIENT = {
+		axios: axios({ type: "axios" })(),
+		"axios-functions": axios({ type: "axios-functions" })(),
+		angular: angular()(),
+		"angular-query": query({
+			output,
+			type: "angular-query"
+		})(),
+		"react-query": query({
+			output,
+			type: "react-query"
+		})(),
+		"solid-start": solidStart()(),
+		"solid-query": query({
+			output,
+			type: "solid-query"
+		})(),
+		"svelte-query": query({
+			output,
+			type: "svelte-query"
+		})(),
+		"vue-query": query({
+			output,
+			type: "vue-query"
+		})(),
+		swr: swr()(),
+		zod: zod()(),
+		hono: hono()(),
+		fetch: fetchClient()(),
+		mcp: mcp()()
+	};
+	const generator = isFunction(outputClient) ? outputClient(GENERATOR_CLIENT) : GENERATOR_CLIENT[outputClient];
+	if (!generator) throw new Error(`Oups... 🍻. Client not found: ${outputClient}`);
+	return generator;
+};
+const generateClientImports = ({ client, implementation, imports, projectName, hasSchemaDir, isAllowSyntheticDefaultImports, hasGlobalMutator, hasTagsMutator, hasParamsSerializerOptions, packageJson, output }) => {
+	const { dependencies } = getGeneratorClient(client, output);
+	return generateDependencyImports(implementation, dependencies ? [...dependencies(hasGlobalMutator, hasParamsSerializerOptions, packageJson, output.httpClient, hasTagsMutator, output.override), ...imports] : imports, projectName, hasSchemaDir, isAllowSyntheticDefaultImports);
+};
+const generateClientHeader = ({ outputClient = DEFAULT_CLIENT, isRequestOptions, isGlobalMutator, isMutator, provideIn, hasAwaitedType, titles, output, verbOptions, tag, clientImplementation }) => {
+	const { header } = getGeneratorClient(outputClient, output);
+	return {
+		implementation: header ? header({
+			title: titles.implementation,
+			isRequestOptions,
+			isGlobalMutator,
+			isMutator,
+			provideIn,
+			hasAwaitedType,
+			output,
+			verbOptions,
+			tag,
+			clientImplementation
+		}) : "",
+		implementationMock: `export const ${titles.implementationMock} = () => [\n`
+	};
+};
+const generateClientFooter = ({ outputClient, operationNames, hasMutator, hasAwaitedType, titles, output }) => {
+	const { footer } = getGeneratorClient(outputClient, output);
+	if (!footer) return {
+		implementation: "",
+		implementationMock: `\n]\n`
+	};
+	let implementation;
+	try {
+		if (isFunction(outputClient)) {
+			implementation = footer(operationNames);
+			console.warn("[WARN] Passing an array of strings for operations names to the footer function is deprecated and will be removed in a future major release. Please pass them in an object instead: { operationNames: string[] }.");
+		} else implementation = footer({
+			operationNames,
+			title: titles.implementation,
+			hasMutator,
+			hasAwaitedType
+		});
+	} catch {
+		implementation = footer({
+			operationNames,
+			title: titles.implementation,
+			hasMutator,
+			hasAwaitedType
+		});
+	}
+	return {
+		implementation,
+		implementationMock: `]\n`
+	};
+};
+const generateClientTitle = ({ outputClient = DEFAULT_CLIENT, title, customTitleFunc, output }) => {
+	const { title: generatorTitle } = getGeneratorClient(outputClient, output);
+	if (!generatorTitle) return {
+		implementation: "",
+		implementationMock: `get${pascal(title)}Mock`
+	};
+	if (customTitleFunc) {
+		const customTitle = customTitleFunc(title);
+		return {
+			implementation: generatorTitle(customTitle),
+			implementationMock: `get${pascal(customTitle)}Mock`
+		};
+	}
+	return {
+		implementation: generatorTitle(title),
+		implementationMock: `get${pascal(title)}Mock`
+	};
+};
+const generateMock = (verbOption, options) => {
+	if (!options.mock) return {
+		implementation: {
+			function: "",
+			handler: "",
+			handlerName: ""
+		},
+		imports: []
+	};
+	if (isFunction(options.mock)) return options.mock(verbOption, options);
+	return mock.generateMock(verbOption, options);
+};
+const generateOperations = (outputClient = DEFAULT_CLIENT, verbsOptions, options, output) => {
+	return asyncReduce(verbsOptions, async (acc, verbOption) => {
+		const { client: generatorClient } = getGeneratorClient(outputClient, output);
+		const client = await generatorClient(verbOption, options, outputClient, output);
+		if (!client.implementation) return acc;
+		const generatedMock = generateMock(verbOption, options);
+		acc[verbOption.operationId] = {
+			implementation: verbOption.doc + client.implementation,
+			imports: client.imports,
+			implementationMock: generatedMock.implementation,
+			importsMock: generatedMock.imports,
+			tags: verbOption.tags,
+			mutator: verbOption.mutator,
+			clientMutators: client.mutators,
+			formData: verbOption.formData,
+			formUrlEncoded: verbOption.formUrlEncoded,
+			paramsSerializer: verbOption.paramsSerializer,
+			operationName: verbOption.operationName,
+			fetchReviver: verbOption.fetchReviver
+		};
+		return acc;
+	}, {});
+};
+const generateExtraFiles = (outputClient = DEFAULT_CLIENT, verbsOptions, output, context) => {
+	const { extraFiles: generateExtraFiles$1 } = getGeneratorClient(outputClient, output);
+	if (!generateExtraFiles$1) return Promise.resolve([]);
+	return generateExtraFiles$1(verbsOptions, output, context);
+};
+
+//#endregion
+//#region src/api.ts
+async function getApiBuilder({ input, output, context }) {
+	const api = await asyncReduce(Object.entries(context.spec.paths ?? {}), async (acc, [pathRoute, verbs]) => {
+		const route = getRoute(pathRoute);
+		let resolvedVerbs = verbs;
+		if (isReference(verbs)) {
+			const { schema, imports } = resolveRef(verbs, context);
+			resolvedVerbs = schema;
+		}
+		let verbsOptions = await generateVerbsOptions({
+			verbs: resolvedVerbs,
+			input,
+			output,
+			route,
+			pathRoute,
+			context
+		});
+		if (output.override.useDeprecatedOperations === false) verbsOptions = verbsOptions.filter((verb) => {
+			return !verb.deprecated;
+		});
+		const schemas = verbsOptions.reduce((acc$1, { queryParams, headers, body, response, props }) => {
+			if (props) acc$1.push(...props.flatMap((param) => param.type === GetterPropType.NAMED_PATH_PARAMS ? param.schema : []));
+			if (queryParams) acc$1.push(queryParams.schema, ...queryParams.deps);
+			if (headers) acc$1.push(headers.schema, ...headers.deps);
+			acc$1.push(...body.schemas, ...response.schemas);
+			return acc$1;
+		}, []);
+		const fullRoute = getFullRoute(route, verbs.servers ?? context.spec.servers, output.baseUrl);
+		if (!output.target) throw new Error("Output does not have a target");
+		const pathOperations = await generateOperations(output.client, verbsOptions, {
+			route: fullRoute,
+			pathRoute,
+			override: output.override,
+			context,
+			mock: output.mock,
+			output: output.target
+		}, output);
+		for (const verbOption of verbsOptions) acc.verbOptions[verbOption.operationId] = verbOption;
+		acc.schemas.push(...schemas);
+		acc.operations = {
+			...acc.operations,
+			...pathOperations
+		};
+		return acc;
+	}, {
+		operations: {},
+		verbOptions: {},
+		schemas: []
+	});
+	const extraFiles = await generateExtraFiles(output.client, api.verbOptions, output, context);
+	return {
+		operations: api.operations,
+		schemas: api.schemas,
+		verbOptions: api.verbOptions,
+		title: generateClientTitle,
+		header: generateClientHeader,
+		footer: generateClientFooter,
+		imports: generateClientImports,
+		importsMock: generateMockImports,
+		extraFiles
+	};
+}
+
+//#endregion
+//#region src/import-open-api.ts
+async function importOpenApi({ spec, input, output, target, workspace, projectName }) {
+	const transformedOpenApi = await applyTransformer(spec, input.override.transformer, workspace);
+	const schemas = getApiSchemas({
+		input,
+		output,
+		target,
+		workspace,
+		spec: transformedOpenApi
+	});
+	const api = await getApiBuilder({
+		input,
+		output,
+		context: {
+			projectName,
+			target,
+			workspace,
+			spec: transformedOpenApi,
+			output
+		}
+	});
+	return {
+		...api,
+		schemas: [...schemas, ...api.schemas],
+		target,
+		info: transformedOpenApi.info,
+		spec: transformedOpenApi
+	};
+}
+async function applyTransformer(openApi, transformer, workspace) {
+	const transformerFn = transformer ? await dynamicImport(transformer, workspace) : void 0;
+	if (!transformerFn) return openApi;
+	const transformedOpenApi = transformerFn(openApi);
+	const { valid, errors } = await validate(transformedOpenApi);
+	if (!valid) throw new Error(`Validation failed`, { cause: errors });
+	return transformedOpenApi;
+}
+function getApiSchemas({ input, output, target, workspace, spec }) {
+	const context = {
+		target,
+		workspace,
+		spec,
+		output
+	};
+	const schemaDefinition = generateSchemasDefinition(spec.components?.schemas, context, output.override.components.schemas.suffix, input.filters);
+	const responseDefinition = generateComponentDefinition(spec.components?.responses, context, output.override.components.responses.suffix);
+	const swaggerResponseDefinition = generateComponentDefinition("responses" in spec ? spec.responses : void 0, context, "");
+	const bodyDefinition = generateComponentDefinition(spec.components?.requestBodies, context, output.override.components.requestBodies.suffix);
+	const parameters = generateParameterDefinition(spec.components?.parameters, context, output.override.components.parameters.suffix);
+	return [
+		...schemaDefinition,
+		...responseDefinition,
+		...swaggerResponseDefinition,
+		...bodyDefinition,
+		...parameters
+	];
+}
+
+//#endregion
+//#region src/import-specs.ts
+async function resolveSpec(input, parserOptions) {
+	const dereferencedData = dereferenceExternalRef(await bundle(input, {
+		plugins: [
+			readFiles(),
+			fetchUrls({ headers: parserOptions?.headers }),
+			parseJson(),
+			parseYaml()
+		],
+		treeShake: true
+	}));
+	const { valid, errors } = await validate(dereferencedData);
+	if (!valid) throw new Error("Validation failed", { cause: errors });
+	const { specification } = upgrade(dereferencedData);
+	return specification;
+}
+async function importSpecs(workspace, options, projectName) {
+	const { input, output } = options;
+	return importOpenApi({
+		spec: await resolveSpec(input.target, input.parserOptions),
+		input,
+		output,
+		target: input.target,
+		workspace,
+		projectName
+	});
+}
+/**
+* The plugins from `@scalar/json-magic` does not dereference $ref.
+* Instead it fetches them and puts them under x-ext, and changes the $ref to point to #x-ext/<name>.
+* This function dereferences those x-ext $ref's.
+*/
+function dereferenceExternalRef(data) {
+	const extensions = data["x-ext"] ?? {};
+	const UNWANTED_KEYS = new Set(["$schema", "$id"]);
+	function scrub(obj) {
+		if (obj === null || obj === void 0) return obj;
+		if (Array.isArray(obj)) return obj.map((x) => scrub(x));
+		if (typeof obj === "object") {
+			const rec = obj;
+			const out = {};
+			for (const [k, v] of Object.entries(rec)) {
+				if (UNWANTED_KEYS.has(k)) continue;
+				out[k] = scrub(v);
+			}
+			return out;
+		}
+		return obj;
+	}
+	function replaceRefs(obj) {
+		if (obj === null || obj === void 0) return obj;
+		if (typeof obj === "object") {
+			if (Array.isArray(obj)) return obj.map((element) => replaceRefs(element));
+			const record = obj;
+			if ("$ref" in record && typeof record.$ref === "string") {
+				const refValue = record.$ref;
+				if (refValue.startsWith("#/x-ext/")) {
+					const parts = refValue.replace("#/x-ext/", "").split("/");
+					const extKey = parts.shift();
+					if (extKey) {
+						let refObj = extensions[extKey];
+						for (const p of parts) if (refObj && typeof refObj === "object" && p in refObj) refObj = refObj[p];
+						else {
+							refObj = void 0;
+							break;
+						}
+						if (refObj) return replaceRefs(scrub(refObj));
+					}
+				}
+			}
+			const result$1 = {};
+			for (const [key, value] of Object.entries(record)) result$1[key] = replaceRefs(value);
+			return result$1;
+		}
+		return obj;
+	}
+	const result = {};
+	for (const [key, value] of Object.entries(data)) if (key !== "x-ext") result[key] = replaceRefs(value);
+	return result;
+}
+
+//#endregion
+//#region src/utils/execute-hook.ts
+const executeHook = async (name$1, commands = [], args = []) => {
+	log(chalk.white(`Running ${name$1} hook...`));
+	for (const command of commands) try {
+		if (isString(command)) await executeCommand(command, args);
+		else if (isFunction(command)) await command(args);
+		else if (isObject(command)) await executeObjectCommand(command, args);
+	} catch (error) {
+		logError(error, `Failed to run ${name$1} hook`);
+	}
+};
+async function executeCommand(command, args) {
+	const [cmd, ..._args] = [...parseArgsStringToArgv(command), ...args];
+	await execa(cmd, _args);
+}
+async function executeObjectCommand(command, args) {
+	if (command.injectGeneratedDirsAndFiles === false) args = [];
+	if (isString(command.command)) await executeCommand(command.command, args);
+	else if (isFunction(command.command)) await command.command();
+}
+
+//#endregion
+//#region src/utils/package-json.ts
+const loadPackageJson = async (packageJson, workspace = process.cwd()) => {
+	if (!packageJson) {
+		const pkgPath = await findUp(["package.json"], { cwd: workspace });
+		if (pkgPath) {
+			const pkg = await dynamicImport(pkgPath, workspace);
+			if (isPackageJson(pkg)) return await maybeReplaceCatalog(pkg, workspace);
+			else throw new Error("Invalid package.json file");
+		}
+		return;
+	}
+	const normalizedPath = normalizePath(packageJson, workspace);
+	if (fs.existsSync(normalizedPath)) {
+		const pkg = await dynamicImport(normalizedPath);
+		if (isPackageJson(pkg)) return await maybeReplaceCatalog(pkg, workspace);
+		else throw new Error(`Invalid package.json file: ${normalizedPath}`);
+	}
+};
+const isPackageJson = (obj) => typeof obj === "object" && obj !== null;
+const hasCatalogReferences = (pkg) => {
+	return [
+		...Object.entries(pkg.dependencies ?? {}),
+		...Object.entries(pkg.devDependencies ?? {}),
+		...Object.entries(pkg.peerDependencies ?? {})
+	].some(([, value]) => isString(value) && value.startsWith("catalog:"));
+};
+const loadPnpmWorkspaceCatalog = async (workspace) => {
+	const filePath = await findUp("pnpm-workspace.yaml", { cwd: workspace });
+	if (!filePath) return void 0;
+	try {
+		const file = await fs.readFile(filePath, "utf8");
+		const data = yaml.load(file);
+		if (!data?.catalog && !data?.catalogs) return void 0;
+		return {
+			catalog: data.catalog,
+			catalogs: data.catalogs
+		};
+	} catch {
+		return;
+	}
+};
+const loadPackageJsonCatalog = async (workspace) => {
+	const filePaths = await findUpMultiple("package.json", { cwd: workspace });
+	for (const filePath of filePaths) try {
+		const pkg = await fs.readJson(filePath);
+		if (pkg?.catalog || pkg?.catalogs) return {
+			catalog: pkg.catalog,
+			catalogs: pkg.catalogs
+		};
+	} catch {}
+};
+const loadYarnrcCatalog = async (workspace) => {
+	const filePath = await findUp(".yarnrc.yml", { cwd: workspace });
+	if (!filePath) return void 0;
+	try {
+		const file = await fs.readFile(filePath, "utf8");
+		const data = yaml.load(file);
+		if (!data?.catalog && !data?.catalogs) return void 0;
+		return {
+			catalog: data.catalog,
+			catalogs: data.catalogs
+		};
+	} catch {
+		return;
+	}
+};
+const maybeReplaceCatalog = async (pkg, workspace) => {
+	if (!hasCatalogReferences(pkg)) return pkg;
+	const catalogData = await loadPnpmWorkspaceCatalog(workspace) ?? await loadPackageJsonCatalog(workspace) ?? await loadYarnrcCatalog(workspace);
+	if (!catalogData) {
+		log(`⚠️  ${chalk.yellow("package.json contains catalog: references, but no catalog source was found (checked: pnpm-workspace.yaml, package.json, .yarnrc.yml).")}`);
+		return pkg;
+	}
+	performSubstitution(pkg.dependencies, catalogData);
+	performSubstitution(pkg.devDependencies, catalogData);
+	performSubstitution(pkg.peerDependencies, catalogData);
+	return pkg;
+};
+const performSubstitution = (dependencies, catalogData) => {
+	if (!dependencies) return;
+	for (const [packageName, version$1] of Object.entries(dependencies)) if (version$1 === "catalog:" || version$1 === "catalog:default") {
+		if (!catalogData.catalog) {
+			log(`⚠️  ${chalk.yellow(`catalog: substitution for the package '${packageName}' failed as there is no default catalog.`)}`);
+			continue;
+		}
+		const sub = catalogData.catalog[packageName];
+		if (!sub) {
+			log(`⚠️  ${chalk.yellow(`catalog: substitution for the package '${packageName}' failed as there is no matching package in the default catalog.`)}`);
+			continue;
+		}
+		dependencies[packageName] = sub;
+	} else if (version$1.startsWith("catalog:")) {
+		const catalogName = version$1.slice(8);
+		const catalog = catalogData.catalogs?.[catalogName];
+		if (!catalog) {
+			log(`⚠️  ${chalk.yellow(`'${version$1}' substitution for the package '${packageName}' failed as there is no matching catalog named '${catalogName}'. (available named catalogs are: ${Object.keys(catalogData.catalogs ?? {}).join(", ")})`)}`);
+			continue;
+		}
+		const sub = catalog[packageName];
+		if (!sub) {
+			log(`⚠️  ${chalk.yellow(`'${version$1}' substitution for the package '${packageName}' failed as there is no package in the catalog named '${catalogName}'. (packages in the catalog are: ${Object.keys(catalog).join(", ")})`)}`);
+			continue;
+		}
+		dependencies[packageName] = sub;
+	}
+};
+
+//#endregion
+//#region src/utils/tsconfig.ts
+const loadTsconfig = async (tsconfig, workspace = process.cwd()) => {
+	if (isUndefined(tsconfig)) {
+		const configPath = await findUp(["tsconfig.json", "jsconfig.json"], { cwd: workspace });
+		if (configPath) return (await parse(configPath)).tsconfig;
+		return;
+	}
+	if (isString(tsconfig)) {
+		const normalizedPath = normalizePath(tsconfig, workspace);
+		if (fs.existsSync(normalizedPath)) {
+			const config = await parse(normalizedPath);
+			return config.referenced?.find(({ tsconfigFile }) => tsconfigFile === normalizedPath)?.tsconfig || config.tsconfig;
+		}
+		return;
+	}
+	if (isObject(tsconfig)) return tsconfig;
+};
+
+//#endregion
+//#region src/utils/options.ts
+/**
+* Type helper to make it easier to use orval.config.ts
+* accepts a direct {@link ConfigExternal} object.
+*/
+function defineConfig(options) {
+	return options;
+}
+function createFormData(workspace, formData) {
+	const defaultArrayHandling = FormDataArrayHandling.SERIALIZE;
+	if (formData === void 0) return {
+		disabled: false,
+		arrayHandling: defaultArrayHandling
+	};
+	if (isBoolean(formData)) return {
+		disabled: !formData,
+		arrayHandling: defaultArrayHandling
+	};
+	if (isString(formData)) return {
+		disabled: false,
+		mutator: normalizeMutator(workspace, formData),
+		arrayHandling: defaultArrayHandling
+	};
+	if ("mutator" in formData || "arrayHandling" in formData) return {
+		disabled: false,
+		mutator: normalizeMutator(workspace, formData.mutator),
+		arrayHandling: formData.arrayHandling ?? defaultArrayHandling
+	};
+	return {
+		disabled: false,
+		mutator: normalizeMutator(workspace, formData),
+		arrayHandling: defaultArrayHandling
+	};
+}
+function normalizeSchemasOption(schemas, workspace) {
+	if (!schemas) return;
+	if (isString(schemas)) return normalizePath(schemas, workspace);
+	return {
+		path: normalizePath(schemas.path, workspace),
+		type: schemas.type
+	};
+}
+async function normalizeOptions(optionsExport, workspace = process.cwd(), globalOptions = {}) {
+	const options = await (isFunction(optionsExport) ? optionsExport() : optionsExport);
+	if (!options.input) throw new Error(chalk.red(`Config require an input`));
+	if (!options.output) throw new Error(chalk.red(`Config require an output`));
+	const inputOptions = isString(options.input) ? { target: options.input } : options.input;
+	const outputOptions = isString(options.output) ? { target: options.output } : options.output;
+	const outputWorkspace = normalizePath(outputOptions.workspace || "", workspace);
+	const { clean, prettier, client, httpClient, mode, biome } = globalOptions;
+	const tsconfig = await loadTsconfig(outputOptions.tsconfig || globalOptions.tsconfig, workspace);
+	const packageJson = await loadPackageJson(outputOptions.packageJson || globalOptions.packageJson, workspace);
+	const mockOption = outputOptions.mock ?? globalOptions.mock;
+	let mock$1;
+	if (typeof mockOption === "boolean" && mockOption) mock$1 = DEFAULT_MOCK_OPTIONS;
+	else if (isFunction(mockOption)) mock$1 = mockOption;
+	else if (mockOption) mock$1 = {
+		...DEFAULT_MOCK_OPTIONS,
+		...mockOption
+	};
+	else mock$1 = void 0;
+	const defaultFileExtension = ".ts";
+	const globalQueryOptions = {
+		useQuery: true,
+		useMutation: true,
+		signal: true,
+		shouldExportMutatorHooks: true,
+		shouldExportHttpClient: true,
+		shouldExportQueryKey: true,
+		shouldSplitQueryKey: false,
+		...normalizeQueryOptions(outputOptions.override?.query, workspace)
+	};
+	const normalizedOptions = {
+		input: {
+			target: globalOptions.input ? normalizePathOrUrl(globalOptions.input, process.cwd()) : normalizePathOrUrl(inputOptions.target, workspace),
+			override: { transformer: normalizePath(inputOptions.override?.transformer, workspace) },
+			filters: inputOptions.filters,
+			parserOptions: inputOptions.parserOptions
+		},
+		output: {
+			target: globalOptions.output ? normalizePath(globalOptions.output, process.cwd()) : normalizePath(outputOptions.target, outputWorkspace),
+			schemas: normalizeSchemasOption(outputOptions.schemas, outputWorkspace),
+			operationSchemas: outputOptions.operationSchemas ? normalizePath(outputOptions.operationSchemas, outputWorkspace) : void 0,
+			namingConvention: outputOptions.namingConvention || NamingConvention.CAMEL_CASE,
+			fileExtension: outputOptions.fileExtension || defaultFileExtension,
+			workspace: outputOptions.workspace ? outputWorkspace : void 0,
+			client: outputOptions.client ?? client ?? OutputClient.AXIOS_FUNCTIONS,
+			httpClient: outputOptions.httpClient ?? httpClient ?? ((outputOptions.client ?? client) === OutputClient.ANGULAR_QUERY ? OutputHttpClient.ANGULAR : OutputHttpClient.FETCH),
+			mode: normalizeOutputMode(outputOptions.mode ?? mode),
+			mock: mock$1,
+			clean: outputOptions.clean ?? clean ?? false,
+			docs: outputOptions.docs ?? false,
+			prettier: outputOptions.prettier ?? prettier ?? false,
+			biome: outputOptions.biome ?? biome ?? false,
+			tsconfig,
+			packageJson,
+			headers: outputOptions.headers ?? false,
+			indexFiles: outputOptions.indexFiles ?? true,
+			baseUrl: outputOptions.baseUrl,
+			unionAddMissingProperties: outputOptions.unionAddMissingProperties ?? false,
+			override: {
+				...outputOptions.override,
+				mock: {
+					arrayMin: outputOptions.override?.mock?.arrayMin ?? 1,
+					arrayMax: outputOptions.override?.mock?.arrayMax ?? 10,
+					stringMin: outputOptions.override?.mock?.stringMin ?? 10,
+					stringMax: outputOptions.override?.mock?.stringMax ?? 20,
+					fractionDigits: outputOptions.override?.mock?.fractionDigits ?? 2,
+					...outputOptions.override?.mock
+				},
+				operations: normalizeOperationsAndTags(outputOptions.override?.operations ?? {}, outputWorkspace, { query: globalQueryOptions }),
+				tags: normalizeOperationsAndTags(outputOptions.override?.tags ?? {}, outputWorkspace, { query: globalQueryOptions }),
+				mutator: normalizeMutator(outputWorkspace, outputOptions.override?.mutator),
+				formData: createFormData(outputWorkspace, outputOptions.override?.formData),
+				formUrlEncoded: (isBoolean(outputOptions.override?.formUrlEncoded) ? outputOptions.override?.formUrlEncoded : normalizeMutator(outputWorkspace, outputOptions.override?.formUrlEncoded)) ?? true,
+				paramsSerializer: normalizeMutator(outputWorkspace, outputOptions.override?.paramsSerializer),
+				header: outputOptions.override?.header === false ? false : isFunction(outputOptions.override?.header) ? outputOptions.override?.header : getDefaultFilesHeader,
+				requestOptions: outputOptions.override?.requestOptions ?? true,
+				namingConvention: outputOptions.override?.namingConvention ?? {},
+				components: {
+					schemas: {
+						suffix: RefComponentSuffix.schemas,
+						itemSuffix: outputOptions.override?.components?.schemas?.itemSuffix ?? "Item",
+						...outputOptions.override?.components?.schemas
+					},
+					responses: {
+						suffix: RefComponentSuffix.responses,
+						...outputOptions.override?.components?.responses
+					},
+					parameters: {
+						suffix: RefComponentSuffix.parameters,
+						...outputOptions.override?.components?.parameters
+					},
+					requestBodies: {
+						suffix: RefComponentSuffix.requestBodies,
+						...outputOptions.override?.components?.requestBodies
+					}
+				},
+				hono: normalizeHonoOptions(outputOptions.override?.hono, workspace),
+				jsDoc: normalizeJSDocOptions(outputOptions.override?.jsDoc),
+				query: globalQueryOptions,
+				zod: {
+					strict: {
+						param: outputOptions.override?.zod?.strict?.param ?? false,
+						query: outputOptions.override?.zod?.strict?.query ?? false,
+						header: outputOptions.override?.zod?.strict?.header ?? false,
+						body: outputOptions.override?.zod?.strict?.body ?? false,
+						response: outputOptions.override?.zod?.strict?.response ?? false
+					},
+					generate: {
+						param: outputOptions.override?.zod?.generate?.param ?? true,
+						query: outputOptions.override?.zod?.generate?.query ?? true,
+						header: outputOptions.override?.zod?.generate?.header ?? true,
+						body: outputOptions.override?.zod?.generate?.body ?? true,
+						response: outputOptions.override?.zod?.generate?.response ?? true
+					},
+					coerce: {
+						param: outputOptions.override?.zod?.coerce?.param ?? false,
+						query: outputOptions.override?.zod?.coerce?.query ?? false,
+						header: outputOptions.override?.zod?.coerce?.header ?? false,
+						body: outputOptions.override?.zod?.coerce?.body ?? false,
+						response: outputOptions.override?.zod?.coerce?.response ?? false
+					},
+					preprocess: {
+						...outputOptions.override?.zod?.preprocess?.param ? { param: normalizeMutator(workspace, outputOptions.override.zod.preprocess.param) } : {},
+						...outputOptions.override?.zod?.preprocess?.query ? { query: normalizeMutator(workspace, outputOptions.override.zod.preprocess.query) } : {},
+						...outputOptions.override?.zod?.preprocess?.header ? { header: normalizeMutator(workspace, outputOptions.override.zod.preprocess.header) } : {},
+						...outputOptions.override?.zod?.preprocess?.body ? { body: normalizeMutator(workspace, outputOptions.override.zod.preprocess.body) } : {},
+						...outputOptions.override?.zod?.preprocess?.response ? { response: normalizeMutator(workspace, outputOptions.override.zod.preprocess.response) } : {}
+					},
+					generateEachHttpStatus: outputOptions.override?.zod?.generateEachHttpStatus ?? false,
+					dateTimeOptions: outputOptions.override?.zod?.dateTimeOptions ?? {},
+					timeOptions: outputOptions.override?.zod?.timeOptions ?? {}
+				},
+				swr: {
+					generateErrorTypes: false,
+					...outputOptions.override?.swr
+				},
+				angular: { provideIn: outputOptions.override?.angular?.provideIn ?? "root" },
+				fetch: {
+					includeHttpResponseReturnType: outputOptions.override?.fetch?.includeHttpResponseReturnType ?? true,
+					forceSuccessResponse: outputOptions.override?.fetch?.forceSuccessResponse ?? false,
+					runtimeValidation: outputOptions.override?.fetch?.runtimeValidation ?? false,
+					...outputOptions.override?.fetch
+				},
+				useDates: outputOptions.override?.useDates || false,
+				useDeprecatedOperations: outputOptions.override?.useDeprecatedOperations ?? true,
+				enumGenerationType: outputOptions.override?.enumGenerationType ?? "const",
+				suppressReadonlyModifier: outputOptions.override?.suppressReadonlyModifier || false,
+				aliasCombinedTypes: outputOptions.override?.aliasCombinedTypes ?? false
+			},
+			allParamsOptional: outputOptions.allParamsOptional ?? false,
+			urlEncodeParameters: outputOptions.urlEncodeParameters ?? false,
+			optionsParamRequired: outputOptions.optionsParamRequired ?? false,
+			propertySortOrder: outputOptions.propertySortOrder ?? PropertySortOrder.SPECIFICATION
+		},
+		hooks: options.hooks ? normalizeHooks(options.hooks) : {}
+	};
+	if (!normalizedOptions.input.target) throw new Error(chalk.red(`Config require an input target`));
+	if (!normalizedOptions.output.target && !normalizedOptions.output.schemas) throw new Error(chalk.red(`Config require an output target or schemas`));
+	return normalizedOptions;
+}
+function normalizeMutator(workspace, mutator) {
+	if (isObject(mutator)) {
+		if (!mutator.path) throw new Error(chalk.red(`Mutator need a path`));
+		return {
+			...mutator,
+			path: upath.resolve(workspace, mutator.path),
+			default: (mutator.default || !mutator.name) ?? false
+		};
+	}
+	if (isString(mutator)) return {
+		path: upath.resolve(workspace, mutator),
+		default: true
+	};
+	return mutator;
+}
+function normalizePathOrUrl(path$1, workspace) {
+	if (isString(path$1) && !isUrl(path$1)) return normalizePath(path$1, workspace);
+	return path$1;
+}
+function normalizePath(path$1, workspace) {
+	if (!isString(path$1)) return path$1;
+	return upath.resolve(workspace, path$1);
+}
+function normalizeOperationsAndTags(operationsOrTags, workspace, global) {
+	return Object.fromEntries(Object.entries(operationsOrTags).map(([key, { transformer, mutator, formData, formUrlEncoded, paramsSerializer, query: query$1, zod: zod$1, ...rest }]) => {
+		return [key, {
+			...rest,
+			...query$1 ? { query: normalizeQueryOptions(query$1, workspace, global.query) } : {},
+			...zod$1 ? { zod: {
+				strict: {
+					param: zod$1.strict?.param ?? false,
+					query: zod$1.strict?.query ?? false,
+					header: zod$1.strict?.header ?? false,
+					body: zod$1.strict?.body ?? false,
+					response: zod$1.strict?.response ?? false
+				},
+				generate: {
+					param: zod$1.generate?.param ?? true,
+					query: zod$1.generate?.query ?? true,
+					header: zod$1.generate?.header ?? true,
+					body: zod$1.generate?.body ?? true,
+					response: zod$1.generate?.response ?? true
+				},
+				coerce: {
+					param: zod$1.coerce?.param ?? false,
+					query: zod$1.coerce?.query ?? false,
+					header: zod$1.coerce?.header ?? false,
+					body: zod$1.coerce?.body ?? false,
+					response: zod$1.coerce?.response ?? false
+				},
+				preprocess: {
+					...zod$1.preprocess?.param ? { param: normalizeMutator(workspace, zod$1.preprocess.param) } : {},
+					...zod$1.preprocess?.query ? { query: normalizeMutator(workspace, zod$1.preprocess.query) } : {},
+					...zod$1.preprocess?.header ? { header: normalizeMutator(workspace, zod$1.preprocess.header) } : {},
+					...zod$1.preprocess?.body ? { body: normalizeMutator(workspace, zod$1.preprocess.body) } : {},
+					...zod$1.preprocess?.response ? { response: normalizeMutator(workspace, zod$1.preprocess.response) } : {}
+				},
+				generateEachHttpStatus: zod$1?.generateEachHttpStatus ?? false,
+				dateTimeOptions: zod$1?.dateTimeOptions ?? {},
+				timeOptions: zod$1?.timeOptions ?? {}
+			} } : {},
+			...transformer ? { transformer: normalizePath(transformer, workspace) } : {},
+			...mutator ? { mutator: normalizeMutator(workspace, mutator) } : {},
+			...createFormData(workspace, formData),
+			...formUrlEncoded ? { formUrlEncoded: isBoolean(formUrlEncoded) ? formUrlEncoded : normalizeMutator(workspace, formUrlEncoded) } : {},
+			...paramsSerializer ? { paramsSerializer: normalizeMutator(workspace, paramsSerializer) } : {}
+		}];
+	}));
+}
+function normalizeOutputMode(mode) {
+	if (!mode) return OutputMode.SINGLE;
+	if (!Object.values(OutputMode).includes(mode)) {
+		createLogger().warn(chalk.yellow(`Unknown the provided mode => ${mode}`));
+		return OutputMode.SINGLE;
+	}
+	return mode;
+}
+function normalizeHooks(hooks) {
+	return Object.keys(hooks).reduce((acc, key) => {
+		if (isString(hooks[key])) return {
+			...acc,
+			[key]: [hooks[key]]
+		};
+		else if (Array.isArray(hooks[key])) return {
+			...acc,
+			[key]: hooks[key]
+		};
+		else if (isFunction(hooks[key])) return {
+			...acc,
+			[key]: [hooks[key]]
+		};
+		else if (isObject(hooks[key])) return {
+			...acc,
+			[key]: [hooks[key]]
+		};
+		return acc;
+	}, {});
+}
+function normalizeHonoOptions(hono$1 = {}, workspace) {
+	return {
+		...hono$1.handlers ? { handlers: upath.resolve(workspace, hono$1.handlers) } : {},
+		compositeRoute: hono$1.compositeRoute ?? "",
+		validator: hono$1.validator ?? true,
+		validatorOutputPath: hono$1.validatorOutputPath ? upath.resolve(workspace, hono$1.validatorOutputPath) : ""
+	};
+}
+function normalizeJSDocOptions(jsdoc = {}) {
+	return { ...jsdoc };
+}
+function normalizeQueryOptions(queryOptions = {}, outputWorkspace, globalOptions = {}) {
+	if (queryOptions.options) console.warn("[WARN] Using query options is deprecated and will be removed in a future major release. Please use queryOptions or mutationOptions instead.");
+	return {
+		...isUndefined(queryOptions.usePrefetch) ? {} : { usePrefetch: queryOptions.usePrefetch },
+		...isUndefined(queryOptions.useInvalidate) ? {} : { useInvalidate: queryOptions.useInvalidate },
+		...isUndefined(queryOptions.useQuery) ? {} : { useQuery: queryOptions.useQuery },
+		...isUndefined(queryOptions.useSuspenseQuery) ? {} : { useSuspenseQuery: queryOptions.useSuspenseQuery },
+		...isUndefined(queryOptions.useMutation) ? {} : { useMutation: queryOptions.useMutation },
+		...isUndefined(queryOptions.useInfinite) ? {} : { useInfinite: queryOptions.useInfinite },
+		...isUndefined(queryOptions.useSuspenseInfiniteQuery) ? {} : { useSuspenseInfiniteQuery: queryOptions.useSuspenseInfiniteQuery },
+		...queryOptions.useInfiniteQueryParam ? { useInfiniteQueryParam: queryOptions.useInfiniteQueryParam } : {},
+		...queryOptions.options ? { options: queryOptions.options } : {},
+		...globalOptions.queryKey ? { queryKey: globalOptions.queryKey } : {},
+		...queryOptions?.queryKey ? { queryKey: normalizeMutator(outputWorkspace, queryOptions?.queryKey) } : {},
+		...globalOptions.queryOptions ? { queryOptions: globalOptions.queryOptions } : {},
+		...queryOptions?.queryOptions ? { queryOptions: normalizeMutator(outputWorkspace, queryOptions?.queryOptions) } : {},
+		...globalOptions.mutationOptions ? { mutationOptions: globalOptions.mutationOptions } : {},
+		...queryOptions?.mutationOptions ? { mutationOptions: normalizeMutator(outputWorkspace, queryOptions?.mutationOptions) } : {},
+		...isUndefined(globalOptions.shouldExportQueryKey) ? {} : { shouldExportQueryKey: globalOptions.shouldExportQueryKey },
+		...isUndefined(queryOptions.shouldExportQueryKey) ? {} : { shouldExportQueryKey: queryOptions.shouldExportQueryKey },
+		...isUndefined(globalOptions.shouldExportHttpClient) ? {} : { shouldExportHttpClient: globalOptions.shouldExportHttpClient },
+		...isUndefined(queryOptions.shouldExportHttpClient) ? {} : { shouldExportHttpClient: queryOptions.shouldExportHttpClient },
+		...isUndefined(globalOptions.shouldExportMutatorHooks) ? {} : { shouldExportMutatorHooks: globalOptions.shouldExportMutatorHooks },
+		...isUndefined(queryOptions.shouldExportMutatorHooks) ? {} : { shouldExportMutatorHooks: queryOptions.shouldExportMutatorHooks },
+		...isUndefined(globalOptions.shouldSplitQueryKey) ? {} : { shouldSplitQueryKey: globalOptions.shouldSplitQueryKey },
+		...isUndefined(queryOptions.shouldSplitQueryKey) ? {} : { shouldSplitQueryKey: queryOptions.shouldSplitQueryKey },
+		...isUndefined(globalOptions.signal) ? {} : { signal: globalOptions.signal },
+		...isUndefined(globalOptions.useOperationIdAsQueryKey) ? {} : { useOperationIdAsQueryKey: globalOptions.useOperationIdAsQueryKey },
+		...isUndefined(queryOptions.useOperationIdAsQueryKey) ? {} : { useOperationIdAsQueryKey: queryOptions.useOperationIdAsQueryKey },
+		...isUndefined(globalOptions.signal) ? {} : { signal: globalOptions.signal },
+		...isUndefined(queryOptions.signal) ? {} : { signal: queryOptions.signal },
+		...isUndefined(globalOptions.version) ? {} : { version: globalOptions.version },
+		...isUndefined(queryOptions.version) ? {} : { version: queryOptions.version },
+		...queryOptions.mutationInvalidates ? { mutationInvalidates: queryOptions.mutationInvalidates } : {}
+	};
+}
+function getDefaultFilesHeader({ title, description: description$1, version: version$1 } = {}) {
+	return [
+		`Generated by ${name} v${version} 🍺`,
+		`Do not edit manually.`,
+		...title ? [title] : [],
+		...description$1 ? [description$1] : [],
+		...version$1 ? [`OpenAPI spec version: ${version$1}`] : []
+	];
+}
+
+//#endregion
+//#region src/utils/watcher.ts
+/**
+* Start a file watcher and invoke an async callback on file changes.
+*
+* If `watchOptions` is falsy the watcher is not started. Supported shapes:
+*  - boolean: when true the `defaultTarget` is watched
+*  - string: a single path to watch
+*  - string[]: an array of paths to watch
+*
+* @param watchOptions - false to disable watching, or a path/paths to watch
+* @param watchFn - async callback executed on change events
+* @param defaultTarget - path(s) to watch when `watchOptions` is `true` (default: '.')
+* @returns Resolves once the watcher has been started (or immediately if disabled)
+*
+* @example
+* await startWatcher(true, async () => { await buildProject(); }, 'src');
+*/
+async function startWatcher(watchOptions, watchFn, defaultTarget = ".") {
+	if (!watchOptions) return;
+	const { watch } = await import("chokidar");
+	const ignored = ["**/{.git,node_modules}/**"];
+	const watchPaths = typeof watchOptions === "boolean" ? defaultTarget : watchOptions;
+	log(`Watching for changes in ${Array.isArray(watchPaths) ? watchPaths.map((v) => "\"" + v + "\"").join(" | ") : "\"" + watchPaths + "\""}`);
+	watch(watchPaths, {
+		ignorePermissionErrors: true,
+		ignored
+	}).on("all", (type, file) => {
+		log(`Change detected: ${type} ${file}`);
+		watchFn().catch((error) => {
+			logError(error);
+		});
+	});
+}
+
+//#endregion
+//#region src/write-zod-specs.ts
+function generateZodSchemaFileContent(header, schemaName, zodContent) {
+	return `${header}import { z as zod } from 'zod';
+
+export const ${schemaName} = ${zodContent}
+
+export type ${schemaName} = zod.infer<typeof ${schemaName}>;
+`;
+}
+async function writeZodSchemaIndex(schemasPath, fileExtension, header, schemaNames, namingConvention, shouldMergeExisting = false) {
+	const importFileExtension = fileExtension.replace(/\.ts$/, "");
+	const indexPath = upath.join(schemasPath, `index${fileExtension}`);
+	let existingExports = "";
+	if (shouldMergeExisting && await fs.pathExists(indexPath)) {
+		const existingContent = await fs.readFile(indexPath, "utf8");
+		const headerMatch = /^(\/\*\*[\s\S]*?\*\/\n)?/.exec(existingContent);
+		const headerPart = headerMatch ? headerMatch[0] : "";
+		existingExports = existingContent.slice(headerPart.length).trim();
+	}
+	const newExports = schemaNames.map((schemaName) => {
+		return `export * from './${conventionName(schemaName, namingConvention)}${importFileExtension}';`;
+	}).sort().join("\n");
+	const allExports = existingExports ? `${existingExports}\n${newExports}` : newExports;
+	const uniqueExports = [...new Set(allExports.split("\n"))].filter((line) => line.trim()).sort().join("\n");
+	await fs.outputFile(indexPath, `${header}\n${uniqueExports}\n`);
+}
+async function writeZodSchemas(builder, schemasPath, fileExtension, header, output) {
+	const schemasWithOpenApiDef = builder.schemas.filter((s) => s.schema);
+	await Promise.all(schemasWithOpenApiDef.map(async (generatorSchema) => {
+		const { name: name$1, schema: schemaObject } = generatorSchema;
+		if (!schemaObject) return;
+		const fileName = conventionName(name$1, output.namingConvention);
+		const filePath = upath.join(schemasPath, `${fileName}${fileExtension}`);
+		const context = {
+			spec: builder.spec,
+			target: builder.target,
+			workspace: "",
+			output
+		};
+		const isZodV4 = !!output.packageJson && isZodVersionV4(output.packageJson);
+		const strict = typeof output.override?.zod?.strict === "object" ? output.override.zod.strict.body ?? false : output.override?.zod?.strict ?? false;
+		const coerce = typeof output.override?.zod?.coerce === "object" ? output.override.zod.coerce.body ?? false : output.override?.zod?.coerce ?? false;
+		const parsedZodDefinition = parseZodValidationSchemaDefinition(generateZodValidationSchemaDefinition(dereference(schemaObject, context), context, name$1, strict, isZodV4, { required: true }), context, coerce, strict, isZodV4);
+		const fileContent = generateZodSchemaFileContent(header, name$1, parsedZodDefinition.consts ? `${parsedZodDefinition.consts}\n${parsedZodDefinition.zod}` : parsedZodDefinition.zod);
+		await fs.outputFile(filePath, fileContent);
+	}));
+	if (output.indexFiles) await writeZodSchemaIndex(schemasPath, fileExtension, header, schemasWithOpenApiDef.map((schema) => schema.name), output.namingConvention, false);
+}
+async function writeZodSchemasFromVerbs(verbOptions, schemasPath, fileExtension, header, output, context) {
+	const verbOptionsArray = Object.values(verbOptions);
+	if (verbOptionsArray.length === 0) return;
+	const isZodV4 = !!output.packageJson && isZodVersionV4(output.packageJson);
+	const strict = typeof output.override?.zod?.strict === "object" ? output.override.zod.strict.body ?? false : output.override?.zod?.strict ?? false;
+	const coerce = typeof output.override?.zod?.coerce === "object" ? output.override.zod.coerce.body ?? false : output.override?.zod?.coerce ?? false;
+	const generateVerbsSchemas = verbOptionsArray.flatMap((verbOption) => {
+		const operation = verbOption.originalOperation;
+		const bodySchema = operation.requestBody && "content" in operation.requestBody ? operation.requestBody.content["application/json"]?.schema : void 0;
+		const bodySchemas = bodySchema ? [{
+			name: `${pascal(verbOption.operationName)}Body`,
+			schema: dereference(bodySchema, context)
+		}] : [];
+		const queryParams = operation.parameters?.filter((p) => "in" in p && p.in === "query");
+		const queryParamsSchemas = queryParams && queryParams.length > 0 ? [{
+			name: `${pascal(verbOption.operationName)}Params`,
+			schema: {
+				type: "object",
+				properties: Object.fromEntries(queryParams.filter((p) => "schema" in p && p.schema).map((p) => [p.name, dereference(p.schema, context)])),
+				required: queryParams.filter((p) => p.required).map((p) => p.name)
+			}
+		}] : [];
+		const headerParams = operation.parameters?.filter((p) => "in" in p && p.in === "header");
+		const headerParamsSchemas = headerParams && headerParams.length > 0 ? [{
+			name: `${pascal(verbOption.operationName)}Headers`,
+			schema: {
+				type: "object",
+				properties: Object.fromEntries(headerParams.filter((p) => "schema" in p && p.schema).map((p) => [p.name, dereference(p.schema, context)])),
+				required: headerParams.filter((p) => p.required).map((p) => p.name)
+			}
+		}] : [];
+		return [
+			...bodySchemas,
+			...queryParamsSchemas,
+			...headerParamsSchemas
+		];
+	});
+	await Promise.all(generateVerbsSchemas.map(async ({ name: name$1, schema }) => {
+		const fileName = conventionName(name$1, output.namingConvention);
+		const filePath = upath.join(schemasPath, `${fileName}${fileExtension}`);
+		const parsedZodDefinition = parseZodValidationSchemaDefinition(generateZodValidationSchemaDefinition(schema, context, name$1, strict, isZodV4, { required: true }), context, coerce, strict, isZodV4);
+		const fileContent = generateZodSchemaFileContent(header, name$1, parsedZodDefinition.consts ? `${parsedZodDefinition.consts}\n${parsedZodDefinition.zod}` : parsedZodDefinition.zod);
+		await fs.outputFile(filePath, fileContent);
+	}));
+	if (output.indexFiles && generateVerbsSchemas.length > 0) await writeZodSchemaIndex(schemasPath, fileExtension, header, generateVerbsSchemas.map((s) => s.name), output.namingConvention, true);
+}
+
+//#endregion
+//#region src/write-specs.ts
+function getHeader(option, info) {
+	if (!option) return "";
+	const header = option(info);
+	return Array.isArray(header) ? jsDoc({ description: header }) : header;
+}
+/**
+* Add re-export of operation schemas from the main schemas index file.
+* Handles the case where the index file doesn't exist (no regular schemas).
+*/
+async function addOperationSchemasReExport(schemaPath, operationSchemasPath, fileExtension, header) {
+	const relativePath = upath.relativeSafe(schemaPath, operationSchemasPath);
+	const schemaIndexPath = upath.join(schemaPath, `index${fileExtension}`);
+	const exportLine = `export * from '${relativePath}';\n`;
+	if (!await fs.pathExists(schemaIndexPath)) {
+		const content = header && header.trim().length > 0 ? `${header}\n${exportLine}` : exportLine;
+		await fs.outputFile(schemaIndexPath, content);
+	} else {
+		const existingContent = await fs.readFile(schemaIndexPath, "utf8");
+		if (!(/* @__PURE__ */ new RegExp(`export\\s*\\*\\s*from\\s*['"]${relativePath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}['"]`)).test(existingContent)) await fs.appendFile(schemaIndexPath, exportLine);
+	}
+}
+async function writeSpecs(builder, workspace, options, projectName) {
+	const { info, schemas, target } = builder;
+	const { output } = options;
+	const projectTitle = projectName ?? info.title;
+	const header = getHeader(output.override.header, info);
+	if (output.schemas) if (isString(output.schemas)) {
+		const fileExtension = output.fileExtension || ".ts";
+		const schemaPath = output.schemas;
+		if (output.operationSchemas) {
+			const { regularSchemas, operationSchemas: opSchemas } = splitSchemasByType(schemas);
+			const regularSchemaNames = new Set(regularSchemas.map((s) => s.name));
+			const operationSchemaNames = new Set(opSchemas.map((s) => s.name));
+			fixCrossDirectoryImports(opSchemas, regularSchemaNames, schemaPath, output.operationSchemas, output.namingConvention);
+			fixRegularSchemaImports(regularSchemas, operationSchemaNames, schemaPath, output.operationSchemas, output.namingConvention);
+			if (regularSchemas.length > 0) await writeSchemas({
+				schemaPath,
+				schemas: regularSchemas,
+				target,
+				namingConvention: output.namingConvention,
+				fileExtension,
+				header,
+				indexFiles: output.indexFiles
+			});
+			if (opSchemas.length > 0) {
+				await writeSchemas({
+					schemaPath: output.operationSchemas,
+					schemas: opSchemas,
+					target,
+					namingConvention: output.namingConvention,
+					fileExtension,
+					header,
+					indexFiles: output.indexFiles
+				});
+				if (output.indexFiles) await addOperationSchemasReExport(schemaPath, output.operationSchemas, fileExtension, header);
+			}
+		} else await writeSchemas({
+			schemaPath,
+			schemas,
+			target,
+			namingConvention: output.namingConvention,
+			fileExtension,
+			header,
+			indexFiles: output.indexFiles
+		});
+	} else {
+		const schemaType = output.schemas.type;
+		if (schemaType === "typescript") {
+			const fileExtension = output.fileExtension || ".ts";
+			if (output.operationSchemas) {
+				const { regularSchemas, operationSchemas: opSchemas } = splitSchemasByType(schemas);
+				const regularSchemaNames = new Set(regularSchemas.map((s) => s.name));
+				const operationSchemaNames = new Set(opSchemas.map((s) => s.name));
+				fixCrossDirectoryImports(opSchemas, regularSchemaNames, output.schemas.path, output.operationSchemas, output.namingConvention);
+				fixRegularSchemaImports(regularSchemas, operationSchemaNames, output.schemas.path, output.operationSchemas, output.namingConvention);
+				if (regularSchemas.length > 0) await writeSchemas({
+					schemaPath: output.schemas.path,
+					schemas: regularSchemas,
+					target,
+					namingConvention: output.namingConvention,
+					fileExtension,
+					header,
+					indexFiles: output.indexFiles
+				});
+				if (opSchemas.length > 0) {
+					await writeSchemas({
+						schemaPath: output.operationSchemas,
+						schemas: opSchemas,
+						target,
+						namingConvention: output.namingConvention,
+						fileExtension,
+						header,
+						indexFiles: output.indexFiles
+					});
+					if (output.indexFiles) await addOperationSchemasReExport(output.schemas.path, output.operationSchemas, fileExtension, header);
+				}
+			} else await writeSchemas({
+				schemaPath: output.schemas.path,
+				schemas,
+				target,
+				namingConvention: output.namingConvention,
+				fileExtension,
+				header,
+				indexFiles: output.indexFiles
+			});
+		} else if (schemaType === "zod") {
+			const fileExtension = ".zod.ts";
+			await writeZodSchemas(builder, output.schemas.path, fileExtension, header, output);
+			if (builder.verbOptions) await writeZodSchemasFromVerbs(builder.verbOptions, output.schemas.path, fileExtension, header, output, {
+				spec: builder.spec,
+				target: builder.target,
+				workspace,
+				output
+			});
+		}
+	}
+	let implementationPaths = [];
+	if (output.target) implementationPaths = await getWriteMode(output.mode)({
+		builder,
+		workspace,
+		output,
+		projectName,
+		header,
+		needSchema: !output.schemas && output.client !== "zod"
+	});
+	if (output.workspace) {
+		const workspacePath = output.workspace;
+		const imports = implementationPaths.filter((path$1) => !output.mock || !path$1.endsWith(`.${getMockFileExtensionByTypeName(output.mock)}.ts`)).map((path$1) => upath.relativeSafe(workspacePath, getFileInfo(path$1).pathWithoutExtension));
+		if (output.schemas) {
+			const schemasPath = typeof output.schemas === "string" ? output.schemas : output.schemas.path;
+			imports.push(upath.relativeSafe(workspacePath, getFileInfo(schemasPath).dirname));
+		}
+		if (output.operationSchemas) imports.push(upath.relativeSafe(workspacePath, getFileInfo(output.operationSchemas).dirname));
+		if (output.indexFiles) {
+			const indexFile = upath.join(workspacePath, "/index.ts");
+			if (await fs.pathExists(indexFile)) {
+				const data = await fs.readFile(indexFile, "utf8");
+				const importsNotDeclared = imports.filter((imp) => !data.includes(imp));
+				await fs.appendFile(indexFile, unique(importsNotDeclared).map((imp) => `export * from '${imp}';\n`).join(""));
+			} else await fs.outputFile(indexFile, unique(imports).map((imp) => `export * from '${imp}';`).join("\n") + "\n");
+			implementationPaths = [indexFile, ...implementationPaths];
+		}
+	}
+	if (builder.extraFiles.length > 0) {
+		await Promise.all(builder.extraFiles.map(async (file) => fs.outputFile(file.path, file.content)));
+		implementationPaths = [...implementationPaths, ...builder.extraFiles.map((file) => file.path)];
+	}
+	const paths = [
+		...output.schemas ? [getFileInfo(typeof output.schemas === "string" ? output.schemas : output.schemas.path).dirname] : [],
+		...output.operationSchemas ? [getFileInfo(output.operationSchemas).dirname] : [],
+		...implementationPaths
+	];
+	if (options.hooks.afterAllFilesWrite) await executeHook("afterAllFilesWrite", options.hooks.afterAllFilesWrite, paths);
+	if (output.prettier) try {
+		await execa("prettier", ["--write", ...paths]);
+	} catch {
+		log(chalk.yellow(`⚠️  ${projectTitle ? `${projectTitle} - ` : ""}Globally installed prettier not found`));
+	}
+	if (output.biome) try {
+		await execa("biome", [
+			"check",
+			"--write",
+			...paths
+		]);
+	} catch (error) {
+		let message = `⚠️  ${projectTitle ? `${projectTitle} - ` : ""}biome not found`;
+		if (error instanceof ExecaError && error.exitCode === 1) message = error.message;
+		log(chalk.yellow(message));
+	}
+	if (output.docs) try {
+		let config = {};
+		let configPath = null;
+		if (typeof output.docs === "object") {
+			({configPath = null, ...config} = output.docs);
+			if (configPath) config.options = configPath;
+		}
+		const getTypedocApplication = async () => {
+			const { Application } = await import("typedoc");
+			return Application;
+		};
+		const app = await (await getTypedocApplication()).bootstrapWithPlugins({
+			entryPoints: paths,
+			theme: "markdown",
+			...config,
+			plugin: ["typedoc-plugin-markdown", ...config.plugin ?? []]
+		});
+		if (!app.options.isSet("readme")) app.options.setValue("readme", "none");
+		if (!app.options.isSet("logLevel")) app.options.setValue("logLevel", "None");
+		const project = await app.convert();
+		if (project) await app.generateDocs(project, app.options.getValue("out"));
+		else throw new Error("TypeDoc not initialized");
+	} catch (error) {
+		const message = error instanceof Error ? error.message : `⚠️  ${projectTitle ? `${projectTitle} - ` : ""}Unable to generate docs`;
+		log(chalk.yellow(message));
+	}
+	createSuccessMessage(projectTitle);
+}
+function getWriteMode(mode) {
+	switch (mode) {
+		case OutputMode.SPLIT: return writeSplitMode;
+		case OutputMode.TAGS: return writeTagsMode;
+		case OutputMode.TAGS_SPLIT: return writeSplitTagsMode;
+		case OutputMode.SINGLE:
+		default: return writeSingleMode;
+	}
+}
+
+//#endregion
+//#region src/generate-spec.ts
+/**
+* Generate client/spec files for a single Orval project.
+*
+* @param workspace - Absolute or relative workspace path used to resolve imports.
+* @param options - Normalized generation options for this project.
+* @param projectName - Optional project name used in logging output.
+* @returns A promise that resolves once generation (and optional cleaning) completes.
+*
+* @example
+* await generateSpec(process.cwd(), normalizedOptions, 'my-project');
+*/
+async function generateSpec(workspace, options, projectName) {
+	if (options.output.clean) {
+		const extraPatterns = Array.isArray(options.output.clean) ? options.output.clean : [];
+		if (options.output.target) await removeFilesAndEmptyFolders([
+			"**/*",
+			"!**/*.d.ts",
+			...extraPatterns
+		], getFileInfo(options.output.target).dirname);
+		if (options.output.schemas) await removeFilesAndEmptyFolders([
+			"**/*",
+			"!**/*.d.ts",
+			...extraPatterns
+		], getFileInfo(options.output.schemas).dirname);
+		log(`${projectName} Cleaning output folder`);
+	}
+	await writeSpecs(await importSpecs(workspace, options, projectName), workspace, options, projectName);
+}
+
+//#endregion
+//#region src/utils/config.ts
+/**
+* Resolve the Orval config file path.
+*
+* @param configFilePath - Optional path to the config file (absolute or relative).
+* @returns The absolute path to the resolved config file.
+* @throws If a provided path does not exist or if no config file is found.
+*
+* @example
+* // explicit path
+* const p = findConfigFile('./orval.config.ts');
+*
+* @example
+* // automatic discovery (searches process.cwd())
+* const p = findConfigFile();
+*/
+function findConfigFile(configFilePath) {
+	if (configFilePath) {
+		const absolutePath = path.isAbsolute(configFilePath) ? configFilePath : path.resolve(process.cwd(), configFilePath);
+		if (!fs$1.existsSync(absolutePath)) throw new Error(`Config file ${configFilePath} does not exist`);
+		return absolutePath;
+	}
+	const root = process.cwd();
+	for (const ext of [
+		".ts",
+		".js",
+		".mjs",
+		".mts"
+	]) {
+		const fullPath = path.resolve(root, `orval.config${ext}`);
+		if (fs$1.existsSync(fullPath)) return fullPath;
+	}
+	throw new Error(`No config file found in ${root}`);
+}
+/**
+* Load an Orval config file
+* @param configFilePath - Path to the config file (absolute or relative).
+* @returns The resolved Orval `Config` object.
+* @throws If the module does not provide a default export or the default export resolves to `undefined`.
+*
+* @example
+* // load a config object
+* const cfg = await loadConfigFile('./orval.config.ts');
+*/
+async function loadConfigFile(configFilePath) {
+	const configExternal = await createJiti(process.cwd(), { interopDefault: true }).import(configFilePath, { default: true });
+	if (configExternal === void 0) throw new Error(`${configFilePath} doesn't have a default export`);
+	return await (isFunction(configExternal) ? configExternal() : configExternal);
+}
+
+//#endregion
+export { defineConfig as a, name as c, startWatcher as i, version as l, loadConfigFile as n, normalizeOptions as o, generateSpec as r, description as s, findConfigFile as t };
+//# sourceMappingURL=config-CfalXEai.mjs.map

@@ -1,0 +1,67 @@
+{
+  "name": "orval",
+  "version": "8.2.0",
+  "requiresBuild": false,
+  "files": {
+    "README.md": {
+      "checkedAt": 1771497257836,
+      "integrity": "sha512-3CS51hmx8Pp7hSJGMCpPkeFdUF1eDPpi3Nl7wohrBfvR7a53AZ0CI17DzKK6qluiqq/mtuYuzT0cBmxTH9YUGA==",
+      "mode": 420,
+      "size": 1650
+    },
+    "dist/bin/orval.d.mts": {
+      "checkedAt": 1771497259326,
+      "integrity": "sha512-Q7+qc6rnZ587+s3Skg0OzC95XuTCblga+c1XQdZPRxZLDqX7uJXmS9G2CEzJjE5UPBlyDvosMazArYsfED7fJA==",
+      "mode": 420,
+      "size": 11
+    },
+    "dist/bin/orval.mjs": {
+      "checkedAt": 1771497259331,
+      "integrity": "sha512-VJxrFtPWH2okLnuSimadRvCQdPYF0uINjK5OU7sTVGQeA3xhmTo6GHqwVI8lFXwqftTzSGKy22Vs6ZgdoOc4cg==",
+      "mode": 493,
+      "size": 4006
+    },
+    "dist/bin/orval.mjs.map": {
+      "checkedAt": 1771497259337,
+      "integrity": "sha512-wi/VwOMqI5R5T4a1HeXPXZtyj2knmzkK+ODCQTfRmGgE4pGY5PN+w7q2049KHdM95/KbrILW7or+RPtBNilQgg==",
+      "mode": 420,
+      "size": 7491
+    },
+    "dist/config-CfalXEai.mjs": {
+      "checkedAt": 1771497259341,
+      "integrity": "sha512-/zx6q2PNzNZRwoWAma1JkTCnW7Bv84gkUHtkpliD8xfQlvI5xcFGCgIdMwVizSdbmOVVTOf2kwIf2kkTGBf+jw==",
+      "mode": 420,
+      "size": 57014
+    },
+    "dist/config-CfalXEai.mjs.map": {
+      "checkedAt": 1771497259346,
+      "integrity": "sha512-b+Izc680SEX4rhwUBmeHFwCoWelvzgMeYdmnK32bdA6Cw7NTyTMam374/YKfbxSMgIHvhHuepVU8LOcr5G5nPA==",
+      "mode": 420,
+      "size": 114946
+    },
+    "dist/index.d.mts": {
+      "checkedAt": 1771497259349,
+      "integrity": "sha512-92z1klpWgQWvMPgQMSDsF3R+ICvA+xWij/sd1fVHASKrAhIjw3GKl2TaAnUKIAxXxdjToib0LvEEL10Hrvt6xw==",
+      "mode": 420,
+      "size": 622
+    },
+    "dist/index.mjs": {
+      "checkedAt": 1771497259352,
+      "integrity": "sha512-+1USOBUwF/ro/4K7/lKfi89VXusBTSZf3phlWT+zl+kLhrqBmQmqS4f3DruSfub0fKB4mEGUJXxB0MY2SXVUJw==",
+      "mode": 420,
+      "size": 1816
+    },
+    "dist/index.mjs.map": {
+      "checkedAt": 1771497259356,
+      "integrity": "sha512-hT8ZT2WH1ioOemQlbvubqVYMFmcOl6YmxMEW0lNsyyY5tUcvqP/z65Cj2pue4uOWmQ8bkF+p4R7Bb/qnQ2CLIg==",
+      "mode": 420,
+      "size": 3253
+    },
+    "package.json": {
+      "checkedAt": 1771497259359,
+      "integrity": "sha512-BnLMEQx/y56RLPaBkwGHuCNSUjNm2Fc+dlOuyOlFVFyq6wNYVH6CmzhG2ZeU8CdTFvxdx32WgndKoQPmFBSr+A==",
+      "mode": 420,
+      "size": 2433
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "@orval/mcp",
+  "version": "8.2.0",
+  "requiresBuild": false,
+  "files": {
+    "README.md": {
+      "checkedAt": 1771497262852,
+      "integrity": "sha512-lAKjPVYi9lAH85bnYRqh03bqvwKG0neez3Rck9+o1btfq/QHepNz7eGpGRrWi35wYIioRnHqvIKKCWPV5XAuWg==",
+      "mode": 420,
+      "size": 2068
+    },
+    "dist/index.d.mts": {
+      "checkedAt": 1771497262855,
+      "integrity": "sha512-skIyj+otdFDGzdlGEkKhY9JgGCkt8mJCWQadFkw68T3M3vBri0IbU/qTGyY9AuDv/7pllNzEv6PnQdz12Qyalw==",
+      "mode": 420,
+      "size": 746
+    },
+    "dist/index.mjs": {
+      "checkedAt": 1771497262858,
+      "integrity": "sha512-MSc1WaQ4r+Fl0YuzYtLpPMzHazwOpHKVwQiY83mBduQX1+PBc7+VJgUyYwApiN5T1ladv1CRK4NzqTXUzQql9Q==",
+      "mode": 420,
+      "size": 9097
+    },
+    "dist/index.mjs.map": {
+      "checkedAt": 1771497262861,
+      "integrity": "sha512-UonCn0M3gZRw/a8gBgJJ5NeXCyLyFswcyHejgmqUpDx/P+/vTxTKd+0U4bFVtdh+Uwis77cV73+KP7JibxoXWA==",
+      "mode": 420,
+      "size": 17951
+    },
+    "package.json": {
+      "checkedAt": 1771497262863,
+      "integrity": "sha512-k8wm2Z6HBXWYfheCztvGWjyO9uko9tzYILPxLGHxL9/uv5h4JI1vFTc9lOpnPLT+cox+DbbjJ8wPRnjJjOJinw==",
+      "mode": 420,
+      "size": 744
+    }
+  }
+}

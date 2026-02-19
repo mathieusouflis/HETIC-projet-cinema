@@ -1,0 +1,37 @@
+{
+  "name": "@orval/axios",
+  "version": "8.2.0",
+  "requiresBuild": false,
+  "files": {
+    "README.md": {
+      "checkedAt": 1771497257836,
+      "integrity": "sha512-3CS51hmx8Pp7hSJGMCpPkeFdUF1eDPpi3Nl7wohrBfvR7a53AZ0CI17DzKK6qluiqq/mtuYuzT0cBmxTH9YUGA==",
+      "mode": 420,
+      "size": 1650
+    },
+    "dist/index.d.mts": {
+      "checkedAt": 1771497261914,
+      "integrity": "sha512-oj2lA+AjYB5OjTgGuzC0fvjscnxJ6Regd/51GVF0ljmj8L8i/5/+rc3WCSEmRaOlTgtvRQ50oDLlbVhcwqvfyA==",
+      "mode": 420,
+      "size": 1313
+    },
+    "dist/index.mjs": {
+      "checkedAt": 1771497261926,
+      "integrity": "sha512-yLHq8V3A4OmSfig8UEe96ZYGrAtexefhNUkOHfxCztZdWGTQt4Tr1j59L8YV5h8I0tzYL2d/RYQU+844gJJRSA==",
+      "mode": 420,
+      "size": 7122
+    },
+    "dist/index.mjs.map": {
+      "checkedAt": 1771497261931,
+      "integrity": "sha512-1XQnwnHlPh8zz/ibeqKT4dKWQrkor9JexJoB19ETDTNisVkk1M16tYV4sPuWRVannhER2FpyoPsUjP2v8LYEJA==",
+      "mode": 420,
+      "size": 14136
+    },
+    "package.json": {
+      "checkedAt": 1771497261937,
+      "integrity": "sha512-cgf4Ai3HsYq4CvpKDZ/mjDP8lmz/K2i1FxbRd0yifD3OY5e7FV7nDFqeu5SOGD19idyiJWahZV56E7HThALRGA==",
+      "mode": 420,
+      "size": 736
+    }
+  }
+}

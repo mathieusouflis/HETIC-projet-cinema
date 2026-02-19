@@ -1,0 +1,25 @@
+{
+  "name": "@esbuild/win32-x64",
+  "version": "0.27.2",
+  "requiresBuild": false,
+  "files": {
+    "esbuild.exe": {
+      "checkedAt": 1771497257558,
+      "integrity": "sha512-8341CU6WxCtqlZ13Cg1onSdtSTqfQpaBhYXw0uK9DH/ltp6Fj17s+yyfv+4VTJvdkRv36pz9kwC+iLNMYsh0kQ==",
+      "mode": 493,
+      "size": 11365376
+    },
+    "package.json": {
+      "checkedAt": 1771497257562,
+      "integrity": "sha512-EiDPlE3TciTMGWJbXudvHVup3U7TnQOR+sc5nkTyRCOSp6yy9dXDtCeGXk+lx7WAxgmdqPHrqhTF3MXiZCkynw==",
+      "mode": 420,
+      "size": 374
+    },
+    "README.md": {
+      "checkedAt": 1771497257566,
+      "integrity": "sha512-e2cdpoy6Mvxh58NQA2piqqXF02XvdYmCFxAGZB6gNxTvaQRl4cfsQV87fCMPnH6IHBTtvotf3qTJ0TPd+mpP0g==",
+      "mode": 420,
+      "size": 143
+    }
+  }
+}

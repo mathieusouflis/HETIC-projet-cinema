@@ -1,0 +1,151 @@
+{
+  "name": "@tanstack/react-router-devtools",
+  "version": "1.159.5",
+  "requiresBuild": false,
+  "files": {
+    "dist/cjs/index.cjs": {
+      "checkedAt": 1771497266256,
+      "integrity": "sha512-QVEAzwXqcy04Sj3284EbtEu7t9u3nze0KoNogcUEfJfsz3x5Lqrgjf6xhJPQht80mLZSb5R133r14tnv5+bFqg==",
+      "mode": 420,
+      "size": 1060
+    },
+    "dist/cjs/TanStackRouterDevtools.cjs": {
+      "checkedAt": 1771497266261,
+      "integrity": "sha512-YKTuII6eCnqHsn/DLv0p7Sd0rUBkYosDKmPB2JHOuD0Bnn0EDeu4EUOe70O1oBHHvHiL83wOzwkuM3+e/bRxkg==",
+      "mode": 420,
+      "size": 2075
+    },
+    "dist/cjs/TanStackRouterDevtoolsPanel.cjs": {
+      "checkedAt": 1771497266264,
+      "integrity": "sha512-Or5fhvRz3fTs+MEqmqlG8dKy28d2LfSVhgkjDZbnUnagNnNSkfNp5iBVJp4ZmVMNZxE5wq5q5ovlHd28GPRXqA==",
+      "mode": 420,
+      "size": 1702
+    },
+    "dist/cjs/index.d.cts": {
+      "checkedAt": 1771497266267,
+      "integrity": "sha512-burDPBW0JhrUNr/7E7m8iJqlVKbXpU8h+wSw00FMlA5IdtU2drEm0wneiCcqncq/+70iOMSG0FJAIcsDfLfggg==",
+      "mode": 420,
+      "size": 528
+    },
+    "dist/cjs/TanStackRouterDevtools.d.cts": {
+      "checkedAt": 1771497266270,
+      "integrity": "sha512-0gLjJIjqOcc9yfi5a/hizuBxt288gii0qwFoItyikxU5c1JfeYH69qSI/ISvPkIM2noYOjBchMWLywhhbhok+g==",
+      "mode": 420,
+      "size": 1797
+    },
+    "dist/cjs/TanStackRouterDevtoolsPanel.d.cts": {
+      "checkedAt": 1771497266277,
+      "integrity": "sha512-tiiIozqC7eD19ZGR92VFfIZ/JQMZBi3G9P+5T/1KyH4Mzew7ChJpJ6rTZZslr1hyi6CPRNaHfD+JhI7J7Nhzhg==",
+      "mode": 420,
+      "size": 1093
+    },
+    "dist/esm/index.js": {
+      "checkedAt": 1771497266280,
+      "integrity": "sha512-RgCDzIQaGvLZG7Nyv1+YFNwiEknouB5nxMEodql4uFUnyqujpEK6LnaJtkBUAvRfPb9Uz7wm6vWY7qKqiKQJgQ==",
+      "mode": 420,
+      "size": 788
+    },
+    "dist/esm/TanStackRouterDevtools.js": {
+      "checkedAt": 1771497266288,
+      "integrity": "sha512-fmeKJouFIwN2JvJYb+zn44M6tk8US2AapF9dLhNc9NzvHF3w1UUfA2GhPgpGTGMjVH/aoyxA6/8dktisIHiGzw==",
+      "mode": 420,
+      "size": 1903
+    },
+    "dist/esm/TanStackRouterDevtoolsPanel.js": {
+      "checkedAt": 1771497266291,
+      "integrity": "sha512-XauVmtd1KsSGp5FA0N010nhRZ8USI+RXr+APOYCVuRKc9el8NqKkBGvsulzlAygkpNYkOZY5XDM8+95tr0kPVA==",
+      "mode": 420,
+      "size": 1525
+    },
+    "package.json": {
+      "checkedAt": 1771497266293,
+      "integrity": "sha512-gUoa18YpeoeKUo25UXa2L+4M4UZ1LkkazTO1y6J+tQA9wXLygKKf5VXv5UpS2PhSMAjOSUbQZ5X5PTYIZpLMfw==",
+      "mode": 420,
+      "size": 2303
+    },
+    "dist/cjs/index.cjs.map": {
+      "checkedAt": 1771497266296,
+      "integrity": "sha512-PlZdaahBUJwtnhODYWTVkp/doK/TIkLeCxopXsZUD+//r+KXvFnPQOkEcjFP7dq8r4RvnZJ6iXTyKAG+majb7w==",
+      "mode": 420,
+      "size": 1245
+    },
+    "dist/esm/index.js.map": {
+      "checkedAt": 1771497266299,
+      "integrity": "sha512-9fBM+9a5BtTr7x8pdmrhT3JvOr7XRUgmoYkBe21m2xzdF44Ww+O2G+8hTUkiQ0zJpzOC7YK4C3hAEb9sXJ4nZg==",
+      "mode": 420,
+      "size": 1210
+    },
+    "dist/cjs/TanStackRouterDevtools.cjs.map": {
+      "checkedAt": 1771497266302,
+      "integrity": "sha512-VKihZBuA/Gg2k2GT+osYRrEfIopv0RpPFbGLt0TL6v9FZkod5UEAIY4V81+IFcMUh2qdnIFQrbMSxS95P/pRKg==",
+      "mode": 420,
+      "size": 5106
+    },
+    "dist/esm/TanStackRouterDevtools.js.map": {
+      "checkedAt": 1771497266304,
+      "integrity": "sha512-IwUm97gvOIVI9qYPcKGnOtJEFL5rLM+7KPLpkINNF3Tpu9BR7F/E9gbZ02GpqeUcTg9l3C9grYhBZakQojsgEA==",
+      "mode": 420,
+      "size": 4922
+    },
+    "dist/cjs/TanStackRouterDevtoolsPanel.cjs.map": {
+      "checkedAt": 1771497266307,
+      "integrity": "sha512-FC1JFomnyndVmsu6tZKtNbG/lDHgZ+bIu8lkzDOa1/uTKHGw3A7rq3OjLG4FJzMfsQeAp0xmYPtH0qfTmUMOeQ==",
+      "mode": 420,
+      "size": 3667
+    },
+    "dist/esm/TanStackRouterDevtoolsPanel.js.map": {
+      "checkedAt": 1771497266312,
+      "integrity": "sha512-x7VSye40AOPgS51WWmhZ5ktYqcea5U/Tt5IagXOvaNkLUG9LT8/gX8PBaCSdGn9I4sadT5uIkGOMupVVTKmRMg==",
+      "mode": 420,
+      "size": 3471
+    },
+    "README.md": {
+      "checkedAt": 1771497266315,
+      "integrity": "sha512-eoabw32TqvRB7hbya+yb+LsRQCFI6KJHmwCfiGDkVbAE6QmEN65G77nsOKozOB1l1OycbhIDbhCkZb3QEK2Lag==",
+      "mode": 420,
+      "size": 192
+    },
+    "dist/esm/index.d.ts": {
+      "checkedAt": 1771497266318,
+      "integrity": "sha512-03zNbnarKUFDnxCbsBBCiBWxDcOtsMqhf7OQIPa5pyAynxuwJO3ILF5qe+rX5pz5FUDvEckS4YkW5VvbrQpihw==",
+      "mode": 420,
+      "size": 526
+    },
+    "src/index.ts": {
+      "checkedAt": 1771497266321,
+      "integrity": "sha512-772cstofnteI4+rgTOsjSVkOXwkbgwJVaRRfsuCukHVL8sXpqHFkv3Mh8iYSaBuG+ftHLCHdLhZFBn9nGduUAA==",
+      "mode": 420,
+      "size": 836
+    },
+    "dist/esm/TanStackRouterDevtools.d.ts": {
+      "checkedAt": 1771497266270,
+      "integrity": "sha512-0gLjJIjqOcc9yfi5a/hizuBxt288gii0qwFoItyikxU5c1JfeYH69qSI/ISvPkIM2noYOjBchMWLywhhbhok+g==",
+      "mode": 420,
+      "size": 1797
+    },
+    "dist/esm/TanStackRouterDevtoolsPanel.d.ts": {
+      "checkedAt": 1771497266277,
+      "integrity": "sha512-tiiIozqC7eD19ZGR92VFfIZ/JQMZBi3G9P+5T/1KyH4Mzew7ChJpJ6rTZZslr1hyi6CPRNaHfD+JhI7J7Nhzhg==",
+      "mode": 420,
+      "size": 1093
+    },
+    "src/TanStackRouterDevtools.tsx": {
+      "checkedAt": 1771497266326,
+      "integrity": "sha512-5OBBs+u5YPpC5FOYoXX043yw4+mlwchEoNWrgPWblMx8PWIBCETuLv5wAqU1f0dng7iUHyIp5RqXW55sQSUvag==",
+      "mode": 420,
+      "size": 3632
+    },
+    "src/TanStackRouterDevtoolsPanel.tsx": {
+      "checkedAt": 1771497266328,
+      "integrity": "sha512-01bnkDmAgD6bWXSxVB8M6+gkbb5Jymm8CBrC4q9TLxcKsiSNiUTUFv7rs3hWy+HpycuQXhjZfsgF1AcgoSAMng==",
+      "mode": 420,
+      "size": 2382
+    },
+    "LICENSE": {
+      "checkedAt": 1771497264937,
+      "integrity": "sha512-WxtFIdggoRh30SS8TYSc02iM8s4IjRzRhQrMRS3MpMFMBjXm7XdZynlNto4YSzcwwKwOG8mcHFszSJLjYm0hHg==",
+      "mode": 420,
+      "size": 1079
+    }
+  }
+}

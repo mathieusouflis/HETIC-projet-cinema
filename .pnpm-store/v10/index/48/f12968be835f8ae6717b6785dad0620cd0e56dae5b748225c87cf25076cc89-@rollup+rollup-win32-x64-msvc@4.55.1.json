@@ -1,0 +1,25 @@
+{
+  "name": "@rollup/rollup-win32-x64-msvc",
+  "version": "4.55.1",
+  "requiresBuild": false,
+  "files": {
+    "package.json": {
+      "checkedAt": 1771497256528,
+      "integrity": "sha512-Aei/Fr6Pm6kF9Chy/RBosboPySA/IFchOvSAxHJZchoeCIi4BPOyCFWMx6S6O5yFnwmvPBLuc6K3jHbwGR5olg==",
+      "mode": 420,
+      "size": 454
+    },
+    "README.md": {
+      "checkedAt": 1771497256532,
+      "integrity": "sha512-e6HNsUdV6F6mxKzQlD2qBtYaSlSExD10U9uueKBCOBTVYjXX4YBJklKgYgF1yuv51egcwuvoGGxC9ZgzhsycGQ==",
+      "mode": 420,
+      "size": 94
+    },
+    "rollup.win32-x64-msvc.node": {
+      "checkedAt": 1771497256547,
+      "integrity": "sha512-0YkPfMeYl+eniqFXKsTVvfFnhhTKHM2K3gRcMfKxGBCxYrxiVVFZrtiBq1YcOJFcOo3wb9nrGqHuwk/wYRX6gQ==",
+      "mode": 420,
+      "size": 2525696
+    }
+  }
+}

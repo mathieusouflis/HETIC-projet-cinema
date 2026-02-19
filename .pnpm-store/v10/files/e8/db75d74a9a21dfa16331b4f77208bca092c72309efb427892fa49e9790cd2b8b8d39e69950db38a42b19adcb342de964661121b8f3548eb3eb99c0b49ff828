@@ -1,0 +1,813 @@
+import { EnumGeneration, PropertySortOrder, camel, compareVersions, escape, generalJSTypesWithArray, generateDependencyImports, getKey, getRefInfo, isBoolean, isFunction, isObject, isReference, isSchema, mergeDeep, pascal, resolveRef, sanitize, stringify } from "@orval/core";
+
+//#region src/delay.ts
+const getDelay = (override, options) => {
+	const overrideDelay = override?.mock?.delay ?? options?.delay;
+	const delayFunctionLazyExecute = override?.mock?.delayFunctionLazyExecute ?? options?.delayFunctionLazyExecute;
+	switch (typeof overrideDelay) {
+		case "function": return delayFunctionLazyExecute ? overrideDelay : overrideDelay();
+		case "number":
+		case "boolean": return overrideDelay;
+		default: return false;
+	}
+};
+
+//#endregion
+//#region ../../node_modules/remeda/dist/prop-Cv_AVBuA.js
+function e(e$1, ...n) {
+	return typeof e$1 == `string` || typeof e$1 == `number` || typeof e$1 == `symbol` ? (r) => t(r, e$1, ...n) : t(e$1, ...n);
+}
+function t(e$1, ...t$1) {
+	let n = e$1;
+	for (let e$2 of t$1) {
+		if (n == null) return;
+		n = n[e$2];
+	}
+	return n;
+}
+
+//#endregion
+//#region src/faker/compatible-v9.ts
+const getFakerPackageVersion = (packageJson) => {
+	return packageJson.dependencies?.["@faker-js/faker"] ?? packageJson.devDependencies?.["@faker-js/faker"] ?? packageJson.peerDependencies?.["@faker-js/faker"];
+};
+const isFakerVersionV9 = (packageJson) => {
+	const version = getFakerPackageVersion(packageJson);
+	if (!version) return false;
+	const withoutRc = version.split("-")[0];
+	return compareVersions(withoutRc, "9.0.0");
+};
+
+//#endregion
+//#region src/faker/constants.ts
+const DEFAULT_FORMAT_MOCK = {
+	bic: "faker.finance.bic()",
+	binary: "new Blob(faker.helpers.arrayElements(faker.word.words(10).split(' ')))",
+	city: "faker.location.city()",
+	country: "faker.location.country()",
+	date: "faker.date.past().toISOString().slice(0, 10)",
+	"date-time": "faker.date.past().toISOString().slice(0, 19) + 'Z'",
+	email: "faker.internet.email()",
+	firstName: "faker.person.firstName()",
+	gender: "faker.person.gender()",
+	iban: "faker.finance.iban()",
+	ipv4: "faker.internet.ipv4()",
+	ipv6: "faker.internet.ipv6()",
+	jobTitle: "faker.person.jobTitle()",
+	lastName: "faker.person.lastName()",
+	password: "faker.internet.password()",
+	phoneNumber: "faker.phone.number()",
+	streetName: "faker.location.street()",
+	uri: "faker.internet.url()",
+	url: "faker.internet.url()",
+	userName: "faker.internet.userName()",
+	uuid: "faker.string.uuid()",
+	zipCode: "faker.location.zipCode()"
+};
+const DEFAULT_OBJECT_KEY_MOCK = "faker.string.alphanumeric(5)";
+
+//#endregion
+//#region src/faker/getters/object.ts
+const overrideVarName = "overrideResponse";
+function getMockObject({ item, mockOptions, operationId, tags, combine, context, imports, existingReferencedProperties, splitMockImplementations, allowOverride = false }) {
+	if (isReference(item)) return resolveMockValue({
+		schema: {
+			...item,
+			name: item.name,
+			path: item.path ? `${item.path}.${item.name}` : item.name
+		},
+		mockOptions,
+		operationId,
+		tags,
+		context,
+		imports,
+		existingReferencedProperties,
+		splitMockImplementations
+	});
+	if (item.allOf || item.oneOf || item.anyOf) return combineSchemasMock({
+		item,
+		separator: item.allOf ? "allOf" : item.oneOf ? "oneOf" : "anyOf",
+		mockOptions,
+		operationId,
+		tags,
+		combine,
+		context,
+		imports,
+		existingReferencedProperties,
+		splitMockImplementations
+	});
+	if (Array.isArray(item.type)) return combineSchemasMock({
+		item: {
+			anyOf: item.type.map((type) => ({ type })),
+			name: item.name
+		},
+		separator: "anyOf",
+		mockOptions,
+		operationId,
+		tags,
+		combine,
+		context,
+		imports,
+		existingReferencedProperties,
+		splitMockImplementations
+	});
+	if (item.properties) {
+		let value = !combine || combine.separator === "oneOf" || combine.separator === "anyOf" ? "{" : "";
+		const imports$1 = [];
+		const includedProperties = [];
+		const entries = Object.entries(item.properties);
+		if (context.output.propertySortOrder === PropertySortOrder.ALPHABETICAL) entries.sort((a, b) => {
+			return a[0].localeCompare(b[0]);
+		});
+		const propertyScalars = entries.map(([key, prop]) => {
+			if (combine?.includedProperties.includes(key)) return;
+			const isRequired = mockOptions?.required ?? (Array.isArray(item.required) ? item.required : []).includes(key);
+			if ("$ref" in prop && existingReferencedProperties.includes(pascal(prop.$ref.split("/").pop() ?? ""))) return;
+			const resolvedValue = resolveMockValue({
+				schema: {
+					...prop,
+					name: key,
+					path: item.path ? `${item.path}.${key}` : `#.${key}`
+				},
+				mockOptions,
+				operationId,
+				tags,
+				context,
+				imports: imports$1,
+				existingReferencedProperties,
+				splitMockImplementations
+			});
+			imports$1.push(...resolvedValue.imports);
+			includedProperties.push(key);
+			const keyDefinition = getKey(key);
+			if (!isRequired && !resolvedValue.overrided) return `${keyDefinition}: faker.helpers.arrayElement([${resolvedValue.value}, undefined])`;
+			if (Array.isArray(prop.type) && prop.type.includes("null") && !resolvedValue.overrided) return `${keyDefinition}: faker.helpers.arrayElement([${resolvedValue.value}, null])`;
+			return `${keyDefinition}: ${resolvedValue.value}`;
+		}).filter(Boolean);
+		if (allowOverride) propertyScalars.push(`...${overrideVarName}`);
+		value += propertyScalars.join(", ");
+		value += !combine || combine.separator === "oneOf" || combine.separator === "anyOf" ? "}" : "";
+		return {
+			value,
+			imports: imports$1,
+			name: item.name,
+			includedProperties
+		};
+	}
+	if (item.additionalProperties) {
+		if (isBoolean(item.additionalProperties)) return {
+			value: `{}`,
+			imports: [],
+			name: item.name
+		};
+		if (isReference(item.additionalProperties) && existingReferencedProperties.includes(item.additionalProperties.$ref.split("/").pop() ?? "")) return {
+			value: `{}`,
+			imports: [],
+			name: item.name
+		};
+		const resolvedValue = resolveMockValue({
+			schema: {
+				...item.additionalProperties,
+				name: item.name,
+				path: item.path ? `${item.path}.#` : "#"
+			},
+			mockOptions,
+			operationId,
+			tags,
+			context,
+			imports,
+			existingReferencedProperties,
+			splitMockImplementations
+		});
+		return {
+			...resolvedValue,
+			value: `{
+        [${DEFAULT_OBJECT_KEY_MOCK}]: ${resolvedValue.value}
+      }`
+		};
+	}
+	return {
+		value: "{}",
+		imports: [],
+		name: item.name
+	};
+}
+
+//#endregion
+//#region src/faker/getters/scalar.ts
+function getMockScalar({ item, imports, mockOptions, operationId, tags, combine, context, existingReferencedProperties, splitMockImplementations, allowOverride = false }) {
+	if (item.isRef) existingReferencedProperties = [...existingReferencedProperties, item.name];
+	const operationProperty = resolveMockOverride(mockOptions?.operations?.[operationId]?.properties, item);
+	if (operationProperty) return operationProperty;
+	const tagProperty = resolveMockOverride(Object.entries(mockOptions?.tags ?? {}).toSorted((a, b) => {
+		return a[0].localeCompare(b[0]);
+	}).reduce((acc, [tag, options]) => tags.includes(tag) ? mergeDeep(acc, options) : acc, {}).properties, item);
+	if (tagProperty) return tagProperty;
+	const property = resolveMockOverride(mockOptions?.properties, item);
+	if (property) return property;
+	if ((context.output.override.mock?.useExamples || mockOptions?.useExamples) && item.example !== void 0) return {
+		value: JSON.stringify(item.example),
+		imports: [],
+		name: item.name,
+		overrided: true
+	};
+	const ALL_FORMAT = {
+		...DEFAULT_FORMAT_MOCK,
+		...mockOptions?.format
+	};
+	const isNullable = Array.isArray(item.type) && item.type.includes("null");
+	if (item.format && ALL_FORMAT[item.format]) {
+		let value = ALL_FORMAT[item.format];
+		if (["date", "date-time"].includes(item.format) && context.output.override.useDates) value = `new Date(${value})`;
+		return {
+			value: getNullable(value, isNullable),
+			imports: [],
+			name: item.name,
+			overrided: false
+		};
+	}
+	const type = getItemType(item);
+	const isFakerV9 = !!context.output.packageJson && isFakerVersionV9(context.output.packageJson);
+	switch (type) {
+		case "number":
+		case "integer": {
+			let value = getNullable(`faker.number.${context.output.override.useBigInt && (item.format === "int64" || item.format === "uint64") ? "bigInt" : "int"}({min: ${item.exclusiveMinimum ?? item.minimum ?? mockOptions?.numberMin}, max: ${item.exclusiveMaximum ?? item.maximum ?? mockOptions?.numberMax}${isFakerV9 && item.multipleOf !== void 0 ? `, multipleOf: ${item.multipleOf}` : ""}})`, isNullable);
+			if (type === "number") value = getNullable(`faker.number.float({min: ${item.exclusiveMinimum ?? item.minimum ?? mockOptions?.numberMin}, max: ${item.exclusiveMaximum ?? item.maximum ?? mockOptions?.numberMax}${isFakerV9 && item.multipleOf !== void 0 ? `, multipleOf: ${item.multipleOf}` : `, fractionDigits: ${mockOptions?.fractionDigits}`}})`, isNullable);
+			const numberImports = [];
+			if (item.enum) value = getEnum(item, numberImports, context, existingReferencedProperties, "number");
+			else if ("const" in item) value = JSON.stringify(item.const);
+			return {
+				value,
+				enums: item.enum,
+				imports: numberImports,
+				name: item.name
+			};
+		}
+		case "boolean": {
+			let value = "faker.datatype.boolean()";
+			if ("const" in item) value = JSON.stringify(item.const);
+			return {
+				value,
+				imports: [],
+				name: item.name
+			};
+		}
+		case "array": {
+			if (!item.items) return {
+				value: "[]",
+				imports: [],
+				name: item.name
+			};
+			if ("$ref" in item.items && existingReferencedProperties.includes(pascal(item.items.$ref.split("/").pop() ?? ""))) return {
+				value: "[]",
+				imports: [],
+				name: item.name
+			};
+			const { value, enums, imports: resolvedImports } = resolveMockValue({
+				schema: {
+					...item.items,
+					name: item.name,
+					path: item.path ? `${item.path}.[]` : "#.[]"
+				},
+				combine,
+				mockOptions,
+				operationId,
+				tags,
+				context,
+				imports,
+				existingReferencedProperties,
+				splitMockImplementations
+			});
+			if (enums) return {
+				value,
+				imports: resolvedImports,
+				name: item.name
+			};
+			let mapValue = value;
+			if (combine && !value.startsWith("faker") && !value.startsWith("{") && !value.startsWith("Array.from")) mapValue = `{${value}}`;
+			return {
+				value: `Array.from({ length: faker.number.int({ min: ${item.minItems ?? mockOptions?.arrayMin}, max: ${item.maxItems ?? mockOptions?.arrayMax} }) }, (_, i) => i + 1).map(() => (${mapValue}))`,
+				imports: resolvedImports,
+				name: item.name
+			};
+		}
+		case "string": {
+			let value = `faker.string.alpha(${`{length: {min: ${item.minLength ?? mockOptions?.stringMin}, max: ${item.maxLength ?? mockOptions?.stringMax}}}`})`;
+			const stringImports = [];
+			if (item.enum) value = getEnum(item, stringImports, context, existingReferencedProperties, "string");
+			else if (item.pattern) value = `faker.helpers.fromRegExp('${item.pattern}')`;
+			else if ("const" in item) value = JSON.stringify(item.const);
+			return {
+				value: getNullable(value, isNullable),
+				enums: item.enum,
+				name: item.name,
+				imports: stringImports
+			};
+		}
+		case "null": return {
+			value: "null",
+			imports: [],
+			name: item.name
+		};
+		default:
+			if (item.enum) {
+				const enumImports = [];
+				return {
+					value: getEnum(item, enumImports, context, existingReferencedProperties),
+					enums: item.enum,
+					imports: enumImports,
+					name: item.name
+				};
+			}
+			return getMockObject({
+				item,
+				mockOptions,
+				operationId,
+				tags,
+				combine: combine ? {
+					separator: combine.separator,
+					includedProperties: []
+				} : void 0,
+				context,
+				imports,
+				existingReferencedProperties,
+				splitMockImplementations,
+				allowOverride
+			});
+	}
+}
+function getItemType(item) {
+	if (Array.isArray(item.type) && item.type.includes("null")) {
+		const typesWithoutNull = item.type.filter((x) => x !== "null");
+		return typesWithoutNull.length === 1 ? typesWithoutNull[0] : typesWithoutNull;
+	}
+	if (item.type) return item.type;
+	if (!item.enum) return;
+	const uniqTypes = new Set(item.enum.map((value) => typeof value));
+	if (uniqTypes.size > 1) return;
+	const type = [...uniqTypes.values()].at(0);
+	if (!type) return;
+	return ["string", "number"].includes(type) ? type : void 0;
+}
+function getEnum(item, imports, context, existingReferencedProperties, type) {
+	if (!item.enum) return "";
+	let enumValue = `[${item.enum.filter((e$1) => e$1 !== null).map((e$1) => type === "string" || type === void 0 && typeof e$1 === "string" ? `'${escape(e$1)}'` : e$1).join(",")}]`;
+	if (context.output.override.enumGenerationType === EnumGeneration.ENUM) if (item.isRef || existingReferencedProperties.length === 0) {
+		enumValue += ` as ${item.name}${item.name.endsWith("[]") ? "" : "[]"}`;
+		imports.push({ name: item.name });
+	} else {
+		enumValue += ` as ${existingReferencedProperties[existingReferencedProperties.length - 1]}['${item.name}']`;
+		if (!item.path?.endsWith("[]")) enumValue += "[]";
+		imports.push({ name: existingReferencedProperties[existingReferencedProperties.length - 1] });
+	}
+	else enumValue += " as const";
+	if (item.isRef && type === "string") {
+		enumValue = `Object.values(${item.name})`;
+		imports.push({
+			name: item.name,
+			values: true
+		});
+	}
+	return item.path?.endsWith("[]") ? `faker.helpers.arrayElements(${enumValue})` : `faker.helpers.arrayElement(${enumValue})`;
+}
+
+//#endregion
+//#region src/faker/resolvers/value.ts
+function isRegex(key) {
+	return key.startsWith("/") && key.endsWith("/");
+}
+function resolveMockOverride(properties = {}, item) {
+	const path = item.path ?? `#.${item.name}`;
+	const property = Object.entries(properties).find(([key]) => {
+		if (isRegex(key)) {
+			const regex = new RegExp(key.slice(1, -1));
+			if (regex.test(item.name) || regex.test(path)) return true;
+		}
+		if (`#.${key}` === path) return true;
+		return false;
+	});
+	if (!property) return;
+	const isNullable = Array.isArray(item.type) && item.type.includes("null");
+	return {
+		value: getNullable(property[1], isNullable),
+		imports: [],
+		name: item.name,
+		overrided: true
+	};
+}
+function getNullable(value, nullable) {
+	return nullable ? `faker.helpers.arrayElement([${value}, null])` : value;
+}
+function resolveMockValue({ schema, mockOptions, operationId, tags, combine, context, imports, existingReferencedProperties, splitMockImplementations, allowOverride }) {
+	if (isReference(schema)) {
+		const { originalName, refPaths } = getRefInfo(schema.$ref, context);
+		const schemaRef = Array.isArray(refPaths) ? e(context.spec, ...refPaths) : void 0;
+		const newSchema = {
+			...schemaRef,
+			name: pascal(originalName),
+			path: schema.path,
+			isRef: true,
+			required: [...schemaRef?.required ?? [], ...schema.required ?? []]
+		};
+		const newSeparator = newSchema.allOf ? "allOf" : newSchema.oneOf ? "oneOf" : "anyOf";
+		const scalar = getMockScalar({
+			item: newSchema,
+			mockOptions,
+			operationId,
+			tags,
+			combine: combine ? {
+				separator: combine.separator === "anyOf" ? newSeparator : combine.separator,
+				includedProperties: newSeparator === "allOf" ? [] : combine.includedProperties
+			} : void 0,
+			context,
+			imports,
+			existingReferencedProperties,
+			splitMockImplementations,
+			allowOverride
+		});
+		if (scalar.value && (newSchema.type === "object" || newSchema.allOf) && combine?.separator === "oneOf") {
+			const funcName = `get${pascal(operationId)}Response${pascal(newSchema.name)}Mock`;
+			if (!splitMockImplementations.some((f) => f.includes(`export const ${funcName}`))) {
+				const discriminatedProperty = newSchema.discriminator?.propertyName;
+				let type = `Partial<${newSchema.name}>`;
+				if (discriminatedProperty) type = `Omit<${type}, '${discriminatedProperty}'>`;
+				const func = `export const ${funcName} = (${`${overrideVarName}: ${type} = {}`}): ${newSchema.name} => ({${scalar.value.startsWith("...") ? "" : "..."}${scalar.value}, ...${overrideVarName}});`;
+				splitMockImplementations.push(func);
+			}
+			scalar.value = newSchema.nullable ? `${funcName}()` : `{...${funcName}()}`;
+			scalar.imports.push({ name: newSchema.name });
+		}
+		return {
+			...scalar,
+			type: getType(newSchema)
+		};
+	}
+	return {
+		...getMockScalar({
+			item: schema,
+			mockOptions,
+			operationId,
+			tags,
+			combine,
+			context,
+			imports,
+			existingReferencedProperties,
+			splitMockImplementations,
+			allowOverride
+		}),
+		type: getType(schema)
+	};
+}
+function getType(schema) {
+	return schema.type ?? (schema.properties ? "object" : schema.items ? "array" : void 0);
+}
+
+//#endregion
+//#region src/faker/getters/combine.ts
+function combineSchemasMock({ item, separator, mockOptions, operationId, tags, combine, context, imports, existingReferencedProperties, splitMockImplementations }) {
+	const combineImports = [];
+	const includedProperties = [...combine?.includedProperties ?? []];
+	const itemResolvedValue = isReference(item) && !existingReferencedProperties.includes(item.name) || item.properties ? resolveMockValue({
+		schema: Object.fromEntries(Object.entries(item).filter(([key]) => key !== separator)),
+		combine: {
+			separator: "allOf",
+			includedProperties: []
+		},
+		mockOptions,
+		operationId,
+		tags,
+		context,
+		imports,
+		existingReferencedProperties,
+		splitMockImplementations
+	}) : void 0;
+	includedProperties.push(...itemResolvedValue?.includedProperties ?? []);
+	combineImports.push(...itemResolvedValue?.imports ?? []);
+	let containsOnlyPrimitiveValues = true;
+	const value = (item[separator] ?? []).reduce((acc, val, _, arr) => {
+		const refName = "$ref" in val ? pascal(val.$ref.split("/").pop() ?? "") : "";
+		if (separator === "allOf" ? refName && (refName === item.name || existingReferencedProperties.includes(refName) && !item.isRef) : refName && existingReferencedProperties.includes(refName)) {
+			if (arr.length === 1) return "undefined";
+			return acc;
+		}
+		if (separator === "allOf" && item.required) val = isSchema(val) && val.required ? {
+			...val,
+			required: [...item.required, ...val.required]
+		} : {
+			...val,
+			required: item.required
+		};
+		const resolvedValue = resolveMockValue({
+			schema: {
+				...val,
+				name: item.name,
+				path: item.path ?? "#"
+			},
+			combine: {
+				separator,
+				includedProperties: separator === "oneOf" ? itemResolvedValue?.includedProperties ?? [] : includedProperties
+			},
+			mockOptions,
+			operationId,
+			tags,
+			context,
+			imports,
+			existingReferencedProperties,
+			splitMockImplementations
+		});
+		combineImports.push(...resolvedValue.imports);
+		includedProperties.push(...resolvedValue.includedProperties ?? []);
+		if (resolvedValue.value === "{}") {
+			containsOnlyPrimitiveValues = false;
+			return acc;
+		}
+		if (separator === "allOf") {
+			if (resolvedValue.value.startsWith("{") || !resolvedValue.type) {
+				containsOnlyPrimitiveValues = false;
+				return `${acc}...${resolvedValue.value},`;
+			} else if (resolvedValue.type === "object") {
+				containsOnlyPrimitiveValues = false;
+				return resolvedValue.value.startsWith("faker") ? `${acc}...${resolvedValue.value},` : `${acc}...{${resolvedValue.value}},`;
+			}
+		}
+		return `${acc}${resolvedValue.value},`;
+	}, separator === "allOf" ? "" : "faker.helpers.arrayElement([");
+	let finalValue = value === "undefined" ? value : `${separator === "allOf" && !containsOnlyPrimitiveValues ? "{" : ""}${value}${separator === "allOf" ? containsOnlyPrimitiveValues ? "" : "}" : "])"}`;
+	if (itemResolvedValue) finalValue = finalValue.startsWith("...") ? `...{${finalValue}, ${itemResolvedValue.value}}` : `{...${finalValue}, ${itemResolvedValue.value}}`;
+	if (finalValue.endsWith(",")) finalValue = finalValue.slice(0, Math.max(0, finalValue.length - 1));
+	return {
+		value: finalValue,
+		imports: combineImports,
+		name: item.name,
+		includedProperties
+	};
+}
+
+//#endregion
+//#region src/faker/getters/route.ts
+const hasParam = (path) => /[^{]*{[\w*_-]*}.*/.test(path);
+const getRoutePath = (path) => {
+	const matches = /([^{]*){?([\w*_-]*)}?(.*)/.exec(path);
+	if (!matches?.length) return path;
+	const prev = matches[1];
+	const param = sanitize(camel(matches[2]), {
+		es5keyword: true,
+		underscore: true,
+		dash: true,
+		dot: true
+	});
+	const next = hasParam(matches[3]) ? getRoutePath(matches[3]) : matches[3];
+	return hasParam(path) ? `${prev}:${param}${next}` : `${prev}${param}${next}`;
+};
+const getRouteMSW = (route, baseUrl = "*") => {
+	route = route.replaceAll(":", String.raw`\:`);
+	return route.split("/").reduce((acc, path, i) => {
+		if (!path && !i) return acc;
+		if (!path.includes("{")) return `${acc}/${path}`;
+		return `${acc}/${getRoutePath(path)}`;
+	}, baseUrl);
+};
+
+//#endregion
+//#region src/msw/mocks.ts
+function getMockPropertiesWithoutFunc(properties, spec) {
+	return Object.entries(isFunction(properties) ? properties(spec) : properties).reduce((acc, [key, value]) => {
+		acc[key] = (isFunction(value) ? `(${value})()` : stringify(value)).replaceAll(/import_faker\.defaults|import_faker\.faker|_faker\.faker/g, "faker");
+		return acc;
+	}, {});
+}
+function getMockWithoutFunc(spec, override) {
+	return {
+		arrayMin: override?.mock?.arrayMin,
+		arrayMax: override?.mock?.arrayMax,
+		stringMin: override?.mock?.stringMin,
+		stringMax: override?.mock?.stringMax,
+		numberMin: override?.mock?.numberMin,
+		numberMax: override?.mock?.numberMax,
+		required: override?.mock?.required,
+		fractionDigits: override?.mock?.fractionDigits,
+		...override?.mock?.properties ? { properties: getMockPropertiesWithoutFunc(override.mock.properties, spec) } : {},
+		...override?.mock?.format ? { format: getMockPropertiesWithoutFunc(override.mock.format, spec) } : {},
+		...override?.operations ? { operations: Object.entries(override.operations).reduce((acc, [key, value]) => {
+			if (value?.mock?.properties) acc[key] = { properties: getMockPropertiesWithoutFunc(value.mock.properties, spec) };
+			return acc;
+		}, {}) } : {},
+		...override?.tags ? { tags: Object.entries(override.tags).reduce((acc, [key, value]) => {
+			if (value?.mock?.properties) acc[key] = { properties: getMockPropertiesWithoutFunc(value.mock.properties, spec) };
+			return acc;
+		}, {}) } : {}
+	};
+}
+function getMockScalarJsTypes(definition, mockOptionsWithoutFunc) {
+	const isArray = definition.endsWith("[]");
+	switch (isArray ? definition.slice(0, -2) : definition) {
+		case "number": return isArray ? `Array.from({length: faker.number.int({min: ${mockOptionsWithoutFunc.arrayMin}, max: ${mockOptionsWithoutFunc.arrayMax}})}, () => faker.number.int())` : "faker.number.int()";
+		case "string": return isArray ? `Array.from({length: faker.number.int({min: ${mockOptionsWithoutFunc?.arrayMin},max: ${mockOptionsWithoutFunc?.arrayMax}})}, () => faker.word.sample())` : "faker.word.sample()";
+		default: return "undefined";
+	}
+}
+function getResponsesMockDefinition({ operationId, tags, returnType, responses, imports: responseImports, mockOptionsWithoutFunc, transformer, context, mockOptions, splitMockImplementations }) {
+	return responses.reduce((acc, { value: definition, originalSchema, example, examples, imports, isRef }) => {
+		if (context.output.override.mock?.useExamples || mockOptions?.useExamples) {
+			let exampleValue = example ?? originalSchema?.example ?? Object.values(examples ?? {})[0] ?? originalSchema?.examples?.[0];
+			exampleValue = exampleValue?.value ?? exampleValue;
+			if (exampleValue) {
+				acc.definitions.push(transformer ? transformer(exampleValue, returnType) : JSON.stringify(exampleValue));
+				return acc;
+			}
+		}
+		if (!definition || generalJSTypesWithArray.includes(definition)) {
+			const value = getMockScalarJsTypes(definition, mockOptionsWithoutFunc);
+			acc.definitions.push(transformer ? transformer(value, returnType) : value);
+			return acc;
+		}
+		if (!originalSchema && definition === "Blob") originalSchema = {
+			type: "string",
+			format: "binary"
+		};
+		else if (!originalSchema) return acc;
+		const scalar = getMockScalar({
+			item: {
+				name: definition,
+				...resolveRef(originalSchema, context).schema
+			},
+			imports,
+			mockOptions: mockOptionsWithoutFunc,
+			operationId,
+			tags,
+			context,
+			existingReferencedProperties: [],
+			splitMockImplementations,
+			allowOverride: true
+		});
+		acc.imports.push(...scalar.imports);
+		acc.definitions.push(transformer ? transformer(scalar.value, returnType) : scalar.value);
+		return acc;
+	}, {
+		definitions: [],
+		imports: []
+	});
+}
+function getMockDefinition({ operationId, tags, returnType, responses, imports: responseImports, override, transformer, context, mockOptions, splitMockImplementations }) {
+	const { definitions, imports } = getResponsesMockDefinition({
+		operationId,
+		tags,
+		returnType,
+		responses,
+		imports: responseImports,
+		mockOptionsWithoutFunc: getMockWithoutFunc(context.spec, override),
+		transformer,
+		context,
+		mockOptions,
+		splitMockImplementations
+	});
+	return {
+		definition: "[" + definitions.join(", ") + "]",
+		definitions,
+		imports
+	};
+}
+function getMockOptionsDataOverride(operationTags, operationId, override) {
+	const responseOverride = override.operations[operationId]?.mock?.data ?? operationTags.map((operationTag) => override.tags[operationTag]?.mock?.data).find((e$1) => e$1 !== void 0);
+	return (isFunction(responseOverride) ? `(${responseOverride})()` : stringify(responseOverride))?.replaceAll(/import_faker\.defaults|import_faker\.faker|_faker\.faker/g, "faker");
+}
+
+//#endregion
+//#region src/msw/index.ts
+function getMSWDependencies(options) {
+	const hasDelay = options?.delay !== false;
+	const locale = options?.locale;
+	const exports = [
+		{
+			name: "http",
+			values: true
+		},
+		{
+			name: "HttpResponse",
+			values: true
+		},
+		{
+			name: "RequestHandlerOptions",
+			values: false
+		}
+	];
+	if (hasDelay) exports.push({
+		name: "delay",
+		values: true
+	});
+	return [{
+		exports,
+		dependency: "msw"
+	}, {
+		exports: [{
+			name: "faker",
+			values: true
+		}],
+		dependency: locale ? `@faker-js/faker/locale/${locale}` : "@faker-js/faker"
+	}];
+}
+const generateMSWImports = ({ implementation, imports, projectName, hasSchemaDir, isAllowSyntheticDefaultImports, options }) => {
+	return generateDependencyImports(implementation, [...getMSWDependencies(options), ...imports], projectName, hasSchemaDir, isAllowSyntheticDefaultImports);
+};
+function generateDefinition(name, route, getResponseMockFunctionNameBase, handlerNameBase, { operationId, response, verb, tags }, { override, context, mock }, returnType, status, responseImports, responses, contentTypes, splitMockImplementations) {
+	const oldSplitMockImplementations = [...splitMockImplementations];
+	const { definitions, definition, imports } = getMockDefinition({
+		operationId,
+		tags,
+		returnType,
+		responses,
+		imports: responseImports,
+		override,
+		context,
+		mockOptions: isFunction(mock) ? void 0 : mock,
+		splitMockImplementations
+	});
+	const mockData = getMockOptionsDataOverride(tags, operationId, override);
+	let value = "";
+	if (mockData) value = mockData;
+	else if (definitions.length > 1) value = `faker.helpers.arrayElement(${definition})`;
+	else if (definitions[0]) value = definitions[0];
+	const isResponseOverridable = value.includes(overrideVarName);
+	const isTextPlain = contentTypes.includes("text/plain");
+	const isReturnHttpResponse = value && value !== "undefined";
+	const getResponseMockFunctionName = `${getResponseMockFunctionNameBase}${pascal(name)}`;
+	const handlerName = `${handlerNameBase}${pascal(name)}`;
+	const addedSplitMockImplementations = splitMockImplementations.slice(oldSplitMockImplementations.length);
+	splitMockImplementations.push(...addedSplitMockImplementations);
+	const mockImplementations = addedSplitMockImplementations.length > 0 ? `${addedSplitMockImplementations.join("\n\n")}\n\n` : "";
+	const mockImplementation = isReturnHttpResponse ? `${mockImplementations}export const ${getResponseMockFunctionName} = (${isResponseOverridable ? `overrideResponse: Partial< ${returnType} > = {}` : ""})${mockData ? "" : `: ${returnType}`} => (${value})\n\n` : mockImplementations;
+	const delay = getDelay(override, isFunction(mock) ? void 0 : mock);
+	const infoParam = "info";
+	const overrideResponse = `overrideResponse !== undefined
+    ? (typeof overrideResponse === "function" ? await overrideResponse(${infoParam}) : overrideResponse)
+    : ${getResponseMockFunctionName}()`;
+	const handlerImplementation = `
+export const ${handlerName} = (overrideResponse?: ${returnType} | ((${infoParam}: Parameters<Parameters<typeof http.${verb}>[1]>[0]) => Promise<${returnType}> | ${returnType}), options?: RequestHandlerOptions) => {
+  return http.${verb}('${route}', async (${infoParam}) => {${delay === false ? "" : `await delay(${isFunction(delay) ? `(${delay})()` : delay});`}
+  ${isReturnHttpResponse ? "" : `if (typeof overrideResponse === 'function') {await overrideResponse(info); }`}
+    return new HttpResponse(${isReturnHttpResponse ? isTextPlain ? overrideResponse : `JSON.stringify(${overrideResponse})` : null},
+      { status: ${status === "default" ? 200 : status.replace(/XX$/, "00")},
+        ${isReturnHttpResponse ? `headers: { 'Content-Type': ${isTextPlain ? "'text/plain'" : "'application/json'"} }` : ""}
+      })
+  }, options)
+}\n`;
+	const includeResponseImports = [...imports, ...response.imports.filter((r) => {
+		const reg = new RegExp(String.raw`\b${r.name}\b`);
+		return reg.test(handlerImplementation) || reg.test(mockImplementation);
+	})];
+	return {
+		implementation: {
+			function: mockImplementation,
+			handlerName,
+			handler: handlerImplementation
+		},
+		imports: includeResponseImports
+	};
+}
+function generateMSW(generatorVerbOptions, generatorOptions) {
+	const { pathRoute, override, mock } = generatorOptions;
+	const { operationId, response } = generatorVerbOptions;
+	const route = getRouteMSW(pathRoute, override.mock?.baseUrl ?? (isFunction(mock) ? void 0 : mock?.baseUrl));
+	const handlerName = `get${pascal(operationId)}MockHandler`;
+	const getResponseMockFunctionName = `get${pascal(operationId)}ResponseMock`;
+	const splitMockImplementations = [];
+	const baseDefinition = generateDefinition("", route, getResponseMockFunctionName, handlerName, generatorVerbOptions, generatorOptions, response.definition.success, response.types.success[0]?.key ?? "200", response.imports, response.types.success, response.contentTypes, splitMockImplementations);
+	const mockImplementations = [baseDefinition.implementation.function];
+	const handlerImplementations = [baseDefinition.implementation.handler];
+	const imports = [...baseDefinition.imports];
+	if (generatorOptions.mock && isObject(generatorOptions.mock) && generatorOptions.mock.generateEachHttpStatus) for (const statusResponse of [...response.types.success, ...response.types.errors]) {
+		const definition = generateDefinition(statusResponse.key, route, getResponseMockFunctionName, handlerName, generatorVerbOptions, generatorOptions, statusResponse.value, statusResponse.key, response.imports, [statusResponse], [statusResponse.contentType], splitMockImplementations);
+		mockImplementations.push(definition.implementation.function);
+		handlerImplementations.push(definition.implementation.handler);
+		imports.push(...definition.imports);
+	}
+	return {
+		implementation: {
+			function: mockImplementations.join("\n"),
+			handlerName,
+			handler: handlerImplementations.join("\n")
+		},
+		imports
+	};
+}
+
+//#endregion
+//#region src/index.ts
+const DEFAULT_MOCK_OPTIONS = {
+	type: "msw",
+	useExamples: false
+};
+const generateMockImports = (importOptions) => {
+	switch (importOptions.options?.type) {
+		default: return generateMSWImports(importOptions);
+	}
+};
+function generateMock(generatorVerbOptions, generatorOptions) {
+	switch (generatorOptions.mock.type) {
+		default: return generateMSW(generatorVerbOptions, generatorOptions);
+	}
+}
+
+//#endregion
+export { DEFAULT_MOCK_OPTIONS, generateMock, generateMockImports };
+//# sourceMappingURL=index.mjs.map

@@ -1,0 +1,37 @@
+{
+  "name": "morgan",
+  "version": "1.10.1",
+  "requiresBuild": false,
+  "files": {
+    "LICENSE": {
+      "checkedAt": 1771497251056,
+      "integrity": "sha512-iWRzCjP++3WiPxiH+75Y1dgKyslsz5U2CNkGkPuXUrBsJy3jmaCX2m6rwQffSka+CvAF/gOACMrNSnGc5ZlQ7A==",
+      "mode": 420,
+      "size": 1172
+    },
+    "index.js": {
+      "checkedAt": 1771497251069,
+      "integrity": "sha512-4ARpp6Da9vLlA1dnVqgRLu+x0Swo4VnQwgGxG8OZveCn5quTq7V5hBpMeBVozKBdVj9Wa4RdMQ7oMT3/YoQBPg==",
+      "mode": 420,
+      "size": 10765
+    },
+    "package.json": {
+      "checkedAt": 1771497251076,
+      "integrity": "sha512-6vPxR+sstlqmEDCENLrdnW/ys/MyKSNm4C4EifgG7qMhoddkVT3h1X/2LlW87037GiE+OsAJ9Ie4Amstf5fLWw==",
+      "mode": 420,
+      "size": 1295
+    },
+    "HISTORY.md": {
+      "checkedAt": 1771497251087,
+      "integrity": "sha512-rvp6mAd6NKnpO0Mr0ZxNDJBeqjbXK+9XhAv1C39T+vh/2RAjK4lwmyj2Yxxtk+qoMfvYcWNZb0CMIrYk9vkZpg==",
+      "mode": 420,
+      "size": 5674
+    },
+    "README.md": {
+      "checkedAt": 1771497251093,
+      "integrity": "sha512-qfEC4VbFKj+3hXMVZ5pHViDcsWzsfiVKHoAue9hu0rP7g5wB7+E3Ais1cl98UihIGXarFVkXeLuyOsrRbkC3Bw==",
+      "mode": 420,
+      "size": 11687
+    }
+  }
+}

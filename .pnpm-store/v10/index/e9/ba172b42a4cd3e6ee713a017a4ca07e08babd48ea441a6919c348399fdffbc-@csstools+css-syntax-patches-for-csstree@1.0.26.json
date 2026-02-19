@@ -1,0 +1,43 @@
+{
+  "name": "@csstools/css-syntax-patches-for-csstree",
+  "version": "1.0.26",
+  "requiresBuild": false,
+  "files": {
+    "dist/index.json": {
+      "checkedAt": 1771497256917,
+      "integrity": "sha512-hygtDriMOEVyKjuvzt3TFSzP+gMIP/JAvSieRwbyx327mZ838/FNRWhE+/l08pWeZIGUTN2FpjGFFiUV7vLDEw==",
+      "mode": 420,
+      "size": 86321
+    },
+    "package.json": {
+      "checkedAt": 1771497256923,
+      "integrity": "sha512-9HV3DAu+4dNjqTRb2dImf9k4+EIS2rJ6nTXiSj2mjAm+PrdrUYvoBXKQCI2So+OPWVc0UIaVmLMe9qFB2ZlV7Q==",
+      "mode": 420,
+      "size": 1073
+    },
+    "CHANGELOG.md": {
+      "checkedAt": 1771497256928,
+      "integrity": "sha512-B5ZHHvDqmDRKo5sALulzl/Cyc9RHd0CHOT8ZaTnlNBPOVvYgrEGjj2hk/cVVXd6arqRwwBBxzouKsL93YRV8XA==",
+      "mode": 420,
+      "size": 308
+    },
+    "LICENSE.md": {
+      "checkedAt": 1771497256575,
+      "integrity": "sha512-dIOhT9dEI1Ct4ChTsNYbvybJSoNP/ug3v1s2hHGbUtZYaWAZYQAI97MvJEspZkEp6p+6pbAgX1ePvzOH0hE0Mw==",
+      "mode": 420,
+      "size": 930
+    },
+    "README.md": {
+      "checkedAt": 1771497256933,
+      "integrity": "sha512-/qwvRSEg4HYqL8RpmYzV2sAhv3DOPmjceGG1NmYz3xVlo94s9ialHTCFE2u6xPsB+JzkThll91baKD9jeBh8XQ==",
+      "mode": 420,
+      "size": 1685
+    },
+    "dist/index.d.ts": {
+      "checkedAt": 1771497256944,
+      "integrity": "sha512-ynZi3vAZud4MbjT5CdDaKB76hRN0mtRAAgRz4/Dx9HYV52JbVHUM/OMmCvUzeYj2O0ZGy81OuViICHnHSRYK8g==",
+      "mode": 420,
+      "size": 159
+    }
+  }
+}

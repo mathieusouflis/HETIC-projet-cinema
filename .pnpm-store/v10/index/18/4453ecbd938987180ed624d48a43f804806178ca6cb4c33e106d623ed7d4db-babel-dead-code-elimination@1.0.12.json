@@ -1,0 +1,49 @@
+{
+  "name": "babel-dead-code-elimination",
+  "version": "1.0.12",
+  "requiresBuild": false,
+  "files": {
+    "LICENSE": {
+      "checkedAt": 1771497269397,
+      "integrity": "sha512-+jCm/FDE2M4l+YTs/s1k6Bqam7m3yYzK3+Wzf7PtVuoq+j/p9L+IT6lvjSMqSPSS08LvWaGQOKBmFyI+jTm9AA==",
+      "mode": 420,
+      "size": 1057
+    },
+    "dist/index.cjs": {
+      "checkedAt": 1771497269401,
+      "integrity": "sha512-1VZ3H+24IDmVwIBcCUWbW7aqbagSXyDI2j/M8KQrRDsZGVrh4OefvuWz47afI2yTEj8KK44dx6rge6O2XCIUAg==",
+      "mode": 420,
+      "size": 15802
+    },
+    "dist/index.d.cts": {
+      "checkedAt": 1771497269403,
+      "integrity": "sha512-/RWh+4oQIdPOIZmC087Yf6piKF0sI5Lv5MArxjYNtSpzA5vALjXEcGLfH8D4KZ2flecPOIgqq8AAqdYslTiCeA==",
+      "mode": 420,
+      "size": 552
+    },
+    "dist/index.js": {
+      "checkedAt": 1771497269406,
+      "integrity": "sha512-iUgEi8vpp3fOg9Rd/fnD4PgIcq+MsjZZrnlKMI4CpNKH33lYqsDUv1z8jY++VCvAWA2aE2SvArqDbX93tZ9vZQ==",
+      "mode": 420,
+      "size": 13749
+    },
+    "package.json": {
+      "checkedAt": 1771497269408,
+      "integrity": "sha512-WWT6IxvWHXx/hSpMdIja0EKkG4yQylaPT+K9z3S58oVtWG4FyqZNKij29NP9YKFSVZUGQl6w3uyaaj2bqz8yMw==",
+      "mode": 420,
+      "size": 1420
+    },
+    "README.md": {
+      "checkedAt": 1771497269411,
+      "integrity": "sha512-Mv8pd069nJNQR4HBSFav9IRAbdzGqEuFbmW90i8QyRDswiyPNE7p5ZjaQeD5Xte+L7zinjMN09hZJEgYYfgHVA==",
+      "mode": 420,
+      "size": 1912
+    },
+    "dist/index.d.ts": {
+      "checkedAt": 1771497269403,
+      "integrity": "sha512-/RWh+4oQIdPOIZmC087Yf6piKF0sI5Lv5MArxjYNtSpzA5vALjXEcGLfH8D4KZ2flecPOIgqq8AAqdYslTiCeA==",
+      "mode": 420,
+      "size": 552
+    }
+  }
+}

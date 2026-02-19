@@ -1,0 +1,233 @@
+import { generateFormDataAndUrlEncodedFunction, generateMutatorConfig, generateMutatorRequestOptions, generateOptions, generateVerbImports, getDefaultContentType, isBoolean, pascal, sanitize, toObjectString } from "@orval/core";
+
+//#region src/index.ts
+const ANGULAR_DEPENDENCIES = [
+	{
+		exports: [
+			{
+				name: "HttpClient",
+				values: true
+			},
+			{ name: "HttpHeaders" },
+			{ name: "HttpParams" },
+			{ name: "HttpContext" },
+			{
+				name: "HttpResponse",
+				alias: "AngularHttpResponse"
+			},
+			{ name: "HttpEvent" }
+		],
+		dependency: "@angular/common/http"
+	},
+	{
+		exports: [{
+			name: "Injectable",
+			values: true
+		}, {
+			name: "inject",
+			values: true
+		}],
+		dependency: "@angular/core"
+	},
+	{
+		exports: [{
+			name: "Observable",
+			values: true
+		}],
+		dependency: "rxjs"
+	},
+	{
+		exports: [{ name: "DeepNonNullable" }],
+		dependency: "@orval/core"
+	}
+];
+const returnTypesToWrite = /* @__PURE__ */ new Map();
+const getAngularDependencies = () => ANGULAR_DEPENDENCIES;
+const generateAngularTitle = (title) => {
+	return `${pascal(sanitize(title))}Service`;
+};
+const generateAngularHeader = ({ title, isRequestOptions, isMutator, isGlobalMutator, provideIn }) => `
+${isRequestOptions && !isGlobalMutator ? `interface HttpClientOptions {
+  headers?: HttpHeaders | Record<string, string | string[]>;
+  context?: HttpContext;
+  params?:
+        | HttpParams
+        | Record<string, string | number | boolean | ReadonlyArray<string | number | boolean>>;
+  reportProgress?: boolean;
+  withCredentials?: boolean;
+  credentials?: RequestCredentials;
+  keepalive?: boolean;
+  priority?: RequestPriority;
+  cache?: RequestCache;
+  mode?: RequestMode;
+  redirect?: RequestRedirect;
+  referrer?: string;
+  integrity?: string;
+  transferCache?: {includeHeaders?: string[]} | boolean;
+  timeout?: number;
+}` : ""}
+
+${isRequestOptions && isMutator ? `// eslint-disable-next-line
+    type ThirdParameter<T extends (...args: any) => any> = T extends (
+  config: any,
+  httpClient: any,
+  args: infer P,
+) => any
+  ? P
+  : never;` : ""}
+
+@Injectable(${provideIn ? `{ providedIn: '${isBoolean(provideIn) ? "root" : provideIn}' }` : ""})
+export class ${title} {
+  private readonly http = inject(HttpClient);
+`;
+const generateAngularFooter = ({ operationNames }) => {
+	let footer = "};\n\n";
+	for (const operationName of operationNames) if (returnTypesToWrite.has(operationName)) footer += returnTypesToWrite.get(operationName) + "\n";
+	return footer;
+};
+const generateImplementation = ({ headers, queryParams, operationName, response, mutator, body, props, verb, override, formData, formUrlEncoded, paramsSerializer }, { route, context }) => {
+	const isRequestOptions = override.requestOptions !== false;
+	const isFormData = !override.formData.disabled;
+	const isFormUrlEncoded = override.formUrlEncoded !== false;
+	const isExactOptionalPropertyTypes = !!context.output.tsconfig?.compilerOptions?.exactOptionalPropertyTypes;
+	const bodyForm = generateFormDataAndUrlEncodedFunction({
+		formData,
+		formUrlEncoded,
+		body,
+		isFormData,
+		isFormUrlEncoded
+	});
+	const dataType = response.definition.success || "unknown";
+	returnTypesToWrite.set(operationName, `export type ${pascal(operationName)}ClientResult = NonNullable<${dataType}>`);
+	if (mutator) {
+		const mutatorConfig = generateMutatorConfig({
+			route,
+			body,
+			headers,
+			queryParams,
+			response,
+			verb,
+			isFormData,
+			isFormUrlEncoded,
+			hasSignal: false,
+			isExactOptionalPropertyTypes
+		});
+		const requestOptions = isRequestOptions ? generateMutatorRequestOptions(override.requestOptions, mutator.hasThirdArg) : "";
+		return ` ${operationName}<TData = ${dataType}>(\n    ${mutator.bodyTypeName && body.definition ? toObjectString(props, "implementation").replace(new RegExp(String.raw`(\w*):\s?${body.definition}`), `$1: ${mutator.bodyTypeName}<${body.definition}>`) : toObjectString(props, "implementation")}\n ${isRequestOptions && mutator.hasThirdArg ? `options?: ThirdParameter<typeof ${mutator.name}>` : ""}) {${bodyForm}
+      return ${mutator.name}<TData>(
+      ${mutatorConfig},
+      this.http,
+      ${requestOptions});
+    }
+  `;
+	}
+	const options = generateOptions({
+		route,
+		body,
+		headers,
+		queryParams,
+		response,
+		verb,
+		requestOptions: override.requestOptions,
+		isFormData,
+		isFormUrlEncoded,
+		paramsSerializer,
+		paramsSerializerOptions: override.paramsSerializerOptions,
+		isAngular: true,
+		isExactOptionalPropertyTypes,
+		hasSignal: false
+	});
+	const propsDefinition = toObjectString(props, "definition");
+	const successTypes = response.types.success;
+	const uniqueContentTypes = [...new Set(successTypes.map((t) => t.contentType).filter(Boolean))];
+	const hasMultipleContentTypes = uniqueContentTypes.length > 1;
+	const defaultContentType = hasMultipleContentTypes ? getDefaultContentType(uniqueContentTypes) : uniqueContentTypes[0] ?? "application/json";
+	const defaultReturnType = (hasMultipleContentTypes ? successTypes.find((t) => t.contentType === defaultContentType) : void 0)?.value ?? dataType;
+	const isModelType = dataType !== "Blob" && dataType !== "string";
+	let functionName = operationName;
+	if (isModelType && !hasMultipleContentTypes) functionName += `<TData = ${dataType}>`;
+	let contentTypeOverloads = "";
+	if (hasMultipleContentTypes && isRequestOptions) {
+		const requiredProps = props.filter((p) => p.required && !p.default);
+		const optionalProps = props.filter((p) => !p.required || p.default);
+		contentTypeOverloads = successTypes.filter((t) => t.contentType).map(({ contentType, value }) => {
+			return `${operationName}(${[
+				requiredProps.map((p) => p.definition).join(",\n    "),
+				`accept: '${contentType}'`,
+				optionalProps.map((p) => p.definition).join(",\n    ")
+			].filter(Boolean).join(",\n    ")}, options?: HttpClientOptions): Observable<${value}>;`;
+		}).join("\n  ");
+		const allParams = [
+			requiredProps.map((p) => p.definition).join(",\n    "),
+			"accept?: string",
+			optionalProps.map((p) => p.definition).join(",\n    ")
+		].filter(Boolean).join(",\n    ");
+		contentTypeOverloads += `\n  ${operationName}(${allParams}, options?: HttpClientOptions): Observable<${defaultReturnType}>;`;
+	}
+	const observeOverloads = isRequestOptions && !hasMultipleContentTypes ? `${functionName}(${propsDefinition} options?: HttpClientOptions & { observe?: 'body' }): Observable<${isModelType ? "TData" : dataType}>;
+ ${functionName}(${propsDefinition} options?: HttpClientOptions & { observe: 'events' }): Observable<HttpEvent<${isModelType ? "TData" : dataType}>>;
+ ${functionName}(${propsDefinition} options?: HttpClientOptions & { observe: 'response' }): Observable<AngularHttpResponse<${isModelType ? "TData" : dataType}>>;` : "";
+	const overloads = contentTypeOverloads || observeOverloads;
+	if (hasMultipleContentTypes) {
+		const requiredProps = props.filter((p) => p.required && !p.default);
+		const optionalProps = props.filter((p) => !p.required || p.default);
+		const requiredPart = requiredProps.map((p) => p.implementation).join(",\n    ");
+		const optionalPart = optionalProps.map((p) => p.implementation).join(",\n    ");
+		return ` ${overloads}
+  ${operationName}(
+    ${[
+			requiredPart,
+			`accept: string = '${defaultContentType}'`,
+			optionalPart
+		].filter(Boolean).join(",\n    ")},
+    ${isRequestOptions ? "options?: HttpClientOptions" : ""}
+  ): Observable<any> {${bodyForm}
+    if (accept.includes('json') || accept.includes('+json')) {
+      return this.http.${verb}<any>(\`${route}\`, {
+        ...options,
+        responseType: 'json',
+        headers: { Accept: accept, ...options?.headers },
+      });
+    } else if (accept.startsWith('text/') || accept.includes('xml')) {
+      return this.http.${verb}(\`${route}\`, {
+        ...options,
+        responseType: 'text',
+        headers: { Accept: accept, ...options?.headers },
+      }) as any;
+    } else {
+      return this.http.${verb}(\`${route}\`, {
+        ...options,
+        responseType: 'blob',
+        headers: { Accept: accept, ...options?.headers },
+      }) as any;
+    }
+  }
+`;
+	}
+	return ` ${overloads}
+  ${functionName}(
+    ${toObjectString(props, "implementation")} ${isRequestOptions ? `options?: HttpClientOptions & { observe?: any }` : ""}): Observable<any> {${bodyForm}
+    return this.http.${verb}${isModelType ? "<TData>" : ""}(${options});
+  }
+`;
+};
+const generateAngular = (verbOptions, options) => {
+	const imports = generateVerbImports(verbOptions);
+	return {
+		implementation: generateImplementation(verbOptions, options),
+		imports
+	};
+};
+const angularClientBuilder = {
+	client: generateAngular,
+	header: generateAngularHeader,
+	dependencies: getAngularDependencies,
+	footer: generateAngularFooter,
+	title: generateAngularTitle
+};
+const builder = () => () => angularClientBuilder;
+var src_default = builder;
+
+//#endregion
+export { builder, src_default as default, generateAngular, generateAngularFooter, generateAngularHeader, generateAngularTitle, getAngularDependencies };
+//# sourceMappingURL=index.mjs.map

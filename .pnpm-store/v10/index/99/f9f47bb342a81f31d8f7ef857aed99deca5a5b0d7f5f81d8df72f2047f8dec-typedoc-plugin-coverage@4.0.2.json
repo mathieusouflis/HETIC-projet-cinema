@@ -1,0 +1,31 @@
+{
+  "name": "typedoc-plugin-coverage",
+  "version": "4.0.2",
+  "requiresBuild": false,
+  "files": {
+    "LICENSE": {
+      "checkedAt": 1771497264348,
+      "integrity": "sha512-PMLa+UWUVb8qkXTm73ptVvc+fYe9X88VfAd/x35Bz8JBgWjSZQlxSEusyq6XEZiGHiKTph8aaU/5mBXZiPSolw==",
+      "mode": 420,
+      "size": 1073
+    },
+    "index.js": {
+      "checkedAt": 1771497264354,
+      "integrity": "sha512-zCXEuNEgVO3ZfX9SgceG1DxBNbD/Ve/Mf/beDBpFM1WN7/+g/08wSqbOvM8C7JFo0v4ZgUmxbZwE/t3GUC17OQ==",
+      "mode": 420,
+      "size": 10059
+    },
+    "package.json": {
+      "checkedAt": 1771497264358,
+      "integrity": "sha512-pFTvEoM1W6WX4k5U0AE/ktzV1ikgBTbZq0vcaIzYTjvvq2Fh6DAkyuksn03VotgJy7n8Pl9oYM/ZYc8GRVoYNw==",
+      "mode": 420,
+      "size": 715
+    },
+    "README.md": {
+      "checkedAt": 1771497264364,
+      "integrity": "sha512-kxo6d6y9auMrUCYbMqlzBM5tDM5PeRR0PXbiUgKf9sei8QuHGS9p4s4KHDokqLpLvhdpu2c8QA/opq5S8D6Q2w==",
+      "mode": 420,
+      "size": 1359
+    }
+  }
+}

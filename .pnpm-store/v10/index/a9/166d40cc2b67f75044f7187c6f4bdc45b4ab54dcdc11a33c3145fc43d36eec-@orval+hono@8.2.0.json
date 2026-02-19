@@ -1,0 +1,43 @@
+{
+  "name": "@orval/hono",
+  "version": "8.2.0",
+  "requiresBuild": false,
+  "files": {
+    "README.md": {
+      "checkedAt": 1771497261908,
+      "integrity": "sha512-3CS51hmx8Pp7hSJGMCpPkeFdUF1eDPpi3Nl7wohrBfvR7a53AZ0CI17DzKK6qluiqq/mtuYuzT0cBmxTH9YUGA==",
+      "mode": 420,
+      "size": 1650
+    },
+    "dist/index.d.mts": {
+      "checkedAt": 1771497261915,
+      "integrity": "sha512-zxLbmMJqjxtQZ44InP8Tvmu3X0dyQN4tire6zerMUATNDUiSFilUuHV17obdv6Z20JLREo6bQZ8j7wpkC4AYwA==",
+      "mode": 420,
+      "size": 684
+    },
+    "dist/index.mjs": {
+      "checkedAt": 1771497261925,
+      "integrity": "sha512-MRhFVNmQwja+ydV3q6kfw10RA/aCYD4ESdp7Usw9zAYQE0zyYXZFmMjK9BaI25R0ftitu4ko+JqbCizorhpJlw==",
+      "mode": 420,
+      "size": 18554
+    },
+    "dist/index.mjs.map": {
+      "checkedAt": 1771497261929,
+      "integrity": "sha512-qwL8QpUmgVoCZNjpoDJdKL00GGEswhvYYDaTuz+JzA/DxPD1jgaMIbvQPD3OEZL2gftUAAAstCP9CyYfW9yBdA==",
+      "mode": 420,
+      "size": 37871
+    },
+    "dist/zValidator.ts": {
+      "checkedAt": 1771497261935,
+      "integrity": "sha512-ijNMAYMpgjtqIgOQpIis4mOpJmaw+8zLnr1Xmk3E9MA+5a5VZxACYz7DSgG7dp/2iBrHTUVzdVPPKNSlUGZffA==",
+      "mode": 420,
+      "size": 5022
+    },
+    "package.json": {
+      "checkedAt": 1771497261940,
+      "integrity": "sha512-sP0XTsVvtQxH4NtRaVotC4+f2g8g9d6k2qL89EjR1oLOMJDyFdODUupsSkaWNXT8HrZRBvhA+WnAXASbwLqxsw==",
+      "mode": 420,
+      "size": 873
+    }
+  }
+}

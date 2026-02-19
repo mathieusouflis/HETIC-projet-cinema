@@ -1,0 +1,31 @@
+{
+  "name": "@types/morgan",
+  "version": "1.9.10",
+  "requiresBuild": false,
+  "files": {
+    "LICENSE": {
+      "checkedAt": 1771497252302,
+      "integrity": "sha512-HQaIQk9pwOcyKutyDk4o2a87WnotwYuLGYFW43emGm4FvIJFKPyg+OYaw5sTegKAKf+C5SKa1ACjzCLivbaHrQ==",
+      "mode": 420,
+      "size": 1141
+    },
+    "README.md": {
+      "checkedAt": 1771497252307,
+      "integrity": "sha512-QJqiQdfwMcuUnx44CoPoZ1nEwvMC9s6pFCqRAy3oLutUyp+yc6OTks46/L2/UKBZDnbLM1/IsVOd0ruFputEUA==",
+      "mode": 420,
+      "size": 689
+    },
+    "index.d.ts": {
+      "checkedAt": 1771497252309,
+      "integrity": "sha512-WiKKCpX7hb6aea8ul/14w4jDR3Dj6IonFRM2mIVfuoQrS/uh9r3l9SUumOB4ZQuWC3voUhBajmumsIeSk4fFVw==",
+      "mode": 420,
+      "size": 10922
+    },
+    "package.json": {
+      "checkedAt": 1771497252313,
+      "integrity": "sha512-V07Bh+NTpnQ/D8I0eX+qe+kQqRP9O/3wQwl0XyVBr4y2eX0fa8gwRODt9LMvLTDpFdPPkluncmcihL36gj6UCQ==",
+      "mode": 420,
+      "size": 1341
+    }
+  }
+}

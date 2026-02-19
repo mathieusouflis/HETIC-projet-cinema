@@ -1,0 +1,31 @@
+{
+  "name": "@tailwindcss/oxide-win32-x64-msvc",
+  "version": "4.1.18",
+  "requiresBuild": false,
+  "files": {
+    "package.json": {
+      "checkedAt": 1771497267944,
+      "integrity": "sha512-L/JpwPIQEfcKVb5lFvWcRURhSY61rvEdm4zp+55XeyKxRiyy5GwJimWtHcQtHMtl8hYCEjMwYiI7ZeWir7pGVg==",
+      "mode": 420,
+      "size": 529
+    },
+    "README.md": {
+      "checkedAt": 1771497267947,
+      "integrity": "sha512-fd5/MQxy++I2ebZ5kYH8mNEPXIUrbyjZnDvwsrv3S2jlj5N8jLUYtbuKSYRVdkvYnk/lWwU93NUOLm6nkXJcbg==",
+      "mode": 420,
+      "size": 110
+    },
+    "tailwindcss-oxide.win32-x64-msvc.node": {
+      "checkedAt": 1771497267956,
+      "integrity": "sha512-Sz/bvK7ItWsIZJpX/2HZQfm13qEW9tiOoHoBjf4WhfFiUQxv/48MwWlP9O5koI6ZnNy6e/x1x2RtS2WsOu7vsg==",
+      "mode": 420,
+      "size": 3173888
+    },
+    "LICENSE": {
+      "checkedAt": 1771497267958,
+      "integrity": "sha512-9X+sI7UOelzzysUtes9vKamnAYfathdWUsIyS1QlQ5lSXr/i62gEli2uj9/sd5mFKW+aAmOdaTEAhqFEG5CWIA==",
+      "mode": 420,
+      "size": 1071
+    }
+  }
+}

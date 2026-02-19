@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/index.ts"],
+  "sourcesContent": ["/** biome-ignore-all lint/performance/noBarrelFile: entrypoint */\nexport * from './openapi-types'\n"],
+  "mappings": "AACA,cAAc;",
+  "names": []
+}

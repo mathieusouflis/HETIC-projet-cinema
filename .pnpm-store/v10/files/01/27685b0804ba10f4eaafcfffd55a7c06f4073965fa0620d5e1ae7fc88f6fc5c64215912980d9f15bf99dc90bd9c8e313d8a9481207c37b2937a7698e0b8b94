@@ -1,0 +1,4266 @@
+import { t as __export } from "./chunk-C6wwvPpM.mjs";
+import { entries, groupBy, isArray, isEmptyish, prop, unique, uniqueBy, uniqueWith } from "remeda";
+import { keyword } from "esutils";
+import path from "node:path";
+import fs from "node:fs";
+import { globby } from "globby";
+import { compare } from "compare-versions";
+import debug from "debug";
+import { pathToFileURL } from "node:url";
+import readline from "node:readline";
+import chalk from "chalk";
+import { isDereferenced } from "@scalar/openapi-types/helpers";
+import fs$1 from "fs-extra";
+import { Parser } from "acorn";
+import { build } from "esbuild";
+
+//#region src/types.ts
+const PropertySortOrder = {
+	ALPHABETICAL: "Alphabetical",
+	SPECIFICATION: "Specification"
+};
+const NamingConvention = {
+	CAMEL_CASE: "camelCase",
+	PASCAL_CASE: "PascalCase",
+	SNAKE_CASE: "snake_case",
+	KEBAB_CASE: "kebab-case"
+};
+const EnumGeneration = {
+	CONST: "const",
+	ENUM: "enum",
+	UNION: "union"
+};
+const OutputClient = {
+	ANGULAR: "angular",
+	ANGULAR_QUERY: "angular-query",
+	AXIOS: "axios",
+	AXIOS_FUNCTIONS: "axios-functions",
+	REACT_QUERY: "react-query",
+	SOLID_START: "solid-start",
+	SOLID_QUERY: "solid-query",
+	SVELTE_QUERY: "svelte-query",
+	VUE_QUERY: "vue-query",
+	SWR: "swr",
+	ZOD: "zod",
+	HONO: "hono",
+	FETCH: "fetch",
+	MCP: "mcp"
+};
+const OutputHttpClient = {
+	AXIOS: "axios",
+	FETCH: "fetch",
+	ANGULAR: "angular"
+};
+const OutputMode = {
+	SINGLE: "single",
+	SPLIT: "split",
+	TAGS: "tags",
+	TAGS_SPLIT: "tags-split"
+};
+const OutputMockType = { MSW: "msw" };
+const FormDataArrayHandling = {
+	SERIALIZE: "serialize",
+	EXPLODE: "explode",
+	SERIALIZE_WITH_BRACKETS: "serialize-with-brackets"
+};
+const Verbs = {
+	POST: "post",
+	PUT: "put",
+	GET: "get",
+	PATCH: "patch",
+	DELETE: "delete",
+	HEAD: "head"
+};
+const GetterPropType = {
+	PARAM: "param",
+	NAMED_PATH_PARAMS: "namedPathParams",
+	BODY: "body",
+	QUERY_PARAM: "queryParam",
+	HEADER: "header"
+};
+const SchemaType = {
+	integer: "integer",
+	number: "number",
+	string: "string",
+	boolean: "boolean",
+	object: "object",
+	null: "null",
+	array: "array",
+	enum: "enum",
+	unknown: "unknown"
+};
+var ErrorWithTag = class extends Error {
+	tag;
+	constructor(message, tag, options) {
+		super(message, options);
+		this.tag = tag;
+	}
+};
+
+//#endregion
+//#region src/constants.ts
+const generalJSTypes = [
+	"number",
+	"string",
+	"null",
+	"unknown",
+	"undefined",
+	"object",
+	"blob"
+];
+const generalJSTypesWithArray = generalJSTypes.reduce((acc, type) => {
+	acc.push(type, `Array<${type}>`, `${type}[]`);
+	return acc;
+}, []);
+const VERBS_WITH_BODY = [
+	Verbs.POST,
+	Verbs.PUT,
+	Verbs.PATCH,
+	Verbs.DELETE
+];
+const URL_REGEX = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
+const TEMPLATE_TAG_REGEX = /\${(.+?)}/g;
+
+//#endregion
+//#region src/utils/extension.ts
+function getExtension(path$2) {
+	return path$2.toLowerCase().includes(".yaml") || path$2.toLowerCase().includes(".yml") ? "yaml" : "json";
+}
+
+//#endregion
+//#region src/utils/file.ts
+function getFileInfo(target = "", { backupFilename = "filename", extension = ".ts" } = {}) {
+	const isDir = isDirectory(target);
+	const filePath = isDir ? path.join(target, backupFilename + extension) : target;
+	return {
+		path: filePath,
+		pathWithoutExtension: filePath.replace(/\.[^/.]+$/, ""),
+		extension,
+		isDirectory: isDir,
+		dirname: path.dirname(filePath),
+		filename: path.basename(filePath, extension.startsWith(".") ? extension : `.${extension}`)
+	};
+}
+async function removeFilesAndEmptyFolders(patterns, dir) {
+	const files = await globby(patterns, {
+		cwd: dir,
+		absolute: true
+	});
+	await Promise.all(files.map((file) => fs.promises.unlink(file)));
+	const sortedDirectories = (await globby(["**/*"], {
+		cwd: dir,
+		absolute: true,
+		onlyDirectories: true
+	})).toSorted((a, b) => {
+		const depthA = a.split("/").length;
+		return b.split("/").length - depthA;
+	});
+	for (const directory of sortedDirectories) try {
+		if ((await fs.promises.readdir(directory)).length === 0) await fs.promises.rmdir(directory);
+	} catch {}
+}
+
+//#endregion
+//#region src/utils/path.ts
+var path_exports = /* @__PURE__ */ __export({
+	basename: () => basename,
+	dirname: () => dirname,
+	extname: () => extname,
+	getSchemaFileName: () => getSchemaFileName,
+	isAbsolute: () => isAbsolute,
+	join: () => join,
+	joinSafe: () => joinSafe,
+	normalizeSafe: () => normalizeSafe,
+	relativeSafe: () => relativeSafe,
+	resolve: () => resolve,
+	separator: () => separator
+});
+const path$1 = {};
+const isFunction$1 = (val) => typeof val == "function";
+const isString$1 = (val) => {
+	if (typeof val === "string") return true;
+	if (typeof val === "object" && val !== null) return Object.toString.call(val) == "[object String]";
+	return false;
+};
+for (const [propName, propValue] of Object.entries(path)) if (isFunction$1(propValue)) path$1[propName] = ((propName$1) => {
+	return (...args) => {
+		args = args.map((p) => {
+			return isString$1(p) ? toUnix(p) : p;
+		});
+		const result = path[propName$1](...args);
+		return isString$1(result) ? toUnix(result) : result;
+	};
+})(propName);
+else path$1[propName] = propValue;
+const { join, resolve, extname, dirname, basename, isAbsolute } = path$1;
+/**
+* Behaves exactly like `path.relative(from, to)`, but keeps the first meaningful "./"
+*/
+function relativeSafe(from, to) {
+	return normalizeSafe(`.${separator}${path$1.relative(from, to)}`);
+}
+function getSchemaFileName(path$2) {
+	return path$2.replace(`.${getExtension(path$2)}`, "").slice(path$2.lastIndexOf("/") + 1);
+}
+const separator = "/";
+const toUnix = function(value) {
+	value = value.replaceAll("\\", "/");
+	value = value.replaceAll(/(?<!^)\/+/g, "/");
+	return value;
+};
+function normalizeSafe(value) {
+	let result;
+	value = toUnix(value);
+	result = path$1.normalize(value);
+	if (value.startsWith("./") && !result.startsWith("./") && !result.startsWith("..")) result = "./" + result;
+	else if (value.startsWith("//") && !result.startsWith("//")) result = value.startsWith("//./") ? "//." + result : "/" + result;
+	return result;
+}
+function joinSafe(...values) {
+	let result = path$1.join(...values);
+	if (values.length > 0) {
+		const firstValue = toUnix(values[0]);
+		if (firstValue.startsWith("./") && !result.startsWith("./") && !result.startsWith("..")) result = "./" + result;
+		else if (firstValue.startsWith("//") && !result.startsWith("//")) result = firstValue.startsWith("//./") ? "//." + result : "/" + result;
+	}
+	return result;
+}
+
+//#endregion
+//#region src/utils/assertion.ts
+/**
+* Discriminator helper for `ReferenceObject`
+*
+* @param property
+*/
+function isReference(obj) {
+	return !isNull(obj) && Object.hasOwn(obj, "$ref");
+}
+function isDirectory(path$2) {
+	return !extname(path$2);
+}
+function isObject(x) {
+	return Object.prototype.toString.call(x) === "[object Object]";
+}
+function isModule(x) {
+	return Object.prototype.toString.call(x) === "[object Module]";
+}
+function isString(x) {
+	return typeof x === "string";
+}
+function isNumber(x) {
+	return typeof x === "number";
+}
+function isNumeric(x) {
+	return /^-?\d+$/.test(x);
+}
+function isBoolean(x) {
+	return typeof x === "boolean";
+}
+function isFunction(x) {
+	return typeof x === "function";
+}
+function isUndefined(x) {
+	return x === void 0;
+}
+function isNull(x) {
+	return x === null;
+}
+function isSchema(x) {
+	if (!isObject(x)) return false;
+	if (isString(x.type) && Object.values(SchemaType).includes(x.type)) return true;
+	const combine = x.allOf || x.anyOf || x.oneOf;
+	if (Array.isArray(combine)) return true;
+	if (isObject(x.properties)) return true;
+	return false;
+}
+function isVerb(verb) {
+	return Object.values(Verbs).includes(verb);
+}
+function isUrl(str) {
+	let givenURL;
+	try {
+		givenURL = new URL(str);
+	} catch {
+		return false;
+	}
+	return givenURL.protocol === "http:" || givenURL.protocol === "https:";
+}
+
+//#endregion
+//#region src/utils/async-reduce.ts
+async function asyncReduce(array, reducer, initValue) {
+	let accumulate = typeof initValue === "object" ? Object.create(initValue) : initValue;
+	for (const item of array) accumulate = await reducer(accumulate, item);
+	return accumulate;
+}
+
+//#endregion
+//#region src/utils/case.ts
+const unicodes = function(s, prefix) {
+	prefix = prefix || "";
+	return s.replaceAll(/(^|-)/g, String.raw`$1\u` + prefix).replaceAll(",", String.raw`\u` + prefix);
+};
+const symbols = unicodes("20-26,28-2F,3A-40,5B-60,7B-7E,A0-BF,D7,F7", "00");
+const lowers = "a-z" + unicodes("DF-F6,F8-FF", "00");
+const uppers = "A-Z" + unicodes("C0-D6,D8-DE", "00");
+const impropers = String.raw`A|An|And|As|At|But|By|En|For|If|In|Of|On|Or|The|To|Vs?\.?|Via`;
+const regexps = {
+	capitalize: new RegExp("(^|[" + symbols + "])([" + lowers + "])", "g"),
+	pascal: new RegExp("(^|[" + symbols + "])+([" + lowers + uppers + "])", "g"),
+	fill: new RegExp("[" + symbols + "]+(.|$)", "g"),
+	sentence: new RegExp(String.raw`(^\s*|[\?\!\.]+"?\s+"?|,\s+")([` + lowers + "])", "g"),
+	improper: new RegExp(String.raw`\b(` + impropers + String.raw`)\b`, "g"),
+	relax: new RegExp("([^" + uppers + "])([" + uppers + "]*)([" + uppers + "])(?=[^" + uppers + "]|$)", "g"),
+	upper: /* @__PURE__ */ new RegExp("^[^" + lowers + "]+$"),
+	hole: /[^\s]\s[^\s]/,
+	apostrophe: /'/g,
+	room: /* @__PURE__ */ new RegExp("[" + symbols + "]")
+};
+const deapostrophe = (s) => {
+	return s.replace(regexps.apostrophe, "");
+};
+const up = String.prototype.toUpperCase;
+const low = String.prototype.toLowerCase;
+const fill = (s, fillWith, isDeapostrophe = false) => {
+	s = s.replace(regexps.fill, function(m, next) {
+		return next ? fillWith + next : "";
+	});
+	if (isDeapostrophe) s = deapostrophe(s);
+	return s;
+};
+const decap = (s, char = 0) => {
+	return low.call(s.charAt(char)) + s.slice(char + 1);
+};
+const relax = (m, before, acronym, caps) => {
+	return before + " " + (acronym ? acronym + " " : "") + caps;
+};
+const prep = (s, isFill = false, isPascal = false, isUpper = false) => {
+	s = s == void 0 ? "" : s + "";
+	if (!isUpper && regexps.upper.test(s)) s = low.call(s);
+	if (!isFill && !regexps.hole.test(s)) {
+		var holey = fill(s, " ");
+		if (regexps.hole.test(holey)) s = holey;
+	}
+	if (!isPascal && !regexps.room.test(s)) s = s.replace(regexps.relax, relax);
+	return s;
+};
+const lower = (s, fillWith, isDeapostrophe) => {
+	return fill(low.call(prep(s, !!fillWith)), fillWith, isDeapostrophe);
+};
+const pascalMemory = {};
+function pascal(s) {
+	if (pascalMemory[s]) return pascalMemory[s];
+	const isStartWithUnderscore = s?.startsWith("_");
+	if (regexps.upper.test(s)) s = low.call(s);
+	const pascalString = (s?.match(/[a-zA-Z0-9\u00C0-\u017F]+/g) || []).map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join("");
+	const pascalWithUnderscore = isStartWithUnderscore ? `_${pascalString}` : pascalString;
+	pascalMemory[s] = pascalWithUnderscore;
+	return pascalWithUnderscore;
+}
+function camel(s) {
+	const isStartWithUnderscore = s?.startsWith("_");
+	const camelString = decap(pascal(s), isStartWithUnderscore ? 1 : 0);
+	return isStartWithUnderscore ? `_${camelString}` : camelString;
+}
+function snake(s) {
+	return lower(s, "_", true);
+}
+function kebab(s) {
+	return lower(s, "-", true);
+}
+function upper(s, fillWith, isDeapostrophe) {
+	return fill(up.call(prep(s, !!fillWith, false, true)), fillWith, isDeapostrophe);
+}
+function conventionName(name, convention) {
+	let nameConventionTransform = camel;
+	switch (convention) {
+		case NamingConvention.PASCAL_CASE:
+			nameConventionTransform = pascal;
+			break;
+		case NamingConvention.SNAKE_CASE:
+			nameConventionTransform = snake;
+			break;
+		case NamingConvention.KEBAB_CASE:
+			nameConventionTransform = kebab;
+			break;
+	}
+	return nameConventionTransform(name);
+}
+
+//#endregion
+//#region src/utils/content-type.ts
+/**
+* Determine if a content type is binary (vs text-based).
+*/
+function isBinaryContentType(contentType) {
+	if (contentType === "application/octet-stream") return true;
+	if (contentType.startsWith("image/")) return true;
+	if (contentType.startsWith("audio/")) return true;
+	if (contentType.startsWith("video/")) return true;
+	if (contentType.startsWith("font/")) return true;
+	if (contentType.startsWith("text/")) return false;
+	if ([
+		"+json",
+		"-json",
+		"+xml",
+		"-xml",
+		"+yaml",
+		"-yaml",
+		"+rss",
+		"-rss",
+		"+csv",
+		"-csv"
+	].some((suffix) => contentType.includes(suffix))) return false;
+	return !new Set([
+		"application/json",
+		"application/xml",
+		"application/yaml",
+		"application/x-www-form-urlencoded",
+		"application/javascript",
+		"application/ecmascript",
+		"application/graphql"
+	]).has(contentType);
+}
+/**
+* Determine if a form-data field should be treated as a file (binary or text).
+*
+* Precedence (per OAS 3.1): encoding.contentType > schema.contentMediaType
+*
+* Returns:
+* - 'binary': binary file (Blob)
+* - 'text': text file (Blob | string)
+* - undefined: not a file, use standard string resolution
+*/
+function getFormDataFieldFileType(resolvedSchema, partContentType) {
+	if (resolvedSchema.type !== "string") return;
+	if (resolvedSchema.contentEncoding) return;
+	const effectiveContentType = partContentType ?? resolvedSchema.contentMediaType;
+	if (effectiveContentType) return isBinaryContentType(effectiveContentType) ? "binary" : "text";
+}
+
+//#endregion
+//#region src/utils/compare-version.ts
+function compareVersions(firstVersion, secondVersions, operator = ">=") {
+	if (firstVersion === "latest" || firstVersion === "*") return true;
+	if (firstVersion.startsWith("catalog:")) return true;
+	return compare(firstVersion.replace(/(\s(.*))/, ""), secondVersions, operator);
+}
+
+//#endregion
+//#region src/utils/debug.ts
+const filter = process.env.ORVAL_DEBUG_FILTER;
+const DEBUG = process.env.DEBUG;
+function createDebugger(ns, options = {}) {
+	const log$1 = debug(ns);
+	const { onlyWhenFocused } = options;
+	const focus = typeof onlyWhenFocused === "string" ? onlyWhenFocused : ns;
+	return (msg, ...args) => {
+		if (filter && !msg.includes(filter)) return;
+		if (onlyWhenFocused && !DEBUG?.includes(focus)) return;
+		log$1(msg, ...args);
+	};
+}
+
+//#endregion
+//#region src/utils/doc.ts
+const search = String.raw`\*/`;
+const replacement = String.raw`*\/`;
+const regex$1 = new RegExp(search, "g");
+function jsDoc(schema, tryOneLine = false, context) {
+	if (context?.output?.override?.jsDoc) {
+		const { filter: filter$1 } = context.output.override.jsDoc;
+		if (filter$1) return keyValuePairsToJsDoc(filter$1(schema));
+	}
+	const { description, deprecated, summary, minLength, maxLength, minimum, maximum, exclusiveMinimum, exclusiveMaximum, minItems, maxItems, pattern } = schema;
+	const isNullable = schema.type === "null" || Array.isArray(schema.type) && schema.type.includes("null");
+	const lines = (Array.isArray(description) ? description.filter((d) => !d.includes("eslint-disable")) : [description || ""]).map((line) => line.replaceAll(regex$1, replacement));
+	const count$1 = [
+		description,
+		deprecated,
+		summary,
+		minLength?.toString(),
+		maxLength?.toString(),
+		minimum?.toString(),
+		maximum?.toString(),
+		exclusiveMinimum?.toString(),
+		exclusiveMaximum?.toString(),
+		minItems?.toString(),
+		maxItems?.toString(),
+		isNullable ? "null" : "",
+		pattern
+	].reduce((acc, it) => it ? acc + 1 : acc, 0);
+	if (!count$1) return "";
+	const oneLine = count$1 === 1 && tryOneLine;
+	const eslintDisable = Array.isArray(description) ? description.find((d) => d.includes("eslint-disable"))?.replaceAll(regex$1, replacement) : void 0;
+	let doc = `${eslintDisable ? `/* ${eslintDisable} */\n` : ""}/**`;
+	if (description) {
+		if (!oneLine) doc += `\n${tryOneLine ? "  " : ""} *`;
+		doc += ` ${lines.join("\n * ")}`;
+	}
+	function appendPrefix() {
+		if (!oneLine) doc += `\n${tryOneLine ? "  " : ""} *`;
+	}
+	function tryAppendStringDocLine(key, value) {
+		if (value) {
+			appendPrefix();
+			doc += ` @${key} ${value.replaceAll(regex$1, replacement)}`;
+		}
+	}
+	function tryAppendBooleanDocLine(key, value) {
+		if (value === true) {
+			appendPrefix();
+			doc += ` @${key}`;
+		}
+	}
+	function tryAppendNumberDocLine(key, value) {
+		if (value !== void 0) {
+			appendPrefix();
+			doc += ` @${key} ${value}`;
+		}
+	}
+	tryAppendBooleanDocLine("deprecated", deprecated);
+	tryAppendStringDocLine("summary", summary?.replaceAll(regex$1, replacement));
+	tryAppendNumberDocLine("minLength", minLength);
+	tryAppendNumberDocLine("maxLength", maxLength);
+	tryAppendNumberDocLine("minimum", minimum);
+	tryAppendNumberDocLine("maximum", maximum);
+	tryAppendNumberDocLine("exclusiveMinimum", exclusiveMinimum);
+	tryAppendNumberDocLine("exclusiveMaximum", exclusiveMaximum);
+	tryAppendNumberDocLine("minItems", minItems);
+	tryAppendNumberDocLine("maxItems", maxItems);
+	tryAppendBooleanDocLine("nullable", isNullable);
+	tryAppendStringDocLine("pattern", pattern);
+	doc += oneLine ? " " : `\n ${tryOneLine ? "  " : ""}`;
+	doc += "*/\n";
+	return doc;
+}
+function keyValuePairsToJsDoc(keyValues) {
+	if (keyValues.length === 0) return "";
+	let doc = "/**\n";
+	for (const { key, value } of keyValues) doc += ` * @${key} ${value}\n`;
+	doc += " */\n";
+	return doc;
+}
+
+//#endregion
+//#region src/utils/dynamic-import.ts
+async function dynamicImport(toImport, from = process.cwd(), takeDefault = true) {
+	if (!toImport) return toImport;
+	try {
+		if (isString(toImport)) {
+			const fileUrl = pathToFileURL(path.resolve(from, toImport));
+			const data = path.extname(fileUrl.href) === ".json" ? await import(fileUrl.href, { with: { type: "json" } }) : await import(fileUrl.href);
+			if (takeDefault && (isObject(data) || isModule(data)) && data.default) return data.default;
+			return data;
+		}
+		return toImport;
+	} catch (error) {
+		throw new Error(`Oups... 🍻. Path: ${toImport} => ${error}`);
+	}
+}
+
+//#endregion
+//#region src/utils/file-extensions.ts
+function getMockFileExtensionByTypeName(mock) {
+	if (isFunction(mock)) return "msw";
+	switch (mock.type) {
+		default: return "msw";
+	}
+}
+
+//#endregion
+//#region src/utils/get-property-safe.ts
+/**
+* Type safe way to get arbitrary property from an object.
+*
+* @param obj - The object from which to retrieve the property.
+* @param propertyName - The name of the property to retrieve.
+* @returns Object with `hasProperty: true` and `value` of the property if it exists; otherwise `hasProperty: false` and undefined.
+*
+* @remarks Until TypeScript adds type-narrowing for Object.hasOwn we have to use this workaround
+*/
+function getPropertySafe(obj, propertyName) {
+	if (Object.hasOwn(obj, propertyName)) return {
+		hasProperty: true,
+		value: obj[propertyName]
+	};
+	return {
+		hasProperty: false,
+		value: void 0
+	};
+}
+
+//#endregion
+//#region src/utils/is-body-verb.ts
+function getIsBodyVerb(verb) {
+	return VERBS_WITH_BODY.includes(verb);
+}
+
+//#endregion
+//#region src/utils/logger.ts
+const log = console.log;
+function startMessage({ name, version, description }) {
+	return `🍻 ${chalk.cyan.bold(name)} ${chalk.green(`v${version}`)}${description ? ` - ${description}` : ""}`;
+}
+function logError(err, tag) {
+	let message = "";
+	if (err instanceof Error) {
+		message = (err.message || err.stack) ?? "Unknown error";
+		if (err.cause) {
+			const causeMsg = err.cause instanceof Error ? err.cause.message : typeof err.cause === "string" ? err.cause : JSON.stringify(err.cause, void 0, 2);
+			message += `\n  Cause: ${causeMsg}`;
+		}
+	} else message = String(err);
+	log(chalk.red([
+		"🛑",
+		tag ? `${tag} -` : void 0,
+		message
+	].filter(Boolean).join(" ")));
+}
+function mismatchArgsMessage(mismatchArgs) {
+	log(chalk.yellow(`${mismatchArgs.join(", ")} ${mismatchArgs.length === 1 ? "is" : "are"} not defined in your configuration!`));
+}
+function createSuccessMessage(backend) {
+	log(`🎉 ${backend ? `${chalk.green(backend)} - ` : ""}Your OpenAPI spec has been converted into ready to use orval!`);
+}
+const LogLevels = {
+	silent: 0,
+	error: 1,
+	warn: 2,
+	info: 3
+};
+let lastType;
+let lastMsg;
+let sameCount = 0;
+function clearScreen() {
+	const repeatCount = process.stdout.rows - 2;
+	const blank = repeatCount > 0 ? "\n".repeat(repeatCount) : "";
+	console.log(blank);
+	readline.cursorTo(process.stdout, 0, 0);
+	readline.clearScreenDown(process.stdout);
+}
+function createLogger(level = "info", options = {}) {
+	const { prefix = "[vite]", allowClearScreen = true } = options;
+	const thresh = LogLevels[level];
+	const clear = allowClearScreen && process.stdout.isTTY && !process.env.CI ? clearScreen : () => {};
+	function output(type, msg, options$1 = {}) {
+		if (thresh >= LogLevels[type]) {
+			const method = type === "info" ? "log" : type;
+			const format = () => {
+				if (options$1.timestamp) {
+					const tag = type === "info" ? chalk.cyan.bold(prefix) : type === "warn" ? chalk.yellow.bold(prefix) : chalk.red.bold(prefix);
+					return `${chalk.dim((/* @__PURE__ */ new Date()).toLocaleTimeString())} ${tag} ${msg}`;
+				} else return msg;
+			};
+			if (type === lastType && msg === lastMsg) {
+				sameCount++;
+				clear();
+				console[method](format(), chalk.yellow(`(x${sameCount + 1})`));
+			} else {
+				sameCount = 0;
+				lastMsg = msg;
+				lastType = type;
+				if (options$1.clear) clear();
+				console[method](format());
+			}
+		}
+	}
+	const warnedMessages = /* @__PURE__ */ new Set();
+	const logger = {
+		hasWarned: false,
+		info(msg, opts) {
+			output("info", msg, opts);
+		},
+		warn(msg, opts) {
+			logger.hasWarned = true;
+			output("warn", msg, opts);
+		},
+		warnOnce(msg, opts) {
+			if (warnedMessages.has(msg)) return;
+			logger.hasWarned = true;
+			output("warn", msg, opts);
+			warnedMessages.add(msg);
+		},
+		error(msg, opts) {
+			logger.hasWarned = true;
+			output("error", msg, opts);
+		},
+		clearScreen(type) {
+			if (thresh >= LogLevels[type]) clear();
+		}
+	};
+	return logger;
+}
+
+//#endregion
+//#region src/utils/merge-deep.ts
+const isObject$1 = (obj) => obj && typeof obj === "object";
+function mergeDeep(source, target) {
+	if (!isObject$1(target) || !isObject$1(source)) return source;
+	return Object.entries(target).reduce((acc, [key, value]) => {
+		const sourceValue = acc[key];
+		if (Array.isArray(sourceValue) && Array.isArray(value)) acc[key] = [...sourceValue, ...value];
+		else if (isObject$1(sourceValue) && isObject$1(value)) acc[key] = mergeDeep(sourceValue, value);
+		else acc[key] = value;
+		return acc;
+	}, Object.assign({}, source));
+}
+
+//#endregion
+//#region src/utils/occurrence.ts
+function count(str = "", key) {
+	if (!str) return 0;
+	return (str.match(new RegExp(key, "g")) ?? []).length;
+}
+
+//#endregion
+//#region src/utils/sort.ts
+const sortByPriority = (arr) => arr.sort((a, b) => {
+	if (a.default) return 1;
+	if (b.default) return -1;
+	if (a.required && b.required) return 0;
+	if (a.required) return -1;
+	if (b.required) return 1;
+	return 0;
+});
+
+//#endregion
+//#region src/utils/string.ts
+/**
+* Converts data to a string representation suitable for code generation.
+* Handles strings, numbers, booleans, functions, arrays, and objects.
+*
+* @param data - The data to stringify. Can be a string, array, object, number, boolean, function, null, or undefined.
+* @returns A string representation of the data, or undefined if data is null or undefined.
+* @example
+* stringify('hello') // returns "'hello'"
+* stringify(42) // returns "42"
+* stringify([1, 2, 3]) // returns "[1, 2, 3]"
+* stringify({ a: 1, b: 'test' }) // returns "{ a: 1, b: 'test', }"
+*/
+function stringify(data) {
+	if (isUndefined(data) || isNull(data)) return;
+	if (isString(data)) return `'${data.replaceAll("'", String.raw`\'`)}'`;
+	if (isNumber(data) || isBoolean(data) || isFunction(data)) return `${data}`;
+	if (Array.isArray(data)) return `[${data.map(stringify).join(", ")}]`;
+	return Object.entries(data).reduce((acc, [key, value], index, arr) => {
+		const strValue = stringify(value);
+		if (arr.length === 1) return `{ ${key}: ${strValue}, }`;
+		if (!index) return `{ ${key}: ${strValue}, `;
+		if (arr.length - 1 === index) return acc + `${key}: ${strValue}, }`;
+		return acc + `${key}: ${strValue}, `;
+	}, "");
+}
+/**
+* Sanitizes a string value by removing or replacing special characters and ensuring
+* it conforms to JavaScript identifier naming rules if needed.
+*
+* @param value - The string value to sanitize.
+* @param options - Configuration options for sanitization:
+*   - `whitespace` - Replacement string for whitespace characters, or `true` to keep them.
+*   - `underscore` - Replacement string for underscores, or `true` to keep them.
+*   - `dot` - Replacement string for dots, or `true` to keep them.
+*   - `dash` - Replacement string for dashes, or `true` to keep them.
+*   - `es5keyword` - If true, prefixes the value with underscore if it's an ES5 keyword.
+*   - `es5IdentifierName` - If true, ensures the value is a valid ES5 identifier name.
+*   - `special` - If true, preserves special characters that would otherwise be removed.
+* @returns The sanitized string value.
+* @example
+* sanitize('hello-world', { dash: '_' }) // returns "hello_world"
+* sanitize('class', { es5keyword: true }) // returns "_class"
+* sanitize('123abc', { es5IdentifierName: true }) // returns "N123abc"
+*/
+function sanitize(value, options) {
+	const { whitespace = "", underscore = "", dot = "", dash = "", es5keyword = false, es5IdentifierName = false, special = false } = options ?? {};
+	let newValue = value;
+	if (!special) newValue = newValue.replaceAll(/[!"`'#%&,:;<>=@{}~\$\(\)\*\+\/\\\?\[\]\^\|]/g, "");
+	if (whitespace !== true) newValue = newValue.replaceAll(/[\s]/g, whitespace);
+	if (underscore !== true) newValue = newValue.replaceAll(/['_']/g, underscore);
+	if (dot !== true) newValue = newValue.replaceAll(/[.]/g, dot);
+	if (dash !== true) newValue = newValue.replaceAll(/[-]/g, dash);
+	if (es5keyword) newValue = keyword.isKeywordES5(newValue, true) ? `_${newValue}` : newValue;
+	if (es5IdentifierName) if (/^[0-9]/.test(newValue)) newValue = `N${newValue}`;
+	else newValue = keyword.isIdentifierNameES5(newValue) ? newValue : `_${newValue}`;
+	return newValue;
+}
+/**
+* Converts an array of objects to a comma-separated string representation.
+* Optionally extracts a nested property from each object using a dot-notation path.
+*
+* @param props - Array of objects to convert to string.
+* @param path - Optional dot-notation path to extract a property from each object (e.g., "user.name").
+* @returns A comma-separated string of values, with each value on a new line indented.
+* @example
+* toObjectString([{ name: 'John' }, { name: 'Jane' }], 'name')
+* // returns "John,\n    Jane,"
+* toObjectString(['a', 'b', 'c'])
+* // returns "a,\n    b,\n    c,"
+*/
+function toObjectString(props, path$2) {
+	if (props.length === 0) return "";
+	return (typeof path$2 === "string" ? props.map((prop$1) => path$2.split(".").reduce((obj, key) => obj && typeof obj === "object" ? obj[key] : void 0, prop$1)) : props).join(",\n    ") + ",";
+}
+const NUMBERS = {
+	"0": "zero",
+	"1": "one",
+	"2": "two",
+	"3": "three",
+	"4": "four",
+	"5": "five",
+	"6": "six",
+	"7": "seven",
+	"8": "eight",
+	"9": "nine"
+};
+/**
+* Converts a number to its word representation by translating each digit to its word form.
+*
+* @param num - The number to convert to words.
+* @returns A string containing the word representation of each digit concatenated together.
+* @example
+* getNumberWord(123) // returns "onetwothree"
+* getNumberWord(42) // returns "fourtwo"
+*/
+function getNumberWord(num) {
+	return num.toString().split("").reduce((acc, n) => acc + NUMBERS[n], "");
+}
+/**
+* Escapes a specific character in a string by prefixing it with a backslash.
+*
+* @param str - The string to escape, or null.
+* @param char - The character to escape. Defaults to single quote (').
+* @returns The escaped string, or null if the input is null.
+* @example
+* escape("don't") // returns "don\'t"
+* escape('say "hello"', '"') // returns 'say \\"hello\\"'
+*/
+function escape(str, char = "'") {
+	return str?.replace(char, `\\${char}`);
+}
+/**
+* Escape all characters not included in SingleStringCharacters and
+* DoubleStringCharacters on
+* http://www.ecma-international.org/ecma-262/5.1/#sec-7.8.4
+*
+* Based on https://github.com/joliss/js-string-escape/blob/master/index.js
+*
+* @param input String to escape
+*/
+function jsStringEscape(input) {
+	return input.replaceAll(/["'\\\n\r\u2028\u2029/*]/g, (character) => {
+		switch (character) {
+			case "\"":
+			case "'":
+			case "\\":
+			case "/":
+			case "*": return "\\" + character;
+			case "\n": return String.raw`\n`;
+			case "\r": return String.raw`\r`;
+			case "\u2028": return String.raw`\u2028`;
+			case "\u2029": return String.raw`\u2029`;
+			default: return "";
+		}
+	});
+}
+/**
+* Deduplicates a TypeScript union type string.
+* Handles types like "A | B | B" → "A | B" and "null | null" → "null".
+* Only splits on top-level | (not inside {} () [] <> or string literals).
+*/
+function dedupeUnionType(unionType) {
+	const parts = [];
+	let current = "";
+	let depth = 0;
+	let quote = "";
+	let escaped = false;
+	for (const c of unionType) {
+		if (!escaped && (c === "'" || c === "\"")) {
+			if (!quote) quote = c;
+			else if (quote === c) quote = "";
+		}
+		if (!quote) {
+			if ("{([<".includes(c)) depth++;
+			if ("})]>".includes(c)) depth--;
+			if (c === "|" && depth === 0) {
+				parts.push(current.trim());
+				current = "";
+				continue;
+			}
+		}
+		current += c;
+		escaped = !!quote && !escaped && c === "\\";
+	}
+	if (current.trim()) parts.push(current.trim());
+	return [...new Set(parts)].join(" | ");
+}
+
+//#endregion
+//#region src/utils/tsconfig.ts
+function isSyntheticDefaultImportsAllow(config) {
+	if (!config) return true;
+	return !!(config.compilerOptions?.allowSyntheticDefaultImports ?? config.compilerOptions?.esModuleInterop);
+}
+
+//#endregion
+//#region src/getters/enum.ts
+function getEnumNames(schemaObject) {
+	const names = schemaObject?.["x-enumNames"] ?? schemaObject?.["x-enumnames"] ?? schemaObject?.["x-enum-varnames"];
+	if (!names) return;
+	return names.map((name) => jsStringEscape(name));
+}
+function getEnumDescriptions(schemaObject) {
+	const descriptions = schemaObject?.["x-enumDescriptions"] ?? schemaObject?.["x-enumdescriptions"] ?? schemaObject?.["x-enum-descriptions"];
+	if (!descriptions) return;
+	return descriptions.map((description) => jsStringEscape(description));
+}
+function getEnum(value, enumName, names, enumGenerationType, descriptions, enumNamingConvention) {
+	if (enumGenerationType === EnumGeneration.CONST) return getTypeConstEnum(value, enumName, names, descriptions, enumNamingConvention);
+	if (enumGenerationType === EnumGeneration.ENUM) return getNativeEnum(value, enumName, names, enumNamingConvention);
+	if (enumGenerationType === EnumGeneration.UNION) return getUnion(value, enumName);
+	throw new Error(`Invalid enumGenerationType: ${enumGenerationType}`);
+}
+const getTypeConstEnum = (value, enumName, names, descriptions, enumNamingConvention) => {
+	let enumValue = `export type ${enumName} = typeof ${enumName}[keyof typeof ${enumName}]`;
+	if (value.endsWith(" | null")) {
+		value = value.replace(" | null", "");
+		enumValue += " | null";
+	}
+	enumValue += ";\n";
+	const implementation = getEnumImplementation(value, names, descriptions, enumNamingConvention);
+	enumValue += "\n\n";
+	enumValue += `export const ${enumName} = {\n${implementation}} as const;\n`;
+	return enumValue;
+};
+function getEnumImplementation(value, names, descriptions, enumNamingConvention) {
+	if (value === "") return "";
+	return [...new Set(value.split(" | "))].reduce((acc, val, index) => {
+		const name = names?.[index];
+		const description = descriptions?.[index];
+		const comment = description ? `  /** ${description} */\n` : "";
+		if (name) return acc + comment + `  ${keyword.isIdentifierNameES5(name) ? name : `'${name}'`}: ${val},\n`;
+		let key = val.startsWith("'") ? val.slice(1, -1) : val;
+		if (isNumeric(key)) key = toNumberKey(key);
+		if (key.length > 1) key = sanitize(key, {
+			whitespace: "_",
+			underscore: true,
+			dash: true,
+			special: true
+		});
+		if (enumNamingConvention) key = conventionName(key, enumNamingConvention);
+		return acc + comment + `  ${keyword.isIdentifierNameES5(key) ? key : `'${key}'`}: ${val},\n`;
+	}, "");
+}
+const getNativeEnum = (value, enumName, names, enumNamingConvention) => {
+	return `export enum ${enumName} {\n${getNativeEnumItems(value, names, enumNamingConvention)}\n}`;
+};
+const getNativeEnumItems = (value, names, enumNamingConvention) => {
+	if (value === "") return "";
+	return [...new Set(value.split(" | "))].reduce((acc, val, index) => {
+		const name = names?.[index];
+		if (name) return acc + `  ${keyword.isIdentifierNameES5(name) ? name : `'${name}'`}= ${val},\n`;
+		let key = val.startsWith("'") ? val.slice(1, -1) : val;
+		if (isNumeric(key)) key = toNumberKey(key);
+		if (key.length > 1) key = sanitize(key, {
+			whitespace: "_",
+			underscore: true,
+			dash: true,
+			special: true
+		});
+		if (enumNamingConvention) key = conventionName(key, enumNamingConvention);
+		return acc + `  ${keyword.isIdentifierNameES5(key) ? key : `'${key}'`}= ${val},\n`;
+	}, "");
+};
+const toNumberKey = (value) => {
+	if (value.startsWith("-")) return `NUMBER_MINUS_${value.slice(1)}`;
+	if (value.startsWith("+")) return `NUMBER_PLUS_${value.slice(1)}`;
+	return `NUMBER_${value}`;
+};
+const getUnion = (value, enumName) => {
+	return `export type ${enumName} = ${value};`;
+};
+function getEnumUnionFromSchema(schema) {
+	if (!schema?.enum) return "";
+	return schema.enum.filter((val) => val !== null).map((val) => isString(val) ? `'${escape(val)}'` : `${val}`).join(" | ");
+}
+const stripNullUnion = (value) => value.replace(/\s*\|\s*null/g, "").trim();
+const isSpreadableEnumRef = (schema, refName) => {
+	if (!schema?.enum || !refName) return false;
+	if (!getEnumUnionFromSchema(schema)) return false;
+	const type = schema.type;
+	if (type === "boolean" || Array.isArray(type) && type.includes("boolean")) return false;
+	return /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(refName);
+};
+const buildInlineEnum = (schema, enumValue) => {
+	const names = getEnumNames(schema);
+	const descriptions = getEnumDescriptions(schema);
+	return getEnumImplementation(enumValue ?? getEnumUnionFromSchema(schema), names, descriptions);
+};
+function getCombinedEnumValue(inputs) {
+	const valueImports = [];
+	const hasNull = inputs.some((input) => {
+		if (input.value.includes("| null")) return true;
+		const schema = input.schema;
+		if (!schema) return false;
+		if (schema.nullable === true) return true;
+		if (Array.isArray(schema.type) && schema.type.includes("null")) return true;
+		return schema.enum?.includes(null) ?? false;
+	});
+	const addValueImport = (name) => {
+		if (!valueImports.includes(name)) valueImports.push(name);
+	};
+	if (inputs.length === 1) {
+		const input = inputs[0];
+		if (input.isRef) {
+			const refName = stripNullUnion(input.value);
+			if (isSpreadableEnumRef(input.schema, refName)) {
+				addValueImport(refName);
+				return {
+					value: refName,
+					valueImports,
+					hasNull
+				};
+			}
+			return {
+				value: `{${buildInlineEnum(input.schema)}} as const`,
+				valueImports,
+				hasNull
+			};
+		}
+		return {
+			value: `{${buildInlineEnum(input.schema, stripNullUnion(input.value))}} as const`,
+			valueImports,
+			hasNull
+		};
+	}
+	return {
+		value: `{${inputs.map((input) => {
+			if (input.isRef) {
+				const refName = stripNullUnion(input.value);
+				if (isSpreadableEnumRef(input.schema, refName)) {
+					addValueImport(refName);
+					return `...${refName},`;
+				}
+				return buildInlineEnum(input.schema);
+			}
+			return buildInlineEnum(input.schema, stripNullUnion(input.value));
+		}).join("")}} as const`,
+		valueImports,
+		hasNull
+	};
+}
+
+//#endregion
+//#region src/getters/ref.ts
+const RefComponentSuffix = {
+	schemas: "",
+	responses: "Response",
+	parameters: "Parameter",
+	requestBodies: "Body"
+};
+const regex = new RegExp("~1", "g");
+/**
+* Return the output type from the $ref
+*
+* @param $ref
+*/
+function getRefInfo($ref, context) {
+	const [pathname, ref] = $ref.split("#");
+	const refPaths = ref.slice(1).split("/").map((part) => decodeURIComponent(part.replaceAll(regex, "/")));
+	const getOverrideSuffix = (override, paths) => {
+		const firstLevel = override[paths[0]];
+		if (!firstLevel) return "";
+		return firstLevel[paths[1]]?.suffix ?? "";
+	};
+	const suffix = getOverrideSuffix(context.output.override, refPaths);
+	const originalName = ref ? refPaths[refPaths.length - 1] : getSchemaFileName(pathname);
+	if (!pathname) return {
+		name: sanitize(pascal(originalName) + suffix, {
+			es5keyword: true,
+			es5IdentifierName: true,
+			underscore: true,
+			dash: true
+		}),
+		originalName,
+		refPaths
+	};
+	return {
+		name: sanitize(pascal(originalName) + suffix, {
+			es5keyword: true,
+			es5IdentifierName: true,
+			underscore: true,
+			dash: true
+		}),
+		originalName,
+		refPaths
+	};
+}
+
+//#endregion
+//#region src/resolvers/ref.ts
+function resolveRef(schema, context, imports = []) {
+	if ("schema" in schema && schema.schema?.$ref) {
+		const resolvedRef = resolveRef(schema.schema, context, imports);
+		if ("examples" in schema) schema.examples = resolveExampleRefs(schema.examples, context);
+		if ("examples" in resolvedRef.schema) resolvedRef.schema.examples = resolveExampleRefs(resolvedRef.schema.examples, context);
+		return {
+			schema: {
+				...schema,
+				schema: resolvedRef.schema
+			},
+			imports
+		};
+	}
+	if (isDereferenced(schema)) {
+		if ("examples" in schema) schema.examples = resolveExampleRefs(schema.examples, context);
+		return {
+			schema,
+			imports
+		};
+	}
+	const { currentSchema, refInfo: { name, originalName } } = getSchema$1(schema, context);
+	if (!currentSchema) throw new Error(`Oops... 🍻. Ref not found: ${schema.$ref}`);
+	return resolveRef(currentSchema, { ...context }, [...imports, {
+		name,
+		schemaName: originalName
+	}]);
+}
+function getSchema$1(schema, context) {
+	const refInfo = getRefInfo(schema.$ref, context);
+	const { refPaths } = refInfo;
+	let schemaByRefPaths = Array.isArray(refPaths) ? prop(context.spec, ...refPaths) : void 0;
+	if (!schemaByRefPaths) schemaByRefPaths = context.spec;
+	if (isReference(schemaByRefPaths)) return getSchema$1(schemaByRefPaths, context);
+	let currentSchema = schemaByRefPaths ? schemaByRefPaths : context.spec;
+	if ("nullable" in schema) currentSchema = {
+		...currentSchema,
+		nullable: schema.nullable
+	};
+	if ("type" in schema && Array.isArray(schema.type)) currentSchema = {
+		...currentSchema,
+		type: schema.type
+	};
+	return {
+		currentSchema,
+		refInfo
+	};
+}
+function resolveExampleRefs(examples, context) {
+	if (!examples) return;
+	return Array.isArray(examples) ? examples.map((example) => {
+		if (isReference(example)) {
+			const { schema } = resolveRef(example, context);
+			return schema.value;
+		}
+		return example;
+	}) : Object.entries(examples).reduce((acc, [key, example]) => {
+		let schema = example;
+		if (isReference(example)) schema = resolveRef(example, context).schema.value;
+		return {
+			...acc,
+			[key]: schema
+		};
+	}, {});
+}
+
+//#endregion
+//#region src/resolvers/value.ts
+function resolveValue({ schema, name, context, formDataContext }) {
+	if (isReference(schema)) {
+		const { schema: schemaObject, imports } = resolveRef(schema, context);
+		const resolvedImport = imports[0];
+		let hasReadonlyProps = false;
+		const refName = resolvedImport.name;
+		if (!context.parents?.includes(refName)) hasReadonlyProps = getScalar({
+			item: schemaObject,
+			name: refName,
+			context: {
+				...context,
+				parents: [...context.parents ?? [], refName]
+			}
+		}).hasReadonlyProps;
+		const nullable = Array.isArray(schemaObject.type) && schemaObject.type.includes("null") || schemaObject.nullable === true ? " | null" : "";
+		return {
+			value: resolvedImport.name + nullable,
+			imports: [{
+				name: resolvedImport.name,
+				schemaName: resolvedImport.schemaName
+			}],
+			type: schemaObject.type ?? "object",
+			schemas: [],
+			isEnum: !!schemaObject.enum,
+			originalSchema: schemaObject,
+			hasReadonlyProps,
+			isRef: true,
+			dependencies: [resolvedImport.name]
+		};
+	}
+	return {
+		...getScalar({
+			item: schema,
+			name,
+			context,
+			formDataContext
+		}),
+		originalSchema: schema,
+		isRef: false
+	};
+}
+
+//#endregion
+//#region src/resolvers/object.ts
+/**
+* Wraps inline object type in a type alias.
+* E.g. `{ foo: string }` → value becomes `FooBody`, schema gets `export type FooBody = { foo: string };`
+*/
+function createTypeAliasIfNeeded({ resolvedValue, propName, context }) {
+	if (!propName) return;
+	if (resolvedValue.isEnum || resolvedValue.type !== "object") return;
+	const aliasPattern = context.output.override.aliasCombinedTypes ? "{|&|\\|" : "{";
+	if (!new RegExp(aliasPattern).test(resolvedValue.value)) return;
+	const { originalSchema } = resolvedValue;
+	const doc = jsDoc(originalSchema);
+	const isConstant = "const" in originalSchema;
+	const constantIsString = "type" in originalSchema && (originalSchema.type === "string" || Array.isArray(originalSchema.type) && originalSchema.type.includes("string"));
+	const model = isConstant ? `${doc}export const ${propName} = ${constantIsString ? `'${originalSchema.const}'` : originalSchema.const} as const;\n` : `${doc}export type ${propName} = ${resolvedValue.value};\n`;
+	return {
+		value: propName,
+		imports: [{
+			name: propName,
+			isConstant
+		}],
+		schemas: [...resolvedValue.schemas, {
+			name: propName,
+			model,
+			imports: resolvedValue.imports,
+			dependencies: resolvedValue.dependencies
+		}],
+		isEnum: false,
+		type: "object",
+		isRef: resolvedValue.isRef,
+		hasReadonlyProps: resolvedValue.hasReadonlyProps,
+		dependencies: resolvedValue.dependencies
+	};
+}
+function resolveObjectOriginal({ schema, propName, combined = false, context, formDataContext }) {
+	const resolvedValue = resolveValue({
+		schema,
+		name: propName,
+		context,
+		formDataContext
+	});
+	const aliased = createTypeAliasIfNeeded({
+		resolvedValue,
+		propName,
+		context
+	});
+	if (aliased) return {
+		...aliased,
+		originalSchema: resolvedValue.originalSchema
+	};
+	if (propName && resolvedValue.isEnum && !combined && !resolvedValue.isRef) {
+		const doc = jsDoc(resolvedValue.originalSchema ?? {});
+		const enumValue = getEnum(resolvedValue.value, propName, getEnumNames(resolvedValue.originalSchema), context.output.override.enumGenerationType, getEnumDescriptions(resolvedValue.originalSchema), context.output.override.namingConvention?.enum);
+		return {
+			value: propName,
+			imports: [{ name: propName }],
+			schemas: [...resolvedValue.schemas, {
+				name: propName,
+				model: doc + enumValue,
+				imports: resolvedValue.imports,
+				dependencies: resolvedValue.dependencies
+			}],
+			isEnum: false,
+			type: "enum",
+			originalSchema: resolvedValue.originalSchema,
+			isRef: resolvedValue.isRef,
+			hasReadonlyProps: resolvedValue.hasReadonlyProps,
+			dependencies: [...resolvedValue.dependencies, propName]
+		};
+	}
+	return resolvedValue;
+}
+const resolveObjectCacheMap = /* @__PURE__ */ new Map();
+function resolveObject({ schema, propName, combined = false, context, formDataContext }) {
+	const hashKey = JSON.stringify({
+		schema,
+		propName,
+		combined,
+		projectName: context.projectName ?? context.output.target,
+		formDataContext
+	});
+	if (resolveObjectCacheMap.has(hashKey)) return resolveObjectCacheMap.get(hashKey);
+	const result = resolveObjectOriginal({
+		schema,
+		propName,
+		combined,
+		context,
+		formDataContext
+	});
+	resolveObjectCacheMap.set(hashKey, result);
+	return result;
+}
+
+//#endregion
+//#region src/getters/array.ts
+/**
+* Return the output type from an array
+*
+* @param item item with type === "array"
+*/
+function getArray({ schema, name, context, formDataContext }) {
+	const schema31 = schema;
+	const itemSuffix = context.output.override.components.schemas.itemSuffix;
+	if (schema31.prefixItems) {
+		const resolvedObjects = schema31.prefixItems.map((item, index) => resolveObject({
+			schema: item,
+			propName: name ? name + itemSuffix + index : void 0,
+			context
+		}));
+		if (schema31.items) {
+			const additional = resolveObject({
+				schema: schema31.items,
+				propName: name ? name + itemSuffix + "Additional" : void 0,
+				context
+			});
+			resolvedObjects.push({
+				...additional,
+				value: `...${additional.value}[]`
+			});
+		}
+		return {
+			type: "array",
+			isEnum: false,
+			isRef: false,
+			value: `[${resolvedObjects.map((o) => o.value).join(", ")}]`,
+			imports: resolvedObjects.flatMap((o) => o.imports),
+			schemas: resolvedObjects.flatMap((o) => o.schemas),
+			dependencies: resolvedObjects.flatMap((o) => o.dependencies),
+			hasReadonlyProps: resolvedObjects.some((o) => o.hasReadonlyProps),
+			example: schema.example,
+			examples: resolveExampleRefs(schema.examples, context)
+		};
+	}
+	if (schema.items) {
+		const resolvedObject = resolveObject({
+			schema: schema.items,
+			propName: name ? name + itemSuffix : void 0,
+			context,
+			formDataContext
+		});
+		return {
+			value: `${schema.readOnly === true && !context.output.override.suppressReadonlyModifier ? "readonly " : ""}${resolvedObject.value.includes("|") ? `(${resolvedObject.value})[]` : `${resolvedObject.value}[]`}`,
+			imports: resolvedObject.imports,
+			schemas: resolvedObject.schemas,
+			dependencies: resolvedObject.dependencies,
+			isEnum: false,
+			type: "array",
+			isRef: false,
+			hasReadonlyProps: resolvedObject.hasReadonlyProps,
+			example: schema.example,
+			examples: resolveExampleRefs(schema.examples, context)
+		};
+	} else if (compareVersions(context.spec.openapi, "3.1", ">=")) return {
+		value: "unknown[]",
+		imports: [],
+		schemas: [],
+		dependencies: [],
+		isEnum: false,
+		type: "array",
+		isRef: false,
+		hasReadonlyProps: false
+	};
+	else throw new Error(`All arrays must have an \`items\` key defined (name=${name}, schema=${JSON.stringify(schema)})`);
+}
+
+//#endregion
+//#region src/getters/res-req-types.ts
+const formDataContentTypes = new Set(["multipart/form-data"]);
+const formUrlEncodedContentTypes = new Set(["application/x-www-form-urlencoded"]);
+function getResReqContentTypes({ mediaType, propName, context, isFormData, contentType }) {
+	if (!mediaType.schema) return;
+	const formDataContext = isFormData ? {
+		atPart: false,
+		encoding: mediaType.encoding ?? {}
+	} : void 0;
+	const resolvedObject = resolveObject({
+		schema: mediaType.schema,
+		propName,
+		context,
+		formDataContext
+	});
+	if (!isFormData && isBinaryContentType(contentType)) return {
+		...resolvedObject,
+		value: "Blob"
+	};
+	return resolvedObject;
+}
+function getResReqTypes(responsesOrRequests, name, context, defaultType = "unknown", uniqueKey = (item) => item.value) {
+	return uniqueBy(responsesOrRequests.filter(([_, res]) => Boolean(res)).map(([key, res]) => {
+		if (isReference(res)) {
+			const { schema: bodySchema, imports: [{ name: name$1, schemaName }] } = resolveRef(res, context);
+			const [contentType, mediaType] = Object.entries(bodySchema.content ?? {})[0] ?? [];
+			const isFormData = formDataContentTypes.has(contentType);
+			const isFormUrlEncoded = formUrlEncodedContentTypes.has(contentType);
+			if (!isFormData && !isFormUrlEncoded || !mediaType.schema) return [{
+				value: name$1,
+				imports: [{
+					name: name$1,
+					schemaName
+				}],
+				schemas: [],
+				type: "unknown",
+				isEnum: false,
+				isRef: true,
+				hasReadonlyProps: false,
+				originalSchema: mediaType?.schema,
+				example: mediaType?.example,
+				examples: resolveExampleRefs(mediaType?.examples, context),
+				key,
+				contentType
+			}];
+			const formData = isFormData ? getSchemaFormDataAndUrlEncoded({
+				name: name$1,
+				schemaObject: mediaType.schema,
+				context,
+				isRequestBodyOptional: "required" in bodySchema && bodySchema.required === false,
+				isRef: true,
+				encoding: mediaType.encoding
+			}) : void 0;
+			const formUrlEncoded = isFormUrlEncoded ? getSchemaFormDataAndUrlEncoded({
+				name: name$1,
+				schemaObject: mediaType.schema,
+				context,
+				isRequestBodyOptional: "required" in bodySchema && bodySchema.required === false,
+				isUrlEncoded: true,
+				isRef: true,
+				encoding: mediaType.encoding
+			}) : void 0;
+			const additionalImports = getFormDataAdditionalImports({
+				schemaObject: mediaType.schema,
+				context
+			});
+			return [{
+				value: name$1,
+				imports: [{
+					name: name$1,
+					schemaName
+				}, ...additionalImports],
+				schemas: [],
+				type: "unknown",
+				isEnum: false,
+				hasReadonlyProps: false,
+				formData,
+				formUrlEncoded,
+				isRef: true,
+				originalSchema: mediaType.schema,
+				example: mediaType.example,
+				examples: resolveExampleRefs(mediaType.examples, context),
+				key,
+				contentType
+			}];
+		}
+		if (res.content) return Object.entries(res.content).map(([contentType, mediaType], index, arr) => {
+			let propName = key ? pascal(name) + pascal(key) : void 0;
+			if (propName && arr.length > 1) propName = propName + pascal(getNumberWord(index + 1));
+			let effectivePropName = propName;
+			if (mediaType.schema && isReference(mediaType.schema)) {
+				const { imports } = resolveRef(mediaType.schema, context);
+				if (imports[0]?.name) effectivePropName = imports[0].name;
+			}
+			const isFormData = formDataContentTypes.has(contentType);
+			const resolvedValue = getResReqContentTypes({
+				mediaType,
+				propName: effectivePropName,
+				context,
+				isFormData,
+				contentType
+			});
+			if (!resolvedValue) {
+				if (isBinaryContentType(contentType)) return {
+					value: "Blob",
+					imports: [],
+					schemas: [],
+					type: "Blob",
+					isEnum: false,
+					key,
+					isRef: false,
+					hasReadonlyProps: false,
+					contentType
+				};
+				return;
+			}
+			const isFormUrlEncoded = formUrlEncodedContentTypes.has(contentType);
+			if (!isFormData && !isFormUrlEncoded || !effectivePropName) return {
+				...resolvedValue,
+				imports: resolvedValue.imports,
+				contentType,
+				example: mediaType.example,
+				examples: resolveExampleRefs(mediaType.examples, context)
+			};
+			const formData = isFormData ? getSchemaFormDataAndUrlEncoded({
+				name: effectivePropName,
+				schemaObject: mediaType.schema,
+				context,
+				isRequestBodyOptional: "required" in res && res.required === false,
+				isRef: true,
+				encoding: mediaType.encoding
+			}) : void 0;
+			const formUrlEncoded = isFormUrlEncoded ? getSchemaFormDataAndUrlEncoded({
+				name: effectivePropName,
+				schemaObject: mediaType.schema,
+				context,
+				isUrlEncoded: true,
+				isRequestBodyOptional: "required" in res && res.required === false,
+				isRef: true,
+				encoding: mediaType.encoding
+			}) : void 0;
+			const additionalImports = getFormDataAdditionalImports({
+				schemaObject: mediaType.schema,
+				context
+			});
+			return {
+				...resolvedValue,
+				imports: [...resolvedValue.imports, ...additionalImports],
+				formData,
+				formUrlEncoded,
+				contentType,
+				example: mediaType.example,
+				examples: resolveExampleRefs(mediaType.examples, context)
+			};
+		}).filter(Boolean).map((x) => ({
+			...x,
+			key
+		}));
+		const swaggerSchema = "schema" in res ? res.schema : void 0;
+		if (swaggerSchema) return [{
+			...resolveObject({
+				schema: swaggerSchema,
+				propName: key ? pascal(name) + pascal(key) : void 0,
+				context
+			}),
+			contentType: "application/json",
+			key
+		}];
+		return [{
+			value: defaultType,
+			imports: [],
+			schemas: [],
+			type: defaultType,
+			isEnum: false,
+			key,
+			isRef: false,
+			hasReadonlyProps: false,
+			contentType: "application/json"
+		}];
+	}).flat(), uniqueKey);
+}
+/**
+* Determine the response type category for a given content type.
+* Used to set the correct responseType option in HTTP clients.
+*
+* @param contentType - The MIME content type (e.g., 'application/json', 'text/plain')
+* @returns The response type category to use for parsing
+*/
+function getResponseTypeCategory(contentType) {
+	if (isBinaryContentType(contentType)) return "blob";
+	if (contentType === "application/json" || contentType.includes("+json") || contentType.includes("-json")) return "json";
+	return "text";
+}
+/**
+* Get the default content type from a list of content types.
+* Priority: application/json > any JSON-like type > first in list
+*
+* @param contentTypes - Array of content types from OpenAPI spec
+* @returns The default content type to use
+*/
+function getDefaultContentType(contentTypes) {
+	if (contentTypes.length === 0) return "application/json";
+	if (contentTypes.includes("application/json")) return "application/json";
+	const jsonType = contentTypes.find((ct) => ct.includes("+json") || ct.includes("-json"));
+	if (jsonType) return jsonType;
+	return contentTypes[0];
+}
+function getFormDataAdditionalImports({ schemaObject, context }) {
+	const { schema } = resolveRef(schemaObject, context);
+	if (schema.type !== "object") return [];
+	const combinedSchemas = schema.oneOf || schema.anyOf;
+	if (!combinedSchemas) return [];
+	return combinedSchemas.map((schema$1) => resolveRef(schema$1, context).imports[0]).filter(Boolean);
+}
+function getSchemaFormDataAndUrlEncoded({ name, schemaObject, context, isRequestBodyOptional, isUrlEncoded, isRef, encoding }) {
+	const { schema, imports } = resolveRef(schemaObject, context);
+	const propName = camel(!isRef && isReference(schemaObject) ? imports[0].name : name);
+	const additionalImports = [];
+	const variableName = isUrlEncoded ? "formUrlEncoded" : "formData";
+	let form = isUrlEncoded ? `const ${variableName} = new URLSearchParams();\n` : `const ${variableName} = new FormData();\n`;
+	const combinedSchemas = schema.oneOf || schema.anyOf || schema.allOf;
+	if (schema.type === "object" || schema.type === void 0 && combinedSchemas) {
+		if (combinedSchemas) {
+			const shouldCast = !!schema.oneOf || !!schema.anyOf;
+			const combinedSchemasFormData = combinedSchemas.map((schema$1) => {
+				const { schema: combinedSchema, imports: imports$1 } = resolveRef(schema$1, context);
+				let newPropName = propName;
+				let newPropDefinition = "";
+				if (shouldCast && imports$1[0]) {
+					additionalImports.push(imports$1[0]);
+					newPropName = `${propName}${pascal(imports$1[0].name)}`;
+					newPropDefinition = `const ${newPropName} = (${propName} as ${imports$1[0].name}${isRequestBodyOptional ? " | undefined" : ""});\n`;
+				}
+				return newPropDefinition + resolveSchemaPropertiesToFormData({
+					schema: combinedSchema,
+					variableName,
+					propName: newPropName,
+					context,
+					isRequestBodyOptional,
+					encoding
+				});
+			}).filter(Boolean).join("\n");
+			form += combinedSchemasFormData;
+		}
+		if (schema.properties) {
+			const formDataValues = resolveSchemaPropertiesToFormData({
+				schema,
+				variableName,
+				propName,
+				context,
+				isRequestBodyOptional,
+				encoding
+			});
+			form += formDataValues;
+		}
+		return form;
+	}
+	if (schema.type === "array") {
+		let valueStr = "value";
+		if (schema.items) {
+			const { schema: itemSchema } = resolveRef(schema.items, context);
+			if (itemSchema.type === "object" || itemSchema.type === "array") valueStr = "JSON.stringify(value)";
+			else if (itemSchema.type === "number" || itemSchema.type === "integer" || itemSchema.type === "boolean") valueStr = "value.toString()";
+		}
+		return `${form}${propName}.forEach(value => ${variableName}.append('data', ${valueStr}))\n`;
+	}
+	if (schema.type === "number" || schema.type === "integer" || schema.type === "boolean") return `${form}${variableName}.append('data', ${propName}.toString())\n`;
+	return `${form}${variableName}.append('data', ${propName})\n`;
+}
+function resolveSchemaPropertiesToFormData({ schema, variableName, propName, context, isRequestBodyOptional, keyPrefix = "", depth = 0, encoding }) {
+	return Object.entries(schema.properties ?? {}).reduce((acc, [key, value]) => {
+		const { schema: property } = resolveRef(value, context);
+		if (property.readOnly) return acc;
+		let formDataValue = "";
+		const partContentType = (depth === 0 ? encoding?.[key] : void 0)?.contentType;
+		const formattedKeyPrefix = isRequestBodyOptional ? keyword.isIdentifierNameES5(key) ? "?" : "?." : "";
+		const formattedKey = keyword.isIdentifierNameES5(key) ? `.${key}` : `['${key}']`;
+		const valueKey = `${propName}${formattedKeyPrefix}${formattedKey}`;
+		const nonOptionalValueKey = `${propName}${formattedKey}`;
+		const fileType = getFormDataFieldFileType(property, partContentType);
+		const effectiveContentType = partContentType ?? property.contentMediaType;
+		if (fileType === "binary" || property.format === "binary") formDataValue = `${variableName}.append(\`${keyPrefix}${key}\`, ${nonOptionalValueKey});\n`;
+		else if (fileType === "text") formDataValue = `${variableName}.append(\`${keyPrefix}${key}\`, ${nonOptionalValueKey} instanceof Blob ? ${nonOptionalValueKey} : new Blob([${nonOptionalValueKey}], { type: '${effectiveContentType}' }));\n`;
+		else if (property.type === "object") formDataValue = context.output.override.formData.arrayHandling === FormDataArrayHandling.EXPLODE ? resolveSchemaPropertiesToFormData({
+			schema: property,
+			variableName,
+			propName: nonOptionalValueKey,
+			context,
+			isRequestBodyOptional,
+			keyPrefix: `${keyPrefix}${key}.`,
+			depth: depth + 1,
+			encoding
+		}) : partContentType ? `${variableName}.append(\`${keyPrefix}${key}\`, new Blob([JSON.stringify(${nonOptionalValueKey})], { type: '${partContentType}' }));\n` : `${variableName}.append(\`${keyPrefix}${key}\`, JSON.stringify(${nonOptionalValueKey}));\n`;
+		else if (property.type === "array") {
+			let valueStr = "value";
+			let hasNonPrimitiveChild = false;
+			if (property.items) {
+				const { schema: itemSchema } = resolveRef(property.items, context);
+				if (itemSchema.type === "object" || itemSchema.type === "array") if (context.output.override.formData.arrayHandling === FormDataArrayHandling.EXPLODE) {
+					hasNonPrimitiveChild = true;
+					const resolvedValue = resolveSchemaPropertiesToFormData({
+						schema: itemSchema,
+						variableName,
+						propName: "value",
+						context,
+						isRequestBodyOptional,
+						keyPrefix: `${keyPrefix}${key}[\${index${depth > 0 ? depth : ""}}].`,
+						depth: depth + 1
+					});
+					formDataValue = `${valueKey}.forEach((value, index${depth > 0 ? depth : ""}) => {
+    ${resolvedValue}});\n`;
+				} else valueStr = "JSON.stringify(value)";
+				else if (itemSchema.type === "number" || itemSchema.type?.includes("number") || itemSchema.type === "integer" || itemSchema.type?.includes("integer") || itemSchema.type === "boolean" || itemSchema.type?.includes("boolean")) valueStr = "value.toString()";
+			}
+			if (context.output.override.formData.arrayHandling === FormDataArrayHandling.EXPLODE) {
+				if (!hasNonPrimitiveChild) formDataValue = `${valueKey}.forEach((value, index${depth > 0 ? depth : ""}) => ${variableName}.append(\`${keyPrefix}${key}[\${index${depth > 0 ? depth : ""}}]\`, ${valueStr}));\n`;
+			} else formDataValue = `${valueKey}.forEach(value => ${variableName}.append(\`${keyPrefix}${key}${context.output.override.formData.arrayHandling === FormDataArrayHandling.SERIALIZE_WITH_BRACKETS ? "[]" : ""}\`, ${valueStr}));\n`;
+		} else if (property.type === "number" || property.type?.includes("number") || property.type === "integer" || property.type?.includes("integer") || property.type === "boolean" || property.type?.includes("boolean")) formDataValue = `${variableName}.append(\`${keyPrefix}${key}\`, ${nonOptionalValueKey}.toString())\n`;
+		else formDataValue = `${variableName}.append(\`${keyPrefix}${key}\`, ${nonOptionalValueKey});\n`;
+		let existSubSchemaNullable = false;
+		if (property.allOf || property.anyOf || property.oneOf) {
+			const subSchemas = (property.allOf || property.anyOf || property.oneOf)?.map((c) => resolveObject({
+				schema: c,
+				combined: true,
+				context
+			}));
+			if (subSchemas?.some((subSchema) => {
+				return [
+					"number",
+					"integer",
+					"boolean"
+				].includes(subSchema.type);
+			})) formDataValue = `${variableName}.append(\`${key}\`, ${nonOptionalValueKey}.toString())\n`;
+			if (subSchemas?.some((subSchema) => {
+				return subSchema.type === "null";
+			})) existSubSchemaNullable = true;
+		}
+		const isRequired = schema.required?.includes(key) && !isRequestBodyOptional;
+		if (property.nullable || property.type?.includes("null") || existSubSchemaNullable) {
+			if (isRequired) return acc + `if(${valueKey} !== null) {\n ${formDataValue} }\n`;
+			return acc + `if(${valueKey} !== undefined && ${nonOptionalValueKey} !== null) {\n ${formDataValue} }\n`;
+		}
+		if (isRequired) return acc + formDataValue;
+		return acc + `if(${valueKey} !== undefined) {\n ${formDataValue} }\n`;
+	}, "");
+}
+
+//#endregion
+//#region src/getters/body.ts
+function getBody({ requestBody, operationName, context, contentType }) {
+	const allBodyTypes = getResReqTypes([[context.output.override.components.requestBodies.suffix, requestBody]], operationName, context);
+	const filteredBodyTypes = contentType ? allBodyTypes.filter((type) => {
+		let include = true;
+		let exclude = false;
+		if (contentType.include) include = contentType.include.includes(type.contentType);
+		if (contentType.exclude) exclude = contentType.exclude.includes(type.contentType);
+		return include && !exclude;
+	}) : allBodyTypes;
+	const imports = filteredBodyTypes.flatMap(({ imports: imports$1 }) => imports$1);
+	const schemas = filteredBodyTypes.flatMap(({ schemas: schemas$1 }) => schemas$1);
+	const definition = filteredBodyTypes.map(({ value }) => value).join(" | ");
+	const nonReadonlyDefinition = filteredBodyTypes.some((x) => x.hasReadonlyProps) && definition ? `NonReadonly<${definition}>` : definition;
+	let implementation = generalJSTypesWithArray.includes(definition.toLowerCase()) || filteredBodyTypes.length > 1 ? camel(operationName) + context.output.override.components.requestBodies.suffix : camel(definition);
+	let isOptional = false;
+	if (implementation) {
+		implementation = sanitize(implementation, {
+			underscore: "_",
+			whitespace: "_",
+			dash: true,
+			es5keyword: true,
+			es5IdentifierName: true
+		});
+		if (isReference(requestBody)) {
+			const { schema: bodySchema } = resolveRef(requestBody, context);
+			if (bodySchema.required !== void 0) isOptional = !bodySchema.required;
+		} else if (requestBody.required !== void 0) isOptional = !requestBody.required;
+	}
+	return {
+		originalSchema: requestBody,
+		definition: nonReadonlyDefinition,
+		implementation,
+		imports,
+		schemas,
+		isOptional,
+		...filteredBodyTypes.length === 1 ? {
+			formData: filteredBodyTypes[0].formData,
+			formUrlEncoded: filteredBodyTypes[0].formUrlEncoded,
+			contentType: filteredBodyTypes[0].contentType
+		} : {
+			formData: "",
+			formUrlEncoded: "",
+			contentType: ""
+		}
+	};
+}
+
+//#endregion
+//#region src/getters/imports.ts
+function getAliasedImports({ name, resolvedValue, context }) {
+	return context.output.schemas && resolvedValue.isRef ? resolvedValue.imports.map((imp) => {
+		if (!needCreateImportAlias({
+			name,
+			imp
+		})) return imp;
+		return {
+			...imp,
+			alias: `__${imp.name}`
+		};
+	}) : resolvedValue.imports;
+}
+function needCreateImportAlias({ imp, name }) {
+	return !imp.alias && imp.name === name;
+}
+function getImportAliasForRefOrValue({ context, imports, resolvedValue }) {
+	if (!context.output.schemas || !resolvedValue.isRef) return resolvedValue.value;
+	return imports.find((imp) => imp.name === resolvedValue.value)?.alias ?? resolvedValue.value;
+}
+
+//#endregion
+//#region src/getters/keys.ts
+function getKey(key) {
+	return keyword.isIdentifierNameES5(key) ? key : `'${key}'`;
+}
+
+//#endregion
+//#region src/getters/object.ts
+/**
+* Extract enum values from propertyNames schema (OpenAPI 3.1)
+* Returns undefined if propertyNames doesn't have an enum
+*/
+function getPropertyNamesEnum(item) {
+	if ("propertyNames" in item && item.propertyNames && "enum" in item.propertyNames && Array.isArray(item.propertyNames.enum)) return item.propertyNames.enum.filter((val) => typeof val === "string");
+}
+/**
+* Generate index signature key type based on propertyNames enum
+* Returns union type string like "'foo' | 'bar'" or 'string' if no enum
+*/
+function getIndexSignatureKey(item) {
+	const enumValues = getPropertyNamesEnum(item);
+	if (enumValues && enumValues.length > 0) return enumValues.map((val) => `'${val}'`).join(" | ");
+	return "string";
+}
+function getPropertyNamesRecordType(item, valueType) {
+	const enumValues = getPropertyNamesEnum(item);
+	if (!enumValues || enumValues.length === 0) return;
+	return `Partial<Record<${enumValues.map((val) => `'${val}'`).join(" | ")}, ${valueType}>>`;
+}
+/**
+* Return the output type from an object
+*
+* @param item item with type === "object"
+*/
+function getObject({ item, name, context, nullable, formDataContext }) {
+	if (isReference(item)) {
+		const { name: name$1 } = getRefInfo(item.$ref, context);
+		return {
+			value: name$1 + nullable,
+			imports: [{ name: name$1 }],
+			schemas: [],
+			isEnum: false,
+			type: "object",
+			isRef: true,
+			hasReadonlyProps: item.readOnly ?? false,
+			dependencies: [name$1],
+			example: item.example,
+			examples: resolveExampleRefs(item.examples, context)
+		};
+	}
+	if (item.allOf || item.oneOf || item.anyOf) return combineSchemas({
+		schema: item,
+		name,
+		separator: item.allOf ? "allOf" : item.oneOf ? "oneOf" : "anyOf",
+		context,
+		nullable,
+		formDataContext
+	});
+	if (Array.isArray(item.type)) return combineSchemas({
+		schema: { anyOf: item.type.map((type) => ({
+			...item,
+			type
+		})) },
+		name,
+		separator: "anyOf",
+		context,
+		nullable
+	});
+	if (item.properties && Object.entries(item.properties).length > 0) {
+		const entries$1 = Object.entries(item.properties);
+		if (context.output.propertySortOrder === PropertySortOrder.ALPHABETICAL) entries$1.sort((a, b) => {
+			return a[0].localeCompare(b[0]);
+		});
+		return entries$1.reduce((acc, [key, schema], index, arr) => {
+			const isRequired = (Array.isArray(item.required) ? item.required : []).includes(key);
+			let propName = "";
+			if (name) {
+				const isKeyStartWithUnderscore = key.startsWith("_");
+				propName += pascal(`${isKeyStartWithUnderscore ? "_" : ""}${name}_${key}`);
+			}
+			const allSpecSchemas = context.spec.components?.schemas ?? {};
+			if (Object.keys(allSpecSchemas).some((schemaName) => pascal(schemaName) === propName)) propName = propName + "Property";
+			const propertyFormDataContext = formDataContext && !formDataContext.atPart ? {
+				atPart: true,
+				partContentType: formDataContext.encoding[key]?.contentType
+			} : void 0;
+			const resolvedValue = resolveObject({
+				schema,
+				propName,
+				context,
+				formDataContext: propertyFormDataContext
+			});
+			const isReadOnly = item.readOnly || schema.readOnly;
+			if (!index) acc.value += "{";
+			const doc = jsDoc(schema, true, context);
+			acc.hasReadonlyProps ||= isReadOnly || false;
+			const constValue = "const" in schema ? schema.const : void 0;
+			const hasConst = constValue !== void 0;
+			let constLiteral;
+			if (!hasConst) constLiteral = void 0;
+			else if (typeof constValue === "string") constLiteral = `'${escape(constValue)}'`;
+			else constLiteral = JSON.stringify(constValue);
+			const needsValueImport = hasConst && (resolvedValue.isEnum || resolvedValue.type === "enum");
+			const aliasedImports = needsValueImport ? resolvedValue.imports.map((imp) => ({
+				...imp,
+				isConstant: true
+			})) : hasConst ? [] : getAliasedImports({
+				name,
+				context,
+				resolvedValue
+			});
+			if (aliasedImports.length > 0) acc.imports.push(...aliasedImports);
+			const alias = getImportAliasForRefOrValue({
+				context,
+				resolvedValue,
+				imports: aliasedImports
+			});
+			const propValue = needsValueImport ? alias : constLiteral ?? alias;
+			const finalPropValue = isRequired ? propValue : context.output.override.useNullForOptional === true ? `${propValue} | null` : propValue;
+			acc.value += `\n  ${doc ? `${doc}  ` : ""}${isReadOnly && !context.output.override.suppressReadonlyModifier ? "readonly " : ""}${getKey(key)}${isRequired ? "" : "?"}: ${finalPropValue};`;
+			acc.schemas.push(...resolvedValue.schemas);
+			acc.dependencies.push(...resolvedValue.dependencies);
+			if (arr.length - 1 === index) {
+				if (item.additionalProperties) if (isBoolean(item.additionalProperties)) {
+					const recordType$1 = getPropertyNamesRecordType(item, "unknown");
+					if (recordType$1) {
+						acc.value += "\n}";
+						acc.value += ` & ${recordType$1}`;
+						acc.useTypeAlias = true;
+					} else {
+						const keyType$1 = getIndexSignatureKey(item);
+						acc.value += `\n  [key: ${keyType$1}]: unknown;\n }`;
+					}
+				} else {
+					const resolvedValue$1 = resolveValue({
+						schema: item.additionalProperties,
+						name,
+						context
+					});
+					const recordType$1 = getPropertyNamesRecordType(item, resolvedValue$1.value);
+					if (recordType$1) {
+						acc.value += "\n}";
+						acc.value += ` & ${recordType$1}`;
+						acc.useTypeAlias = true;
+					} else {
+						const keyType$1 = getIndexSignatureKey(item);
+						acc.value += `\n  [key: ${keyType$1}]: ${resolvedValue$1.value};\n}`;
+					}
+					acc.dependencies.push(...resolvedValue$1.dependencies);
+				}
+				else acc.value += "\n}";
+				acc.value += nullable;
+			}
+			return acc;
+		}, {
+			imports: [],
+			schemas: [],
+			value: "",
+			isEnum: false,
+			type: "object",
+			isRef: false,
+			schema: {},
+			hasReadonlyProps: false,
+			useTypeAlias: false,
+			dependencies: [],
+			example: item.example,
+			examples: resolveExampleRefs(item.examples, context)
+		});
+	}
+	if (item.additionalProperties) {
+		if (isBoolean(item.additionalProperties)) {
+			const recordType$2 = getPropertyNamesRecordType(item, "unknown");
+			if (recordType$2) return {
+				value: recordType$2 + nullable,
+				imports: [],
+				schemas: [],
+				isEnum: false,
+				type: "object",
+				isRef: false,
+				hasReadonlyProps: item.readOnly || false,
+				useTypeAlias: true,
+				dependencies: []
+			};
+			return {
+				value: `{ [key: ${getIndexSignatureKey(item)}]: unknown }` + nullable,
+				imports: [],
+				schemas: [],
+				isEnum: false,
+				type: "object",
+				isRef: false,
+				hasReadonlyProps: item.readOnly || false,
+				useTypeAlias: false,
+				dependencies: []
+			};
+		}
+		const resolvedValue = resolveValue({
+			schema: item.additionalProperties,
+			name,
+			context
+		});
+		const recordType$1 = getPropertyNamesRecordType(item, resolvedValue.value);
+		if (recordType$1) return {
+			value: recordType$1 + nullable,
+			imports: resolvedValue.imports ?? [],
+			schemas: resolvedValue.schemas ?? [],
+			isEnum: false,
+			type: "object",
+			isRef: false,
+			hasReadonlyProps: resolvedValue.hasReadonlyProps,
+			useTypeAlias: true,
+			dependencies: resolvedValue.dependencies
+		};
+		return {
+			value: `{[key: ${getIndexSignatureKey(item)}]: ${resolvedValue.value}}` + nullable,
+			imports: resolvedValue.imports ?? [],
+			schemas: resolvedValue.schemas ?? [],
+			isEnum: false,
+			type: "object",
+			isRef: false,
+			hasReadonlyProps: resolvedValue.hasReadonlyProps,
+			useTypeAlias: false,
+			dependencies: resolvedValue.dependencies
+		};
+	}
+	const itemWithConst = item;
+	if (itemWithConst.const) return {
+		value: `'${itemWithConst.const}'`,
+		imports: [],
+		schemas: [],
+		isEnum: false,
+		type: "string",
+		isRef: false,
+		hasReadonlyProps: item.readOnly || false,
+		dependencies: []
+	};
+	const keyType = item.type === "object" ? getIndexSignatureKey(item) : "string";
+	const recordType = getPropertyNamesRecordType(item, "unknown");
+	if (item.type === "object" && recordType) return {
+		value: recordType + nullable,
+		imports: [],
+		schemas: [],
+		isEnum: false,
+		type: "object",
+		isRef: false,
+		hasReadonlyProps: item.readOnly || false,
+		useTypeAlias: true,
+		dependencies: []
+	};
+	return {
+		value: (item.type === "object" ? `{ [key: ${keyType}]: unknown }` : "unknown") + nullable,
+		imports: [],
+		schemas: [],
+		isEnum: false,
+		type: "object",
+		isRef: false,
+		hasReadonlyProps: item.readOnly || false,
+		useTypeAlias: false,
+		dependencies: []
+	};
+}
+
+//#endregion
+//#region src/getters/scalar.ts
+/**
+* Return the typescript equivalent of open-api data type
+*
+* @param item
+* @ref https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.1.md#data-types
+*/
+function getScalar({ item, name, context, formDataContext }) {
+	const nullable = isArray(item.type) && item.type.includes("null") || item.nullable === true ? " | null" : "";
+	const enumItems = item.enum?.filter((enumItem) => enumItem !== null);
+	let itemType = item.type;
+	if (!itemType && item.items) {
+		item.type = "array";
+		itemType = "array";
+	}
+	if (isArray(item.type) && item.type.includes("null")) {
+		const typesWithoutNull = item.type.filter((x) => x !== "null");
+		itemType = typesWithoutNull.length === 1 ? typesWithoutNull[0] : typesWithoutNull;
+	}
+	switch (itemType) {
+		case "number":
+		case "integer": {
+			let value = context.output.override.useBigInt && (item.format === "int64" || item.format === "uint64") ? "bigint" : "number";
+			let isEnum = false;
+			if (enumItems) {
+				value = enumItems.map((enumItem) => `${enumItem}`).join(" | ");
+				isEnum = true;
+			}
+			value += nullable;
+			const itemWithConst = item;
+			if (itemWithConst.const !== void 0) value = itemWithConst.const;
+			return {
+				value,
+				isEnum,
+				type: "number",
+				schemas: [],
+				imports: [],
+				isRef: false,
+				hasReadonlyProps: item.readOnly || false,
+				dependencies: [],
+				example: item.example,
+				examples: resolveExampleRefs(item.examples, context)
+			};
+		}
+		case "boolean": {
+			let value = "boolean" + nullable;
+			const itemWithConst = item;
+			if (itemWithConst.const !== void 0) value = itemWithConst.const;
+			return {
+				value,
+				type: "boolean",
+				isEnum: false,
+				schemas: [],
+				imports: [],
+				isRef: false,
+				hasReadonlyProps: item.readOnly || false,
+				dependencies: [],
+				example: item.example,
+				examples: resolveExampleRefs(item.examples, context)
+			};
+		}
+		case "array": {
+			const { value, ...rest } = getArray({
+				schema: item,
+				name,
+				context,
+				formDataContext
+			});
+			return {
+				value: value + nullable,
+				...rest,
+				dependencies: rest.dependencies ?? []
+			};
+		}
+		case "string": {
+			let value = "string";
+			let isEnum = false;
+			if (enumItems) {
+				value = enumItems.map((enumItem) => isString(enumItem) ? `'${escape(enumItem)}'` : `${enumItem}`).filter(Boolean).join(` | `);
+				isEnum = true;
+			}
+			if (item.format === "binary") value = "Blob";
+			else if (formDataContext?.atPart) {
+				const fileType = getFormDataFieldFileType(item, formDataContext.partContentType);
+				if (fileType) value = fileType === "binary" ? "Blob" : "Blob | string";
+			}
+			if (context.output.override.useDates && (item.format === "date" || item.format === "date-time")) value = "Date";
+			value += nullable;
+			const itemWithConst = item;
+			if (itemWithConst.const) value = `'${itemWithConst.const}'`;
+			return {
+				value,
+				isEnum,
+				type: "string",
+				imports: [],
+				schemas: [],
+				isRef: false,
+				hasReadonlyProps: item.readOnly || false,
+				dependencies: [],
+				example: item.example,
+				examples: resolveExampleRefs(item.examples, context)
+			};
+		}
+		case "null": return {
+			value: "null",
+			isEnum: false,
+			type: "null",
+			imports: [],
+			schemas: [],
+			isRef: false,
+			hasReadonlyProps: item.readOnly || false,
+			dependencies: []
+		};
+		case "object":
+		default: {
+			if (isArray(itemType)) return combineSchemas({
+				schema: { anyOf: itemType.map((type) => ({
+					...item,
+					type
+				})) },
+				name,
+				separator: "anyOf",
+				context,
+				nullable
+			});
+			if (enumItems) return {
+				value: enumItems.map((enumItem) => isString(enumItem) ? `'${escape(enumItem)}'` : `${enumItem}`).filter(Boolean).join(` | `) + nullable,
+				isEnum: true,
+				type: "string",
+				imports: [],
+				schemas: [],
+				isRef: false,
+				hasReadonlyProps: item.readOnly || false,
+				dependencies: [],
+				example: item.example,
+				examples: resolveExampleRefs(item.examples, context)
+			};
+			const hasCombiners = item.allOf || item.anyOf || item.oneOf;
+			const { value, ...rest } = getObject({
+				item,
+				name,
+				context,
+				nullable,
+				formDataContext: formDataContext?.atPart === false || formDataContext?.atPart && hasCombiners ? formDataContext : void 0
+			});
+			return {
+				value,
+				...rest
+			};
+		}
+	}
+}
+
+//#endregion
+//#region src/getters/combine.ts
+function combineValues({ resolvedData, resolvedValue, separator: separator$1, context }) {
+	if (resolvedData.isEnum.every(Boolean)) return `${resolvedData.values.join(` | `)}${resolvedValue ? ` | ${resolvedValue.value}` : ""}`;
+	if (separator$1 === "allOf") {
+		let resolvedDataValue = resolvedData.values.map((v) => v.includes(" | ") ? `(${v})` : v).join(` & `);
+		if (resolvedData.originalSchema.length > 0 && resolvedValue) {
+			const discriminatedPropertySchemas = resolvedData.originalSchema.filter((s) => s?.discriminator && resolvedValue.value.includes(` ${s.discriminator.propertyName}:`));
+			if (discriminatedPropertySchemas.length > 0) resolvedDataValue = `Omit<${resolvedDataValue}, '${discriminatedPropertySchemas.map((s) => s.discriminator?.propertyName).join("' | '")}'>`;
+		}
+		const resolvedValueStr = resolvedValue?.value.includes(" | ") ? `(${resolvedValue.value})` : resolvedValue?.value;
+		const joined = `${resolvedDataValue}${resolvedValue ? ` & ${resolvedValueStr}` : ""}`;
+		const overrideRequiredProperties = resolvedData.requiredProperties.filter((prop$1) => !resolvedData.originalSchema.some((schema) => schema?.properties?.[prop$1] && schema.required?.includes(prop$1)));
+		if (overrideRequiredProperties.length > 0) return `${joined} & Required<Pick<${joined}, '${overrideRequiredProperties.join("' | '")}'>>`;
+		return joined;
+	}
+	let values = resolvedData.values;
+	if (resolvedData.allProperties.length && context.output.unionAddMissingProperties) {
+		values = [];
+		for (let i = 0; i < resolvedData.values.length; i += 1) {
+			const subSchema = resolvedData.originalSchema[i];
+			if (subSchema?.type !== "object") {
+				values.push(resolvedData.values[i]);
+				continue;
+			}
+			const missingProperties = unique(resolvedData.allProperties.filter((p) => !Object.keys(subSchema.properties).includes(p)));
+			values.push(`${resolvedData.values[i]}${missingProperties.length > 0 ? ` & {${missingProperties.map((p) => `${p}?: never`).join("; ")}}` : ""}`);
+		}
+	}
+	if (resolvedValue) return `(${values.join(` & ${resolvedValue.value}) | (`)} & ${resolvedValue.value})`;
+	return values.join(" | ");
+}
+function combineSchemas({ name, schema, separator: separator$1, context, nullable, formDataContext }) {
+	const items = schema[separator$1] ?? [];
+	const resolvedData = items.reduce((acc, subSchema) => {
+		let propName;
+		if (context.output.override.aliasCombinedTypes) {
+			propName = name ? name + pascal(separator$1) : void 0;
+			if (propName && acc.schemas.length > 0) propName = propName + pascal(getNumberWord(acc.schemas.length + 1));
+		}
+		if (separator$1 === "allOf" && isSchema(subSchema) && subSchema.required) acc.requiredProperties.push(...subSchema.required);
+		const resolvedValue$1 = resolveObject({
+			schema: subSchema,
+			propName,
+			combined: true,
+			context,
+			formDataContext
+		});
+		const aliasedImports = getAliasedImports({
+			context,
+			name,
+			resolvedValue: resolvedValue$1
+		});
+		const value = getImportAliasForRefOrValue({
+			context,
+			resolvedValue: resolvedValue$1,
+			imports: aliasedImports
+		});
+		acc.values.push(value);
+		acc.imports.push(...aliasedImports);
+		acc.schemas.push(...resolvedValue$1.schemas);
+		acc.dependencies.push(...resolvedValue$1.dependencies);
+		acc.isEnum.push(resolvedValue$1.isEnum);
+		acc.types.push(resolvedValue$1.type);
+		acc.isRef.push(resolvedValue$1.isRef);
+		acc.originalSchema.push(resolvedValue$1.originalSchema);
+		acc.hasReadonlyProps ||= resolvedValue$1.hasReadonlyProps;
+		if (resolvedValue$1.type === "object" && resolvedValue$1.originalSchema.properties) acc.allProperties.push(...Object.keys(resolvedValue$1.originalSchema.properties));
+		return acc;
+	}, {
+		values: [],
+		imports: [],
+		schemas: [],
+		isEnum: [],
+		isRef: [],
+		types: [],
+		dependencies: [],
+		originalSchema: [],
+		allProperties: [],
+		hasReadonlyProps: false,
+		example: schema.example,
+		examples: resolveExampleRefs(schema.examples, context),
+		requiredProperties: separator$1 === "allOf" ? schema.required ?? [] : []
+	});
+	if (resolvedData.isEnum.every(Boolean) && name && items.length > 1 && context.output.override.enumGenerationType !== EnumGeneration.UNION) {
+		const { value: combinedEnumValue, valueImports, hasNull } = getCombinedEnumValue(resolvedData.values.map((value, index) => ({
+			value,
+			isRef: resolvedData.isRef[index],
+			schema: resolvedData.originalSchema[index]
+		})));
+		const newEnum = `export const ${pascal(name)} = ${combinedEnumValue}`;
+		const valueImportSet = new Set(valueImports);
+		const typeSuffix = `${nullable}${hasNull && !nullable.includes("null") ? " | null" : ""}`;
+		return {
+			value: `typeof ${pascal(name)}[keyof typeof ${pascal(name)}]${typeSuffix}`,
+			imports: [{ name: pascal(name) }],
+			schemas: [...resolvedData.schemas, {
+				imports: resolvedData.imports.filter((toImport) => valueImportSet.has(toImport.alias ?? toImport.name)).map((toImport) => ({
+					...toImport,
+					values: true
+				})),
+				model: newEnum,
+				name
+			}],
+			isEnum: false,
+			type: "object",
+			isRef: false,
+			hasReadonlyProps: resolvedData.hasReadonlyProps,
+			dependencies: resolvedData.dependencies,
+			example: schema.example,
+			examples: resolveExampleRefs(schema.examples, context)
+		};
+	}
+	let resolvedValue;
+	if (schema.properties) resolvedValue = getScalar({
+		item: Object.fromEntries(Object.entries(schema).filter(([key]) => key !== separator$1)),
+		name,
+		context
+	});
+	else if (separator$1 === "allOf" && (schema.oneOf || schema.anyOf)) {
+		const siblingCombiner = schema.oneOf ? "oneOf" : "anyOf";
+		resolvedValue = combineSchemas({
+			schema: { [siblingCombiner]: schema[siblingCombiner] },
+			name,
+			separator: siblingCombiner,
+			context,
+			nullable: ""
+		});
+	}
+	return {
+		value: dedupeUnionType(combineValues({
+			resolvedData,
+			separator: separator$1,
+			resolvedValue,
+			context
+		}) + nullable),
+		imports: resolvedValue ? [...resolvedData.imports, ...resolvedValue.imports] : resolvedData.imports,
+		schemas: resolvedValue ? [...resolvedData.schemas, ...resolvedValue.schemas] : resolvedData.schemas,
+		dependencies: resolvedValue ? [...resolvedData.dependencies, ...resolvedValue.dependencies] : resolvedData.dependencies,
+		isEnum: false,
+		type: "object",
+		isRef: false,
+		hasReadonlyProps: resolvedData?.hasReadonlyProps || resolvedValue?.hasReadonlyProps || false,
+		example: schema.example,
+		examples: resolveExampleRefs(schema.examples, context)
+	};
+}
+
+//#endregion
+//#region src/getters/discriminators.ts
+function resolveDiscriminators(schemas, context) {
+	const transformedSchemas = schemas;
+	for (const schema of Object.values(transformedSchemas)) {
+		if (typeof schema === "boolean") continue;
+		if (schema.discriminator?.mapping) {
+			const { mapping, propertyName } = schema.discriminator;
+			for (const [mappingKey, mappingValue] of Object.entries(mapping)) {
+				let subTypeSchema;
+				try {
+					const { originalName } = getRefInfo(mappingValue, context);
+					subTypeSchema = transformedSchemas[pascal(originalName)] ?? transformedSchemas[originalName];
+				} catch {
+					subTypeSchema = transformedSchemas[mappingValue];
+				}
+				if (typeof subTypeSchema === "boolean" || propertyName === void 0) continue;
+				const property = subTypeSchema.properties?.[propertyName];
+				if (typeof property === "boolean" || property === void 0) continue;
+				subTypeSchema.properties = {
+					...subTypeSchema.properties,
+					[propertyName]: {
+						type: "string",
+						enum: [...property?.enum?.filter((value) => value !== mappingKey) ?? [], mappingKey]
+					}
+				};
+				subTypeSchema.required = [...subTypeSchema.required ?? [], propertyName];
+			}
+		}
+	}
+	return transformedSchemas;
+}
+
+//#endregion
+//#region src/getters/operation.ts
+function getOperationId(operation, route, verb) {
+	if (isString(operation.operationId)) return operation.operationId;
+	return pascal([verb, ...route.split("/").map((p) => sanitize(p, {
+		dash: true,
+		underscore: "-",
+		dot: "-",
+		whitespace: "-"
+	}))].join("-"));
+}
+
+//#endregion
+//#region src/getters/parameters.ts
+function getParameters({ parameters, context }) {
+	return parameters.reduce((acc, p) => {
+		if (isReference(p)) {
+			const { schema: parameter, imports } = resolveRef(p, context);
+			if (parameter.in === "path" || parameter.in === "query" || parameter.in === "header") acc[parameter.in].push({
+				parameter,
+				imports
+			});
+		} else if (p.in === "query" || p.in === "path" || p.in === "header") acc[p.in].push({
+			parameter: p,
+			imports: []
+		});
+		return acc;
+	}, {
+		path: [],
+		query: [],
+		header: []
+	});
+}
+
+//#endregion
+//#region src/getters/params.ts
+/**
+* Return every params in a path
+*
+* @example
+* ```
+* getParamsInPath("/pet/{category}/{name}/");
+* // => ["category", "name"]
+* ```
+* @param path
+*/
+function getParamsInPath(path$2) {
+	let n;
+	const output = [];
+	const templatePathRegex = /\{(.*?)\}/g;
+	while ((n = templatePathRegex.exec(path$2)) !== null) output.push(n[1]);
+	return output;
+}
+function getParams({ route, pathParams = [], operationId, context, output }) {
+	return getParamsInPath(route).map((p) => {
+		const pathParam = pathParams.find(({ parameter }) => sanitize(camel(parameter.name), {
+			es5keyword: true,
+			underscore: true,
+			dash: true
+		}) === p);
+		if (!pathParam) throw new Error(`The path params ${p} can't be found in parameters (${operationId})`);
+		const { name: nameWithoutSanitize, required = false, schema } = pathParam.parameter;
+		const name = sanitize(camel(nameWithoutSanitize), { es5keyword: true });
+		if (!schema) return {
+			name,
+			definition: `${name}${required ? "" : "?"}: unknown`,
+			implementation: `${name}${required ? "" : "?"}: unknown`,
+			default: false,
+			required,
+			imports: []
+		};
+		const resolvedValue = resolveValue({
+			schema,
+			context
+		});
+		let paramType = resolvedValue.value;
+		if (output.allParamsOptional) paramType = `${paramType} | undefined | null`;
+		return {
+			name,
+			definition: `${name}${!required || resolvedValue.originalSchema.default ? "?" : ""}: ${paramType}`,
+			implementation: `${name}${!required && !resolvedValue.originalSchema.default ? "?" : ""}${resolvedValue.originalSchema.default ? `: ${paramType} = ${stringify(resolvedValue.originalSchema.default)}` : `: ${paramType}`}`,
+			default: resolvedValue.originalSchema.default,
+			required,
+			imports: resolvedValue.imports,
+			originalSchema: resolvedValue.originalSchema
+		};
+	});
+}
+
+//#endregion
+//#region src/getters/props.ts
+function getProps({ body, queryParams, params, operationName, headers, context }) {
+	const bodyProp = {
+		name: body.implementation,
+		definition: `${body.implementation}${body.isOptional && !context.output.optionsParamRequired ? "?" : ""}: ${body.definition}`,
+		implementation: `${body.implementation}${body.isOptional && !context.output.optionsParamRequired ? "?" : ""}: ${body.definition}`,
+		default: false,
+		required: !body.isOptional || context.output.optionsParamRequired,
+		type: GetterPropType.BODY
+	};
+	const queryParamsProp = {
+		name: "params",
+		definition: getQueryParamDefinition(queryParams, context),
+		implementation: getQueryParamDefinition(queryParams, context),
+		default: false,
+		required: isUndefined(queryParams?.isOptional) ? !context.output.allParamsOptional || context.output.optionsParamRequired : !queryParams?.isOptional && !context.output.allParamsOptional || context.output.optionsParamRequired,
+		type: GetterPropType.QUERY_PARAM
+	};
+	const headersProp = {
+		name: "headers",
+		definition: `headers${headers?.isOptional && !context.output.optionsParamRequired ? "?" : ""}: ${headers?.schema.name}`,
+		implementation: `headers${headers?.isOptional && !context.output.optionsParamRequired ? "?" : ""}: ${headers?.schema.name}`,
+		default: false,
+		required: isUndefined(headers?.isOptional) ? false : !headers?.isOptional || context.output.optionsParamRequired,
+		type: GetterPropType.HEADER
+	};
+	let paramGetterProps;
+	if (context.output.override.useNamedParameters && params.length > 0) {
+		const parameterTypeName = `${pascal(operationName)}PathParameters`;
+		const name = "pathParams";
+		const namedParametersTypeDefinition = `export type ${parameterTypeName} = {\n ${params.map((property) => property.definition).join(",\n    ")},\n }`;
+		const isOptional = context.output.optionsParamRequired || params.every((param) => param.default);
+		const implementation = `{ ${params.map((property) => property.default ? `${property.name} = ${property.default}` : property.name).join(", ")} }: ${parameterTypeName}${isOptional ? " = {}" : ""}`;
+		const destructured = `{ ${params.map((property) => property.name).join(", ")} }`;
+		paramGetterProps = [{
+			type: GetterPropType.NAMED_PATH_PARAMS,
+			name,
+			definition: `${name}: ${parameterTypeName}`,
+			implementation,
+			default: false,
+			destructured,
+			required: true,
+			schema: {
+				name: parameterTypeName,
+				model: namedParametersTypeDefinition,
+				imports: params.flatMap((property) => property.imports)
+			}
+		}];
+	} else paramGetterProps = params.map((param) => ({
+		...param,
+		type: GetterPropType.PARAM
+	}));
+	return sortByPriority([
+		...paramGetterProps,
+		...body.definition ? [bodyProp] : [],
+		...queryParams ? [queryParamsProp] : [],
+		...headers ? [headersProp] : []
+	]);
+}
+function getQueryParamDefinition(queryParams, context) {
+	let paramType = queryParams?.schema.name;
+	if (OutputClient.ANGULAR === context.output.client) paramType = `DeepNonNullable<${paramType}>`;
+	return `params${(queryParams?.isOptional || context.output.allParamsOptional) && !context.output.optionsParamRequired ? "?" : ""}: ${paramType}`;
+}
+
+//#endregion
+//#region src/getters/query-params.ts
+function getQueryParamsTypes(queryParams, operationName, context) {
+	return queryParams.map(({ parameter, imports: parameterImports }) => {
+		const { name, required, schema: schemaParam, content } = parameter;
+		const queryName = sanitize(`${pascal(operationName)}${pascal(name)}`, {
+			underscore: "_",
+			whitespace: "_",
+			dash: true,
+			es5keyword: true,
+			es5IdentifierName: true
+		});
+		const schema = schemaParam || content["application/json"].schema;
+		const resolvedValue = resolveValue({
+			schema,
+			context,
+			name: queryName
+		});
+		const key = getKey(name);
+		const doc = jsDoc({
+			description: parameter.description,
+			...schema
+		}, void 0, context);
+		if (parameterImports.length > 0) return {
+			definition: `${doc}${key}${!required || schema.default ? "?" : ""}: ${parameterImports[0].name};`,
+			imports: parameterImports,
+			schemas: [],
+			originalSchema: resolvedValue.originalSchema
+		};
+		if (resolvedValue.isEnum && !resolvedValue.isRef) {
+			const enumName = queryName;
+			const enumValue = getEnum(resolvedValue.value, enumName, getEnumNames(resolvedValue.originalSchema), context.output.override.enumGenerationType, getEnumDescriptions(resolvedValue.originalSchema), context.output.override.namingConvention?.enum);
+			return {
+				definition: `${doc}${key}${!required || schema.default ? "?" : ""}: ${enumName};`,
+				imports: [{ name: enumName }],
+				schemas: [...resolvedValue.schemas, {
+					name: enumName,
+					model: enumValue,
+					imports: resolvedValue.imports
+				}],
+				originalSchema: resolvedValue.originalSchema
+			};
+		}
+		return {
+			definition: `${doc}${key}${!required || schema.default ? "?" : ""}: ${resolvedValue.value};`,
+			imports: resolvedValue.imports,
+			schemas: resolvedValue.schemas,
+			originalSchema: resolvedValue.originalSchema
+		};
+	});
+}
+function getQueryParams({ queryParams, operationName, context, suffix = "params" }) {
+	if (queryParams.length === 0) return;
+	const types = getQueryParamsTypes(queryParams, operationName, context);
+	const imports = types.flatMap(({ imports: imports$1 }) => imports$1);
+	const schemas = types.flatMap(({ schemas: schemas$1 }) => schemas$1);
+	const name = `${pascal(operationName)}${pascal(suffix)}`;
+	const type = types.map(({ definition }) => definition).join("\n");
+	const allOptional = queryParams.every(({ parameter }) => !parameter.required);
+	return {
+		schema: {
+			name,
+			model: `export type ${name} = {\n${type}\n};\n`,
+			imports
+		},
+		deps: schemas,
+		isOptional: allOptional
+	};
+}
+
+//#endregion
+//#region src/getters/response.ts
+function getResponse({ responses, operationName, context, contentType }) {
+	if (!responses) return {
+		imports: [],
+		definition: {
+			success: "",
+			errors: ""
+		},
+		isBlob: false,
+		types: {
+			success: [],
+			errors: []
+		},
+		schemas: [],
+		contentTypes: []
+	};
+	const types = getResReqTypes(Object.entries(responses), operationName, context, "void", (type) => `${type.key}-${type.value}`);
+	const filteredTypes = contentType ? types.filter((type) => {
+		let include = true;
+		let exclude = false;
+		if (contentType.include) include = contentType.include.includes(type.contentType);
+		if (contentType.exclude) exclude = contentType.exclude.includes(type.contentType);
+		return include && !exclude;
+	}) : types;
+	const imports = filteredTypes.flatMap(({ imports: imports$1 }) => imports$1);
+	const schemas = filteredTypes.flatMap(({ schemas: schemas$1 }) => schemas$1);
+	const contentTypes = [...new Set(filteredTypes.map(({ contentType: contentType$1 }) => contentType$1))];
+	const groupedByStatus = filteredTypes.reduce((acc, type) => {
+		if (type.key.startsWith("2")) acc.success.push(type);
+		else acc.errors.push(type);
+		return acc;
+	}, {
+		success: [],
+		errors: []
+	});
+	const success = dedupeUnionType(groupedByStatus.success.map(({ value, formData }) => formData ? "Blob" : value).join(" | "));
+	const errors = dedupeUnionType(groupedByStatus.errors.map(({ value }) => value).join(" | "));
+	const defaultType = filteredTypes.find(({ key }) => key === "default")?.value;
+	return {
+		imports,
+		definition: {
+			success: success || (defaultType ?? "unknown"),
+			errors: errors || (defaultType ?? "unknown")
+		},
+		isBlob: success === "Blob",
+		types: groupedByStatus,
+		contentTypes,
+		schemas,
+		originalSchema: responses
+	};
+}
+
+//#endregion
+//#region src/getters/route.ts
+const TEMPLATE_TAG_IN_PATH_REGEX = /\/([\w]+)(?:\$\{)/g;
+const hasParam = (path$2) => /[^{]*{[\w*_-]*}.*/.test(path$2);
+const getRoutePath = (path$2) => {
+	const matches = /([^{]*){?([\w*_-]*)}?(.*)/.exec(path$2);
+	if (!matches?.length) return path$2;
+	const prev = matches[1];
+	const param = sanitize(camel(matches[2]), {
+		es5keyword: true,
+		underscore: true,
+		dash: true,
+		dot: true
+	});
+	const next = hasParam(matches[3]) ? getRoutePath(matches[3]) : matches[3];
+	return hasParam(path$2) ? `${prev}\${${param}}${next}` : `${prev}${param}${next}`;
+};
+function getRoute(route) {
+	return route.split("/").reduce((acc, path$2, i) => {
+		if (!path$2 && !i) return acc;
+		if (!path$2.includes("{")) return `${acc}/${path$2}`;
+		return `${acc}/${getRoutePath(path$2)}`;
+	}, "");
+}
+function getFullRoute(route, servers, baseUrl) {
+	const getBaseUrl = () => {
+		if (!baseUrl) return "";
+		if (typeof baseUrl === "string") return baseUrl;
+		if (baseUrl.getBaseUrlFromSpecification) {
+			if (!servers) throw new Error("Orval is configured to use baseUrl from the specifications 'servers' field, but there exist no servers in the specification.");
+			const server = servers.at(Math.min(baseUrl.index ?? 0, servers.length - 1));
+			if (!server) return "";
+			if (!server.variables) return server.url;
+			let url = server.url;
+			const variables = baseUrl.variables;
+			for (const variableKey of Object.keys(server.variables)) {
+				const variable = server.variables[variableKey];
+				if (variables?.[variableKey]) {
+					if (variable.enum && !variable.enum.some((e) => e == variables[variableKey])) throw new Error(`Invalid variable value '${variables[variableKey]}' for variable '${variableKey}' when resolving ${server.url}. Valid values are: ${variable.enum.join(", ")}.`);
+					url = url.replaceAll(`{${variableKey}}`, variables[variableKey]);
+				} else url = url.replaceAll(`{${variableKey}}`, String(variable.default));
+			}
+			return url;
+		}
+		return baseUrl.baseUrl;
+	};
+	let fullRoute = route;
+	const base = getBaseUrl();
+	if (base) {
+		if (base.endsWith("/") && route.startsWith("/")) fullRoute = route.slice(1);
+		fullRoute = `${base}${fullRoute}`;
+	}
+	return fullRoute;
+}
+function getRouteAsArray(route) {
+	return route.replaceAll(TEMPLATE_TAG_IN_PATH_REGEX, "/$1/${").split("/").filter((i) => i !== "").map((i) => i.includes("${") ? i.replace(TEMPLATE_TAG_REGEX, "$1") : `'${i}'`).join(",").replace(",,", "");
+}
+
+//#endregion
+//#region src/generators/component-definition.ts
+function generateComponentDefinition(responses = {}, context, suffix) {
+	if (isEmptyish(responses)) return [];
+	const generatorSchemas = [];
+	for (const [name, response] of entries(responses)) {
+		const allResponseTypes = getResReqTypes([[suffix, response]], name, context, "void");
+		const imports = allResponseTypes.flatMap(({ imports: imports$1 }) => imports$1);
+		const schemas = allResponseTypes.flatMap(({ schemas: schemas$1 }) => schemas$1);
+		const type = allResponseTypes.map(({ value }) => value).join(" | ");
+		const modelName = sanitize(`${pascal(name)}${suffix}`, {
+			underscore: "_",
+			whitespace: "_",
+			dash: true,
+			es5keyword: true,
+			es5IdentifierName: true
+		});
+		const model = `${jsDoc(response)}export type ${modelName} = ${type || "unknown"};\n`;
+		generatorSchemas.push(...schemas);
+		if (modelName !== type) generatorSchemas.push({
+			name: modelName,
+			model,
+			imports
+		});
+	}
+	return generatorSchemas;
+}
+
+//#endregion
+//#region src/generators/imports.ts
+function generateImports({ imports, namingConvention = NamingConvention.CAMEL_CASE }) {
+	if (imports.length === 0) return "";
+	const grouped = groupBy(uniqueWith(imports, (a, b) => a.name === b.name && a.default === b.default).map((imp) => ({
+		...imp,
+		importPath: imp.importPath ?? `./${conventionName(imp.name, namingConvention)}`
+	})), (imp) => !imp.default && !imp.namespaceImport && !imp.syntheticDefaultImport && !imp.values && !imp.isConstant ? `aggregate|${imp.importPath}` : `single|${imp.importPath}|${imp.name}|${imp.alias ?? ""}|${String(imp.default)}|${String(imp.namespaceImport)}|${String(imp.syntheticDefaultImport)}|${String(imp.values)}|${String(imp.isConstant)}`);
+	return Object.entries(grouped).toSorted(([a], [b]) => a.localeCompare(b)).map(([, group]) => {
+		const sample = group[0];
+		if (!sample.default && !sample.namespaceImport && !sample.syntheticDefaultImport && !sample.values && !sample.isConstant) return `import type { ${[...new Set(group.map(({ name: name$1, alias: alias$1 }) => `${name$1}${alias$1 ? ` as ${alias$1}` : ""}`))].toSorted().join(", ")} } from '${sample.importPath}';`;
+		const { name, values, alias, isConstant, importPath } = sample;
+		return `import ${!values && !isConstant ? "type " : ""}{ ${name}${alias ? ` as ${alias}` : ""} } from '${importPath}';`;
+	}).join("\n");
+}
+function generateMutatorImports({ mutators, implementation, oneMore }) {
+	return uniqueWith(mutators, (a, b) => a.name === b.name && a.default === b.default).reduce((acc, mutator) => {
+		const path$2 = `${oneMore ? "../" : ""}${mutator.path}`;
+		const importDefault = mutator.default ? mutator.name : `{ ${mutator.name} }`;
+		acc += `import ${importDefault} from '${path$2}';`;
+		acc += "\n";
+		if (implementation && (mutator.hasErrorType || mutator.bodyTypeName)) {
+			let errorImportName = "";
+			const targetErrorImportName = mutator.default ? `ErrorType as ${mutator.errorTypeName}` : mutator.errorTypeName;
+			if (mutator.hasErrorType && implementation.includes(mutator.errorTypeName) && !acc.includes(`{ ${targetErrorImportName} `)) errorImportName = targetErrorImportName;
+			let bodyImportName = "";
+			const targetBodyImportName = mutator.default ? `BodyType as ${mutator.bodyTypeName}` : mutator.bodyTypeName;
+			if (mutator.bodyTypeName && implementation.includes(mutator.bodyTypeName) && !acc.includes(` ${targetBodyImportName} }`)) bodyImportName = targetBodyImportName;
+			if (bodyImportName || errorImportName) {
+				acc += `import type { ${errorImportName}${errorImportName && bodyImportName ? " , " : ""}${bodyImportName} } from '${path$2}';`;
+				acc += "\n";
+			}
+		}
+		return acc;
+	}, "");
+}
+function generateDependency({ deps, isAllowSyntheticDefaultImports, dependency, projectName, key, onlyTypes }) {
+	const defaultDep = deps.find((e) => e.default && (isAllowSyntheticDefaultImports || !e.syntheticDefaultImport));
+	const namespaceImportDep = defaultDep ? void 0 : deps.find((e) => !!e.namespaceImport || !isAllowSyntheticDefaultImports && e.syntheticDefaultImport);
+	const depsString = unique(deps.filter((e) => !e.default && !e.syntheticDefaultImport && !e.namespaceImport).map(({ name, alias }) => alias ? `${name} as ${alias}` : name)).toSorted().join(",\n  ");
+	let importString = "";
+	const namespaceImportString = namespaceImportDep ? `import * as ${namespaceImportDep.name} from '${dependency}';` : "";
+	if (namespaceImportString) {
+		if (deps.length === 1) return namespaceImportString;
+		importString += `${namespaceImportString}\n`;
+	}
+	importString += `import ${onlyTypes ? "type " : ""}${defaultDep ? `${defaultDep.name}${depsString ? "," : ""}` : ""}${depsString ? `{\n  ${depsString}\n}` : ""} from '${dependency}${key !== "default" && projectName ? `/${projectName}` : ""}';`;
+	return importString;
+}
+function addDependency({ implementation, exports, dependency, projectName, hasSchemaDir, isAllowSyntheticDefaultImports }) {
+	const toAdds = exports.filter((e) => {
+		const searchWords = [e.alias, e.name].filter((p) => p?.length).join("|");
+		const pattern = new RegExp(String.raw`\b(${searchWords})\b`, "g");
+		return implementation.match(pattern);
+	});
+	if (toAdds.length === 0) return;
+	const groupedBySpecKey = toAdds.reduce((acc, dep) => {
+		const key = "default";
+		if (dep.values && (isAllowSyntheticDefaultImports || !dep.syntheticDefaultImport)) {
+			acc[key] = {
+				...acc[key],
+				values: [...acc[key]?.values ?? [], dep]
+			};
+			return acc;
+		}
+		acc[key] = {
+			...acc[key],
+			types: [...acc[key]?.types ?? [], dep]
+		};
+		return acc;
+	}, {});
+	return Object.entries(groupedBySpecKey).map(([key, { values, types }]) => {
+		let dep = "";
+		if (values) dep += generateDependency({
+			deps: values,
+			isAllowSyntheticDefaultImports,
+			dependency,
+			projectName,
+			key,
+			onlyTypes: false
+		});
+		if (types) {
+			let uniqueTypes = types;
+			if (values) {
+				uniqueTypes = types.filter((t) => !values.some((v) => v.name === t.name));
+				dep += "\n";
+			}
+			dep += generateDependency({
+				deps: uniqueTypes,
+				isAllowSyntheticDefaultImports,
+				dependency,
+				projectName,
+				key,
+				onlyTypes: true
+			});
+		}
+		return dep;
+	}).join("\n") + "\n";
+}
+function getLibName(code) {
+	const splitString = code.split(" from ");
+	return splitString[splitString.length - 1].split(";")[0].trim();
+}
+function generateDependencyImports(implementation, imports, projectName, hasSchemaDir, isAllowSyntheticDefaultImports) {
+	const dependencies = imports.map((dep) => addDependency({
+		...dep,
+		implementation,
+		projectName,
+		hasSchemaDir,
+		isAllowSyntheticDefaultImports
+	})).filter(Boolean).sort((a, b) => {
+		const aLib = getLibName(a);
+		const bLib = getLibName(b);
+		if (aLib === bLib) return 0;
+		if (aLib.startsWith("'.") && !bLib.startsWith("'.")) return 1;
+		return aLib < bLib ? -1 : 1;
+	}).join("\n");
+	return dependencies ? dependencies + "\n" : "";
+}
+function generateVerbImports({ response, body, queryParams, props, headers, params }) {
+	return [
+		...response.imports,
+		...body.imports,
+		...props.flatMap((prop$1) => prop$1.type === GetterPropType.NAMED_PATH_PARAMS ? [{ name: prop$1.schema.name }] : []),
+		...queryParams ? [{ name: queryParams.schema.name }] : [],
+		...headers ? [{ name: headers.schema.name }] : [],
+		...params.flatMap(({ imports }) => imports)
+	];
+}
+
+//#endregion
+//#region src/generators/models-inline.ts
+function generateModelInline(acc, model) {
+	return acc + `${model}\n`;
+}
+function generateModelsInline(obj) {
+	return Object.values(obj).flat().reduce((acc, { model }) => generateModelInline(acc, model), "");
+}
+
+//#endregion
+//#region src/generators/mutator-info.ts
+async function getMutatorInfo(filePath, options) {
+	const { root = process.cwd(), namedExport = "default", alias, external, tsconfig } = options ?? {};
+	return parseFile(await bundleFile(root, path.resolve(filePath), alias, external, tsconfig?.compilerOptions), namedExport, getEcmaVersion(tsconfig?.compilerOptions?.target));
+}
+async function bundleFile(root, fileName, alias, external, compilerOptions) {
+	const { text } = (await build({
+		absWorkingDir: root,
+		entryPoints: [fileName],
+		write: false,
+		platform: "node",
+		bundle: true,
+		format: "esm",
+		metafile: false,
+		target: compilerOptions?.target ?? "es6",
+		minify: false,
+		minifyIdentifiers: false,
+		minifySyntax: false,
+		minifyWhitespace: false,
+		treeShaking: false,
+		keepNames: false,
+		alias,
+		external: external || ["*"]
+	})).outputFiles[0];
+	return text;
+}
+function parseFile(file, name, ecmaVersion = 6) {
+	try {
+		const ast = Parser.parse(file, {
+			ecmaVersion,
+			sourceType: "module"
+		});
+		const foundSpecifier = ast.body.filter((x) => x.type === "ExportNamedDeclaration").flatMap((x) => x.specifiers).find((x) => x.exported.type === "Identifier" && x.exported.name === name && x.local.type === "Identifier");
+		if (foundSpecifier && "name" in foundSpecifier.local) {
+			const exportedFuncName = foundSpecifier.local.name;
+			return parseFunction(ast, exportedFuncName);
+		}
+	} catch {
+		return;
+	}
+}
+function parseFunction(ast, funcName) {
+	const node = ast.body.find((childNode) => {
+		if (childNode.type === "VariableDeclaration") return childNode.declarations.find((d) => d.id.type === "Identifier" && d.id.name === funcName);
+		if (childNode.type === "FunctionDeclaration" && childNode.id.name === funcName) return childNode;
+	});
+	if (!node) return;
+	if (node.type === "FunctionDeclaration") {
+		const returnStatement = node.body.body.find((b) => b.type === "ReturnStatement");
+		if (returnStatement?.argument && "params" in returnStatement.argument) return {
+			numberOfParams: node.params.length,
+			returnNumberOfParams: returnStatement.argument.params.length
+		};
+		else if (returnStatement?.argument?.type === "CallExpression") {
+			const arrowFn = returnStatement.argument.arguments.at(0);
+			if (arrowFn?.type === "ArrowFunctionExpression") return {
+				numberOfParams: node.params.length,
+				returnNumberOfParams: arrowFn.params.length
+			};
+		}
+		return { numberOfParams: node.params.length };
+	}
+	const declaration = "declarations" in node ? node.declarations.find((d) => d.id.type === "Identifier" && d.id.name === funcName) : void 0;
+	if (declaration?.init) {
+		if ("name" in declaration.init) return parseFunction(ast, declaration.init.name);
+		if ("body" in declaration.init && "params" in declaration.init && declaration.init.body.type === "ArrowFunctionExpression") return {
+			numberOfParams: declaration.init.params.length,
+			returnNumberOfParams: declaration.init.body.params.length
+		};
+		const returnStatement = "body" in declaration.init && "body" in declaration.init.body && isArray(declaration.init.body.body) ? declaration.init.body.body.find((b) => b.type === "ReturnStatement") : void 0;
+		if ("params" in declaration.init) {
+			if (returnStatement?.argument && "params" in returnStatement.argument) return {
+				numberOfParams: declaration.init.params.length,
+				returnNumberOfParams: returnStatement.argument.params.length
+			};
+			else if (returnStatement?.argument?.type === "CallExpression" && returnStatement.argument.arguments[0]?.type === "ArrowFunctionExpression") {
+				const arrowFn = returnStatement.argument.arguments[0];
+				return {
+					numberOfParams: declaration.init.params.length,
+					returnNumberOfParams: arrowFn.params.length
+				};
+			}
+			return { numberOfParams: declaration.init.params.length };
+		}
+	}
+}
+function getEcmaVersion(target) {
+	if (!target) return;
+	if (target.toLowerCase() === "esnext") return "latest";
+	try {
+		return Number(target.toLowerCase().replace("es", ""));
+	} catch {
+		return;
+	}
+}
+
+//#endregion
+//#region src/generators/mutator.ts
+const BODY_TYPE_NAME = "BodyType";
+const getImport = (output, mutator) => {
+	const outputFileInfo = getFileInfo(output);
+	const mutatorFileInfo = getFileInfo(mutator.path);
+	const { pathWithoutExtension } = getFileInfo(relativeSafe(outputFileInfo.dirname, mutatorFileInfo.path));
+	return `${pathWithoutExtension}${mutator.extension ?? ""}`;
+};
+async function generateMutator({ output, mutator, name, workspace, tsconfig }) {
+	if (!mutator || !output) return;
+	const isDefault = mutator.default;
+	const importName = mutator.name ?? `${name}Mutator`;
+	const importPath = mutator.path;
+	const mutatorInfoName = isDefault ? "default" : mutator.name;
+	if (mutatorInfoName === void 0) throw new Error(chalk.red(`Mutator ${importPath} must have a named or default export.`));
+	let rawFile = await fs$1.readFile(importPath, "utf8");
+	rawFile = removeComments(rawFile);
+	const hasErrorType = rawFile.includes("export type ErrorType") || rawFile.includes("export interface ErrorType");
+	const hasBodyType = rawFile.includes(`export type ${BODY_TYPE_NAME}`) || rawFile.includes(`export interface ${BODY_TYPE_NAME}`);
+	const errorTypeName = mutator.default ? `${pascal(name)}ErrorType` : "ErrorType";
+	const bodyTypeName = mutator.default ? `${pascal(name)}${BODY_TYPE_NAME}` : BODY_TYPE_NAME;
+	const mutatorInfo = await getMutatorInfo(importPath, {
+		root: path.resolve(workspace),
+		namedExport: mutatorInfoName,
+		alias: mutator.alias,
+		external: mutator.external,
+		tsconfig
+	});
+	if (!mutatorInfo) throw new Error(chalk.red(`Your mutator file doesn't have the ${mutatorInfoName} exported function`));
+	const importStatementPath = getImport(output, mutator);
+	const isHook = mutator.name ? mutator.name.startsWith("use") && !mutatorInfo.numberOfParams : !mutatorInfo.numberOfParams;
+	return {
+		name: mutator.name || !isHook ? importName : `use${pascal(importName)}`,
+		path: importStatementPath,
+		default: isDefault,
+		hasErrorType,
+		errorTypeName,
+		hasSecondArg: isHook ? (mutatorInfo.returnNumberOfParams ?? 0) > 1 : mutatorInfo.numberOfParams > 1,
+		hasThirdArg: mutatorInfo.numberOfParams > 2,
+		isHook,
+		...hasBodyType ? { bodyTypeName } : {}
+	};
+}
+function removeComments(file) {
+	return file.replaceAll(/\/\/.*|\/\*[\s\S]*?\*\//g, "");
+}
+
+//#endregion
+//#region src/generators/options.ts
+function generateBodyOptions(body, isFormData, isFormUrlEncoded) {
+	if (isFormData && body.formData) return "\n      formData,";
+	if (isFormUrlEncoded && body.formUrlEncoded) return "\n      formUrlEncoded,";
+	if (body.implementation) return `\n      ${body.implementation},`;
+	return "";
+}
+function generateAxiosOptions({ response, isExactOptionalPropertyTypes, queryParams, headers, requestOptions, hasSignal, hasSignalParam = false, isVue, isAngular, paramsSerializer, paramsSerializerOptions }) {
+	const isRequestOptions = requestOptions !== false;
+	const signalVar = hasSignalParam ? "querySignal" : "signal";
+	const signalProp = hasSignalParam ? `signal: ${signalVar}` : "signal";
+	if (!queryParams && !headers && !response.isBlob && response.definition.success !== "string") {
+		if (isRequestOptions) return "options";
+		if (hasSignal) return isExactOptionalPropertyTypes ? `...(${signalVar} ? { ${signalProp} } : {})` : signalProp;
+		return "";
+	}
+	let value = "";
+	if (!isRequestOptions) {
+		if (queryParams) value += "\n        params,";
+		if (headers) value += "\n        headers,";
+		if (hasSignal) value += isExactOptionalPropertyTypes ? `\n        ...(${signalVar} ? { ${signalProp} } : {}),` : `\n        ${signalProp},`;
+	}
+	if (!isObject(requestOptions) || !requestOptions.hasOwnProperty("responseType")) {
+		if (response.isBlob) value += `\n        responseType: 'blob',`;
+		else if (response.contentTypes.at(0) === "text/plain") value += `\n        responseType: 'text',`;
+	}
+	if (isObject(requestOptions)) value += `\n ${stringify(requestOptions)?.slice(1, -1)}`;
+	if (isRequestOptions) {
+		value += "\n    ...options,";
+		if (queryParams) if (isVue) value += "\n        params: {...unref(params), ...options?.params},";
+		else if (isAngular && paramsSerializer) value += `\n        params: ${paramsSerializer.name}({...params, ...options?.params}),`;
+		else value += "\n        params: {...params, ...options?.params},";
+		if (headers) value += "\n        headers: {...headers, ...options?.headers},";
+	}
+	if (!isAngular && queryParams && (paramsSerializer || paramsSerializerOptions?.qs)) value += paramsSerializer ? `\n        paramsSerializer: ${paramsSerializer.name},` : `\n        paramsSerializer: (params) => qs.stringify(params, ${JSON.stringify(paramsSerializerOptions.qs)}),`;
+	return value;
+}
+function generateOptions({ route, body, headers, queryParams, response, verb, requestOptions, isFormData, isFormUrlEncoded, isAngular, isExactOptionalPropertyTypes, hasSignal, hasSignalParam, isVue, paramsSerializer, paramsSerializerOptions }) {
+	const bodyOptions = getIsBodyVerb(verb) ? generateBodyOptions(body, isFormData, isFormUrlEncoded) : "";
+	const axiosOptions = generateAxiosOptions({
+		response,
+		queryParams: queryParams?.schema,
+		headers: headers?.schema,
+		requestOptions,
+		isExactOptionalPropertyTypes,
+		hasSignal,
+		hasSignalParam,
+		isVue: isVue ?? false,
+		isAngular: isAngular ?? false,
+		paramsSerializer,
+		paramsSerializerOptions
+	});
+	const options = axiosOptions ? `{${axiosOptions}}` : "";
+	if (verb === Verbs.DELETE) {
+		if (!bodyOptions) return `\n      \`${route}\`,${axiosOptions === "options" ? axiosOptions : options}\n    `;
+		return `\n      \`${route}\`,{${isAngular ? "body" : "data"}:${bodyOptions} ${axiosOptions === "options" ? `...${axiosOptions}` : axiosOptions}}\n    `;
+	}
+	return `\n      \`${route}\`,${getIsBodyVerb(verb) ? bodyOptions || "undefined," : ""}${axiosOptions === "options" ? axiosOptions : options}\n    `;
+}
+function generateBodyMutatorConfig(body, isFormData, isFormUrlEncoded) {
+	if (isFormData && body.formData) return ",\n       data: formData";
+	if (isFormUrlEncoded && body.formUrlEncoded) return ",\n       data: formUrlEncoded";
+	if (body.implementation) return `,\n      data: ${body.implementation}`;
+	return "";
+}
+function generateQueryParamsAxiosConfig(response, isVue, queryParams) {
+	if (!queryParams && !response.isBlob) return "";
+	let value = "";
+	if (queryParams) value += isVue ? ",\n        params: unref(params)" : ",\n        params";
+	if (response.isBlob) value += `,\n        responseType: 'blob'`;
+	return value;
+}
+function generateMutatorConfig({ route, body, headers, queryParams, response, verb, isFormData, isFormUrlEncoded, hasSignal, hasSignalParam = false, isExactOptionalPropertyTypes, isVue }) {
+	const bodyOptions = getIsBodyVerb(verb) ? generateBodyMutatorConfig(body, isFormData, isFormUrlEncoded) : "";
+	const queryParamsOptions = generateQueryParamsAxiosConfig(response, isVue ?? false, queryParams);
+	const headerOptions = body.contentType ? `,\n      headers: {'Content-Type': '${body.contentType}', ${headers ? "...headers" : ""}}` : headers ? ",\n      headers" : "";
+	const signalVar = hasSignalParam ? "querySignal" : "signal";
+	const signalProp = hasSignalParam ? `signal: ${signalVar}` : "signal";
+	return `{url: \`${route}\`, method: '${verb.toUpperCase()}'${headerOptions}${bodyOptions}${queryParamsOptions}${hasSignal ? `, ${isExactOptionalPropertyTypes ? `...(${signalVar} ? { ${signalProp} }: {})` : signalProp}` : ""}\n    }`;
+}
+function generateMutatorRequestOptions(requestOptions, hasSecondArgument) {
+	if (!hasSecondArgument) return isObject(requestOptions) ? `{${stringify(requestOptions)?.slice(1, -1)}}` : "";
+	if (isObject(requestOptions)) return `{${stringify(requestOptions)?.slice(1, -1)} ...options}`;
+	return "options";
+}
+function generateFormDataAndUrlEncodedFunction({ body, formData, formUrlEncoded, isFormData, isFormUrlEncoded }) {
+	if (isFormData && body.formData) {
+		if (formData) return `const formData = ${formData.name}(${body.implementation})`;
+		return body.formData;
+	}
+	if (isFormUrlEncoded && body.formUrlEncoded) {
+		if (formUrlEncoded) return `const formUrlEncoded = ${formUrlEncoded.name}(${body.implementation})`;
+		return body.formUrlEncoded;
+	}
+	return "";
+}
+
+//#endregion
+//#region src/generators/parameter-definition.ts
+function generateParameterDefinition(parameters = {}, context, suffix) {
+	if (isEmptyish(parameters)) return [];
+	const generatorSchemas = [];
+	for (const [parameterName, parameter] of entries(parameters)) {
+		const modelName = sanitize(`${pascal(parameterName)}${suffix}`, {
+			underscore: "_",
+			whitespace: "_",
+			dash: true,
+			es5keyword: true,
+			es5IdentifierName: true
+		});
+		const { schema, imports } = resolveRef(parameter, context);
+		if (schema.in !== "query" && schema.in !== "header") continue;
+		if (!schema.schema || imports.length > 0) {
+			generatorSchemas.push({
+				name: modelName,
+				imports: imports.length > 0 ? [{
+					name: imports[0].name,
+					schemaName: imports[0].schemaName
+				}] : [],
+				model: `export type ${modelName} = ${imports.length > 0 ? imports[0].name : "unknown"};\n`,
+				dependencies: imports.length > 0 ? [imports[0].name] : []
+			});
+			continue;
+		}
+		const resolvedObject = resolveObject({
+			schema: schema.schema,
+			propName: modelName,
+			context
+		});
+		const model = `${jsDoc(schema)}export type ${modelName} = ${resolvedObject.value || "unknown"};\n`;
+		generatorSchemas.push(...resolvedObject.schemas);
+		if (modelName !== resolvedObject.value) generatorSchemas.push({
+			name: modelName,
+			model,
+			imports: resolvedObject.imports,
+			dependencies: resolvedObject.dependencies
+		});
+	}
+	return generatorSchemas;
+}
+
+//#endregion
+//#region src/generators/interface.ts
+/**
+* Generate the interface string
+* An eslint comment is insert if the resulted object is empty
+*
+* @param name interface name
+* @param schema
+*/
+function generateInterface({ name, schema, context }) {
+	const scalar = getScalar({
+		item: schema,
+		name,
+		context
+	});
+	const isEmptyObject = scalar.value === "{}";
+	const shouldUseTypeAlias = context?.output.override?.useTypeOverInterfaces || scalar.useTypeAlias;
+	let model = "";
+	model += jsDoc(schema);
+	if (isEmptyObject) model += "// eslint-disable-next-line @typescript-eslint/no-empty-interface\n";
+	if (scalar.type === "object" && !shouldUseTypeAlias) if (scalar.type === "object" && schema.properties && Object.values(schema.properties).length > 0 && Object.values(schema.properties).every((item) => "const" in item)) {
+		const mappedScalarValue = scalar.value.replaceAll(";", ",").replaceAll("?:", ":");
+		model += `export const ${name}Value = ${mappedScalarValue} as const;\nexport type ${name} = typeof ${name}Value;\n`;
+	} else {
+		const blankInterfaceValue = scalar.value === "unknown" ? "{}" : scalar.value;
+		model += `export interface ${name} ${blankInterfaceValue}\n`;
+	}
+	else model += `export type ${name} = ${scalar.value};\n`;
+	const externalModulesImportsOnly = scalar.imports.filter((importName) => importName.alias ? importName.alias !== name : importName.name !== name);
+	return [...scalar.schemas, {
+		name,
+		model,
+		imports: externalModulesImportsOnly,
+		dependencies: scalar.dependencies,
+		schema
+	}];
+}
+
+//#endregion
+//#region src/generators/schema-definition.ts
+/**
+* Extract all types from #/components/schemas
+*/
+function generateSchemasDefinition(schemas = {}, context, suffix, filters) {
+	if (isEmptyish(schemas)) return [];
+	const transformedSchemas = resolveDiscriminators(schemas, context);
+	let generateSchemas = Object.entries(transformedSchemas);
+	if (filters?.schemas) {
+		const schemasFilters = filters.schemas;
+		const mode = filters.mode ?? "include";
+		generateSchemas = generateSchemas.filter(([schemaName]) => {
+			const isMatch = schemasFilters.some((filter$1) => isString(filter$1) ? filter$1 === schemaName : filter$1.test(schemaName));
+			return mode === "include" ? isMatch : !isMatch;
+		});
+	}
+	const models = generateSchemas.flatMap(([schemaName, schema]) => generateSchemaDefinitions(schemaName, schema, context, suffix));
+	const seenNames = /* @__PURE__ */ new Set();
+	const deduplicatedModels = [];
+	for (const schema of models) {
+		const normalizedName = conventionName(schema.name, context.output.namingConvention);
+		if (!seenNames.has(normalizedName)) {
+			seenNames.add(normalizedName);
+			deduplicatedModels.push(schema);
+		}
+	}
+	return sortSchemasByDependencies(deduplicatedModels);
+}
+function sortSchemasByDependencies(schemas) {
+	if (schemas.length === 0) return schemas;
+	const schemaNames = new Set(schemas.map((schema) => schema.name));
+	const dependencyMap = /* @__PURE__ */ new Map();
+	for (const schema of schemas) {
+		const dependencies = /* @__PURE__ */ new Set();
+		if (schema.dependencies) {
+			for (const dependencyName of schema.dependencies) if (dependencyName && schemaNames.has(dependencyName)) dependencies.add(dependencyName);
+		}
+		for (const imp of schema.imports) {
+			const dependencyName = imp.alias || imp.name;
+			if (dependencyName && schemaNames.has(dependencyName)) dependencies.add(dependencyName);
+		}
+		dependencyMap.set(schema.name, dependencies);
+	}
+	const sorted = [];
+	const temporary = /* @__PURE__ */ new Set();
+	const permanent = /* @__PURE__ */ new Set();
+	const schemaMap = new Map(schemas.map((schema) => [schema.name, schema]));
+	const visit = (name) => {
+		if (permanent.has(name)) return;
+		if (temporary.has(name)) return;
+		temporary.add(name);
+		const dependencies = dependencyMap.get(name);
+		if (dependencies) {
+			for (const dep of dependencies) if (dep !== name) visit(dep);
+		}
+		temporary.delete(name);
+		permanent.add(name);
+		const schema = schemaMap.get(name);
+		if (schema) sorted.push(schema);
+	};
+	for (const schema of schemas) visit(schema.name);
+	return sorted;
+}
+function shouldCreateInterface(schema) {
+	const isNullable = isArray(schema.type) && schema.type.includes("null");
+	return (!schema.type || schema.type === "object") && !schema.allOf && !schema.oneOf && !schema.anyOf && isDereferenced(schema) && !schema.enum && !isNullable;
+}
+function generateSchemaDefinitions(schemaName, schema, context, suffix) {
+	const sanitizedSchemaName = sanitize(`${pascal(schemaName)}${suffix}`, {
+		underscore: "_",
+		whitespace: "_",
+		dash: true,
+		es5keyword: true,
+		es5IdentifierName: true
+	});
+	if (typeof schema === "boolean") return [{
+		name: sanitizedSchemaName,
+		model: `export type ${sanitizedSchemaName} = ${schema ? "any" : "never"};\n`,
+		imports: [],
+		schema
+	}];
+	if (shouldCreateInterface(schema)) return generateInterface({
+		name: sanitizedSchemaName,
+		schema,
+		context
+	});
+	const resolvedValue = resolveValue({
+		schema,
+		name: sanitizedSchemaName,
+		context
+	});
+	let output = "";
+	let imports = resolvedValue.imports;
+	output += jsDoc(schema);
+	if (resolvedValue.isEnum && !resolvedValue.isRef) output += getEnum(resolvedValue.value, sanitizedSchemaName, getEnumNames(resolvedValue.originalSchema), context.output.override.enumGenerationType, getEnumDescriptions(resolvedValue.originalSchema), context.output.override.namingConvention?.enum);
+	else if (sanitizedSchemaName === resolvedValue.value && resolvedValue.isRef) {
+		const { schema: referredSchema } = resolveRef(schema, context);
+		if (!shouldCreateInterface(referredSchema)) {
+			const imp = resolvedValue.imports.find((imp$1) => imp$1.name === sanitizedSchemaName);
+			if (imp) {
+				const alias = `${resolvedValue.value}Bis`;
+				output += `export type ${sanitizedSchemaName} = ${alias};\n`;
+				imports = imports.map((imp$1) => imp$1.name === sanitizedSchemaName ? {
+					...imp$1,
+					alias
+				} : imp$1);
+				resolvedValue.dependencies = [imp.name];
+			} else output += `export type ${sanitizedSchemaName} = ${resolvedValue.value};\n`;
+		}
+	} else {
+		resolvedValue.schemas = resolvedValue.schemas.filter((schema$1) => {
+			if (schema$1.name !== sanitizedSchemaName) return true;
+			output += `${schema$1.model}\n`;
+			imports = imports.concat(schema$1.imports);
+			resolvedValue.dependencies.push(...schema$1.dependencies ?? []);
+			return false;
+		});
+		output += `export type ${sanitizedSchemaName} = ${resolvedValue.value};\n`;
+	}
+	return [...resolvedValue.schemas, {
+		name: sanitizedSchemaName,
+		model: output,
+		imports,
+		dependencies: resolvedValue.dependencies,
+		schema
+	}];
+}
+
+//#endregion
+//#region src/generators/verbs-options.ts
+async function generateVerbOptions({ verb, output, operation, route, pathRoute, verbParameters = [], context }) {
+	const { responses, requestBody, parameters: operationParameters, tags = [], deprecated, description, summary } = operation;
+	const operationId = getOperationId(operation, route, verb);
+	const overrideOperation = output.override.operations[operationId];
+	const overrideTag = Object.entries(output.override.tags).reduce((acc, [tag, options]) => tags.includes(tag) && options ? mergeDeep(acc, options) : acc, {});
+	const override = mergeDeep(mergeDeep(output.override, overrideTag), overrideOperation);
+	const overrideOperationName = overrideOperation?.operationName ?? output.override.operationName;
+	const operationName = overrideOperationName ? overrideOperationName(operation, route, verb) : sanitize(camel(operationId), { es5keyword: true });
+	const response = getResponse({
+		responses,
+		operationName,
+		context,
+		contentType: override.contentType
+	});
+	const body = getBody({
+		requestBody,
+		operationName,
+		context,
+		contentType: override.contentType
+	});
+	const parameters = getParameters({
+		parameters: [...verbParameters, ...operationParameters ?? []],
+		context
+	});
+	const queryParams = getQueryParams({
+		queryParams: parameters.query,
+		operationName,
+		context
+	});
+	const headers = output.headers ? getQueryParams({
+		queryParams: parameters.header,
+		operationName,
+		context,
+		suffix: "headers"
+	}) : void 0;
+	const params = getParams({
+		route,
+		pathParams: parameters.path,
+		operationId,
+		context,
+		output
+	});
+	const props = getProps({
+		body,
+		queryParams,
+		params,
+		headers,
+		operationName,
+		context
+	});
+	const mutator = await generateMutator({
+		output: output.target,
+		name: operationName,
+		mutator: override.mutator,
+		workspace: context.workspace,
+		tsconfig: context.output.tsconfig
+	});
+	const formData = !override.formData.disabled && body.formData ? await generateMutator({
+		output: output.target,
+		name: operationName,
+		mutator: override.formData.mutator,
+		workspace: context.workspace,
+		tsconfig: context.output.tsconfig
+	}) : void 0;
+	const formUrlEncoded = isString(override.formUrlEncoded) || isObject(override.formUrlEncoded) ? await generateMutator({
+		output: output.target,
+		name: operationName,
+		mutator: override.formUrlEncoded,
+		workspace: context.workspace,
+		tsconfig: context.output.tsconfig
+	}) : void 0;
+	const paramsSerializer = isString(override.paramsSerializer) || isObject(override.paramsSerializer) ? await generateMutator({
+		output: output.target,
+		name: "paramsSerializer",
+		mutator: override.paramsSerializer,
+		workspace: context.workspace,
+		tsconfig: context.output.tsconfig
+	}) : void 0;
+	const fetchReviver = isString(override.fetch.jsonReviver) || isObject(override.fetch.jsonReviver) ? await generateMutator({
+		output: output.target,
+		name: "fetchReviver",
+		mutator: override.fetch.jsonReviver,
+		workspace: context.workspace,
+		tsconfig: context.output.tsconfig
+	}) : void 0;
+	const doc = jsDoc({
+		description,
+		deprecated,
+		summary
+	});
+	const verbOption = {
+		verb,
+		tags,
+		route,
+		pathRoute,
+		summary: operation.summary,
+		operationId,
+		operationName,
+		response,
+		body,
+		headers,
+		queryParams,
+		params,
+		props,
+		mutator,
+		formData,
+		formUrlEncoded,
+		paramsSerializer,
+		fetchReviver,
+		override,
+		doc,
+		deprecated,
+		originalOperation: operation
+	};
+	const transformer = await dynamicImport(override.transformer, context.workspace);
+	return transformer ? transformer(verbOption) : verbOption;
+}
+function generateVerbsOptions({ verbs, input, output, route, pathRoute, context }) {
+	return asyncReduce(_filteredVerbs(verbs, input.filters), async (acc, [verb, operation]) => {
+		if (isVerb(verb)) {
+			const verbOptions = await generateVerbOptions({
+				verb,
+				output,
+				verbParameters: verbs.parameters,
+				route,
+				pathRoute,
+				operation,
+				context
+			});
+			acc.push(verbOptions);
+		}
+		return acc;
+	}, []);
+}
+function _filteredVerbs(verbs, filters) {
+	if (filters?.tags === void 0) return Object.entries(verbs);
+	const filterTags = filters.tags || [];
+	const filterMode = filters.mode ?? "include";
+	return Object.entries(verbs).filter(([, operation]) => {
+		const isMatch = (operation.tags ?? []).some((tag) => filterTags.some((filterTag) => filterTag instanceof RegExp ? filterTag.test(tag) : filterTag === tag));
+		return filterMode === "exclude" ? !isMatch : isMatch;
+	});
+}
+
+//#endregion
+//#region src/writers/schemas.ts
+/**
+* Patterns to detect operation-derived types (params, bodies, responses).
+* These types are auto-generated from OpenAPI operations, not from component schemas.
+*/
+const OPERATION_TYPE_PATTERNS = [
+	/Params$/i,
+	/Body$/,
+	/Body(One|Two|Three|Four|Five|Item)$/,
+	/Parameter$/i,
+	/Query$/i,
+	/Header$/i,
+	/Response\d*$/i,
+	/^[1-5]\d{2}$/,
+	/\d{3}(One|Two|Three|Four|Five|Item)$/i,
+	/^(get|post|put|patch|delete|head|options)[A-Z].*\d{3}$/
+];
+/**
+* Check if a schema name matches operation type patterns.
+*/
+function isOperationType(schemaName) {
+	return OPERATION_TYPE_PATTERNS.some((pattern) => pattern.test(schemaName));
+}
+/**
+* Split schemas into regular and operation types.
+*/
+function splitSchemasByType(schemas) {
+	const regularSchemas = [];
+	const operationSchemas = [];
+	for (const schema of schemas) if (isOperationType(schema.name)) operationSchemas.push(schema);
+	else regularSchemas.push(schema);
+	return {
+		regularSchemas,
+		operationSchemas
+	};
+}
+/**
+* Fix cross-directory imports when schemas reference other schemas in a different directory.
+* Updates import paths to use correct relative paths between directories.
+*/
+function fixSchemaImports(schemas, targetSchemaNames, fromPath, toPath, namingConvention) {
+	const relativePath = relativeSafe(fromPath, toPath);
+	for (const schema of schemas) schema.imports = schema.imports.map((imp) => {
+		if (targetSchemaNames.has(imp.name)) {
+			const fileName = conventionName(imp.name, namingConvention);
+			return {
+				...imp,
+				importPath: joinSafe(relativePath, fileName)
+			};
+		}
+		return imp;
+	});
+}
+/**
+* Fix imports in operation schemas that reference regular schemas.
+*/
+function fixCrossDirectoryImports(operationSchemas, regularSchemaNames, schemaPath, operationSchemaPath, namingConvention) {
+	fixSchemaImports(operationSchemas, regularSchemaNames, operationSchemaPath, schemaPath, namingConvention);
+}
+/**
+* Fix imports in regular schemas that reference operation schemas.
+*/
+function fixRegularSchemaImports(regularSchemas, operationSchemaNames, schemaPath, operationSchemaPath, namingConvention) {
+	fixSchemaImports(regularSchemas, operationSchemaNames, schemaPath, operationSchemaPath, namingConvention);
+}
+function getSchemaKey(schemaPath, schemaName, namingConvention, fileExtension) {
+	return getPath(schemaPath, conventionName(schemaName, namingConvention), fileExtension).toLowerCase().replaceAll("\\", "/");
+}
+function getSchemaGroups(schemaPath, schemas, namingConvention, fileExtension) {
+	return groupBy(schemas, (schema) => getSchemaKey(schemaPath, schema.name, namingConvention, fileExtension));
+}
+function getCanonicalMap(schemaGroups, schemaPath, namingConvention, fileExtension) {
+	const canonicalPathMap = /* @__PURE__ */ new Map();
+	for (const [key, groupSchemas] of Object.entries(schemaGroups)) {
+		const canonicalPath = getPath(schemaPath, conventionName(groupSchemas[0].name, namingConvention), fileExtension);
+		canonicalPathMap.set(key, {
+			importPath: canonicalPath,
+			name: groupSchemas[0].name
+		});
+	}
+	return canonicalPathMap;
+}
+function normalizeCanonicalImportPaths(schemas, canonicalPathMap, schemaPath, namingConvention, fileExtension) {
+	for (const schema of schemas) schema.imports = schema.imports.map((imp) => {
+		const resolvedImportKey = resolveImportKey(schemaPath, imp.importPath ?? `./${conventionName(imp.name, namingConvention)}`, fileExtension);
+		const canonical = canonicalPathMap.get(resolvedImportKey);
+		if (!canonical?.importPath) return imp;
+		const importPath = removeFileExtension(relativeSafe(schemaPath, canonical.importPath.replaceAll("\\", "/")), fileExtension);
+		return {
+			...imp,
+			importPath
+		};
+	});
+}
+function mergeSchemaGroup(schemas) {
+	const baseSchemaName = schemas[0].name;
+	const baseSchema = schemas[0].schema;
+	const mergedImports = [...new Map(schemas.flatMap((schema) => schema.imports).map((imp) => [JSON.stringify(imp), imp])).values()];
+	const mergedDependencies = [...new Set(schemas.flatMap((schema) => schema.dependencies ?? []))];
+	return {
+		name: baseSchemaName,
+		schema: baseSchema,
+		model: schemas.map((schema) => schema.model).join("\n"),
+		imports: mergedImports,
+		dependencies: mergedDependencies
+	};
+}
+function resolveImportKey(schemaPath, importPath, fileExtension) {
+	return join(schemaPath, `${importPath}${fileExtension}`).toLowerCase().replaceAll("\\", "/");
+}
+function removeFileExtension(path$2, fileExtension) {
+	return path$2.endsWith(fileExtension) ? path$2.slice(0, path$2.length - fileExtension.length) : path$2;
+}
+function getSchema({ schema: { imports, model }, target, header, namingConvention = NamingConvention.CAMEL_CASE }) {
+	let file = header;
+	file += generateImports({
+		imports: imports.filter((imp) => !model.includes(`type ${imp.alias || imp.name} =`) && !model.includes(`interface ${imp.alias || imp.name} {`)),
+		target,
+		namingConvention
+	});
+	file += imports.length > 0 ? "\n\n" : "\n";
+	file += model;
+	return file;
+}
+function getPath(path$2, name, fileExtension) {
+	return join(path$2, `/${name}${fileExtension}`);
+}
+function writeModelInline(acc, model) {
+	return acc + `${model}\n`;
+}
+function writeModelsInline(array) {
+	let acc = "";
+	for (const { model } of array) acc = writeModelInline(acc, model);
+	return acc;
+}
+async function writeSchema({ path: path$2, schema, target, namingConvention, fileExtension, header }) {
+	const name = conventionName(schema.name, namingConvention);
+	try {
+		await fs$1.outputFile(getPath(path$2, name, fileExtension), getSchema({
+			schema,
+			target,
+			header,
+			namingConvention
+		}));
+	} catch (error) {
+		throw new Error(`Oups... 🍻. An Error occurred while writing schema ${name} => ${error}`);
+	}
+}
+async function writeSchemas({ schemaPath, schemas, target, namingConvention, fileExtension, header, indexFiles }) {
+	const schemaGroups = getSchemaGroups(schemaPath, schemas, namingConvention, fileExtension);
+	normalizeCanonicalImportPaths(schemas, getCanonicalMap(schemaGroups, schemaPath, namingConvention, fileExtension), schemaPath, namingConvention, fileExtension);
+	for (const groupSchemas of Object.values(schemaGroups)) {
+		if (groupSchemas.length === 1) {
+			await writeSchema({
+				path: schemaPath,
+				schema: groupSchemas[0],
+				target,
+				namingConvention,
+				fileExtension,
+				header
+			});
+			continue;
+		}
+		await writeSchema({
+			path: schemaPath,
+			schema: mergeSchemaGroup(groupSchemas),
+			target,
+			namingConvention,
+			fileExtension,
+			header
+		});
+	}
+	if (indexFiles) {
+		const schemaFilePath = join(schemaPath, `/index${fileExtension}`);
+		await fs$1.ensureFile(schemaFilePath);
+		const ext = fileExtension.endsWith(".ts") ? fileExtension.slice(0, -3) : fileExtension;
+		const conventionNamesSet = new Set(Object.values(schemaGroups).map((group) => conventionName(group[0].name, namingConvention)));
+		try {
+			const currentExports = [...conventionNamesSet].map((schemaName) => `export * from './${schemaName}${ext}';`).toSorted((a, b) => a.localeCompare(b));
+			const existingExports = (await fs$1.readFile(schemaFilePath, "utf8")).match(/export\s+\*\s+from\s+['"][^'"]+['"]/g)?.map((statement) => {
+				const match = statement.match(/export\s+\*\s+from\s+['"]([^'"]+)['"]/);
+				if (!match) return void 0;
+				return `export * from '${match[1]}';`;
+			}).filter((statement) => Boolean(statement)) ?? [];
+			const fileContent = `${header}\n${[...new Set([...existingExports, ...currentExports])].toSorted((a, b) => a.localeCompare(b)).join("\n")}`;
+			await fs$1.writeFile(schemaFilePath, fileContent, { encoding: "utf8" });
+		} catch (error) {
+			throw new Error(`Oups... 🍻. An Error occurred while writing schema index file ${schemaFilePath} => ${error}`);
+		}
+	}
+}
+
+//#endregion
+//#region src/writers/generate-imports-for-builder.ts
+function generateImportsForBuilder(output, imports, relativeSchemasPath) {
+	const isZodSchemaOutput = isObject(output.schemas) && output.schemas.type === "zod";
+	if (!output.indexFiles) return uniqueBy(imports, (x) => x.name).map((i) => {
+		const name = conventionName(i.schemaName || i.name, output.namingConvention);
+		const suffix = isZodSchemaOutput ? ".zod" : "";
+		const importExtension = output.fileExtension?.replace(/\.ts$/, "") || "";
+		return {
+			exports: isZodSchemaOutput ? [{
+				...i,
+				values: true
+			}] : [i],
+			dependency: joinSafe(relativeSchemasPath, `${name}${suffix}${importExtension}`)
+		};
+	});
+	else if (isZodSchemaOutput) return [{
+		exports: imports.map((i) => ({
+			...i,
+			values: true
+		})),
+		dependency: joinSafe(relativeSchemasPath, "index.zod")
+	}];
+	else return [{
+		exports: imports,
+		dependency: relativeSchemasPath
+	}];
+}
+
+//#endregion
+//#region src/writers/target.ts
+function generateTarget(builder, options) {
+	const operationNames = Object.values(builder.operations).map(({ operationName }) => operationName);
+	const isAngularClient = options?.client === OutputClient.ANGULAR;
+	const titles = builder.title({
+		outputClient: options.client,
+		title: pascal(builder.info.title),
+		customTitleFunc: options.override.title,
+		output: options
+	});
+	const target = Object.values(builder.operations).reduce((acc, operation, index, arr) => {
+		acc.imports.push(...operation.imports);
+		acc.importsMock.push(...operation.importsMock);
+		acc.implementation += operation.implementation + "\n";
+		acc.implementationMock.function += operation.implementationMock.function;
+		acc.implementationMock.handler += operation.implementationMock.handler;
+		const handlerNameSeparator = acc.implementationMock.handlerName.length > 0 ? ",\n  " : "  ";
+		acc.implementationMock.handlerName += handlerNameSeparator + operation.implementationMock.handlerName + "()";
+		if (operation.mutator) acc.mutators.push(operation.mutator);
+		if (operation.formData) acc.formData.push(operation.formData);
+		if (operation.formUrlEncoded) acc.formUrlEncoded.push(operation.formUrlEncoded);
+		if (operation.paramsSerializer) acc.paramsSerializer.push(operation.paramsSerializer);
+		if (operation.clientMutators) acc.clientMutators.push(...operation.clientMutators);
+		if (operation.fetchReviver) acc.fetchReviver.push(operation.fetchReviver);
+		if (index === arr.length - 1) {
+			const isMutator = acc.mutators.some((mutator) => isAngularClient ? mutator.hasThirdArg : mutator.hasSecondArg);
+			const hasAwaitedType = compareVersions(options.packageJson?.dependencies?.typescript ?? options.packageJson?.devDependencies?.typescript ?? "4.4.0", "4.5.0");
+			const header = builder.header({
+				outputClient: options.client,
+				isRequestOptions: options.override.requestOptions !== false,
+				isMutator,
+				isGlobalMutator: !!options.override.mutator,
+				provideIn: options.override.angular.provideIn,
+				hasAwaitedType,
+				titles,
+				output: options,
+				verbOptions: builder.verbOptions,
+				clientImplementation: acc.implementation
+			});
+			acc.implementation = header.implementation + acc.implementation;
+			acc.implementationMock.handler = acc.implementationMock.handler + header.implementationMock + acc.implementationMock.handlerName;
+			const footer = builder.footer({
+				outputClient: options?.client,
+				operationNames,
+				hasMutator: acc.mutators.length > 0,
+				hasAwaitedType,
+				titles,
+				output: options
+			});
+			acc.implementation += footer.implementation;
+			acc.implementationMock.handler += footer.implementationMock;
+		}
+		return acc;
+	}, {
+		imports: [],
+		implementation: "",
+		implementationMock: {
+			function: "",
+			handler: "",
+			handlerName: ""
+		},
+		importsMock: [],
+		mutators: [],
+		clientMutators: [],
+		formData: [],
+		formUrlEncoded: [],
+		paramsSerializer: [],
+		fetchReviver: []
+	});
+	return {
+		...target,
+		implementationMock: target.implementationMock.function + target.implementationMock.handler
+	};
+}
+
+//#endregion
+//#region src/writers/types.ts
+function getOrvalGeneratedTypes() {
+	return `
+// https://stackoverflow.com/questions/49579094/typescript-conditional-types-filter-out-readonly-properties-pick-only-requir/49579497#49579497
+type IfEquals<X, Y, A = X, B = never> = (<T>() => T extends X ? 1 : 2) extends <
+T,
+>() => T extends Y ? 1 : 2
+? A
+: B;
+
+type WritableKeys<T> = {
+[P in keyof T]-?: IfEquals<
+  { [Q in P]: T[P] },
+  { -readonly [Q in P]: T[P] },
+  P
+>;
+}[keyof T];
+
+type UnionToIntersection<U> =
+  (U extends any ? (k: U)=>void : never) extends ((k: infer I)=>void) ? I : never;
+type DistributeReadOnlyOverUnions<T> = T extends any ? NonReadonly<T> : never;
+
+type Writable<T> = Pick<T, WritableKeys<T>>;
+type NonReadonly<T> = [T] extends [UnionToIntersection<T>] ? {
+  [P in keyof Writable<T>]: T[P] extends object
+    ? NonReadonly<NonNullable<T[P]>>
+    : T[P];
+} : DistributeReadOnlyOverUnions<T>;
+`;
+}
+function getTypedResponse() {
+	return `
+interface TypedResponse<T> extends Response {
+  json(): Promise<T>;
+}
+`;
+}
+
+//#endregion
+//#region src/writers/single-mode.ts
+async function writeSingleMode({ builder, output, projectName, header, needSchema }) {
+	try {
+		const { path: path$2, dirname: dirname$1 } = getFileInfo(output.target, {
+			backupFilename: conventionName(builder.info.title, output.namingConvention),
+			extension: output.fileExtension
+		});
+		const { imports, importsMock, implementation, implementationMock, mutators, clientMutators, formData, formUrlEncoded, paramsSerializer, fetchReviver } = generateTarget(builder, output);
+		let data = header;
+		const schemasPath = output.schemas ? relativeSafe(dirname$1, getFileInfo(typeof output.schemas === "string" ? output.schemas : output.schemas.path, { extension: output.fileExtension }).dirname) : void 0;
+		const isAllowSyntheticDefaultImports = isSyntheticDefaultImportsAllow(output.tsconfig);
+		const importsForBuilder = schemasPath ? generateImportsForBuilder(output, imports.filter((imp) => !importsMock.some((impMock) => imp.name === impMock.name)), schemasPath) : [];
+		data += builder.imports({
+			client: output.client,
+			implementation,
+			imports: importsForBuilder,
+			projectName,
+			hasSchemaDir: !!output.schemas,
+			isAllowSyntheticDefaultImports,
+			hasGlobalMutator: !!output.override.mutator,
+			hasTagsMutator: Object.values(output.override.tags).some((tag) => !!tag?.mutator),
+			hasParamsSerializerOptions: !!output.override.paramsSerializerOptions,
+			packageJson: output.packageJson,
+			output
+		});
+		if (output.mock) {
+			const importsMockForBuilder = schemasPath ? generateImportsForBuilder(output, importsMock, schemasPath) : [];
+			data += builder.importsMock({
+				implementation: implementationMock,
+				imports: importsMockForBuilder,
+				projectName,
+				hasSchemaDir: !!output.schemas,
+				isAllowSyntheticDefaultImports,
+				options: isFunction(output.mock) ? void 0 : output.mock
+			});
+		}
+		if (mutators) data += generateMutatorImports({
+			mutators,
+			implementation
+		});
+		if (clientMutators) data += generateMutatorImports({ mutators: clientMutators });
+		if (formData) data += generateMutatorImports({ mutators: formData });
+		if (formUrlEncoded) data += generateMutatorImports({ mutators: formUrlEncoded });
+		if (paramsSerializer) data += generateMutatorImports({ mutators: paramsSerializer });
+		if (fetchReviver) data += generateMutatorImports({ mutators: fetchReviver });
+		if (implementation.includes("NonReadonly<")) {
+			data += getOrvalGeneratedTypes();
+			data += "\n";
+		}
+		if (implementation.includes("TypedResponse<")) {
+			data += getTypedResponse();
+			data += "\n";
+		}
+		if (!output.schemas && needSchema) data += generateModelsInline(builder.schemas);
+		data += `${implementation.trim()}\n`;
+		if (output.mock) {
+			data += "\n\n";
+			data += implementationMock;
+		}
+		await fs$1.outputFile(path$2, data);
+		return [path$2];
+	} catch (error) {
+		const errorMsg = error instanceof Error ? error.message : "unknown error";
+		throw new Error(`Oups... 🍻. An Error occurred while writing file => ${errorMsg}`);
+	}
+}
+
+//#endregion
+//#region src/writers/split-mode.ts
+async function writeSplitMode({ builder, output, projectName, header, needSchema }) {
+	try {
+		const { filename, dirname: dirname$1, extension } = getFileInfo(output.target, {
+			backupFilename: conventionName(builder.info.title, output.namingConvention),
+			extension: output.fileExtension
+		});
+		const { imports, implementation, implementationMock, importsMock, mutators, clientMutators, formData, formUrlEncoded, paramsSerializer, fetchReviver } = generateTarget(builder, output);
+		let implementationData = header;
+		let mockData = header;
+		const relativeSchemasPath = output.schemas ? relativeSafe(dirname$1, getFileInfo(typeof output.schemas === "string" ? output.schemas : output.schemas.path, { extension: output.fileExtension }).dirname) : "./" + filename + ".schemas";
+		const isAllowSyntheticDefaultImports = isSyntheticDefaultImportsAllow(output.tsconfig);
+		const importsForBuilder = generateImportsForBuilder(output, imports, relativeSchemasPath);
+		implementationData += builder.imports({
+			client: output.client,
+			implementation,
+			imports: importsForBuilder,
+			projectName,
+			hasSchemaDir: !!output.schemas,
+			isAllowSyntheticDefaultImports,
+			hasGlobalMutator: !!output.override.mutator,
+			hasTagsMutator: Object.values(output.override.tags).some((tag) => !!tag?.mutator),
+			hasParamsSerializerOptions: !!output.override.paramsSerializerOptions,
+			packageJson: output.packageJson,
+			output
+		});
+		const importsMockForBuilder = generateImportsForBuilder(output, importsMock, relativeSchemasPath);
+		mockData += builder.importsMock({
+			implementation: implementationMock,
+			imports: importsMockForBuilder,
+			projectName,
+			hasSchemaDir: !!output.schemas,
+			isAllowSyntheticDefaultImports,
+			options: isFunction(output.mock) ? void 0 : output.mock
+		});
+		const schemasPath = output.schemas ? void 0 : join(dirname$1, filename + ".schemas" + extension);
+		if (schemasPath && needSchema) {
+			const schemasData = header + generateModelsInline(builder.schemas);
+			await fs$1.outputFile(join(dirname$1, filename + ".schemas" + extension), schemasData);
+		}
+		if (mutators) implementationData += generateMutatorImports({
+			mutators,
+			implementation
+		});
+		if (clientMutators) implementationData += generateMutatorImports({ mutators: clientMutators });
+		if (formData) implementationData += generateMutatorImports({ mutators: formData });
+		if (formUrlEncoded) implementationData += generateMutatorImports({ mutators: formUrlEncoded });
+		if (paramsSerializer) implementationData += generateMutatorImports({ mutators: paramsSerializer });
+		if (fetchReviver) implementationData += generateMutatorImports({ mutators: fetchReviver });
+		if (implementation.includes("NonReadonly<")) {
+			implementationData += getOrvalGeneratedTypes();
+			implementationData += "\n";
+		}
+		if (implementation.includes("TypedResponse<")) {
+			implementationData += getTypedResponse();
+			implementationData += "\n";
+		}
+		implementationData += `\n${implementation}`;
+		mockData += `\n${implementationMock}`;
+		const implementationFilename = filename + (OutputClient.ANGULAR === output.client ? ".service" : "") + extension;
+		const implementationPath = join(dirname$1, implementationFilename);
+		await fs$1.outputFile(join(dirname$1, implementationFilename), implementationData);
+		const mockPath = output.mock ? join(dirname$1, filename + "." + getMockFileExtensionByTypeName(output.mock) + extension) : void 0;
+		if (mockPath) await fs$1.outputFile(mockPath, mockData);
+		return [
+			implementationPath,
+			...schemasPath ? [schemasPath] : [],
+			...mockPath ? [mockPath] : []
+		];
+	} catch (error) {
+		throw new Error(`Oups... 🍻. An Error occurred while splitting => ${error}`);
+	}
+}
+
+//#endregion
+//#region src/writers/target-tags.ts
+function addDefaultTagIfEmpty(operation) {
+	return {
+		...operation,
+		tags: operation.tags.length > 0 ? operation.tags : ["default"]
+	};
+}
+function generateTargetTags(currentAcc, operation) {
+	const tag = kebab(operation.tags[0]);
+	const currentOperation = currentAcc[tag];
+	if (!currentOperation) {
+		currentAcc[tag] = {
+			imports: operation.imports,
+			importsMock: operation.importsMock,
+			mutators: operation.mutator ? [operation.mutator] : [],
+			clientMutators: operation.clientMutators ?? [],
+			formData: operation.formData ? [operation.formData] : [],
+			formUrlEncoded: operation.formUrlEncoded ? [operation.formUrlEncoded] : [],
+			paramsSerializer: operation.paramsSerializer ? [operation.paramsSerializer] : [],
+			fetchReviver: operation.fetchReviver ? [operation.fetchReviver] : [],
+			implementation: operation.implementation,
+			implementationMock: {
+				function: operation.implementationMock.function,
+				handler: operation.implementationMock.handler,
+				handlerName: "  " + operation.implementationMock.handlerName + "()"
+			}
+		};
+		return currentAcc;
+	}
+	currentAcc[tag] = {
+		implementation: currentOperation.implementation + operation.implementation,
+		imports: [...currentOperation.imports, ...operation.imports],
+		importsMock: [...currentOperation.importsMock, ...operation.importsMock],
+		implementationMock: {
+			function: currentOperation.implementationMock.function + operation.implementationMock.function,
+			handler: currentOperation.implementationMock.handler + operation.implementationMock.handler,
+			handlerName: currentOperation.implementationMock.handlerName + ",\n  " + operation.implementationMock.handlerName + "()"
+		},
+		mutators: operation.mutator ? [...currentOperation.mutators ?? [], operation.mutator] : currentOperation.mutators,
+		clientMutators: operation.clientMutators ? [...currentOperation.clientMutators ?? [], ...operation.clientMutators] : currentOperation.clientMutators,
+		formData: operation.formData ? [...currentOperation.formData ?? [], operation.formData] : currentOperation.formData,
+		formUrlEncoded: operation.formUrlEncoded ? [...currentOperation.formUrlEncoded ?? [], operation.formUrlEncoded] : currentOperation.formUrlEncoded,
+		paramsSerializer: operation.paramsSerializer ? [...currentOperation.paramsSerializer ?? [], operation.paramsSerializer] : currentOperation.paramsSerializer,
+		fetchReviver: operation.fetchReviver ? [...currentOperation.fetchReviver ?? [], operation.fetchReviver] : currentOperation.fetchReviver
+	};
+	return currentAcc;
+}
+function generateTargetForTags(builder, options) {
+	const isAngularClient = options.client === OutputClient.ANGULAR;
+	const allTargetTags = Object.values(builder.operations).map((operation) => addDefaultTagIfEmpty(operation)).reduce((acc, operation, index, arr) => {
+		const targetTags = generateTargetTags(acc, operation);
+		if (index === arr.length - 1) return Object.entries(targetTags).reduce((acc$1, [tag, target]) => {
+			const isMutator = !!target.mutators?.some((mutator) => isAngularClient ? mutator.hasThirdArg : mutator.hasSecondArg);
+			const operationNames = Object.values(builder.operations).filter(({ tags }) => tags.map((tag$1) => kebab(tag$1)).indexOf(kebab(tag)) === 0).map(({ operationName }) => operationName);
+			const hasAwaitedType = compareVersions(options.packageJson?.dependencies?.typescript ?? options.packageJson?.devDependencies?.typescript ?? "4.4.0", "4.5.0");
+			const titles = builder.title({
+				outputClient: options.client,
+				title: pascal(tag),
+				customTitleFunc: options.override.title,
+				output: options
+			});
+			const footer = builder.footer({
+				outputClient: options?.client,
+				operationNames,
+				hasMutator: !!target.mutators?.length,
+				hasAwaitedType,
+				titles,
+				output: options
+			});
+			const header = builder.header({
+				outputClient: options.client,
+				isRequestOptions: options.override.requestOptions !== false,
+				isMutator,
+				isGlobalMutator: !!options.override.mutator,
+				provideIn: options.override.angular.provideIn,
+				hasAwaitedType,
+				titles,
+				output: options,
+				verbOptions: builder.verbOptions,
+				tag,
+				clientImplementation: target.implementation
+			});
+			acc$1[tag] = {
+				implementation: header.implementation + target.implementation + footer.implementation,
+				implementationMock: {
+					function: target.implementationMock.function,
+					handler: target.implementationMock.handler + header.implementationMock + target.implementationMock.handlerName + footer.implementationMock,
+					handlerName: target.implementationMock.handlerName
+				},
+				imports: target.imports,
+				importsMock: target.importsMock,
+				mutators: target.mutators,
+				clientMutators: target.clientMutators,
+				formData: target.formData,
+				formUrlEncoded: target.formUrlEncoded,
+				paramsSerializer: target.paramsSerializer,
+				fetchReviver: target.fetchReviver
+			};
+			return acc$1;
+		}, {});
+		return targetTags;
+	}, {});
+	return Object.entries(allTargetTags).reduce((acc, [tag, target]) => {
+		acc[tag] = {
+			...target,
+			implementationMock: target.implementationMock.function + target.implementationMock.handler
+		};
+		return acc;
+	}, {});
+}
+
+//#endregion
+//#region src/writers/split-tags-mode.ts
+async function writeSplitTagsMode({ builder, output, projectName, header, needSchema }) {
+	const { filename, dirname: dirname$1, extension } = getFileInfo(output.target, {
+		backupFilename: conventionName(builder.info.title, output.namingConvention),
+		extension: output.fileExtension
+	});
+	const target = generateTargetForTags(builder, output);
+	const isAllowSyntheticDefaultImports = isSyntheticDefaultImportsAllow(output.tsconfig);
+	const indexFilePath = output.mock && !isFunction(output.mock) && output.mock.indexMockFiles ? join(dirname$1, "index." + getMockFileExtensionByTypeName(output.mock) + extension) : void 0;
+	if (indexFilePath) await fs$1.outputFile(indexFilePath, "");
+	return (await Promise.all(Object.entries(target).map(async ([tag, target$1]) => {
+		try {
+			const { imports, implementation, implementationMock, importsMock, mutators, clientMutators, formData, fetchReviver, formUrlEncoded, paramsSerializer } = target$1;
+			let implementationData = header;
+			let mockData = header;
+			const relativeSchemasPath = output.schemas ? "../" + relativeSafe(dirname$1, getFileInfo(typeof output.schemas === "string" ? output.schemas : output.schemas.path, { extension: output.fileExtension }).dirname) : "../" + filename + ".schemas";
+			const importsForBuilder = generateImportsForBuilder(output, imports, relativeSchemasPath);
+			implementationData += builder.imports({
+				client: output.client,
+				implementation,
+				imports: importsForBuilder,
+				projectName,
+				hasSchemaDir: !!output.schemas,
+				isAllowSyntheticDefaultImports,
+				hasGlobalMutator: !!output.override.mutator,
+				hasTagsMutator: Object.values(output.override.tags).some((tag$1) => !!tag$1?.mutator),
+				hasParamsSerializerOptions: !!output.override.paramsSerializerOptions,
+				packageJson: output.packageJson,
+				output
+			});
+			const importsMockForBuilder = generateImportsForBuilder(output, importsMock, relativeSchemasPath);
+			mockData += builder.importsMock({
+				implementation: implementationMock,
+				imports: importsMockForBuilder,
+				projectName,
+				hasSchemaDir: !!output.schemas,
+				isAllowSyntheticDefaultImports,
+				options: isFunction(output.mock) ? void 0 : output.mock
+			});
+			const schemasPath = output.schemas ? void 0 : join(dirname$1, filename + ".schemas" + extension);
+			if (schemasPath && needSchema) {
+				const schemasData = header + generateModelsInline(builder.schemas);
+				await fs$1.outputFile(schemasPath, schemasData);
+			}
+			if (mutators) implementationData += generateMutatorImports({
+				mutators,
+				implementation,
+				oneMore: true
+			});
+			if (clientMutators) implementationData += generateMutatorImports({
+				mutators: clientMutators,
+				oneMore: true
+			});
+			if (formData) implementationData += generateMutatorImports({
+				mutators: formData,
+				oneMore: true
+			});
+			if (formUrlEncoded) implementationData += generateMutatorImports({
+				mutators: formUrlEncoded,
+				oneMore: true
+			});
+			if (paramsSerializer) implementationData += generateMutatorImports({
+				mutators: paramsSerializer,
+				oneMore: true
+			});
+			if (fetchReviver) implementationData += generateMutatorImports({
+				mutators: fetchReviver,
+				oneMore: true
+			});
+			if (implementation.includes("NonReadonly<")) {
+				implementationData += getOrvalGeneratedTypes();
+				implementationData += "\n";
+			}
+			if (implementation.includes("TypedResponse<")) {
+				implementationData += getTypedResponse();
+				implementationData += "\n";
+			}
+			implementationData += `\n${implementation}`;
+			mockData += `\n${implementationMock}`;
+			const implementationFilename = tag + (OutputClient.ANGULAR === output.client ? ".service" : "") + extension;
+			const implementationPath = join(dirname$1, tag, implementationFilename);
+			await fs$1.outputFile(implementationPath, implementationData);
+			const mockPath = output.mock ? join(dirname$1, tag, tag + "." + getMockFileExtensionByTypeName(output.mock) + extension) : void 0;
+			if (mockPath) {
+				await fs$1.outputFile(mockPath, mockData);
+				if (indexFilePath) {
+					const localMockPath = joinSafe("./", tag, tag + "." + getMockFileExtensionByTypeName(output.mock));
+					fs$1.appendFile(indexFilePath, `export { get${pascal(tag)}Mock } from '${localMockPath}'\n`);
+				}
+			}
+			return [
+				implementationPath,
+				...schemasPath ? [schemasPath] : [],
+				...mockPath ? [mockPath] : []
+			];
+		} catch (error) {
+			throw new Error(`Oups... 🍻. An Error occurred while splitting tag ${tag} => ${error}`);
+		}
+	}))).flat();
+}
+
+//#endregion
+//#region src/writers/tags-mode.ts
+async function writeTagsMode({ builder, output, projectName, header, needSchema }) {
+	const { filename, dirname: dirname$1, extension } = getFileInfo(output.target, {
+		backupFilename: conventionName(builder.info.title, output.namingConvention),
+		extension: output.fileExtension
+	});
+	const target = generateTargetForTags(builder, output);
+	const isAllowSyntheticDefaultImports = isSyntheticDefaultImportsAllow(output.tsconfig);
+	return (await Promise.all(Object.entries(target).map(async ([tag, target$1]) => {
+		try {
+			const { imports, implementation, implementationMock, importsMock, mutators, clientMutators, formData, formUrlEncoded, fetchReviver, paramsSerializer } = target$1;
+			let data = header;
+			const schemasPathRelative = output.schemas ? relativeSafe(dirname$1, getFileInfo(typeof output.schemas === "string" ? output.schemas : output.schemas.path, { extension: output.fileExtension }).dirname) : "./" + filename + ".schemas";
+			const importsForBuilder = generateImportsForBuilder(output, imports.filter((imp) => !importsMock.some((impMock) => imp.name === impMock.name)), schemasPathRelative);
+			data += builder.imports({
+				client: output.client,
+				implementation,
+				imports: importsForBuilder,
+				projectName,
+				hasSchemaDir: !!output.schemas,
+				isAllowSyntheticDefaultImports,
+				hasGlobalMutator: !!output.override.mutator,
+				hasTagsMutator: Object.values(output.override.tags).some((tag$1) => !!tag$1?.mutator),
+				hasParamsSerializerOptions: !!output.override.paramsSerializerOptions,
+				packageJson: output.packageJson,
+				output
+			});
+			if (output.mock) {
+				const importsMockForBuilder = generateImportsForBuilder(output, importsMock, schemasPathRelative);
+				data += builder.importsMock({
+					implementation: implementationMock,
+					imports: importsMockForBuilder,
+					projectName,
+					hasSchemaDir: !!output.schemas,
+					isAllowSyntheticDefaultImports,
+					options: isFunction(output.mock) ? void 0 : output.mock
+				});
+			}
+			const schemasPath = output.schemas ? void 0 : join(dirname$1, filename + ".schemas" + extension);
+			if (schemasPath && needSchema) {
+				const schemasData = header + generateModelsInline(builder.schemas);
+				await fs$1.outputFile(schemasPath, schemasData);
+			}
+			if (mutators) data += generateMutatorImports({
+				mutators,
+				implementation
+			});
+			if (clientMutators) data += generateMutatorImports({ mutators: clientMutators });
+			if (formData) data += generateMutatorImports({ mutators: formData });
+			if (formUrlEncoded) data += generateMutatorImports({ mutators: formUrlEncoded });
+			if (paramsSerializer) data += generateMutatorImports({ mutators: paramsSerializer });
+			if (fetchReviver) data += generateMutatorImports({ mutators: fetchReviver });
+			data += "\n\n";
+			if (implementation.includes("NonReadonly<")) {
+				data += getOrvalGeneratedTypes();
+				data += "\n";
+			}
+			if (implementation.includes("TypedResponse<")) {
+				data += getTypedResponse();
+				data += "\n";
+			}
+			data += implementation;
+			if (output.mock) {
+				data += "\n\n";
+				data += implementationMock;
+			}
+			const implementationPath = join(dirname$1, `${kebab(tag)}${extension}`);
+			await fs$1.outputFile(implementationPath, data);
+			return [implementationPath, ...schemasPath ? [schemasPath] : []];
+		} catch (error) {
+			throw new Error(`Oups... 🍻. An Error occurred while writing tag ${tag} => ${error}`);
+		}
+	}))).flat();
+}
+
+//#endregion
+export { BODY_TYPE_NAME, EnumGeneration, ErrorWithTag, FormDataArrayHandling, GetterPropType, LogLevels, NamingConvention, OutputClient, OutputHttpClient, OutputMockType, OutputMode, PropertySortOrder, RefComponentSuffix, SchemaType, TEMPLATE_TAG_REGEX, URL_REGEX, VERBS_WITH_BODY, Verbs, _filteredVerbs, addDependency, asyncReduce, camel, combineSchemas, compareVersions, conventionName, count, createDebugger, createLogger, createSuccessMessage, createTypeAliasIfNeeded, dedupeUnionType, dynamicImport, escape, fixCrossDirectoryImports, fixRegularSchemaImports, generalJSTypes, generalJSTypesWithArray, generateAxiosOptions, generateBodyMutatorConfig, generateBodyOptions, generateComponentDefinition, generateDependencyImports, generateFormDataAndUrlEncodedFunction, generateImports, generateModelInline, generateModelsInline, generateMutator, generateMutatorConfig, generateMutatorImports, generateMutatorRequestOptions, generateOptions, generateParameterDefinition, generateQueryParamsAxiosConfig, generateSchemasDefinition, generateTarget, generateTargetForTags, generateVerbImports, generateVerbOptions, generateVerbsOptions, getArray, getBody, getCombinedEnumValue, getDefaultContentType, getEnum, getEnumDescriptions, getEnumImplementation, getEnumNames, getEnumUnionFromSchema, getExtension, getFileInfo, getFormDataFieldFileType, getFullRoute, getIsBodyVerb, getKey, getMockFileExtensionByTypeName, getNumberWord, getObject, getOperationId, getOrvalGeneratedTypes, getParameters, getParams, getParamsInPath, getPropertySafe, getProps, getQueryParams, getRefInfo, getResReqTypes, getResponse, getResponseTypeCategory, getRoute, getRouteAsArray, getScalar, getTypedResponse, isBinaryContentType, isBoolean, isDirectory, isFunction, isModule, isNull, isNumber, isNumeric, isObject, isReference, isSchema, isString, isSyntheticDefaultImportsAllow, isUndefined, isUrl, isVerb, jsDoc, jsStringEscape, kebab, keyValuePairsToJsDoc, log, logError, mergeDeep, mismatchArgsMessage, pascal, removeFilesAndEmptyFolders, resolveDiscriminators, resolveExampleRefs, resolveObject, resolveRef, resolveValue, sanitize, snake, sortByPriority, splitSchemasByType, startMessage, stringify, toObjectString, path_exports as upath, upper, writeModelInline, writeModelsInline, writeSchema, writeSchemas, writeSingleMode, writeSplitMode, writeSplitTagsMode, writeTagsMode };
+//# sourceMappingURL=index.mjs.map

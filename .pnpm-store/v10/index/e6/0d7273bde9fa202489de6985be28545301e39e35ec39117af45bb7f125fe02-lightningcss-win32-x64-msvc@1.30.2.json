@@ -1,0 +1,31 @@
+{
+  "name": "lightningcss-win32-x64-msvc",
+  "version": "1.30.2",
+  "requiresBuild": false,
+  "files": {
+    "LICENSE": {
+      "checkedAt": 1771497264776,
+      "integrity": "sha512-/RQnDGWjLi6nPC/9SZotdtT9WsC3UcXe4N1rZO+ZdaplSU2YFwRg0rJaXcb6JfQ/uw5dxZ1S4juvInkrPBh2Eg==",
+      "mode": 420,
+      "size": 15648
+    },
+    "package.json": {
+      "checkedAt": 1771497264824,
+      "integrity": "sha512-Jxc3QuF3MZnEOJ5/1PF4Sg9u5OtKUIzIeUuKp2rLs/6cl9o989u0XnEcSp7o95sCIBRucC9aH+BdduzsECSNKQ==",
+      "mode": 420,
+      "size": 719
+    },
+    "README.md": {
+      "checkedAt": 1771497264831,
+      "integrity": "sha512-hfz2xwTdszLbUrHHlEksJ/g2uEL0iRGzGoE1RK6528wMqvxwl47i9a5bEZwP+3aEY+pTv7lBYDEpCCy8qlVZjA==",
+      "mode": 420,
+      "size": 121
+    },
+    "lightningcss.win32-x64-msvc.node": {
+      "checkedAt": 1771497265026,
+      "integrity": "sha512-RDPGSIZaF6Ek9ouI42L6XPknp0rVDDIrbYURlnw3f1xAM9tlj9ZzQBKodA7+m1nsAc8cLmD2XbiXQS606Lf/iA==",
+      "mode": 420,
+      "size": 9011712
+    }
+  }
+}

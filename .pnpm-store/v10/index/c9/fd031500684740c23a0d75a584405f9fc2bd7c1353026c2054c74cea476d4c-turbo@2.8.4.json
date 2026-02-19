@@ -1,0 +1,37 @@
+{
+  "name": "turbo",
+  "version": "2.8.4",
+  "requiresBuild": false,
+  "files": {
+    "bin/turbo": {
+      "checkedAt": 1771497271122,
+      "integrity": "sha512-yUVRzjnK31AwliL32YPGnBw3obHHjr2mpgNYCR9pdBlT4wlDzZpWEkZCnbupB8Pw6WvvQHqatohX6KjR39s4lg==",
+      "mode": 493,
+      "size": 10723
+    },
+    "package.json": {
+      "checkedAt": 1771497271125,
+      "integrity": "sha512-szMbOixgi+IsAKqMyC28ju8HUVGDrvR2cYrKMVKkO0O+++Jgc0t+ov8i/aVy6AWsWe6V+esiuFROKgKEY5GM3g==",
+      "mode": 420,
+      "size": 729
+    },
+    "schema.json": {
+      "checkedAt": 1771497271157,
+      "integrity": "sha512-4qH2BRbzhfz3bpf/dyIb1m4JmEP12jwfl30PSbiFTjiZAzpvzoESEagftXfhwOQzmM1jsWPZ1aGJt4IWv01kUQ==",
+      "mode": 420,
+      "size": 24221
+    },
+    "README.md": {
+      "checkedAt": 1771497271163,
+      "integrity": "sha512-zZulh4/Jybp0Rbq9ewuZh+rNoayF3ylIl7uX8eyq6/SMNLu0ZwRHUkNhcfDrNJeP3Qo1W3SatGW6ukIlIoJn1g==",
+      "mode": 420,
+      "size": 2587
+    },
+    "LICENSE": {
+      "checkedAt": 1771497271166,
+      "integrity": "sha512-h3+KqApN1Ujg5sflhpEI8uHmGl29ae5YeISKbRnGvDsjC93DPvgkCCzLnGYhLeTgA4j+gHp84kkl1StuHcpVDw==",
+      "mode": 420,
+      "size": 1055
+    }
+  }
+}

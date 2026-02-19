@@ -1,0 +1,25 @@
+{
+  "name": "@rollup/rollup-win32-x64-gnu",
+  "version": "4.55.1",
+  "requiresBuild": false,
+  "files": {
+    "package.json": {
+      "checkedAt": 1771497262335,
+      "integrity": "sha512-jtFzqE2Zv/2PFrfoJkGbPD0FDkak9PMgOBj5cOd5016WVuGqSOfnVFrEjtWklrN4Wv/T4RFu9qLD7ZMM1/xjbA==",
+      "mode": 420,
+      "size": 451
+    },
+    "README.md": {
+      "checkedAt": 1771497262339,
+      "integrity": "sha512-HDB6kXzhOEWEG3k8IrZqzsmvfzMC5AxbaJKrM9iNdqwUxYBRSDFvVUkhDrjbinXiEZ2tKJIllCu5RYJOqQzzZA==",
+      "mode": 420,
+      "size": 92
+    },
+    "rollup.win32-x64-gnu.node": {
+      "checkedAt": 1771497262350,
+      "integrity": "sha512-wxH3x54+V2Xz0hO46VSfY7zyS6888Midc1gJB1HUyn4C/UolKd2QQ8AoAju9yYTZUYZSFRjTvcFr7KS98HPNEQ==",
+      "mode": 420,
+      "size": 1964032
+    }
+  }
+}

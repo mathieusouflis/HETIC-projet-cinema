@@ -1,0 +1,25 @@
+{
+  "name": "@types/socket.io",
+  "version": "3.0.2",
+  "requiresBuild": false,
+  "files": {
+    "LICENSE": {
+      "checkedAt": 1771497252765,
+      "integrity": "sha512-HQaIQk9pwOcyKutyDk4o2a87WnotwYuLGYFW43emGm4FvIJFKPyg+OYaw5sTegKAKf+C5SKa1ACjzCLivbaHrQ==",
+      "mode": 511,
+      "size": 1141
+    },
+    "README.md": {
+      "checkedAt": 1771497252767,
+      "integrity": "sha512-mrdZ8T++bHPNI0yG6vBUbRE052JwmOO9nZCc2tcIqybfS8s/Cq3+4I3HyN05Opu7ga4UcflRnPvkEnUIJRVCrA==",
+      "mode": 511,
+      "size": 192
+    },
+    "package.json": {
+      "checkedAt": 1771497252771,
+      "integrity": "sha512-bhAjcb8R8gseDbz4I6WYr8jMI7qq5pET9DLsL3tpelZoAxNCRvFdkbltLvXVBVnKkN630zhV2xYuvxdo9Yo4Yg==",
+      "mode": 511,
+      "size": 320
+    }
+  }
+}
