@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useLogin } from "../hooks/useLogin";
+import { AuthError, useLogin } from "../hooks/useLogin";
 
 const schema = z.object({
   email: z.string().email("Invalid email address"),
@@ -24,7 +24,7 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 export function LoginForm() {
-  const { login } = useLogin();
+  const { login, isLoading } = useLogin();
   const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<FormValues>({
@@ -35,8 +35,30 @@ export function LoginForm() {
     try {
       await login(values.email, values.password);
     } catch (error: unknown) {
+      if (error instanceof AuthError) {
+        switch (error.code) {
+          case "INVALID_CREDENTIALS":
+            form.setError("password", {
+              message: "Email ou mot de passe incorrect",
+            });
+            return;
+
+          case "USER_NOT_FOUND":
+            form.setError("email", {
+              message: "Aucun compte avec cet email",
+            });
+            return;
+
+          default:
+            form.setError("root", {
+              message: "Erreur serveur. Réessaie.",
+            });
+            return;
+        }
+      }
+
       form.setError("root", {
-        message: error instanceof Error ? error.message : "Login failed",
+        message: "Erreur inattendue.",
       });
     }
   }
@@ -113,10 +135,10 @@ export function LoginForm() {
 
                 <Button
                   type="submit"
-                  disabled={form.formState.isSubmitting}
+                  disabled={isLoading}
                   className="flex items-center"
                 >
-                  {form.formState.isSubmitting ? (
+                  {isLoading ? (
                     <Loader2 className="animate-spin mr-2" size={18} />
                   ) : (
                     "Sign In"
