@@ -4,6 +4,16 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useLogin } from "../hooks/useLogin";
 
 const schema = z.object({
@@ -32,102 +42,100 @@ export function LoginForm() {
   }
 
   return (
-    <div className="split-layout">
+    <div className="flex min-h-screen">
       {/* LEFT */}
-      <div className="split-left">
-        <div className="form-stack">
-          <div className="text-center">
-            <h1>Login</h1>
-            <p className="text-sm mt-2">
+      <div className="flex w-full lg:w-1/2 items-center justify-center px-6 sm:px-12 lg:px-20">
+        <Card className="w-full max-w-md space-y-6 text-center shadow-none border-none">
+          <CardHeader>
+            <CardTitle>
+              <h1 className="text-2xl font-bold">Login</h1>
+            </CardTitle>
+            <CardDescription className="text-center">
               or{" "}
               <Link to="/register" className="underline">
                 Create an account
               </Link>
-            </p>
-          </div>
+            </CardDescription>
+          </CardHeader>
 
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div>
-              <label htmlFor="email" className="form-label block mb-2">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                placeholder="you@email.com"
-                className="form-input"
-                {...form.register("email")}
-              />
-              {form.formState.errors.email && (
-                <p className="text-sm text-destructive mt-2">
-                  {form.formState.errors.email.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="password" className="form-label block mb-2">
-                Password
-              </label>
-
-              <div className="relative">
-                <input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  className="form-input pr-10"
-                  {...form.register("password")}
+          <CardContent>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@email.com"
+                  className="border-0 border-b shadow-none rounded-none focus-visible:ring-0 focus-visible:border-primary px-0 py-0"
+                  {...form.register("email")}
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-0 top-1/2 -translate-y-1/2"
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
+                {form.formState.errors.email && (
+                  <p className="text-destructive text-sm mt-1">
+                    {form.formState.errors.email.message}
+                  </p>
+                )}
               </div>
 
-              {form.formState.errors.password && (
-                <p className="text-sm text-destructive mt-2">
-                  {form.formState.errors.password.message}
+              <div>
+                <Label htmlFor="password">Password</Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    className="border-0 border-b shadow-none rounded-none focus-visible:ring-0 focus-visible:border-primary px-0 py-0"
+                    {...form.register("password")}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1 "
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                {form.formState.errors.password && (
+                  <p className="text-destructive text-sm mt-1">
+                    {form.formState.errors.password.message}
+                  </p>
+                )}
+              </div>
+
+              {form.formState.errors.root && (
+                <p className="text-destructive text-sm">
+                  {form.formState.errors.root.message}
                 </p>
               )}
-            </div>
 
-            {form.formState.errors.root && (
-              <p className="text-sm text-destructive">
-                {form.formState.errors.root.message}
-              </p>
-            )}
+              <div className="flex justify-end gap-4 pt-12">
+                <Link to="/register">
+                  <Button variant="secondary">Create Account</Button>
+                </Link>
 
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Link
-                to="/register"
-                className="btn-secondary text-center rounded-full"
-              >
-                Create Account
-              </Link>
-
-              <button
-                type="submit"
-                disabled={form.formState.isSubmitting}
-                className="btn-primary flex items-center justify-center rounded-full"
-              >
-                {form.formState.isSubmitting ? (
-                  <Loader2 className="animate-spin" size={18} />
-                ) : (
-                  "Sign In"
-                )}
-              </button>
-            </div>
-          </form>
-        </div>
+                <Button
+                  type="submit"
+                  disabled={form.formState.isSubmitting}
+                  className="flex items-center"
+                >
+                  {form.formState.isSubmitting ? (
+                    <Loader2 className="animate-spin mr-2" size={18} />
+                  ) : (
+                    "Sign In"
+                  )}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
       </div>
 
       {/* RIGHT */}
-      <div className="split-right">
+      <div className="hidden lg:flex lg:w-1/2 items-center justify-center px-16 bg-neutral-800 text-white">
         <div>
-          <p className="display-quote">“Le lorem ipsum est, en imprimerie”</p>
-          <p className="quote-author">- Albert Einstein</p>
+          <p className="text-3xl lg:text-4xl font-serif">
+            “Le lorem ipsum est, en <br />
+            imprimerie”
+          </p>
+          <p className="mt-6 text-base">- Albert Einstein</p>
         </div>
       </div>
     </div>
