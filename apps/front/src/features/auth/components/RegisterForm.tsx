@@ -14,25 +14,25 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import type { RegisterErrorCode } from "../hooks/useRegister";
 import { useRegister } from "../hooks/useRegister";
 
 const schema = z
   .object({
-    email: z.string().email("Invalid email address"),
-    username: z.string().min(3, "Username must be at least 3 characters"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
+    email: z.string().email("Email invalide"),
+    username: z.string().min(3, "Nom d'utilisateur trop court"),
+    password: z.string().min(6, "Mot de passe trop court"),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
+    message: "Les mots de passe ne correspondent pas",
     path: ["confirmPassword"],
   });
 
 type FormValues = z.infer<typeof schema>;
 
 export function RegisterForm() {
-  const { register: registerUser } = useRegister();
-
+  const { register: registerUser, isLoading } = useRegister();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -43,21 +43,37 @@ export function RegisterForm() {
   async function onSubmit(values: FormValues) {
     try {
       await registerUser(values.email, values.username, values.password);
-    } catch (error: unknown) {
-      form.setError("root", {
-        message: error instanceof Error ? error.message : "Registration failed",
-      });
+    } catch (err: unknown) {
+      const error = err as { code?: RegisterErrorCode };
+
+      switch (error.code) {
+        case "EMAIL_ALREADY_EXISTS":
+          form.setError("email", {
+            message: "Cet email est déjà utilisé",
+          });
+          break;
+
+        case "USERNAME_TAKEN":
+          form.setError("username", {
+            message: "Ce nom d’utilisateur est déjà pris",
+          });
+          break;
+
+        default:
+          form.setError("root", {
+            message: "Erreur serveur. Réessaie.",
+          });
+      }
     }
   }
 
   return (
     <div className="flex min-h-screen">
-      {/* LEFT */}
       <div className="flex w-full lg:w-1/2 items-center justify-center px-6 sm:px-12 lg:px-20">
         <Card className="w-full max-w-md space-y-6 text-center shadow-none border-none">
           <CardHeader>
             <CardTitle>
-              <h1 className="text-2xl font-bold">Create an account</h1>
+              <h1 className="text-2xl font-bold">Créer un compte</h1>
             </CardTitle>
             <CardDescription className="text-center">
               or{" "}
@@ -105,7 +121,7 @@ export function RegisterForm() {
 
               {/* PASSWORD */}
               <div>
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Mot de passe</Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -130,7 +146,9 @@ export function RegisterForm() {
 
               {/* CONFIRM PASSWORD */}
               <div>
-                <Label htmlFor="confirmPassword">Confirm password</Label>
+                <Label htmlFor="confirmPassword">
+                  Confirmer le mot de passe
+                </Label>
                 <div className="relative">
                   <Input
                     id="confirmPassword"
@@ -168,10 +186,10 @@ export function RegisterForm() {
 
                 <Button
                   type="submit"
-                  disabled={form.formState.isSubmitting}
+                  disabled={isLoading}
                   className="flex items-center"
                 >
-                  {form.formState.isSubmitting ? (
+                  {isLoading ? (
                     <Loader2 className="animate-spin mr-2" size={18} />
                   ) : (
                     "Create Account"
@@ -183,12 +201,10 @@ export function RegisterForm() {
         </Card>
       </div>
 
-      {/* RIGHT */}
       <div className="hidden lg:flex lg:w-1/2 items-center justify-center px-16 bg-neutral-800 text-white">
         <div>
           <p className="text-3xl lg:text-4xl font-serif">
-            “Le lorem ipsum est, en <br />
-            imprimerie”
+            “Le lorem ipsum est, en <br /> imprimerie”
           </p>
           <p className="mt-6 text-base">- Albert Einstein</p>
         </div>
