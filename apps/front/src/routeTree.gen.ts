@@ -95,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/watchlist/': typeof MainWatchlistIndexRoute
   '/watchparty/': typeof MainWatchpartyIndexRoute
   '/contents/$contentId/': typeof MainContentsContentIdIndexRoute
+  '/profile/': typeof ProfileIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof MainIndexRoute
@@ -107,6 +108,7 @@ export interface FileRoutesByTo {
   '/watchlist': typeof MainWatchlistIndexRoute
   '/watchparty': typeof MainWatchpartyIndexRoute
   '/contents/$contentId': typeof MainContentsContentIdIndexRoute
+  '/profile': typeof ProfileIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -121,6 +123,7 @@ export interface FileRoutesById {
   '/_main/watchlist/': typeof MainWatchlistIndexRoute
   '/_main/watchparty/': typeof MainWatchpartyIndexRoute
   '/_main/contents/$contentId/': typeof MainContentsContentIdIndexRoute
+  '/profile/': typeof ProfileIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
