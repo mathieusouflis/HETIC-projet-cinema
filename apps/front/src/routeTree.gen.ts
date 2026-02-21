@@ -74,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/search/': typeof MainSearchIndexRoute
   '/settings/': typeof MainSettingsIndexRoute
   '/contents/$contentId/': typeof MainContentsContentIdIndexRoute
+  '/profile/': typeof ProfileIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof MainIndexRoute
@@ -84,6 +85,7 @@ export interface FileRoutesByTo {
   '/search': typeof MainSearchIndexRoute
   '/settings': typeof MainSettingsIndexRoute
   '/contents/$contentId': typeof MainContentsContentIdIndexRoute
+  '/profile': typeof ProfileIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -96,6 +98,7 @@ export interface FileRoutesById {
   '/_main/search/': typeof MainSearchIndexRoute
   '/_main/settings/': typeof MainSettingsIndexRoute
   '/_main/contents/$contentId/': typeof MainContentsContentIdIndexRoute
+  '/profile/': typeof ProfileIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
