@@ -17,7 +17,7 @@ import { Label } from "@/components/ui/label";
 import { AuthError, useLogin } from "../hooks/useLogin";
 
 const schema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z.email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
@@ -39,26 +39,26 @@ export function LoginForm() {
         switch (error.code) {
           case "INVALID_CREDENTIALS":
             form.setError("password", {
-              message: "Email ou mot de passe incorrect",
+              message: "Incorrect email or password",
             });
             return;
 
           case "USER_NOT_FOUND":
             form.setError("email", {
-              message: "Aucun compte avec cet email",
+              message: "No account found with this email",
             });
             return;
 
           default:
             form.setError("root", {
-              message: "Erreur serveur. Réessaie.",
+              message: "Server error. Please try again.",
             });
             return;
         }
       }
 
       form.setError("root", {
-        message: "Erreur inattendue.",
+        message: "Unexpected error.",
       });
     }
   }
@@ -154,8 +154,8 @@ export function LoginForm() {
       <div className="hidden lg:flex lg:w-1/2 items-center justify-center px-16 bg-neutral-800 text-white">
         <div>
           <p className="text-3xl lg:text-4xl font-serif">
-            “Le lorem ipsum est, en <br />
-            imprimerie”
+            “Lorem ipsum is, in <br />
+            printing”
           </p>
           <p className="mt-6 text-base">- Albert Einstein</p>
         </div>

@@ -19,13 +19,13 @@ import { useRegister } from "../hooks/useRegister";
 
 const schema = z
   .object({
-    email: z.string().email("Email invalide"),
-    username: z.string().min(3, "Nom d'utilisateur trop court"),
-    password: z.string().min(6, "Mot de passe trop court"),
+    email: z.string().email("Invalid email"),
+    username: z.string().min(3, "Username too short"),
+    password: z.string().min(6, "Password too short"),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Les mots de passe ne correspondent pas",
+    message: "Passwords do not match",
     path: ["confirmPassword"],
   });
 
@@ -49,19 +49,19 @@ export function RegisterForm() {
       switch (error.code) {
         case "EMAIL_ALREADY_EXISTS":
           form.setError("email", {
-            message: "Cet email est déjà utilisé",
+            message: "This email is already in use",
           });
           break;
 
         case "USERNAME_TAKEN":
           form.setError("username", {
-            message: "Ce nom d’utilisateur est déjà pris",
+            message: "This username is already taken",
           });
           break;
 
         default:
           form.setError("root", {
-            message: "Erreur serveur. Réessaie.",
+            message: "Server error. Please try again.",
           });
       }
     }
@@ -73,7 +73,7 @@ export function RegisterForm() {
         <Card className="w-full max-w-md space-y-6 text-center shadow-none border-none">
           <CardHeader>
             <CardTitle>
-              <h1 className="text-2xl font-bold">Créer un compte</h1>
+              <h1 className="text-2xl font-bold">Create an account</h1>
             </CardTitle>
             <CardDescription className="text-center">
               or{" "}
@@ -121,7 +121,7 @@ export function RegisterForm() {
 
               {/* PASSWORD */}
               <div>
-                <Label htmlFor="password">Mot de passe</Label>
+                <Label htmlFor="password">Password</Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -146,9 +146,7 @@ export function RegisterForm() {
 
               {/* CONFIRM PASSWORD */}
               <div>
-                <Label htmlFor="confirmPassword">
-                  Confirmer le mot de passe
-                </Label>
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
                 <div className="relative">
                   <Input
                     id="confirmPassword"
@@ -204,7 +202,7 @@ export function RegisterForm() {
       <div className="hidden lg:flex lg:w-1/2 items-center justify-center px-16 bg-neutral-800 text-white">
         <div>
           <p className="text-3xl lg:text-4xl font-serif">
-            “Le lorem ipsum est, en <br /> imprimerie”
+            “Lorem ipsum is, in <br /> printing”
           </p>
           <p className="mt-6 text-base">- Albert Einstein</p>
         </div>
