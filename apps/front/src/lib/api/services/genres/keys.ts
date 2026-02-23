@@ -1,8 +1,10 @@
 import type { GETCategoriesParams } from "@packages/api-sdk";
 
+const BASEKEY = "categories";
 export const categoriesKeys = {
   list: (params?: GETCategoriesParams) => [
-    "categories",
+    BASEKEY,
+    "list",
     ...Object.values(params ?? {}),
   ],
 };
