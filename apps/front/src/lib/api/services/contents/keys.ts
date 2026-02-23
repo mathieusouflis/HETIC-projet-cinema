@@ -5,4 +5,5 @@ export const contentsKeys = {
     "discover",
     ...Object.values(params),
   ],
+  get: (contentId: string) => ["get", contentId],
 };
