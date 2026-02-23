@@ -1,4 +1,5 @@
 import {
+  type GETContentsIdParams,
   type GETContentsParams,
   gETContents,
   gETContentsId,
@@ -18,13 +19,13 @@ export const contentService = {
       queryKey: [contentsKeys.discover(props)],
     });
   },
-  get: (contentId: string) => {
+  get: (contentId: string, params?: GETContentsIdParams) => {
     return useQuery({
       queryFn: async () => {
-        const response = await gETContentsId(contentId);
+        const response = await gETContentsId(contentId, params);
         return response.data.data;
       },
-      queryKey: [contentsKeys.get(contentId)],
+      queryKey: [contentsKeys.get(contentId, params)],
     });
   },
 };

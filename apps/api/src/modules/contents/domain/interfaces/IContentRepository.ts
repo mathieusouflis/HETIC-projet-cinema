@@ -19,5 +19,12 @@ export interface IContentRepository {
     type?: string,
     options?: PaginationQuery
   ) => Promise<Content[]>;
-  getContentById: (id: string) => Promise<Content | undefined>;
+  getContentById: (params: {
+    id: string;
+    withCast?: boolean;
+    withCategory?: boolean;
+    withPlatform?: boolean;
+    withSeason?: boolean;
+    withEpisode?: boolean;
+  }) => Promise<Content | undefined>;
 }

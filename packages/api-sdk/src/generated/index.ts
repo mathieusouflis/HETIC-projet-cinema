@@ -21,6 +21,7 @@ import type {
   GETCategoriesParams,
   GETContents200,
   GETContentsId200,
+  GETContentsIdParams,
   GETContentsParams,
   GETMovies200,
   GETMoviesId200,
@@ -228,10 +229,13 @@ export const gETContents = (
  * Get content by id
  */
 export const gETContentsId = (
-    id: string, options?: AxiosRequestConfig
+    id: string,
+    params?: GETContentsIdParams, options?: AxiosRequestConfig
  ): Promise<AxiosResponse<GETContentsId200>> => {
     return axios.get(
-      `/contents/${id}`,options
+      `/contents/${id}`,{
+    ...options,
+        params: {...params, ...options?.params},}
     );
   }
 

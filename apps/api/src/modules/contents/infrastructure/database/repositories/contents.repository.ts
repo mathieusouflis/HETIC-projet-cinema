@@ -5,8 +5,13 @@ import type {
   PagePaginationQuery,
   PaginationQuery,
 } from "../../../../../shared/services/pagination";
+import { Category } from "../../../../categories/domain/entities/category.entity";
+import { Episode } from "../../../../episodes/domain/episode.entity";
 import type { IMoviesRepository } from "../../../../movies/domain/interfaces/IMoviesRepository";
 import { CompositeMoviesRepository } from "../../../../movies/infrastructure/database/repositories/composite-movies.repository";
+import { People } from "../../../../peoples/domain/entities/people.entity";
+import { Platform } from "../../../../platforms/domain/entities/platforms.entity";
+import { Season } from "../../../../seasons/domain/seasons.entity";
 import type { ISeriesRepository } from "../../../../series/domain/interfaces/ISeriesRepository";
 import { CompositeSeriesRepository } from "../../../../series/infrastructure/database/repositories/composite-series.repository";
 import { Content } from "../../../domain/entities/content.entity";
@@ -28,16 +33,84 @@ export class ContentsRepository implements IContentRepository {
     this.seriesRepository = new CompositeSeriesRepository();
   }
 
-  async getContentById(id: string): Promise<Content | undefined> {
+  async getContentById(params: {
+    id: string;
+    withCast?: boolean;
+    withCategory?: boolean;
+    withPlatform?: boolean;
+    withSeason?: boolean;
+    withEpisode?: boolean;
+  }): Promise<Content | undefined> {
     try {
-      const content = await db
-        .select()
-        .from(contentSchema)
-        .where(eq(contentSchema.id, id))
-        .execute();
-      return content[0] ? new Content(content[0]) : undefined;
+      const content = await db.query.content.findFirst({
+        where: eq(contentSchema.id, params.id),
+        with: {
+          contentCredits: {
+            with: {
+              person: true,
+            },
+          },
+          contentCategories: {
+            with: {
+              category: true,
+            },
+          },
+          contentPlatforms: {
+            with: {
+              platform: true,
+            },
+          },
+          seasons: {
+            with: {
+              episodes: true,
+            },
+          },
+        },
+      });
+
+      if (!content) {
+        return undefined;
+      }
+
+      const contentEntity = new Content(content);
+      if (params.withCast) {
+        const peoples = content.contentCredits.map(
+          (credit) => new People(credit.person)
+        );
+        contentEntity.setRelations("contentCredits", peoples);
+      }
+
+      if (params.withCategory) {
+        const categories = content.contentCategories.map(
+          (category) => new Category(category.category)
+        );
+        contentEntity.setRelations("contentCategories", categories);
+      }
+
+      if (params.withSeason) {
+        const seasons = content.seasons.map((season) => {
+          const seasonEntity = new Season(season);
+          seasonEntity.setRelations(
+            "episodes",
+            season.episodes.map((ep) => new Episode(ep))
+          );
+          return seasonEntity;
+        });
+
+        contentEntity.setRelations("seasons", seasons);
+      }
+
+      if (params.withPlatform) {
+        const platforms = content.contentPlatforms.map(
+          (platform) => new Platform(platform.platform)
+        );
+
+        contentEntity.setRelations("contentPlatforms", platforms);
+      }
+
+      return contentEntity;
     } catch (error) {
-      logger.error(`Error getting content by id ${id}: ${error}`);
+      logger.error(`Error getting content by id ${params.id}: ${error}`);
       throw error;
     }
   }

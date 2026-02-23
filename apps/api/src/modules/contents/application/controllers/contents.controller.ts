@@ -13,6 +13,10 @@ import {
   getContentByIdValidatorParams,
 } from "../dto/requests/get-content-by-id-params.validator.js";
 import {
+  type GetContentByIdValidatorQuery,
+  getContentByIdValidatorQuery,
+} from "../dto/requests/get-content-by-id-query.validator.js";
+import {
   type QueryContentRequest,
   queryContentRequestSchema,
 } from "../dto/requests/query-contents.validator.js";
@@ -76,6 +80,7 @@ export class ContentsController extends BaseController {
     description: "Get content by id",
   })
   @ValidateParams(getContentByIdValidatorParams)
+  @ValidateQuery(getContentByIdValidatorQuery)
   @ApiResponse(404, "Content not found", notFoundErrorResponseSchema)
   @ApiResponse(
     200,
@@ -85,8 +90,22 @@ export class ContentsController extends BaseController {
   getContentById = asyncHandler(
     async (req, res): Promise<GetContentByIdResponse> => {
       const { id } = req.params as GetContentByIdValidatorParams;
+      const {
+        withCast,
+        withCategory,
+        withPlatform,
+        withSeasons,
+        withEpisodes,
+      } = req.query as GetContentByIdValidatorQuery;
 
-      const content = await this.getContentByIdUseCase.execute(id);
+      const content = await this.getContentByIdUseCase.execute({
+        id,
+        withCast: withCast === "true",
+        withCategory: withCategory === "true",
+        withPlatform: withPlatform === "true",
+        withSeasons: withSeasons === "true",
+        withEpisodes: withEpisodes === "true",
+      });
       const response: GetContentByIdResponse = {
         success: true,
         data: content,
