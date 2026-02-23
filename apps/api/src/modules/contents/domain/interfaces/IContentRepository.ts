@@ -24,7 +24,7 @@ export interface IContentRepository {
     withCast?: boolean;
     withCategory?: boolean;
     withPlatform?: boolean;
-    withSeason?: boolean;
-    withEpisode?: boolean;
+    withSeasons?: boolean;
+    withEpisodes?: boolean;
   }) => Promise<Content | undefined>;
 }
