@@ -14,7 +14,9 @@ export class CreateWatchpartyUseCase {
     userId: string,
     body: CreateWatchpartyBody
   ): Promise<Watchparty> {
-    const content = await this.contentRepository.getContentById(body.contentId);
+    const content = await this.contentRepository.getContentById({
+      id: body.contentId,
+    });
     if (!content) {
       throw new NotFoundError(`Content ${body.contentId} not found`);
     }
