@@ -87,14 +87,13 @@ export class ContentsController extends BaseController {
       const { id } = req.params as GetContentByIdValidatorParams;
 
       const content = await this.getContentByIdUseCase.execute(id);
-
-      res.status(200).json({
+      const response: GetContentByIdResponse = {
         success: true,
-        message: "Content retrieved successfully",
         data: content,
-      });
+      };
+      res.status(200).json(response);
 
-      return content;
+      return response;
     }
   );
 }
