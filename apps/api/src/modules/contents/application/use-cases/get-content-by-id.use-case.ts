@@ -5,7 +5,7 @@ import type { GetContentByIdResponse } from "../dto/response/get-content-by-id-r
 export class GetContentByIdUseCase {
   constructor(private readonly contentRepository: IContentRepository) {}
 
-  async execute(id: string): Promise<GetContentByIdResponse> {
+  async execute(id: string): Promise<GetContentByIdResponse["data"]> {
     const content = await this.contentRepository.getContentById(id);
 
     if (!content) {
