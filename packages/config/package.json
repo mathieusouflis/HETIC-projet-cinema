@@ -23,10 +23,10 @@
   },
   "devDependencies": {
     "@packages/typescript-config": "workspace:*",
-    "@types/node": "^25.2.3",
+    "@types/node": "^25.3.0",
     "typescript": "5.9.3"
   },
   "dependencies": {
-    "dotenv": "^17.2.4"
+    "dotenv": "^17.3.1"
   }
 }
