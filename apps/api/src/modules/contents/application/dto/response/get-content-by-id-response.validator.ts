@@ -1,6 +1,7 @@
 import type z from "zod";
 import { createSuccessResponseSchema } from "../../../../../shared/schemas/base";
 import { categoryResponseSchema } from "../../../../categories/application/dto/response";
+import { episodeValidator } from "../../../../episodes/domain/validator/episode.validator";
 import { peopleValidator } from "../../../../peoples/application/validators/people.validator";
 import { platformValidator } from "../../../../platforms/application/validators/platforms.validator";
 import { seasonValidator } from "../../../../seasons/application/validators/seasons.validator";
@@ -11,7 +12,12 @@ export const getContentByIdResponseSchema = createSuccessResponseSchema(
     contentCategories: categoryResponseSchema.array().optional(),
     contentPlatforms: platformValidator.array().optional(),
     contentCredits: peopleValidator.array().optional(),
-    seasons: seasonValidator.array().optional(),
+    seasons: seasonValidator
+      .extend({
+        episodes: episodeValidator.array().optional(),
+      })
+      .array()
+      .optional(),
   })
 );
 

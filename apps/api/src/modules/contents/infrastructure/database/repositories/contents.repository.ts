@@ -38,8 +38,8 @@ export class ContentsRepository implements IContentRepository {
     withCast?: boolean;
     withCategory?: boolean;
     withPlatform?: boolean;
-    withSeason?: boolean;
-    withEpisode?: boolean;
+    withSeasons?: boolean;
+    withEpisodes?: boolean;
   }): Promise<Content | undefined> {
     try {
       const content = await db.query.content.findFirst({
@@ -87,13 +87,16 @@ export class ContentsRepository implements IContentRepository {
         contentEntity.setRelations("contentCategories", categories);
       }
 
-      if (params.withSeason) {
+      if (params.withSeasons) {
         const seasons = content.seasons.map((season) => {
           const seasonEntity = new Season(season);
-          seasonEntity.setRelations(
-            "episodes",
-            season.episodes.map((ep) => new Episode(ep))
-          );
+          if (params.withEpisodes) {
+            seasonEntity.setRelations(
+              "episodes",
+              season.episodes.map((ep) => new Episode(ep))
+            );
+          }
+          logger.info(seasonEntity.toJSONWithRelations());
           return seasonEntity;
         });
 

@@ -59,6 +59,7 @@ export * from './getcontents-id200-data-content-categories-item';
 export * from './getcontents-id200-data-content-credits-item-content-credits-item';
 export * from './getcontents-id200-data-content-credits-item';
 export * from './getcontents-id200-data-content-platforms-item';
+export * from './getcontents-id200-data-seasons-item-episodes-item';
 export * from './getcontents-id200-data-seasons-item';
 export * from './getcontents-id200-data-type';
 export * from './getcontents-id200-data';

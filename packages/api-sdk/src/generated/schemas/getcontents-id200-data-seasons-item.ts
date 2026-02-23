@@ -5,6 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
+import type { GETContentsId200DataSeasonsItemEpisodesItem } from './getcontents-id200-data-seasons-item-episodes-item';
 
 export type GETContentsId200DataSeasonsItem = {
   /** @minLength 1 */
@@ -24,4 +25,5 @@ export type GETContentsId200DataSeasonsItem = {
   airDate: string | null;
   /** @nullable */
   tmdbId: number | null;
+  episodes?: GETContentsId200DataSeasonsItemEpisodesItem[];
 };

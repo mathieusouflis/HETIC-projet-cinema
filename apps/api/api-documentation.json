@@ -2716,6 +2716,61 @@
                               "tmdbId": {
                                 "type": "integer",
                                 "nullable": true
+                              },
+                              "episodes": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    },
+                                    "seasonId": {
+                                      "type": "string"
+                                    },
+                                    "episodeNumber": {
+                                      "type": "integer",
+                                      "minimum": 0
+                                    },
+                                    "overview": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "stillUrl": {
+                                      "type": "string",
+                                      "nullable": true,
+                                      "format": "uri"
+                                    },
+                                    "airDate": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "durationMinutes": {
+                                      "type": "integer",
+                                      "nullable": true,
+                                      "minimum": 0
+                                    },
+                                    "tmdbId": {
+                                      "type": "integer",
+                                      "nullable": true
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name",
+                                    "seasonId",
+                                    "episodeNumber",
+                                    "overview",
+                                    "stillUrl",
+                                    "airDate",
+                                    "durationMinutes",
+                                    "tmdbId"
+                                  ]
+                                }
                               }
                             },
                             "required": [
