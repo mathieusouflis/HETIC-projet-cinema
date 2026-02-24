@@ -56,7 +56,7 @@
     "@vitest/coverage-v8": "^4.0.18",
     "drizzle-kit": "^0.31.9",
 
-    "orval": "^8.4.1",
+    "orval": "^8.4.2",
     "supertest": "^7.2.2",
     "tsx": "^4.21.0",
     "typescript": "5.9.3",
