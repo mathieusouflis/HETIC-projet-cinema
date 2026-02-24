@@ -2,9 +2,11 @@ import type { GETContents200DataItemsItem } from "@packages/api-sdk";
 import { Link } from "@tanstack/react-router";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRoutes } from "@/lib/routes";
+import { cn } from "@/lib/utils";
 
 interface MovieCardProps {
   movie: GETContents200DataItemsItem;
+  className?: string;
 }
 
 export const MovieCard = (props: MovieCardProps) => {
@@ -13,7 +15,7 @@ export const MovieCard = (props: MovieCardProps) => {
   return (
     <Link
       to={routes.contents.detail(props.movie.id)}
-      className="h-50 sm:h-80 aspect-5/8 "
+      className={cn("flex h-50 sm:h-80 aspect-5/8", props.className)}
     >
       {props.movie.posterUrl ? (
         <img
@@ -28,8 +30,13 @@ export const MovieCard = (props: MovieCardProps) => {
   );
 };
 
-export const MovieCardSkeleton = () => {
+export const MovieCardSkeleton = ({ className }: { className?: string }) => {
   return (
-    <Skeleton className="h-50 sm:h-80 rounded-3xl sm:rounded-3xl aspect-5/8" />
+    <Skeleton
+      className={cn(
+        "h-50 sm:h-80 rounded-3xl sm:rounded-3xl aspect-5/8",
+        className
+      )}
+    />
   );
 };

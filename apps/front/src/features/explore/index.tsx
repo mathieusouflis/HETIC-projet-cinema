@@ -3,8 +3,11 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getApi } from "@/lib/api/services";
+import {
+  MovieCard,
+  MovieCardSkeleton,
+} from "../../components/common/movie-card";
 import { DisplayMovie, DisplayMovieSkeleton } from "./components/display-movie";
-import { MovieCard, MovieCardSkeleton } from "./components/movie-card";
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => {
   return <h2 className="text-2xl sm:text-3xl font-semibold">{children}</h2>;
