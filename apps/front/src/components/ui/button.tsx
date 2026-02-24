@@ -35,10 +35,12 @@ const buttonVariants = cva(
         "icon-xs": "size-6 [&_svg:not([class*='size-'])]:size-3",
         "icon-sm": "size-8",
         "icon-lg": "size-10",
+        "icon-xl": "size-11",
         "icon-2xl": "size-12 [&_svg:not([class*='size-'])]:size-5",
       },
       color: {
         blue: "bg-blue-600 hover:bg-blue-700",
+        secondary: "bg-neutral-600 hover:bg-neutral-700",
       },
     },
     compoundVariants: [
