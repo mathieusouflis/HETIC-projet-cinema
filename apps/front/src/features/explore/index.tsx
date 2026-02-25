@@ -2,7 +2,7 @@ import type { GETContents200DataItemsItem } from "@packages/api-sdk";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getApi } from "@/lib/api/services";
+import { useApi } from "@/lib/api/services";
 import {
   MovieCard,
   MovieCardSkeleton,
@@ -14,7 +14,7 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const HomePage = () => {
-  const services = getApi();
+  const services = useApi();
 
   const { data, isLoading } = services.contents.discover({
     withCategory: "true",

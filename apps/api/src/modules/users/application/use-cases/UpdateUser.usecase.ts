@@ -1,5 +1,6 @@
 import { ValidationError } from "../../../../shared/errors/validation-error.js";
 import { PasswordService } from "../../../../shared/services/password/password-service.js";
+import { EmailAlreadyExistsError } from "../../domain/errors/EmailAlreadyExistsError.js";
 import { UserNotFoundError } from "../../domain/errors/UserNotFoundError.js";
 import { UsernameAlreadyExistsError } from "../../domain/errors/UsernameAlreadyExistsError.js";
 import type { IUserRepository } from "../../domain/interfaces/IUserRepository.js";
@@ -20,6 +21,8 @@ export class UpdateUserUseCase {
    * @returns Promise resolving to updated UserResponseDTO
    * @throws UserNotFoundError if user doesn't exist
    * @throws UsernameAlreadyExistsError if new username is already taken
+   * @throws EmailAlreadyExistsError if new email is already taken
+   * @throws ValidationError if password validation fails
    */
   async execute(id: string, data: PatchIdRequestDTO): Promise<PatchIdResponse> {
     const existingUser = await this.userRepository.findById(id);
@@ -53,14 +56,27 @@ export class UpdateUserUseCase {
       }
     }
 
+    if (data.email && data.email !== existingUser.email) {
+      const emailExists = await this.userRepository.existsByEmail(data.email);
+
+      if (emailExists) {
+        throw new EmailAlreadyExistsError(data.email);
+      }
+    }
+
     const updatePayload: {
       username?: string;
+      email?: string;
       avatarUrl?: string | null;
       passwordHash?: string;
     } = {};
 
     if (data.username !== undefined) {
       updatePayload.username = data.username;
+    }
+
+    if (data.email !== undefined) {
+      updatePayload.email = data.email;
     }
 
     if (data.avatarUrl !== undefined) {

@@ -343,54 +343,6 @@ export const gETSeriesId = (
 };
 
 /**
- * Retrieve a user profile by their unique identifier
- * @summary Get user by ID
- */
-export const gETUsersId = (
-  id: string,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<GETUsersId200>> => {
-  return axios.get(`/users/${id}`, options);
-};
-
-/**
- * Update a user profile (admin only or own profile)
- * @summary Update user profile
- */
-export const pATCHUsersId = (
-  id: string,
-  pATCHUsersIdBody: PATCHUsersIdBody,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<PATCHUsersId200>> => {
-  return axios.patch(`/users/${id}`, pATCHUsersIdBody, options);
-};
-
-/**
- * Delete a user account (admin only or own account)
- * @summary Delete user
- */
-export const dELETEUsersId = (
-  id: string,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<void>> => {
-  return axios.delete(`/users/${id}`, options);
-};
-
-/**
- * Retrieve a paginated list of all users
- * @summary Get all users
- */
-export const gETUsers = (
-  params?: GETUsersParams,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<GETUsers200>> => {
-  return axios.get(`/users/`, {
-    ...options,
-    params: { ...params, ...options?.params },
-  });
-};
-
-/**
  * Retrieve the authenticated user own profile
  * @summary Get current user profile
  */
@@ -409,6 +361,16 @@ export const pATCHUsersMe = (
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<PATCHUsersMe200>> => {
   return axios.patch(`/users/me`, pATCHUsersMeBody, options);
+};
+
+/**
+ * Permanently delete the authenticated user own account
+ * @summary Delete current user account
+ */
+export const dELETEUsersMe = (
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<void>> => {
+  return axios.delete(`/users/me`, options);
 };
 
 /**
@@ -441,6 +403,54 @@ export const gETUsersMeFriendships = (
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<GETUsersMeFriendships200>> => {
   return axios.get(`/users/me/friendships`, options);
+};
+
+/**
+ * Retrieve a paginated list of all users
+ * @summary Get all users
+ */
+export const gETUsers = (
+  params?: GETUsersParams,
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<GETUsers200>> => {
+  return axios.get(`/users/`, {
+    ...options,
+    params: { ...params, ...options?.params },
+  });
+};
+
+/**
+ * Retrieve a user profile by their unique identifier
+ * @summary Get user by ID
+ */
+export const gETUsersId = (
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<GETUsersId200>> => {
+  return axios.get(`/users/${id}`, options);
+};
+
+/**
+ * Update a user profile (admin only or own profile)
+ * @summary Update user profile
+ */
+export const pATCHUsersId = (
+  id: string,
+  pATCHUsersIdBody: PATCHUsersIdBody,
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<PATCHUsersId200>> => {
+  return axios.patch(`/users/${id}`, pATCHUsersIdBody, options);
+};
+
+/**
+ * Delete a user account (admin only or own account)
+ * @summary Delete user
+ */
+export const dELETEUsersId = (
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<void>> => {
+  return axios.delete(`/users/${id}`, options);
 };
 
 /**
@@ -632,17 +642,18 @@ export type PATCHPeoplesIdResult = AxiosResponse<PATCHPeoplesId200>;
 export type DELETEPeoplesIdResult = AxiosResponse<void>;
 export type GETSeriesResult = AxiosResponse<GETSeries200>;
 export type GETSeriesIdResult = AxiosResponse<GETSeriesId200>;
-export type GETUsersIdResult = AxiosResponse<GETUsersId200>;
-export type PATCHUsersIdResult = AxiosResponse<PATCHUsersId200>;
-export type DELETEUsersIdResult = AxiosResponse<void>;
-export type GETUsersResult = AxiosResponse<GETUsers200>;
 export type GETUsersMeResult = AxiosResponse<GETUsersMe200>;
 export type PATCHUsersMeResult = AxiosResponse<PATCHUsersMe200>;
+export type DELETEUsersMeResult = AxiosResponse<void>;
 export type POSTUsersMeFriendshipsIdResult =
   AxiosResponse<POSTUsersMeFriendshipsId201>;
 export type DELETEUsersMeFriendshipsIdResult = AxiosResponse<void>;
 export type GETUsersMeFriendshipsResult =
   AxiosResponse<GETUsersMeFriendships200>;
+export type GETUsersResult = AxiosResponse<GETUsers200>;
+export type GETUsersIdResult = AxiosResponse<GETUsersId200>;
+export type PATCHUsersIdResult = AxiosResponse<PATCHUsersId200>;
+export type DELETEUsersIdResult = AxiosResponse<void>;
 export type GETUsersIdFollowingResult = AxiosResponse<GETUsersIdFollowing200>;
 export type GETUsersIdFollowersResult = AxiosResponse<GETUsersIdFollowers200>;
 export type GETWatchlistResult = AxiosResponse<GETWatchlist200>;

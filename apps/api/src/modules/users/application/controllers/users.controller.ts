@@ -107,167 +107,12 @@ export class UsersController extends BaseController {
     super();
   }
 
-  @Get({
-    path: "/:id",
-    summary: "Get user by ID",
-    description: "Retrieve a user profile by their unique identifier",
-  })
-  @ValidateParams(getIdParamsSchema)
-  @ApiResponse(
-    200,
-    "User retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponseSchema(getIdResponseSchema)
-  )
-  @ApiResponse(
-    400,
-    "Invalid user ID",
-    Shared.Schemas.Base.validationErrorResponseSchema
-  )
-  @ApiResponse(
-    404,
-    "User not found",
-    Shared.Schemas.Base.notFoundErrorResponseSchema
-  )
-  getById = asyncHandler(
-    async (req: Request, res: Response): Promise<GetIdResponse> => {
-      const id = req.params.id!;
-
-      const user = await this.getUserByIdUseCase.execute(id);
-
-      res.status(200).json({
-        success: true,
-        data: user,
-      });
-
-      return user;
-    }
-  );
-
-  @Get({
-    path: "/",
-    summary: "Get all users",
-    description: "Retrieve a paginated list of all users",
-  })
-  @Protected()
-  @ValidateQuery(getQuerySchema)
-  @ApiResponse(
-    200,
-    "Users retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponseSchema(getResponseSchema)
-  )
-  @ApiResponse(
-    400,
-    "Invalid pagination parameters",
-    Shared.Schemas.Base.validationErrorResponseSchema
-  )
-  @ApiResponse(
-    401,
-    "Not authenticated",
-    Shared.Schemas.Base.unauthorizedErrorResponseSchema
-  )
-  getAll = asyncHandler(
-    async (req: Request, res: Response): Promise<GetAllUsersResponse> => {
-      const { page, limit, offset } = req.query as GetQueryDTO;
-
-      const result = await this.getUsersUseCase.execute({
-        page,
-        limit,
-        offset,
-      });
-
-      res.status(200).json({
-        success: true,
-        data: result,
-      });
-
-      return result;
-    }
-  );
-
-  @Patch({
-    path: "/:id",
-    summary: "Update user profile",
-    description: "Update a user profile (admin only or own profile)",
-  })
-  @Protected()
-  @ValidateParams(patchIdParamsSchema)
-  @ValidateBody(patchIdBodySchema)
-  @ApiResponse(
-    200,
-    "User updated successfully",
-    Shared.Schemas.Base.createSuccessResponseSchema(patchIdResponseSchema)
-  )
-  @ApiResponse(
-    400,
-    "Invalid input data",
-    Shared.Schemas.Base.validationErrorResponseSchema
-  )
-  @ApiResponse(
-    401,
-    "Not authenticated",
-    Shared.Schemas.Base.unauthorizedErrorResponseSchema
-  )
-  @ApiResponse(
-    403,
-    "Forbidden - cannot update other users",
-    Shared.Schemas.Base.forbiddenErrorResponseSchema
-  )
-  @ApiResponse(
-    404,
-    "User not found",
-    Shared.Schemas.Base.notFoundErrorResponseSchema
-  )
-  update = asyncHandler(
-    async (req: Request, res: Response): Promise<PatchIdResponse> => {
-      const id = req.params.id!;
-      const updateData = req.body;
-
-      const updatedUser = await this.updateUserUseCase.execute(id, updateData);
-
-      res.status(200).json({
-        success: true,
-        data: updatedUser,
-      });
-
-      return updatedUser;
-    }
-  );
-
-  @Delete({
-    path: "/:id",
-    summary: "Delete user",
-    description: "Delete a user account (admin only or own account)",
-  })
-  @Protected()
-  @ValidateParams(deleteIdParamsSchema)
-  @ApiResponse(204, "User deleted successfully")
-  @ApiResponse(
-    400,
-    "Invalid user ID",
-    Shared.Schemas.Base.validationErrorResponseSchema
-  )
-  @ApiResponse(
-    401,
-    "Not authenticated",
-    Shared.Schemas.Base.unauthorizedErrorResponseSchema
-  )
-  @ApiResponse(
-    403,
-    "Forbidden - cannot delete other users",
-    Shared.Schemas.Base.forbiddenErrorResponseSchema
-  )
-  @ApiResponse(
-    404,
-    "User not found",
-    Shared.Schemas.Base.notFoundErrorResponseSchema
-  )
-  delete = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const id = req.params.id!;
-
-    await this.deleteUserUseCase.execute(id);
-
-    res.status(204).send();
-  });
+  /*
+   * ========================================
+   *   /me routes — MUST come before /:id
+   *   so Express does not treat "me" as an id
+   * ========================================
+   */
 
   @Get({
     path: "/me",
@@ -326,6 +171,11 @@ export class UsersController extends BaseController {
     "Not authenticated",
     Shared.Schemas.Base.unauthorizedErrorResponseSchema
   )
+  @ApiResponse(
+    409,
+    "Email or username already in use",
+    Shared.Schemas.Base.conflictErrorResponseSchema
+  )
   updateMe = asyncHandler(
     async (req: Request, res: Response): Promise<PatchIdResponse> => {
       const userId = req.user?.userId;
@@ -349,11 +199,39 @@ export class UsersController extends BaseController {
     }
   );
 
+  @Delete({
+    path: "/me",
+    summary: "Delete current user account",
+    description: "Permanently delete the authenticated user own account",
+  })
+  @Protected()
+  @ApiResponse(204, "User account deleted successfully")
+  @ApiResponse(
+    401,
+    "Not authenticated",
+    Shared.Schemas.Base.unauthorizedErrorResponseSchema
+  )
+  deleteMe = asyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const userId = req.user?.userId;
+
+      if (!userId) {
+        throw new UnauthorizedError("User not authenticated");
+      }
+
+      await this.deleteUserUseCase.execute(userId);
+
+      res.status(204).send();
+    }
+  );
+
   /*
    * ========================================
    *           FOLLOWING FEATURE
+   *   /me/friendships* — before /:id routes
    * ========================================
    */
+
   @Post({
     path: "/me/friendships/:id",
     summary: "Follow a user",
@@ -499,6 +377,89 @@ export class UsersController extends BaseController {
     }
   );
 
+  /*
+   * ========================================
+   *   Collection + /:id routes — after /me
+   * ========================================
+   */
+
+  @Get({
+    path: "/",
+    summary: "Get all users",
+    description: "Retrieve a paginated list of all users",
+  })
+  @Protected()
+  @ValidateQuery(getQuerySchema)
+  @ApiResponse(
+    200,
+    "Users retrieved successfully",
+    Shared.Schemas.Base.createSuccessResponseSchema(getResponseSchema)
+  )
+  @ApiResponse(
+    400,
+    "Invalid pagination parameters",
+    Shared.Schemas.Base.validationErrorResponseSchema
+  )
+  @ApiResponse(
+    401,
+    "Not authenticated",
+    Shared.Schemas.Base.unauthorizedErrorResponseSchema
+  )
+  getAll = asyncHandler(
+    async (req: Request, res: Response): Promise<GetAllUsersResponse> => {
+      const { page, limit, offset } = req.query as GetQueryDTO;
+
+      const result = await this.getUsersUseCase.execute({
+        page,
+        limit,
+        offset,
+      });
+
+      res.status(200).json({
+        success: true,
+        data: result,
+      });
+
+      return result;
+    }
+  );
+
+  @Get({
+    path: "/:id",
+    summary: "Get user by ID",
+    description: "Retrieve a user profile by their unique identifier",
+  })
+  @ValidateParams(getIdParamsSchema)
+  @ApiResponse(
+    200,
+    "User retrieved successfully",
+    Shared.Schemas.Base.createSuccessResponseSchema(getIdResponseSchema)
+  )
+  @ApiResponse(
+    400,
+    "Invalid user ID",
+    Shared.Schemas.Base.validationErrorResponseSchema
+  )
+  @ApiResponse(
+    404,
+    "User not found",
+    Shared.Schemas.Base.notFoundErrorResponseSchema
+  )
+  getById = asyncHandler(
+    async (req: Request, res: Response): Promise<GetIdResponse> => {
+      const id = req.params.id!;
+
+      const user = await this.getUserByIdUseCase.execute(id);
+
+      res.status(200).json({
+        success: true,
+        data: user,
+      });
+
+      return user;
+    }
+  );
+
   @Get({
     path: "/:id/following",
     summary: "Get user's following list",
@@ -582,4 +543,89 @@ export class UsersController extends BaseController {
       return followersDTO;
     }
   );
+
+  @Patch({
+    path: "/:id",
+    summary: "Update user profile",
+    description: "Update a user profile (admin only or own profile)",
+  })
+  @Protected()
+  @ValidateParams(patchIdParamsSchema)
+  @ValidateBody(patchIdBodySchema)
+  @ApiResponse(
+    200,
+    "User updated successfully",
+    Shared.Schemas.Base.createSuccessResponseSchema(patchIdResponseSchema)
+  )
+  @ApiResponse(
+    400,
+    "Invalid input data",
+    Shared.Schemas.Base.validationErrorResponseSchema
+  )
+  @ApiResponse(
+    401,
+    "Not authenticated",
+    Shared.Schemas.Base.unauthorizedErrorResponseSchema
+  )
+  @ApiResponse(
+    403,
+    "Forbidden - cannot update other users",
+    Shared.Schemas.Base.forbiddenErrorResponseSchema
+  )
+  @ApiResponse(
+    404,
+    "User not found",
+    Shared.Schemas.Base.notFoundErrorResponseSchema
+  )
+  update = asyncHandler(
+    async (req: Request, res: Response): Promise<PatchIdResponse> => {
+      const id = req.params.id!;
+      const updateData = req.body;
+
+      const updatedUser = await this.updateUserUseCase.execute(id, updateData);
+
+      res.status(200).json({
+        success: true,
+        data: updatedUser,
+      });
+
+      return updatedUser;
+    }
+  );
+
+  @Delete({
+    path: "/:id",
+    summary: "Delete user",
+    description: "Delete a user account (admin only or own account)",
+  })
+  @Protected()
+  @ValidateParams(deleteIdParamsSchema)
+  @ApiResponse(204, "User deleted successfully")
+  @ApiResponse(
+    400,
+    "Invalid user ID",
+    Shared.Schemas.Base.validationErrorResponseSchema
+  )
+  @ApiResponse(
+    401,
+    "Not authenticated",
+    Shared.Schemas.Base.unauthorizedErrorResponseSchema
+  )
+  @ApiResponse(
+    403,
+    "Forbidden - cannot delete other users",
+    Shared.Schemas.Base.forbiddenErrorResponseSchema
+  )
+  @ApiResponse(
+    404,
+    "User not found",
+    Shared.Schemas.Base.notFoundErrorResponseSchema
+  )
+  delete = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const id = req.params.id!;
+
+    await this.deleteUserUseCase.execute(id);
+
+    res.status(204).send();
+  });
 }
