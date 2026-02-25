@@ -30,20 +30,26 @@ export const queryUserService = {
       queryFn: usersService.getMe,
     }),
 
-  patchMe: () => {
-    const { user } = useAuth();
-    return useMutation({
+  patchMe: () =>
+    useMutation({
       mutationFn: usersService.patchMe,
-      onSuccess: async () => {
+      onSuccess: async (responseData) => {
         await queryClient.invalidateQueries({ queryKey: usersKeys.me() });
+
+        const { user, setUser } = useAuth.getState();
         if (user?.id) {
           await queryClient.invalidateQueries({
             queryKey: usersKeys.getId(user.id),
           });
         }
+        if (user && responseData?.data) {
+          setUser({
+            ...user,
+            username: responseData.data.username ?? user.username,
+          });
+        }
       },
-    });
-  },
+    }),
 
   deleteMe: () =>
     useMutation({

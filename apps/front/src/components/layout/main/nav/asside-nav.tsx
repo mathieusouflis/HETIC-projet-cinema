@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { Bell, Settings, User2 } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { Bell, LogOut, Settings, User2 } from "lucide-react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,13 +12,23 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/features/auth/stores/auth.store";
+import { getApi } from "@/lib/api/services";
 import { useRoutes } from "@/lib/routes";
 import { navConfig } from "./common";
 import { NavLink } from "./components/nav-link";
 
 export const AssideNav = () => {
   const routes = useRoutes();
-  const { user } = useAuth();
+  const { user, clear } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await getApi().auth.logout();
+    } catch {}
+    clear();
+    navigate({ to: "/login", replace: true });
+  };
 
   return (
     <aside className=" hidden lg:block h-auto">
@@ -79,6 +89,11 @@ export const AssideNav = () => {
                         Settings
                       </DropdownMenuItem>
                     </Link>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout}>
+                      <LogOut />
+                      Sign out
+                    </DropdownMenuItem>
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
