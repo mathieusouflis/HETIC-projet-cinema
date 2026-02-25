@@ -10,7 +10,7 @@
     "clean": "turbo run clean && rm -rf .turbo dist node_modules/.cache packages/*/.turbo packages/*/dist apps/*/.turbo apps/*/dist",
     "db:logs": "docker compose -f docker-compose.dev.yaml logs -f",
     "db:shell": "docker compose -f docker-compose.dev.yaml exec db psql -U ${DB_USER:-root} -d ${DB_DATABASE:-database}",
-    "db:start": "docker-compose -f docker-compose.dev.yaml up -d",
+    "db:start": "docker-compose -f docker-compose.dev.yaml up -d && turbo db:migrate",
     "db:stop": "docker compose -f docker-compose.dev.yaml down",
     "dev": "phase run pnpm db:start && phase run turbo run dev",
     "format": "pnpm lint --write",

@@ -26,6 +26,7 @@
     "clean": {
       "cache": false
     },
+    "db:migrate": {},
     "dev": {
       "dependsOn": ["^build"],
       "env": ["*"],
