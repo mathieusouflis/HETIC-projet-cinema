@@ -12,45 +12,47 @@ import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import { parseApiError } from "@/lib/api/parse-error";
 import { useApi } from "@/lib/api/services";
 
-const changeEmailSchema = z.object({
-  email: z
+const changeUsernameSchema = z.object({
+  username: z
     .string()
-    .email("Please enter a valid email address")
-    .max(255, "Email must be less than 255 characters"),
+    .min(3, "Username must be at least 3 characters")
+    .max(30, "Username must be less than 30 characters")
+    .regex(
+      /^[a-zA-Z0-9_-]+$/,
+      "Username can only contain letters, numbers, hyphens, and underscores"
+    ),
 });
 
-type ChangeEmailFormValues = z.infer<typeof changeEmailSchema>;
+type ChangeUsernameFormValues = z.infer<typeof changeUsernameSchema>;
 
-export function ChangeEmailForm({ currentEmail }: { currentEmail?: string }) {
+export function ChangeUsernameForm({
+  currentUsername,
+}: {
+  currentUsername?: string;
+}) {
   const api = useApi();
   const { mutateAsync: patchMe, isPending } = api.users.patchMe();
 
-  const form = useForm<ChangeEmailFormValues>({
-    resolver: zodResolver(changeEmailSchema),
+  const form = useForm<ChangeUsernameFormValues>({
+    resolver: zodResolver(changeUsernameSchema),
     defaultValues: {
-      email: currentEmail ?? "",
+      username: currentUsername ?? "",
     },
   });
 
   const globalError = form.formState.errors.root?.message;
 
-  const onSubmit = async (data: ChangeEmailFormValues) => {
+  const onSubmit = async (data: ChangeUsernameFormValues) => {
     try {
-      await patchMe({ email: data.email });
-      form.reset({ email: data.email });
+      await patchMe({ username: data.username });
+      form.reset({ username: data.username });
     } catch (err) {
-      const { fieldErrors, globalError: apiError } = parseApiError(err);
+      const { fieldErrors, globalError } = parseApiError(err);
 
-      if (fieldErrors.email) {
-        form.setError("email", { message: fieldErrors.email });
-      } else if (apiError) {
-        if (apiError.toLowerCase().includes("email")) {
-          form.setError("email", {
-            message: "An account with this email already exists.",
-          });
-        } else {
-          form.setError("root", { message: apiError });
-        }
+      if (fieldErrors.username) {
+        form.setError("username", { message: fieldErrors.username });
+      } else if (globalError) {
+        form.setError("root", { message: globalError });
       }
     }
   };
@@ -59,19 +61,18 @@ export function ChangeEmailForm({ currentEmail }: { currentEmail?: string }) {
     <form onSubmit={form.handleSubmit(onSubmit)}>
       <FieldGroup>
         <Controller
-          name="email"
+          name="username"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Email address</FieldLabel>
+              <FieldLabel htmlFor={field.name}>Username</FieldLabel>
               <InputGroup>
                 <InputGroupInput
                   {...field}
                   id={field.name}
-                  type="email"
                   aria-invalid={fieldState.invalid}
-                  placeholder="you@example.com"
-                  autoComplete="email"
+                  placeholder="your-username"
+                  autoComplete="username"
                 />
               </InputGroup>
               {fieldState.error && <FieldError errors={[fieldState.error]} />}
@@ -83,7 +84,7 @@ export function ChangeEmailForm({ currentEmail }: { currentEmail?: string }) {
         <p className="mt-2 text-sm text-destructive">{globalError}</p>
       )}
       <Button type="submit" disabled={isPending} className="mt-4">
-        {isPending ? "Saving..." : "Save email"}
+        {isPending ? "Saving..." : "Save username"}
       </Button>
     </form>
   );

@@ -14,6 +14,11 @@ export type PATCHUsersIdBody = {
    */
   username?: string;
   /**
+   * @minLength 1
+   * @maxLength 255
+   */
+  email?: string;
+  /**
    * @maxLength 500
    * @nullable
    */

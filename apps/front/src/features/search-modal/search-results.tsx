@@ -1,11 +1,11 @@
 import type { GETContents200DataItemsItem } from "@packages/api-sdk";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getApi } from "@/lib/api/services";
+import { useApi } from "@/lib/api/services";
 import { ContentCard, ContentCardSkeleton } from "./components/content-card";
 
 export const SearchResults = ({ query }: { query: string }) => {
-  const { contents: contentService } = getApi();
-  const { data, isLoading } = contentService.discover({
+  const api = useApi();
+  const { data, isLoading } = api.contents.discover({
     title: query,
     withCategory: "true",
   });

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { getApi } from "@/lib/api/services";
+import { useApi } from "@/lib/api/services";
 import {
   MovieCard,
   MovieCardSkeleton,
@@ -18,9 +18,9 @@ export function ContentPage() {
   const { contentId } = useParams({
     from: "/_main/contents/$contentId/",
   });
-  const { contents } = getApi();
+  const api = useApi();
 
-  const { data, isLoading } = contents.get(contentId, {
+  const { data, isLoading } = api.contents.get(contentId, {
     withCast: "true",
     withCategory: "true",
     withEpisodes: "true",
