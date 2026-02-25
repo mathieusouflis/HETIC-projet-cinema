@@ -1,4 +1,4 @@
-import { Outlet } from "@tanstack/react-router";
+import { Outlet, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useAuth } from "@/features/auth/stores/auth.store";
 import { SearchProvider } from "@/features/search-modal";
@@ -7,24 +7,46 @@ import { AssideNav } from "./nav/asside-nav";
 import { BottomNav } from "./nav/bottom-nav";
 
 export const MainLayout = () => {
-  const { user, setAccessToken, setUser, setLoading } = useAuth();
+  const {
+    accessToken,
+    user,
+    isLoading,
+    setAccessToken,
+    setUser,
+    setLoading,
+    clear,
+  } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
+    if (accessToken) {
       return;
     }
 
-    const refreshToken = async () => {
+    const init = async () => {
       setLoading(true);
-      const refreshResponse = await authService.refresh();
-      console.log(refreshResponse);
-      setAccessToken(refreshResponse.data.accessToken);
-      setUser(refreshResponse.data.user);
-      setLoading(false);
+      try {
+        const res = await authService.refresh();
+        setAccessToken(res.data.accessToken);
+        setUser(res.data.user);
+      } catch {
+        clear();
+      } finally {
+        setLoading(false);
+      }
     };
 
-    refreshToken();
-  }, [user, setUser, setAccessToken, setLoading]);
+    init();
+  }, []);
+
+  if (isLoading) {
+    return null;
+  }
+
+  if (!user) {
+    navigate({ to: "/login", replace: true });
+    return null;
+  }
 
   return (
     <div className="flex flex-col lg:flex-row-reverse min-h-screen gap-6">

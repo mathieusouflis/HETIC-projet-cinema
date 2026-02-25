@@ -1,8 +1,5 @@
-import { useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import { useApi } from "@/lib/api/services";
-import { useAuth } from "../auth/stores/auth.store";
 import { ChangeEmailForm } from "./change-email";
 import { ChangePasswordForm } from "./change-password";
 import { ChangeUsernameForm } from "./change-username";
@@ -26,20 +23,8 @@ function SectionHeader({
 }
 
 export function SettingsPage() {
-  const { user: authUser } = useAuth();
-  const navigate = useNavigate();
   const api = useApi();
   const { data: profile, isLoading } = api.users.getMe();
-
-  useEffect(() => {
-    if (!authUser) {
-      navigate({ to: "/", replace: true });
-    }
-  }, [authUser, navigate]);
-
-  if (!authUser) {
-    return null;
-  }
 
   return (
     <div className="flex flex-col gap-8 max-w-lg">
