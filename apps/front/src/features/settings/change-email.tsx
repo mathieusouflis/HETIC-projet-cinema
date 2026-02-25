@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,7 @@ type ChangeEmailFormValues = z.infer<typeof changeEmailSchema>;
 export function ChangeEmailForm({ currentEmail }: { currentEmail?: string }) {
   const api = useApi();
   const { mutateAsync: patchMe, isPending } = api.users.patchMe();
+  const [saved, setSaved] = useState(false);
 
   const form = useForm<ChangeEmailFormValues>({
     resolver: zodResolver(changeEmailSchema),
@@ -32,12 +34,20 @@ export function ChangeEmailForm({ currentEmail }: { currentEmail?: string }) {
     },
   });
 
+  useEffect(() => {
+    if (currentEmail !== undefined) {
+      form.reset({ email: currentEmail });
+    }
+  }, [currentEmail, form]);
+
   const globalError = form.formState.errors.root?.message;
 
   const onSubmit = async (data: ChangeEmailFormValues) => {
     try {
       await patchMe({ email: data.email });
       form.reset({ email: data.email });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
     } catch (err) {
       const { fieldErrors, globalError: apiError } = parseApiError(err);
 
@@ -82,9 +92,12 @@ export function ChangeEmailForm({ currentEmail }: { currentEmail?: string }) {
       {globalError && (
         <p className="mt-2 text-sm text-destructive">{globalError}</p>
       )}
-      <Button type="submit" disabled={isPending} className="mt-4">
-        {isPending ? "Saving..." : "Save email"}
-      </Button>
+      <div className="mt-4 flex items-center gap-3">
+        <Button type="submit" disabled={isPending}>
+          {isPending ? "Saving..." : "Save email"}
+        </Button>
+        {saved && <p className="text-sm text-green-600">Email updated.</p>}
+      </div>
     </form>
   );
 }
