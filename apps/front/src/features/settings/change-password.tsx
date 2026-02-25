@@ -53,6 +53,7 @@ export function ChangePasswordForm() {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   const api = useApi();
   const { mutateAsync: patchMe, isPending } = api.users.patchMe();
@@ -76,6 +77,8 @@ export function ChangePasswordForm() {
         confirmPassword: data.confirmPassword,
       });
       form.reset();
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
     } catch (err) {
       const { fieldErrors, globalError: apiError } = parseApiError(err);
 
@@ -192,9 +195,12 @@ export function ChangePasswordForm() {
       {globalError && (
         <p className="mt-2 text-sm text-destructive">{globalError}</p>
       )}
-      <Button type="submit" disabled={isPending} className="mt-4">
-        {isPending ? "Changing password..." : "Change password"}
-      </Button>
+      <div className="mt-4 flex items-center gap-3">
+        <Button type="submit" disabled={isPending}>
+          {isPending ? "Changing password..." : "Change password"}
+        </Button>
+        {saved && <p className="text-sm text-green-600">Password updated.</p>}
+      </div>
     </form>
   );
 }

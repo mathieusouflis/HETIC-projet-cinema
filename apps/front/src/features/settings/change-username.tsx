@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,7 @@ export function ChangeUsernameForm({
 }) {
   const api = useApi();
   const { mutateAsync: patchMe, isPending } = api.users.patchMe();
+  const [saved, setSaved] = useState(false);
 
   const form = useForm<ChangeUsernameFormValues>({
     resolver: zodResolver(changeUsernameSchema),
@@ -40,12 +42,20 @@ export function ChangeUsernameForm({
     },
   });
 
+  useEffect(() => {
+    if (currentUsername !== undefined) {
+      form.reset({ username: currentUsername });
+    }
+  }, [currentUsername, form]);
+
   const globalError = form.formState.errors.root?.message;
 
   const onSubmit = async (data: ChangeUsernameFormValues) => {
     try {
       await patchMe({ username: data.username });
       form.reset({ username: data.username });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
     } catch (err) {
       const { fieldErrors, globalError } = parseApiError(err);
 
@@ -83,9 +93,12 @@ export function ChangeUsernameForm({
       {globalError && (
         <p className="mt-2 text-sm text-destructive">{globalError}</p>
       )}
-      <Button type="submit" disabled={isPending} className="mt-4">
-        {isPending ? "Saving..." : "Save username"}
-      </Button>
+      <div className="mt-4 flex items-center gap-3">
+        <Button type="submit" disabled={isPending}>
+          {isPending ? "Saving..." : "Save username"}
+        </Button>
+        {saved && <p className="text-sm text-green-600">Username updated.</p>}
+      </div>
     </form>
   );
 }
