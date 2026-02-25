@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './app/__root'
 import { Route as MainRouteImport } from './app/_main'
 import { Route as LoginIndexRouteImport } from './app/login/index'
 import { Route as MainIndexRouteImport } from './app/_main/index'
+import { Route as MainSettingsIndexRouteImport } from './app/_main/settings/index'
 import { Route as MainContentsContentIdIndexRouteImport } from './app/_main/contents/$contentId/index'
 
 const MainRoute = MainRouteImport.update({
@@ -28,6 +29,11 @@ const MainIndexRoute = MainIndexRouteImport.update({
   path: '/',
   getParentRoute: () => MainRoute,
 } as any)
+const MainSettingsIndexRoute = MainSettingsIndexRouteImport.update({
+  id: '/settings/',
+  path: '/settings/',
+  getParentRoute: () => MainRoute,
+} as any)
 const MainContentsContentIdIndexRoute =
   MainContentsContentIdIndexRouteImport.update({
     id: '/contents/$contentId/',
@@ -38,11 +44,13 @@ const MainContentsContentIdIndexRoute =
 export interface FileRoutesByFullPath {
   '/': typeof MainIndexRoute
   '/login/': typeof LoginIndexRoute
+  '/settings/': typeof MainSettingsIndexRoute
   '/contents/$contentId/': typeof MainContentsContentIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof MainIndexRoute
   '/login': typeof LoginIndexRoute
+  '/settings': typeof MainSettingsIndexRoute
   '/contents/$contentId': typeof MainContentsContentIdIndexRoute
 }
 export interface FileRoutesById {
@@ -50,18 +58,20 @@ export interface FileRoutesById {
   '/_main': typeof MainRouteWithChildren
   '/_main/': typeof MainIndexRoute
   '/login/': typeof LoginIndexRoute
+  '/_main/settings/': typeof MainSettingsIndexRoute
   '/_main/contents/$contentId/': typeof MainContentsContentIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login/' | '/contents/$contentId/'
+  fullPaths: '/' | '/login/' | '/settings/' | '/contents/$contentId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/contents/$contentId'
+  to: '/' | '/login' | '/settings' | '/contents/$contentId'
   id:
     | '__root__'
     | '/_main'
     | '/_main/'
     | '/login/'
+    | '/_main/settings/'
     | '/_main/contents/$contentId/'
   fileRoutesById: FileRoutesById
 }
@@ -93,6 +103,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainIndexRouteImport
       parentRoute: typeof MainRoute
     }
+    '/_main/settings/': {
+      id: '/_main/settings/'
+      path: '/settings'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof MainSettingsIndexRouteImport
+      parentRoute: typeof MainRoute
+    }
     '/_main/contents/$contentId/': {
       id: '/_main/contents/$contentId/'
       path: '/contents/$contentId'
@@ -105,11 +122,13 @@ declare module '@tanstack/react-router' {
 
 interface MainRouteChildren {
   MainIndexRoute: typeof MainIndexRoute
+  MainSettingsIndexRoute: typeof MainSettingsIndexRoute
   MainContentsContentIdIndexRoute: typeof MainContentsContentIdIndexRoute
 }
 
 const MainRouteChildren: MainRouteChildren = {
   MainIndexRoute: MainIndexRoute,
+  MainSettingsIndexRoute: MainSettingsIndexRoute,
   MainContentsContentIdIndexRoute: MainContentsContentIdIndexRoute,
 }
 
