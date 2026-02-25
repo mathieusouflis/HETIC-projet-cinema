@@ -18,4 +18,22 @@ export type PATCHUsersMeBody = {
    * @nullable
    */
   avatarUrl?: string | null;
+  /**
+   * @minLength 8
+   * @maxLength 100
+   * @pattern [A-Z]
+   */
+  password?: string;
+  /**
+   * @minLength 8
+   * @maxLength 100
+   * @pattern [A-Z]
+   */
+  newPassword?: string;
+  /**
+   * @minLength 8
+   * @maxLength 100
+   * @pattern [A-Z]
+   */
+  confirmPassword?: string;
 };

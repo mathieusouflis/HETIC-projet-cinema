@@ -12,6 +12,7 @@
     "dev": "vite --host 0.0.0.0 --port 3001 --clearScreen false"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@packages/api-sdk": "workspace:*",
     "@packages/config": "workspace:*",
     "@radix-ui/react-slot": "^1.2.4",
@@ -27,8 +28,10 @@
     "radix-ui": "^1.4.3",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-hook-form": "^7.71.2",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.0",
+    "zod": "^4.3.6",
     "zustand": "^5.0.11"
   },
   "devDependencies": {

@@ -1,3 +1,5 @@
+import { ValidationError } from "../../../../shared/errors/validation-error.js";
+import { PasswordService } from "../../../../shared/services/password/password-service.js";
 import { UserNotFoundError } from "../../domain/errors/UserNotFoundError.js";
 import { UsernameAlreadyExistsError } from "../../domain/errors/UsernameAlreadyExistsError.js";
 import type { IUserRepository } from "../../domain/interfaces/IUserRepository.js";
@@ -6,7 +8,11 @@ import type { PatchIdResponse } from "../dto/response/patch-id.response.validato
 import { toUserResponseDTO } from "../dto/utils/to-user-response.js";
 
 export class UpdateUserUseCase {
-  constructor(private readonly userRepository: IUserRepository) {}
+  private readonly passwordService: PasswordService;
+
+  constructor(private readonly userRepository: IUserRepository) {
+    this.passwordService = new PasswordService();
+  }
 
   /**
    * @param id - User's unique identifier
@@ -22,6 +28,21 @@ export class UpdateUserUseCase {
       throw new UserNotFoundError(id);
     }
 
+    if (data.password) {
+      if (
+        !(await this.passwordService.compare(
+          data.password,
+          existingUser.passwordHash ?? ""
+        ))
+      ) {
+        throw new ValidationError("Invalid password");
+      }
+
+      if (data.newPassword !== data.confirmPassword) {
+        throw new ValidationError("Passwords do not match");
+      }
+    }
+
     if (data.username && data.username !== existingUser.username) {
       const usernameExists = await this.userRepository.existsByUsername(
         data.username
@@ -35,6 +56,7 @@ export class UpdateUserUseCase {
     const updatePayload: {
       username?: string;
       avatarUrl?: string | null;
+      passwordHash?: string;
     } = {};
 
     if (data.username !== undefined) {
@@ -43,6 +65,11 @@ export class UpdateUserUseCase {
 
     if (data.avatarUrl !== undefined) {
       updatePayload.avatarUrl = data.avatarUrl;
+    }
+
+    if (data.newPassword) {
+      const hashedPassword = await this.passwordService.hash(data.newPassword);
+      updatePayload.passwordHash = hashedPassword;
     }
 
     if (Object.keys(updatePayload).length === 0) {
