@@ -2,8 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "@tanstack/react-router";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,54 +11,50 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { AuthError, useLogin } from "../hooks/useLogin";
-
-const schema = z.object({
-  email: z.email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
-
-type FormValues = z.infer<typeof schema>;
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { useLogin } from "../hooks/useLogin";
+import { type LoginFormValues, loginSchema } from "../schemas/auth.schemas";
 
 export function LoginForm() {
   const { login, isLoading } = useLogin();
   const [showPassword, setShowPassword] = useState(false);
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(schema),
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: "", password: "" },
   });
 
-  async function onSubmit(values: FormValues) {
+  const globalError = form.formState.errors.root?.message;
+
+  async function onSubmit(values: LoginFormValues) {
     try {
       await login(values.email, values.password);
-    } catch (error: unknown) {
-      if (error instanceof AuthError) {
-        switch (error.code) {
-          case "INVALID_CREDENTIALS":
-            form.setError("password", {
-              message: "Incorrect email or password",
-            });
-            return;
+    } catch (err: unknown) {
+      const error = err as {
+        fieldErrors?: Record<string, string>;
+        globalError?: string | null;
+      };
 
-          case "USER_NOT_FOUND":
-            form.setError("email", {
-              message: "No account found with this email",
-            });
-            return;
-
-          default:
-            form.setError("root", {
-              message: "Server error. Please try again.",
-            });
-            return;
+      if (error.fieldErrors) {
+        for (const [field, message] of Object.entries(error.fieldErrors)) {
+          form.setError(field as keyof LoginFormValues, { message });
         }
       }
 
-      form.setError("root", {
-        message: "Unexpected error.",
-      });
+      if (error.globalError) {
+        form.setError("root", { message: error.globalError });
+      }
     }
   }
 
@@ -79,58 +74,72 @@ export function LoginForm() {
               </Link>
             </CardDescription>
           </CardHeader>
-
           <CardContent>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <div>
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@email.com"
-                  className="border-0 border-b shadow-none rounded-none focus-visible:ring-0 focus-visible:border-primary px-0 py-0"
-                  {...form.register("email")}
+              <FieldGroup>
+                <Controller
+                  name="email"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                      <InputGroup>
+                        <InputGroupInput
+                          {...field}
+                          id={field.name}
+                          type="email"
+                          placeholder="you@email.com"
+                          autoComplete="email"
+                          aria-invalid={fieldState.invalid}
+                        />
+                      </InputGroup>
+                      {fieldState.error && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
                 />
-                {form.formState.errors.email && (
-                  <p className="text-destructive text-sm mt-1">
-                    {form.formState.errors.email.message}
-                  </p>
-                )}
-              </div>
 
-              <div>
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    className="border-0 border-b shadow-none rounded-none focus-visible:ring-0 focus-visible:border-primary px-0 py-0"
-                    {...form.register("password")}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1 "
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                </div>
-                {form.formState.errors.password && (
-                  <p className="text-destructive text-sm mt-1">
-                    {form.formState.errors.password.message}
-                  </p>
-                )}
-              </div>
+                <Controller
+                  name="password"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                      <InputGroup>
+                        <InputGroupInput
+                          {...field}
+                          id={field.name}
+                          type={showPassword ? "text" : "password"}
+                          autoComplete="current-password"
+                          aria-invalid={fieldState.invalid}
+                        />
+                        <InputGroupAddon align="inline-end">
+                          <InputGroupButton
+                            type="button"
+                            onClick={() => setShowPassword((v) => !v)}
+                          >
+                            {showPassword ? <EyeOff /> : <Eye />}
+                          </InputGroupButton>
+                        </InputGroupAddon>
+                      </InputGroup>
+                      {fieldState.error && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+              </FieldGroup>
 
-              {form.formState.errors.root && (
-                <p className="text-destructive text-sm">
-                  {form.formState.errors.root.message}
-                </p>
+              {globalError && (
+                <FieldError errors={[{ message: globalError }]} />
               )}
 
               <div className="flex justify-end gap-4 pt-12">
                 <Link to="/register">
-                  <Button variant="secondary">Create Account</Button>
+                  <Button type="button" variant="secondary">
+                    Create Account
+                  </Button>
                 </Link>
 
                 <Button
@@ -154,8 +163,8 @@ export function LoginForm() {
       <div className="hidden lg:flex lg:w-1/2 items-center justify-center px-16 bg-neutral-800 text-white">
         <div>
           <p className="text-3xl lg:text-4xl font-serif">
-            “Lorem ipsum is, in <br />
-            printing”
+            "Lorem ipsum is, in <br />
+            printing"
           </p>
           <p className="mt-6 text-base">- Albert Einstein</p>
         </div>

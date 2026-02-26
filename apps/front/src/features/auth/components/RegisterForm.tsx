@@ -2,8 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "@tanstack/react-router";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,57 +11,58 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import type { RegisterErrorCode } from "../hooks/useRegister";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { useRegister } from "../hooks/useRegister";
-
-const schema = z
-  .object({
-    email: z.string().email("Invalid email"),
-    username: z.string().min(3, "Username too short"),
-    password: z.string().min(6, "Password too short"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
-
-type FormValues = z.infer<typeof schema>;
+import {
+  type RegisterFormValues,
+  registerSchema,
+} from "../schemas/auth.schemas";
 
 export function RegisterForm() {
   const { register: registerUser, isLoading } = useRegister();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(schema),
+  const form = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      email: "",
+      username: "",
+      password: "",
+      confirmPassword: "",
+    },
   });
 
-  async function onSubmit(values: FormValues) {
+  const globalError = form.formState.errors.root?.message;
+
+  async function onSubmit(values: RegisterFormValues) {
     try {
       await registerUser(values.email, values.username, values.password);
     } catch (err: unknown) {
-      const error = err as { code?: RegisterErrorCode };
+      const error = err as {
+        fieldErrors?: Record<string, string>;
+        globalError?: string | null;
+      };
 
-      switch (error.code) {
-        case "EMAIL_ALREADY_EXISTS":
-          form.setError("email", {
-            message: "This email is already in use",
-          });
-          break;
+      if (error.fieldErrors) {
+        for (const [field, message] of Object.entries(error.fieldErrors)) {
+          form.setError(field as keyof RegisterFormValues, { message });
+        }
+      }
 
-        case "USERNAME_TAKEN":
-          form.setError("username", {
-            message: "This username is already taken",
-          });
-          break;
-
-        default:
-          form.setError("root", {
-            message: "Server error. Please try again.",
-          });
+      if (error.globalError) {
+        form.setError("root", { message: error.globalError });
       }
     }
   }
@@ -85,101 +85,130 @@ export function RegisterForm() {
 
           <CardContent>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              {/* EMAIL */}
-              <div>
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@email.com"
-                  className="border-0 border-b shadow-none rounded-none focus-visible:ring-0 focus-visible:border-primary px-0 py-0"
-                  {...form.register("email")}
+              <FieldGroup>
+                {/* EMAIL */}
+                <Controller
+                  name="email"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                      <InputGroup>
+                        <InputGroupInput
+                          {...field}
+                          id={field.name}
+                          type="email"
+                          placeholder="you@email.com"
+                          autoComplete="email"
+                          aria-invalid={fieldState.invalid}
+                        />
+                      </InputGroup>
+                      {fieldState.error && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
                 />
-                {form.formState.errors.email && (
-                  <p className="text-destructive text-sm mt-1">
-                    {form.formState.errors.email.message}
-                  </p>
-                )}
-              </div>
 
-              {/* USERNAME */}
-              <div>
-                <Label htmlFor="username">Username</Label>
-                <Input
-                  id="username"
-                  type="text"
-                  placeholder="yourusername"
-                  className="border-0 border-b shadow-none rounded-none focus-visible:ring-0 focus-visible:border-primary px-0 py-0"
-                  {...form.register("username")}
+                {/* USERNAME */}
+                <Controller
+                  name="username"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor={field.name}>Username</FieldLabel>
+                      <InputGroup>
+                        <InputGroupInput
+                          {...field}
+                          id={field.name}
+                          type="text"
+                          placeholder="yourusername"
+                          autoComplete="username"
+                          aria-invalid={fieldState.invalid}
+                        />
+                      </InputGroup>
+                      {fieldState.error && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
                 />
-                {form.formState.errors.username && (
-                  <p className="text-destructive text-sm mt-1">
-                    {form.formState.errors.username.message}
-                  </p>
-                )}
-              </div>
 
-              {/* PASSWORD */}
-              <div>
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    className="border-0 border-b shadow-none rounded-none focus-visible:ring-0 focus-visible:border-primary px-0 py-0"
-                    {...form.register("password")}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1"
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                </div>
-                {form.formState.errors.password && (
-                  <p className="text-destructive text-sm mt-1">
-                    {form.formState.errors.password.message}
-                  </p>
-                )}
-              </div>
+                {/* PASSWORD */}
+                <Controller
+                  name="password"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                      <InputGroup>
+                        <InputGroupInput
+                          {...field}
+                          id={field.name}
+                          type={showPassword ? "text" : "password"}
+                          autoComplete="new-password"
+                          aria-invalid={fieldState.invalid}
+                        />
+                        <InputGroupAddon align="inline-end">
+                          <InputGroupButton
+                            type="button"
+                            onClick={() => setShowPassword((v) => !v)}
+                          >
+                            {showPassword ? <EyeOff /> : <Eye />}
+                          </InputGroupButton>
+                        </InputGroupAddon>
+                      </InputGroup>
+                      {fieldState.error && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
 
-              {/* CONFIRM PASSWORD */}
-              <div>
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <div className="relative">
-                  <Input
-                    id="confirmPassword"
-                    type={showConfirm ? "text" : "password"}
-                    className="border-0 border-b shadow-none rounded-none focus-visible:ring-0 focus-visible:border-primary px-0 py-0"
-                    {...form.register("confirmPassword")}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirm(!showConfirm)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1"
-                  >
-                    {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                </div>
-                {form.formState.errors.confirmPassword && (
-                  <p className="text-destructive text-sm mt-1">
-                    {form.formState.errors.confirmPassword.message}
-                  </p>
-                )}
-              </div>
+                {/* CONFIRM PASSWORD */}
+                <Controller
+                  name="confirmPassword"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor={field.name}>
+                        Confirm Password
+                      </FieldLabel>
+                      <InputGroup>
+                        <InputGroupInput
+                          {...field}
+                          id={field.name}
+                          type={showConfirm ? "text" : "password"}
+                          autoComplete="new-password"
+                          aria-invalid={fieldState.invalid}
+                        />
+                        <InputGroupAddon align="inline-end">
+                          <InputGroupButton
+                            type="button"
+                            onClick={() => setShowConfirm((v) => !v)}
+                          >
+                            {showConfirm ? <EyeOff /> : <Eye />}
+                          </InputGroupButton>
+                        </InputGroupAddon>
+                      </InputGroup>
+                      {fieldState.error && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+              </FieldGroup>
 
-              {/* SERVER ERROR */}
-              {form.formState.errors.root && (
-                <p className="text-destructive text-sm">
-                  {form.formState.errors.root.message}
-                </p>
+              {globalError && (
+                <FieldError errors={[{ message: globalError }]} />
               )}
 
               {/* BUTTONS */}
               <div className="flex justify-end gap-4 pt-12">
                 <Link to="/login">
-                  <Button variant="secondary">Sign In</Button>
+                  <Button type="button" variant="secondary">
+                    Sign In
+                  </Button>
                 </Link>
 
                 <Button
@@ -202,7 +231,7 @@ export function RegisterForm() {
       <div className="hidden lg:flex lg:w-1/2 items-center justify-center px-16 bg-neutral-800 text-white">
         <div>
           <p className="text-3xl lg:text-4xl font-serif">
-            “Lorem ipsum is, in <br /> printing”
+            "Lorem ipsum is, in <br /> printing"
           </p>
           <p className="mt-6 text-base">- Albert Einstein</p>
         </div>
