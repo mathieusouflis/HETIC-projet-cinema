@@ -969,7 +969,7 @@
           {
             "schema": {
               "type": "integer",
-              "minimum": 1,
+              "nullable": true,
               "maximum": 100,
               "default": 25
             },
@@ -1876,7 +1876,7 @@
           {
             "schema": {
               "type": "integer",
-              "minimum": 1,
+              "nullable": true,
               "maximum": 100,
               "default": 25
             },
@@ -2967,7 +2967,7 @@
           {
             "schema": {
               "type": "integer",
-              "minimum": 1,
+              "nullable": true,
               "maximum": 100,
               "default": 25
             },
@@ -3617,7 +3617,7 @@
           {
             "schema": {
               "type": "integer",
-              "minimum": 1,
+              "nullable": true,
               "maximum": 100,
               "default": 25
             },
@@ -3997,7 +3997,7 @@
           {
             "schema": {
               "type": "integer",
-              "minimum": 1,
+              "nullable": true,
               "maximum": 100,
               "default": 25
             },
@@ -4810,7 +4810,7 @@
           {
             "schema": {
               "type": "integer",
-              "minimum": 1,
+              "nullable": true,
               "maximum": 100,
               "default": 25
             },
@@ -6545,7 +6545,7 @@
           {
             "schema": {
               "type": "integer",
-              "minimum": 1,
+              "nullable": true,
               "maximum": 100,
               "default": 25
             },
@@ -7660,7 +7660,7 @@
           {
             "schema": {
               "type": "integer",
-              "minimum": 1,
+              "nullable": true,
               "maximum": 100,
               "default": 25
             },
@@ -9065,7 +9065,7 @@
           {
             "schema": {
               "type": "integer",
-              "minimum": 1,
+              "nullable": true,
               "maximum": 100,
               "default": 25
             },
