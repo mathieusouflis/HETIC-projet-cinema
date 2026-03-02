@@ -39,8 +39,8 @@ export type GETContentsParams = {
    */
   offset?: number | null;
   /**
-   * @minimum 1
    * @maximum 100
+   * @nullable
    */
-  limit?: number;
+  limit?: number | null;
 };
