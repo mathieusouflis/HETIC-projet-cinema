@@ -32,11 +32,6 @@ const RegisterIndexRoute = RegisterIndexRouteImport.update({
   path: '/register/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfileIndexRoute = ProfileIndexRouteImport.update({
-  id: '/profile/',
-  path: '/profile/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LoginIndexRoute = LoginIndexRouteImport.update({
   id: '/login/',
   path: '/login/',
@@ -92,7 +87,7 @@ const MainContentsContentIdIndexRoute =
 export interface FileRoutesByFullPath {
   '/': typeof MainIndexRoute
   '/login/': typeof LoginIndexRoute
-  '/profile/': typeof ProfileIndexRoute
+  '/profile/': typeof MainProfileIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/profile/': typeof MainProfileIndexRoute
   '/search/': typeof MainSearchIndexRoute
@@ -105,7 +100,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof MainIndexRoute
   '/login': typeof LoginIndexRoute
-  '/profile': typeof ProfileIndexRoute
+  '/profile': typeof MainProfileIndexRoute
   '/register': typeof RegisterIndexRoute
   '/profile': typeof MainProfileIndexRoute
   '/search': typeof MainSearchIndexRoute
@@ -119,7 +114,7 @@ export interface FileRoutesById {
   '/_main': typeof MainRouteWithChildren
   '/_main/': typeof MainIndexRoute
   '/login/': typeof LoginIndexRoute
-  '/profile/': typeof ProfileIndexRoute
+  '/_main/profile/': typeof MainProfileIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/_main/profile/': typeof MainProfileIndexRoute
   '/_main/search/': typeof MainSearchIndexRoute
@@ -131,8 +126,11 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    |
     | '/'
+   
     | '/login/'
+   
     | '/profile/'
     | '/register/'
     | '/profile/'
@@ -173,7 +171,8 @@ export interface FileRouteTypes {
     | '/_main'
     | '/_main/'
     | '/login/'
-    | '/profile/'
+   
+    | '/_main/profile/'
     | '/register/'
     | '/_main/profile/'
     | '/_main/search/'
@@ -186,7 +185,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   MainRoute: typeof MainRouteWithChildren
   LoginIndexRoute: typeof LoginIndexRoute
-  ProfileIndexRoute: typeof ProfileIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
 }
 
@@ -204,13 +202,6 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register/'
       preLoaderRoute: typeof RegisterIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile/': {
-      id: '/profile/'
-      path: '/profile'
-      fullPath: '/profile/'
-      preLoaderRoute: typeof ProfileIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login/': {
@@ -317,7 +308,6 @@ const MainRouteWithChildren = MainRoute._addFileChildren(MainRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   MainRoute: MainRouteWithChildren,
   LoginIndexRoute: LoginIndexRoute,
-  ProfileIndexRoute: ProfileIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
 }
 export const routeTree = rootRouteImport
