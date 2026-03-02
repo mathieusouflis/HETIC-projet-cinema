@@ -14,6 +14,7 @@ import { Route as RegisterIndexRouteImport } from './app/register/index'
 import { Route as LoginIndexRouteImport } from './app/login/index'
 import { Route as MainIndexRouteImport } from './app/_main/index'
 import { Route as MainSettingsIndexRouteImport } from './app/_main/settings/index'
+import { Route as MainProfileIndexRouteImport } from './app/_main/profile/index'
 import { Route as MainContentsContentIdIndexRouteImport } from './app/_main/contents/$contentId/index'
 
 const MainRoute = MainRouteImport.update({
@@ -40,6 +41,11 @@ const MainSettingsIndexRoute = MainSettingsIndexRouteImport.update({
   path: '/settings/',
   getParentRoute: () => MainRoute,
 } as any)
+const MainProfileIndexRoute = MainProfileIndexRouteImport.update({
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => MainRoute,
+} as any)
 const MainContentsContentIdIndexRoute =
   MainContentsContentIdIndexRouteImport.update({
     id: '/contents/$contentId/',
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof MainIndexRoute
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
+  '/profile/': typeof MainProfileIndexRoute
   '/settings/': typeof MainSettingsIndexRoute
   '/contents/$contentId/': typeof MainContentsContentIdIndexRoute
 }
@@ -58,6 +65,7 @@ export interface FileRoutesByTo {
   '/': typeof MainIndexRoute
   '/login': typeof LoginIndexRoute
   '/register': typeof RegisterIndexRoute
+  '/profile': typeof MainProfileIndexRoute
   '/settings': typeof MainSettingsIndexRoute
   '/contents/$contentId': typeof MainContentsContentIdIndexRoute
 }
@@ -67,6 +75,7 @@ export interface FileRoutesById {
   '/_main/': typeof MainIndexRoute
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
+  '/_main/profile/': typeof MainProfileIndexRoute
   '/_main/settings/': typeof MainSettingsIndexRoute
   '/_main/contents/$contentId/': typeof MainContentsContentIdIndexRoute
 }
@@ -76,16 +85,24 @@ export interface FileRouteTypes {
     | '/'
     | '/login/'
     | '/register/'
+    | '/profile/'
     | '/settings/'
     | '/contents/$contentId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register' | '/settings' | '/contents/$contentId'
+  to:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/profile'
+    | '/settings'
+    | '/contents/$contentId'
   id:
     | '__root__'
     | '/_main'
     | '/_main/'
     | '/login/'
     | '/register/'
+    | '/_main/profile/'
     | '/_main/settings/'
     | '/_main/contents/$contentId/'
   fileRoutesById: FileRoutesById
@@ -133,6 +150,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainSettingsIndexRouteImport
       parentRoute: typeof MainRoute
     }
+    '/_main/profile/': {
+      id: '/_main/profile/'
+      path: '/profile'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof MainProfileIndexRouteImport
+      parentRoute: typeof MainRoute
+    }
     '/_main/contents/$contentId/': {
       id: '/_main/contents/$contentId/'
       path: '/contents/$contentId'
@@ -145,12 +169,14 @@ declare module '@tanstack/react-router' {
 
 interface MainRouteChildren {
   MainIndexRoute: typeof MainIndexRoute
+  MainProfileIndexRoute: typeof MainProfileIndexRoute
   MainSettingsIndexRoute: typeof MainSettingsIndexRoute
   MainContentsContentIdIndexRoute: typeof MainContentsContentIdIndexRoute
 }
 
 const MainRouteChildren: MainRouteChildren = {
   MainIndexRoute: MainIndexRoute,
+  MainProfileIndexRoute: MainProfileIndexRoute,
   MainSettingsIndexRoute: MainSettingsIndexRoute,
   MainContentsContentIdIndexRoute: MainContentsContentIdIndexRoute,
 }
