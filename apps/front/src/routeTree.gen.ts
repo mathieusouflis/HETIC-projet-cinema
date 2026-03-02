@@ -127,8 +127,7 @@ export interface FileRouteTypes {
     | '/register/'
     | '/profile/'
     | '/search/'
-    | '/profile/'
-    | '/search/'
+   
     | '/settings/'
     | '/watchlist/'
     | '/watchparty/'
@@ -258,6 +257,10 @@ interface MainRouteChildren {
   MainIndexRoute: typeof MainIndexRoute
   MainProfileIndexRoute: typeof MainProfileIndexRoute
   MainSearchIndexRoute: typeof MainSearchIndexRoute
+  MainProfileIndexRoute: typeof MainProfileIndexRoute
+  MainSearchIndexRoute: typeof MainSearchIndexRoute
+  MainProfileIndexRoute: typeof MainProfileIndexRoute
+  MainSearchIndexRoute: typeof MainSearchIndexRoute
   MainSettingsIndexRoute: typeof MainSettingsIndexRoute
   MainWatchlistIndexRoute: typeof MainWatchlistIndexRoute
   MainWatchpartyIndexRoute: typeof MainWatchpartyIndexRoute
@@ -266,6 +269,10 @@ interface MainRouteChildren {
 
 const MainRouteChildren: MainRouteChildren = {
   MainIndexRoute: MainIndexRoute,
+  MainProfileIndexRoute: MainProfileIndexRoute,
+  MainSearchIndexRoute: MainSearchIndexRoute,
+  MainProfileIndexRoute: MainProfileIndexRoute,
+  MainSearchIndexRoute: MainSearchIndexRoute,
   MainProfileIndexRoute: MainProfileIndexRoute,
   MainSearchIndexRoute: MainSearchIndexRoute,
   MainSettingsIndexRoute: MainSettingsIndexRoute,
