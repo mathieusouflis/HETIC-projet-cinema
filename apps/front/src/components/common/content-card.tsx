@@ -246,9 +246,9 @@ function ResultCard({
         )}
       </div>
 
-      <div className="shrink-0 self-center ml-2">
+      <div className="shrink-0 ml-2">
         <Button
-          size="icon-2xl"
+          size="icon-lg"
           className="rounded-full bg-foreground text-background hover:bg-foreground/80"
         >
           <Plus />
