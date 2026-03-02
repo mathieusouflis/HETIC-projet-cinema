@@ -54,36 +54,6 @@ const MainSettingsIndexRoute = MainSettingsIndexRouteImport.update({
   path: '/settings/',
   getParentRoute: () => MainRoute,
 } as any)
-const MainSearchIndexRoute = MainSearchIndexRouteImport.update({
-  id: '/search/',
-  path: '/search/',
-  getParentRoute: () => MainRoute,
-} as any)
-const MainProfileIndexRoute = MainProfileIndexRouteImport.update({
-  id: '/profile/',
-  path: '/profile/',
-  getParentRoute: () => MainRoute,
-} as any)
-const MainSearchIndexRoute = MainSearchIndexRouteImport.update({
-  id: '/search/',
-  path: '/search/',
-  getParentRoute: () => MainRoute,
-} as any)
-const MainProfileIndexRoute = MainProfileIndexRouteImport.update({
-  id: '/profile/',
-  path: '/profile/',
-  getParentRoute: () => MainRoute,
-} as any)
-const MainSearchIndexRoute = MainSearchIndexRouteImport.update({
-  id: '/search/',
-  path: '/search/',
-  getParentRoute: () => MainRoute,
-} as any)
-const MainProfileIndexRoute = MainProfileIndexRouteImport.update({
-  id: '/profile/',
-  path: '/profile/',
-  getParentRoute: () => MainRoute,
-} as any)
 const MainContentsContentIdIndexRoute =
   MainContentsContentIdIndexRouteImport.update({
     id: '/contents/$contentId/',
@@ -96,7 +66,6 @@ export interface FileRoutesByFullPath {
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/profile/': typeof MainProfileIndexRoute
-  '/search/': typeof MainSearchIndexRoute
   '/search/': typeof MainSearchIndexRoute
   '/settings/': typeof MainSettingsIndexRoute
   '/watchlist/': typeof MainWatchlistIndexRoute
