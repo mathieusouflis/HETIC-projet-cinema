@@ -1,0 +1,259 @@
+import type { GETContents200DataItemsItem } from "@packages/api-sdk";
+import { Link } from "@tanstack/react-router";
+import { Plus, Star } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { baseRoutes } from "@/lib/routes";
+import { cn } from "@/lib/utils";
+
+export type ContentCardVariant = "thumbnail" | "hero" | "result";
+
+interface ContentCardProps {
+  content: GETContents200DataItemsItem;
+  variant: ContentCardVariant;
+  className?: string;
+}
+
+export const ContentCard = ({
+  content,
+  variant,
+  className,
+}: ContentCardProps) => {
+  if (variant === "thumbnail")
+    return <ThumbnailCard content={content} className={className} />;
+  if (variant === "hero") return <HeroCard content={content} />;
+  return <ResultCard content={content} className={className} />;
+};
+
+interface ContentCardSkeletonProps {
+  variant: ContentCardVariant;
+  className?: string;
+}
+
+export const ContentCardSkeleton = ({
+  variant,
+  className,
+}: ContentCardSkeletonProps) => {
+  if (variant === "thumbnail") {
+    return (
+      <Skeleton
+        className={cn(
+          "h-50 sm:h-80 rounded-3xl sm:rounded-4xl aspect-5/8",
+          className
+        )}
+      />
+    );
+  }
+  if (variant === "hero") {
+    return (
+      <Skeleton
+        className={cn("w-full aspect-13/6 rounded-[28px]", className)}
+      />
+    );
+  }
+  return (
+    <div className="flex items-start gap-4 py-5">
+      <Skeleton className="w-28 lg:w-36 h-40 lg:h-52 rounded-2xl shrink-0" />
+      <div className="flex-1 flex flex-col gap-2">
+        <Skeleton className="h-6 w-3/4" />
+        <Skeleton className="h-4 w-1/2" />
+        <Skeleton className="h-5 w-14 rounded-full" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-2/3" />
+      </div>
+    </div>
+  );
+};
+
+// ---- Thumbnail variant (formerly MovieCard) ----
+
+function ThumbnailCard({
+  content,
+  className,
+}: {
+  content: GETContents200DataItemsItem;
+  className?: string;
+}) {
+  return (
+    <Link
+      to={baseRoutes.contents.detail(content.id)}
+      className={cn("flex h-50 sm:h-80 aspect-5/8", className)}
+    >
+      {content.posterUrl ? (
+        <img
+          className="h-full w-full object-cover rounded-3xl sm:rounded-4xl"
+          src={content.posterUrl}
+          alt={content.title}
+        />
+      ) : (
+        <span className="h-full w-full bg-neutral-500 rounded-3xl sm:rounded-4xl" />
+      )}
+    </Link>
+  );
+}
+
+// ---- Hero variant (formerly DisplayMovie) ----
+
+function HeroCard({ content }: { content: GETContents200DataItemsItem }) {
+  return (
+    <>
+      <Link
+        to={baseRoutes.contents.detail(content.id)}
+        className="lg:pointer-events-none block lg:hidden"
+      >
+        <HeroCardContent content={content} />
+      </Link>
+      <HeroCardContent content={content} className="hidden lg:block" />
+    </>
+  );
+}
+
+function HeroCardContent({
+  content,
+  className,
+}: {
+  content: GETContents200DataItemsItem;
+  className?: string;
+}) {
+  return (
+    <div className={cn("relative flex flex-col w-full", className)}>
+      {content.backdropUrl ? (
+        <div className="relative w-full h-auto rounded-[28px] overflow-hidden aspect-13/6">
+          <img
+            src={content.backdropUrl}
+            alt={content.title}
+            className="w-full h-auto object-cover"
+          />
+          <div className="absolute inset-0 bg-linear-to-tr from-black/80 to-black/0" />
+        </div>
+      ) : (
+        <span className="w-full h-full object-cover rounded-[28px] bg-neutral-500" />
+      )}
+      <div className="absolute flex flex-col gap-10 bottom-5 left-5 sm:bottom-12 sm:left-12">
+        <span className="flex flex-col gap-5">
+          <div className="sm:flex flex-wrap gap-1.5 hidden">
+            {content.contentCategories?.map((category) => (
+              <Badge size="lg" variant="glass" key={category.id}>
+                {category.name}
+              </Badge>
+            ))}
+          </div>
+          <h2 className="text-2xl sm:text-5xl lg:text-6xl font-bold text-white">
+            {content.title}
+          </h2>
+          <p className="text-white w-1/3 line-clamp-4 hidden xl:block">
+            {content.synopsis}
+          </p>
+        </span>
+        <Link
+          to={baseRoutes.contents.detail(content.id)}
+          className="hidden xl:block"
+        >
+          <Button variant="glass" size="2xl" className="w-fit hidden md:block">
+            Discover {content.type}
+          </Button>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+// ---- Result variant (formerly ContentResultCard) ----
+
+function ResultCard({
+  content,
+  className,
+}: {
+  content: GETContents200DataItemsItem;
+  className?: string;
+}) {
+  const year =
+    content.year ??
+    (content.releaseDate?.trim()
+      ? new Date(content.releaseDate).getFullYear()
+      : null);
+
+  const category = content.contentCategories?.[0]?.name;
+  const actors = content.contentCredits?.slice(0, 2) ?? [];
+  const country = content.contentCredits?.[0]?.nationality;
+
+  return (
+    <div className={cn("flex items-start gap-4 py-5", className)}>
+      <Link to={baseRoutes.contents.detail(content.id)} className="shrink-0">
+        {content.posterUrl ? (
+          <img
+            src={content.posterUrl}
+            alt={content.title}
+            className="w-28 lg:w-36 h-40 lg:h-52 object-cover rounded-2xl"
+          />
+        ) : (
+          <span className="block w-28 lg:w-36 h-40 lg:h-52 bg-muted rounded-2xl" />
+        )}
+      </Link>
+
+      <div className="flex-1 flex flex-col gap-1.5 min-w-0">
+        <Link to={baseRoutes.contents.detail(content.id)}>
+          <h3 className="text-lg font-bold leading-tight hover:underline">
+            {content.title}
+          </h3>
+        </Link>
+
+        <p className="text-sm text-muted-foreground">
+          {[year, category, country].filter(Boolean).join(" - ")}
+        </p>
+
+        <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-700 rounded-full px-2 py-0.5 text-xs font-semibold w-fit">
+          <Star className="size-3 fill-amber-500 stroke-amber-500" />
+          {content.averageRating.toFixed(1)}
+        </span>
+
+        {actors.length > 0 && (
+          <div className="hidden lg:flex flex-col gap-1 mt-1">
+            <p className="text-xs font-medium text-muted-foreground">Actors</p>
+            <div className="flex gap-3 flex-wrap">
+              {actors.map((actor) => (
+                <span
+                  key={actor.id}
+                  className="flex items-center gap-1.5 text-sm text-muted-foreground"
+                >
+                  {actor.photoUrl ? (
+                    <img
+                      src={actor.photoUrl}
+                      alt={actor.name}
+                      className="size-6 rounded-full object-cover shrink-0"
+                    />
+                  ) : (
+                    <span className="size-6 rounded-full bg-muted block shrink-0" />
+                  )}
+                  {actor.name} ↘
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {content.synopsis && (
+          <div className="flex flex-col gap-0.5 mt-0.5">
+            <p className="hidden lg:block text-xs font-medium text-muted-foreground">
+              Synopsis
+            </p>
+            <p className="text-sm text-muted-foreground line-clamp-3 lg:line-clamp-5">
+              {content.synopsis}
+            </p>
+          </div>
+        )}
+      </div>
+
+      <div className="shrink-0 self-center ml-2">
+        <Button
+          size="icon-2xl"
+          className="rounded-full bg-foreground text-background hover:bg-foreground/80"
+        >
+          <Plus />
+        </Button>
+      </div>
+    </div>
+  );
+}

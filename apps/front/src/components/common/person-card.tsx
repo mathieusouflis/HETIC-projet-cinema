@@ -15,17 +15,17 @@ export interface PersonData {
   contentCredits?: { role: string }[];
 }
 
-interface PeopleResultCardProps {
+interface PersonCardProps {
   person: PersonData;
   relatedContents?: GETContents200DataItemsItem[];
   className?: string;
 }
 
-export const PeopleResultCard = ({
+export const PersonCard = ({
   person,
   relatedContents = [],
   className,
-}: PeopleResultCardProps) => {
+}: PersonCardProps) => {
   const role = person.contentCredits?.[0]?.role ?? "Actor";
 
   return (
@@ -90,7 +90,7 @@ export const PeopleResultCard = ({
   );
 };
 
-export const PeopleResultCardSkeleton = () => (
+export const PersonCardSkeleton = () => (
   <div className="flex items-start gap-4 py-5">
     <Skeleton className="w-28 lg:w-36 h-40 lg:h-52 rounded-2xl shrink-0" />
     <div className="flex-1 flex flex-col gap-2">

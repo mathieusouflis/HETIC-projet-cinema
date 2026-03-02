@@ -1,6 +1,10 @@
 import { Link, redirect, useParams } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import {
+  ContentCard,
+  ContentCardSkeleton,
+} from "@/components/common/content-card";
+import {
   Accordion,
   AccordionContent,
   AccordionItem,
@@ -9,10 +13,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useApi } from "@/lib/api/services";
-import {
-  MovieCard,
-  MovieCardSkeleton,
-} from "../../components/common/movie-card";
 
 export function ContentPage() {
   const { contentId } = useParams({
@@ -39,10 +39,14 @@ export function ContentPage() {
       <div className="flex flex-col gap-14 items-center md:items-start md:flex-row">
         <div className="flex flex-col gap-2 items-center md:items-baseline w-fit md:w-80">
           {isLoading || !data ? (
-            <MovieCardSkeleton className="w-full h-fit sm:w-fit" />
+            <ContentCardSkeleton
+              variant="thumbnail"
+              className="w-full h-fit sm:w-fit"
+            />
           ) : (
-            <MovieCard
-              movie={data}
+            <ContentCard
+              variant="thumbnail"
+              content={data}
               className="h-[70vh] md:max-w-2/3 max-h-fit max-w-full w-fit sm:h-[70vh]"
             />
           )}
