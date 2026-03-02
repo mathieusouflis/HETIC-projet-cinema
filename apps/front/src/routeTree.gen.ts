@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './app/__root'
 import { Route as MainRouteImport } from './app/_main'
 import { Route as RegisterIndexRouteImport } from './app/register/index'
-import { Route as ProfileIndexRouteImport } from './app/profile/index'
 import { Route as LoginIndexRouteImport } from './app/login/index'
 import { Route as MainIndexRouteImport } from './app/_main/index'
 import { Route as MainSettingsIndexRouteImport } from './app/_main/settings/index'
@@ -81,7 +80,6 @@ const MainContentsContentIdIndexRoute =
 export interface FileRoutesByFullPath {
   '/': typeof MainIndexRoute
   '/login/': typeof LoginIndexRoute
-  '/profile/': typeof MainProfileIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/profile/': typeof MainProfileIndexRoute
   '/search/': typeof MainSearchIndexRoute
@@ -91,7 +89,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof MainIndexRoute
   '/login': typeof LoginIndexRoute
-  '/profile': typeof MainProfileIndexRoute
   '/register': typeof RegisterIndexRoute
   '/profile': typeof MainProfileIndexRoute
   '/search': typeof MainSearchIndexRoute
@@ -103,7 +100,6 @@ export interface FileRoutesById {
   '/_main': typeof MainRouteWithChildren
   '/_main/': typeof MainIndexRoute
   '/login/': typeof LoginIndexRoute
-  '/_main/profile/': typeof MainProfileIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/_main/profile/': typeof MainProfileIndexRoute
   '/_main/search/': typeof MainSearchIndexRoute
@@ -113,20 +109,15 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    |
     | '/'
-   
     | '/login/'
-   
-    | '/profile/'
     | '/register/'
     | '/profile/'
     | '/search/'
     | '/profile/'
     | '/search/'
-   
+    | '/profile/'
     | '/settings/'
-   
     | '/contents/$contentId/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -135,7 +126,6 @@ export interface FileRouteTypes {
    
     | '/login'
    
-    | '/profile'
     | '/register'
     | '/profile'
    
@@ -145,6 +135,7 @@ export interface FileRouteTypes {
    
     | '/search'
    
+    | '/profile'
     | '/settings'
    
     | '/contents/$contentId'
@@ -153,8 +144,6 @@ export interface FileRouteTypes {
     | '/_main'
     | '/_main/'
     | '/login/'
-   
-    | '/_main/profile/'
     | '/register/'
     | '/_main/profile/'
     | '/_main/search/'
