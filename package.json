@@ -23,13 +23,13 @@
   "devDependencies": {
     "@biomejs/biome": "^2.4.4",
     "husky": "^9.1.7",
-    "turbo": "^2.8.10"
+    "turbo": "^2.8.12"
   },
   "packageManager": "pnpm@10.28.2",
   "engines": {
     "node": ">=18"
   },
   "dependencies": {
-    "lint-staged": "^16.2.7"
+    "lint-staged": "^16.3.0"
   }
 }
