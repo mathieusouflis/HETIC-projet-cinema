@@ -1,6 +1,6 @@
 export const baseRoutes = {
   home: "/",
-  profile: "/me",
+  profile: "/profile",
   watchlist: "/watchlist",
   messages: "/messages",
   calendar: "/calendar",
