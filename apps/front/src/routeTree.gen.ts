@@ -125,9 +125,6 @@ export interface FileRouteTypes {
     | '/'
     | '/login/'
     | '/register/'
-    | '/profile/'
-    | '/search/'
-    | '/profile/'
     | '/search/'
     | '/profile/'
     | '/settings/'
@@ -136,23 +133,11 @@ export interface FileRouteTypes {
     | '/contents/$contentId/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    |
     | '/'
-   
     | '/login'
-   
     | '/register'
     | '/profile'
     | '/search'
-    | '/profile'
-   
-    | '/search'
-   
-    | '/profile'
-   
-    | '/search'
-   
-    | '/profile'
     | '/settings'
     | '/watchlist'
     | '/watchparty'
@@ -269,9 +254,6 @@ declare module '@tanstack/react-router' {
 
 interface MainRouteChildren {
   MainIndexRoute: typeof MainIndexRoute
-  MainProfileIndexRoute: typeof MainProfileIndexRoute
-  MainSearchIndexRoute: typeof MainSearchIndexRoute
-  MainProfileIndexRoute: typeof MainProfileIndexRoute
   MainSearchIndexRoute: typeof MainSearchIndexRoute
   MainProfileIndexRoute: typeof MainProfileIndexRoute
   MainSettingsIndexRoute: typeof MainSettingsIndexRoute
@@ -282,9 +264,6 @@ interface MainRouteChildren {
 
 const MainRouteChildren: MainRouteChildren = {
   MainIndexRoute: MainIndexRoute,
-  MainProfileIndexRoute: MainProfileIndexRoute,
-  MainSearchIndexRoute: MainSearchIndexRoute,
-  MainProfileIndexRoute: MainProfileIndexRoute,
   MainSearchIndexRoute: MainSearchIndexRoute,
   MainProfileIndexRoute: MainProfileIndexRoute,
   MainSettingsIndexRoute: MainSettingsIndexRoute,
