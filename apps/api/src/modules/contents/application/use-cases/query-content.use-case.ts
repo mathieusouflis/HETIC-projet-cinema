@@ -23,7 +23,7 @@ export class QueryContentUseCase {
       query.contentType,
       query.title,
       undefined,
-      undefined,
+      query.categories,
       withCategory,
       withPlatform,
       withCast,

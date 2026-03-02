@@ -23,6 +23,7 @@ export type GETContentsParams = {
    * @maximum 10
    */
   averageRating?: number;
+  categories?: string[];
   withCategory?: GETContentsWithCategory;
   withPlatform?: GETContentsWithPlatform;
   withCast?: GETContentsWithCast;

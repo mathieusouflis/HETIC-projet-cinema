@@ -8,6 +8,7 @@ export const queryContentRequestSchema = z.object({
   releaseDate: z.date().optional(),
   year: z.number().optional(),
   averageRating: z.number().min(0).max(10).optional(),
+  categories: z.array(z.string()).optional(),
   withCategory: z.enum(["true", "false"]).optional(),
   withPlatform: z.enum(["true", "false"]).optional(),
   withCast: z.enum(["true", "false"]).optional(),
