@@ -6,6 +6,7 @@ import { categorieService } from "./genres";
 import { categoriesKeys } from "./genres/keys";
 import { queryPeoplesService } from "./peoples";
 import { queryUserService, usersService } from "./users";
+import { queryWatchlistService, watchlistService } from "./watchlists";
 
 /**
  * getApi() — imperative, safe to call anywhere (event handlers, effects, outside React).
@@ -20,6 +21,7 @@ export const getApi = () => ({
   users: usersService,
   contents: contentService,
   categories: categorieService,
+  watchlsit: watchlistService,
 });
 
 /**
@@ -48,5 +50,7 @@ export const useApi = () => {
     },
 
     peoples: queryPeoplesService,
+
+    watchlist: queryWatchlistService,
   };
 };
