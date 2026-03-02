@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import type { ComponentProps } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRoutes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
@@ -21,12 +22,14 @@ export const ContentCard = ({
   country,
   posterUrl,
   className,
-}: ContentCardProps) => {
+  ...props
+}: ContentCardProps & ComponentProps<"a">) => {
   const routes = useRoutes();
   return (
     <Link
       to={routes.contents.detail(id)}
       className={cn("grid grid-cols-2 gap-2.5", className)}
+      {...props}
     >
       {posterUrl ? (
         <img src={posterUrl} alt={title} className="w-full h-auto rounded-md" />

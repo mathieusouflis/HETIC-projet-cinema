@@ -3,7 +3,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useApi } from "@/lib/api/services";
 import { ContentCard, ContentCardSkeleton } from "./components/content-card";
 
-export const SearchResults = ({ query }: { query: string }) => {
+export const SearchResults = ({
+  query,
+  onClick,
+}: {
+  query: string;
+  onClick: () => void;
+}) => {
   const api = useApi();
   const { data, isLoading } = api.contents.discover({
     title: query,
@@ -42,7 +48,7 @@ export const SearchResults = ({ query }: { query: string }) => {
             {isLoading ? (
               loadingSkeleton
             ) : movies.length > 0 ? (
-              renderContentsComponents(movies)
+              renderContentsComponents(movies, onClick)
             ) : (
               <p className="col-span-full text-muted-foreground">
                 No movies found
@@ -53,7 +59,7 @@ export const SearchResults = ({ query }: { query: string }) => {
             {isLoading ? (
               loadingSkeleton
             ) : series.length > 0 ? (
-              renderContentsComponents(series)
+              renderContentsComponents(series, onClick)
             ) : (
               <p className="col-span-full text-muted-foreground">
                 No series found
@@ -63,16 +69,23 @@ export const SearchResults = ({ query }: { query: string }) => {
         </div>
       </TabGrid>
       <TabGrid value="movies">
-        {isLoading ? loadingSkeleton : renderContentsComponents(movies)}
+        {isLoading
+          ? loadingSkeleton
+          : renderContentsComponents(movies, onClick)}
       </TabGrid>
       <TabGrid value="series">
-        {isLoading ? loadingSkeleton : renderContentsComponents(series)}
+        {isLoading
+          ? loadingSkeleton
+          : renderContentsComponents(series, onClick)}
       </TabGrid>
     </Tabs>
   );
 };
 
-function renderContentsComponents(contents: GETContents200DataItemsItem[]) {
+function renderContentsComponents(
+  contents: GETContents200DataItemsItem[],
+  onClick: () => void
+) {
   return contents.map((content, idx) => (
     <ContentCard
       key={idx}
@@ -86,6 +99,7 @@ function renderContentsComponents(contents: GETContents200DataItemsItem[]) {
       category={content.contentCategories?.[0]?.name || "Unknown"}
       posterUrl={content.posterUrl}
       className="col-span-2"
+      onClick={onClick}
     />
   ));
 }
