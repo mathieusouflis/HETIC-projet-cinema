@@ -1,4 +1,5 @@
 export const watchlistKeys = {
-  all: ["watchlists"] as const,
-  getId: (id: string) => [...watchlistKeys.all, id] as const,
+  all: (userId: string) => ["watchlists", userId] as const,
+  getId: (userId: string, id: string) =>
+    [...watchlistKeys.all(userId), id] as const,
 };

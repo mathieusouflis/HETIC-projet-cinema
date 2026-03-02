@@ -1,9 +1,11 @@
 import type { GETContents200DataItemsItem } from "@packages/api-sdk";
 import { Link } from "@tanstack/react-router";
-import { Plus, Star } from "lucide-react";
+import { Pen, Plus, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import AddContentToWatchlistDialog from "@/features/watchlist/components/add-content-to-watchlist-dialog";
+import { useApi } from "@/lib/api/services";
 import { baseRoutes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
@@ -12,6 +14,7 @@ export type ContentCardVariant = "thumbnail" | "hero" | "result";
 interface ContentCardProps {
   content: GETContents200DataItemsItem;
   variant: ContentCardVariant;
+  inWatchlist?: boolean;
   className?: string;
 }
 
@@ -20,10 +23,28 @@ export const ContentCard = ({
   variant,
   className,
 }: ContentCardProps) => {
+  const services = useApi();
+
+  const { data, isLoading } = services.watchlist.list();
+
   if (variant === "thumbnail")
     return <ThumbnailCard content={content} className={className} />;
   if (variant === "hero") return <HeroCard content={content} />;
-  return <ResultCard content={content} className={className} />;
+
+  if (isLoading) {
+    return null;
+  }
+  console.log(data);
+  return (
+    <ResultCard
+      content={content}
+      className={className}
+      isInWatchlist={
+        data?.data.data.items.find((item) => item.contentId === content.id) !==
+        undefined
+      }
+    />
+  );
 };
 
 interface ContentCardSkeletonProps {
@@ -164,9 +185,11 @@ function HeroCardContent({
 
 function ResultCard({
   content,
+  isInWatchlist,
   className,
 }: {
   content: GETContents200DataItemsItem;
+  isInWatchlist: boolean;
   className?: string;
 }) {
   const year =
@@ -247,12 +270,17 @@ function ResultCard({
       </div>
 
       <div className="shrink-0 ml-2">
-        <Button
-          size="icon-lg"
-          className="rounded-full bg-foreground text-background hover:bg-foreground/80"
+        <AddContentToWatchlistDialog
+          variant={isInWatchlist ? "edit" : "new"}
+          content={content}
         >
-          <Plus />
-        </Button>
+          <Button
+            size="icon-lg"
+            className="rounded-full bg-foreground text-background hover:bg-foreground/80"
+          >
+            {isInWatchlist ? <Pen /> : <Plus />}
+          </Button>
+        </AddContentToWatchlistDialog>
       </div>
     </div>
   );
