@@ -12,7 +12,6 @@ export const pageSchema = z.coerce
 export const limitSchema = z.coerce
   .number("Limit must be a number")
   .int("Limit must be an integer")
-  .min(1, "Limit must be at least 1")
   .max(100, "Limit must be at most 100")
   .default(25);
 

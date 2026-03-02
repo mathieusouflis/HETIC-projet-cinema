@@ -17,7 +17,7 @@ export class ListWatchlistUseCase {
   ): Promise<QueryWatchlistResponse> {
     const { page, limit } = paginationService.parsePageParams({
       page: query.page,
-      limit: query.limit,
+      limit: query.limit ?? 10000000,
     });
 
     const { status } = query;
