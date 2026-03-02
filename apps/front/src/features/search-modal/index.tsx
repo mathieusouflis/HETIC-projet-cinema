@@ -60,12 +60,15 @@ export const SearchProvider = () => {
               htmlFor="search"
               className="absolute top-1/2 left-4 -translate-y-1/2"
             >
-              <Search className=" size-5.5 stroke-accent-foreground" />
+              <Search className="size-5.5 stroke-accent-foreground" />
             </label>
           </SearchDialogContent>
           <SearchDialogContent className="max-h-[50vh]">
             <ScrollArea className="h-full">
-              <SearchResults query={debouncedQuery} />
+              <SearchResults
+                onClick={() => setOpen((old) => !old)}
+                query={debouncedQuery}
+              />
             </ScrollArea>
           </SearchDialogContent>
         </DialogPrimitiveContent>
