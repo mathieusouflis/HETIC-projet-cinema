@@ -1,11 +1,14 @@
 import {
   dELETEWatchlistContentId,
+  dELETEWatchlistId,
   gETWatchlist,
   gETWatchlistContentId,
   type POSTWatchlistBody,
   type PUTWatchlistContentIdBody,
+  type PUTWatchlistIdBody,
   pOSTWatchlist,
   pUTWatchlistContentId,
+  pUTWatchlistId,
 } from "@packages/api-sdk";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/features/auth/stores/auth.store";
@@ -32,8 +35,16 @@ const updateWatchlistByContentId = async (
   return await pUTWatchlistContentId(id, data);
 };
 
+const updateWatchlistById = async (id: string, data: PUTWatchlistIdBody) => {
+  return await pUTWatchlistId(id, data);
+};
+
 const deleteWatchlistByContentId = async (contentId: string) => {
   await dELETEWatchlistContentId(contentId);
+};
+
+const deleteWatchlistById = async (id: string) => {
+  await dELETEWatchlistId(id);
 };
 
 export const queryWatchlistService = {
@@ -55,7 +66,12 @@ export const queryWatchlistService = {
       queryFn: listWatchlist,
     });
   },
-  update: () =>
+
+  updateId: (id: string, data: PUTWatchlistIdBody) =>
+    useMutation({
+      mutationFn: () => updateWatchlistById(id, data),
+    }),
+  updateContentId: () =>
     useMutation({
       mutationFn: ({
         id,
@@ -69,13 +85,20 @@ export const queryWatchlistService = {
     useMutation({
       mutationFn: () => deleteWatchlistByContentId(contentId),
     }),
+  deleteId: (id: string) =>
+    useMutation({
+      mutationFn: () => dELETEWatchlistId(id),
+    }),
 };
 
 export const watchlistService = {
   create: (params: POSTWatchlistBody) => postWatchlist(params),
   getId: (id: string) => getWatchlistByContentId(id),
-  update: (id: string, data: PUTWatchlistContentIdBody) =>
+  updateId: (id: string, data: PUTWatchlistIdBody) =>
+    updateWatchlistById(id, data),
+  updateContentId: (id: string, data: PUTWatchlistContentIdBody) =>
     updateWatchlistByContentId(id, data),
   list: () => listWatchlist(),
   deleteContentId: (contentId: string) => deleteWatchlistByContentId(contentId),
+  deleteId: (id: string) => deleteWatchlistById(id),
 };

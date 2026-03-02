@@ -61,7 +61,7 @@ export default function FormWatchlist(props: {
   const { data: watchlistData, isLoading } = services.watchlist.getId(
     props.content.id
   );
-  const { mutateAsync: updateWatchlist } = services.watchlist.update();
+  const { mutateAsync: updateWatchlist } = services.watchlist.updateContentId();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
