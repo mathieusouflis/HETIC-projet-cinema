@@ -1,6 +1,14 @@
 import type { GETContents200DataItemsItemContentCreditsItem } from "@packages/api-sdk";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import {
+  ContentCard,
+  ContentCardSkeleton,
+} from "@/components/common/content-card";
+import {
+  PersonCard,
+  PersonCardSkeleton,
+} from "@/components/common/person-card";
+import {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
@@ -12,14 +20,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useApi } from "@/lib/api/services";
-import {
-  ContentResultCard,
-  ContentResultCardSkeleton,
-} from "./components/content-result-card";
-import {
-  PeopleResultCard,
-  PeopleResultCardSkeleton,
-} from "./components/people-result-card";
 import { SearchBar } from "./components/search-bar";
 import { type FilterValues, SearchFilters } from "./components/search-filters";
 
@@ -112,7 +112,7 @@ export default function SearchPage() {
   const contentSkeletons = (
     <>
       {[...Array(3)].map((_, i) => (
-        <ContentResultCardSkeleton key={i} />
+        <ContentCardSkeleton key={i} variant="result" />
       ))}
     </>
   );
@@ -120,7 +120,7 @@ export default function SearchPage() {
   const actorSkeletons = (
     <>
       {[...Array(4)].map((_, i) => (
-        <PeopleResultCardSkeleton key={i} />
+        <PersonCardSkeleton key={i} />
       ))}
     </>
   );
@@ -157,7 +157,7 @@ export default function SearchPage() {
             <>
               {contents.map((content, i) => (
                 <div key={content.id}>
-                  <ContentResultCard content={content} />
+                  <ContentCard variant="result" content={content} />
                   {(i < contents.length - 1 || topPeople.length > 0) && (
                     <Separator />
                   )}
@@ -165,7 +165,7 @@ export default function SearchPage() {
               ))}
               {topPeople.map(({ person, relatedContents }, i) => (
                 <div key={person.id}>
-                  <PeopleResultCard
+                  <PersonCard
                     person={person}
                     relatedContents={relatedContents}
                   />
@@ -197,7 +197,7 @@ export default function SearchPage() {
           ) : movies.length > 0 ? (
             movies.map((content, i) => (
               <div key={content.id}>
-                <ContentResultCard content={content} />
+                <ContentCard variant="result" content={content} />
                 {i < movies.length - 1 && <Separator />}
               </div>
             ))
@@ -224,7 +224,7 @@ export default function SearchPage() {
           ) : tvShows.length > 0 ? (
             tvShows.map((content, i) => (
               <div key={content.id}>
-                <ContentResultCard content={content} />
+                <ContentCard variant="result" content={content} />
                 {i < tvShows.length - 1 && <Separator />}
               </div>
             ))
@@ -253,7 +253,7 @@ export default function SearchPage() {
               <>
                 {actors.map((person, i) => (
                   <div key={person.id}>
-                    <PeopleResultCard person={person} />
+                    <PersonCard person={person} />
                     {i < actors.length - 1 && <Separator />}
                   </div>
                 ))}
