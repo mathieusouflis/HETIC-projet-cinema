@@ -120,9 +120,13 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    |
     | '/'
+   
     | '/login/'
     | '/register/'
+    | '/profile/'
+    | '/search/'
     | '/profile/'
     | '/search/'
     | '/settings/'
