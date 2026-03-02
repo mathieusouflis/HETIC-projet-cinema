@@ -13,6 +13,7 @@ import { Route as MainRouteImport } from './app/_main'
 import { Route as RegisterIndexRouteImport } from './app/register/index'
 import { Route as LoginIndexRouteImport } from './app/login/index'
 import { Route as MainIndexRouteImport } from './app/_main/index'
+import { Route as MainWatchpartyIndexRouteImport } from './app/_main/watchparty/index'
 import { Route as MainSettingsIndexRouteImport } from './app/_main/settings/index'
 import { Route as MainSearchIndexRouteImport } from './app/_main/search/index'
 import { Route as MainProfileIndexRouteImport } from './app/_main/profile/index'
@@ -35,6 +36,11 @@ const LoginIndexRoute = LoginIndexRouteImport.update({
 const MainIndexRoute = MainIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainWatchpartyIndexRoute = MainWatchpartyIndexRouteImport.update({
+  id: '/watchparty/',
+  path: '/watchparty/',
   getParentRoute: () => MainRoute,
 } as any)
 const MainSettingsIndexRoute = MainSettingsIndexRouteImport.update({
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/profile/': typeof MainProfileIndexRoute
   '/search/': typeof MainSearchIndexRoute
   '/settings/': typeof MainSettingsIndexRoute
+  '/watchparty/': typeof MainWatchpartyIndexRoute
   '/contents/$contentId/': typeof MainContentsContentIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/profile': typeof MainProfileIndexRoute
   '/search': typeof MainSearchIndexRoute
   '/settings': typeof MainSettingsIndexRoute
+  '/watchparty': typeof MainWatchpartyIndexRoute
   '/contents/$contentId': typeof MainContentsContentIdIndexRoute
 }
 export interface FileRoutesById {
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/_main/profile/': typeof MainProfileIndexRoute
   '/_main/search/': typeof MainSearchIndexRoute
   '/_main/settings/': typeof MainSettingsIndexRoute
+  '/_main/watchparty/': typeof MainWatchpartyIndexRoute
   '/_main/contents/$contentId/': typeof MainContentsContentIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/profile/'
     | '/search/'
     | '/settings/'
+    | '/watchparty/'
     | '/contents/$contentId/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/search'
     | '/settings'
+    | '/watchparty'
     | '/contents/$contentId'
   id:
     | '__root__'
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/_main/profile/'
     | '/_main/search/'
     | '/_main/settings/'
+    | '/_main/watchparty/'
     | '/_main/contents/$contentId/'
   fileRoutesById: FileRoutesById
 }
@@ -155,6 +167,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainIndexRouteImport
       parentRoute: typeof MainRoute
     }
+    '/_main/watchparty/': {
+      id: '/_main/watchparty/'
+      path: '/watchparty'
+      fullPath: '/watchparty/'
+      preLoaderRoute: typeof MainWatchpartyIndexRouteImport
+      parentRoute: typeof MainRoute
+    }
     '/_main/settings/': {
       id: '/_main/settings/'
       path: '/settings'
@@ -191,6 +210,7 @@ interface MainRouteChildren {
   MainProfileIndexRoute: typeof MainProfileIndexRoute
   MainSearchIndexRoute: typeof MainSearchIndexRoute
   MainSettingsIndexRoute: typeof MainSettingsIndexRoute
+  MainWatchpartyIndexRoute: typeof MainWatchpartyIndexRoute
   MainContentsContentIdIndexRoute: typeof MainContentsContentIdIndexRoute
 }
 
@@ -199,6 +219,7 @@ const MainRouteChildren: MainRouteChildren = {
   MainProfileIndexRoute: MainProfileIndexRoute,
   MainSearchIndexRoute: MainSearchIndexRoute,
   MainSettingsIndexRoute: MainSettingsIndexRoute,
+  MainWatchpartyIndexRoute: MainWatchpartyIndexRoute,
   MainContentsContentIdIndexRoute: MainContentsContentIdIndexRoute,
 }
 

@@ -1,11 +1,14 @@
 import {
+  dELETEWatchlistContentId,
+  gETWatchlist,
   gETWatchlistContentId,
-  type PATCHWatchlistContentIdBody,
   type POSTWatchlistBody,
-  pATCHWatchlistContentId,
+  type PUTWatchlistContentIdBody,
   pOSTWatchlist,
+  pUTWatchlistContentId,
 } from "@packages/api-sdk";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/features/auth/stores/auth.store";
 import { watchlistKeys } from "./keys";
 
 const postWatchlist = async (data: POSTWatchlistBody) => {
@@ -16,11 +19,21 @@ const getWatchlistByContentId = async (id: string) => {
   return await gETWatchlistContentId(id);
 };
 
+const listWatchlist = async () => {
+  return await gETWatchlist({
+    limit: 0,
+  });
+};
+
 const updateWatchlistByContentId = async (
   id: string,
-  data: PATCHWatchlistContentIdBody
+  data: PUTWatchlistContentIdBody
 ) => {
-  return await pATCHWatchlistContentId(id, data);
+  return await pUTWatchlistContentId(id, data);
+};
+
+const deleteWatchlistByContentId = async (contentId: string) => {
+  await dELETEWatchlistContentId(contentId);
 };
 
 export const queryWatchlistService = {
@@ -28,11 +41,20 @@ export const queryWatchlistService = {
     useMutation({
       mutationFn: () => postWatchlist(params),
     }),
-  getId: (id: string) =>
-    useQuery({
+  getId: (id: string) => {
+    const { user } = useAuth();
+    return useQuery({
       queryFn: () => getWatchlistByContentId(id),
-      queryKey: watchlistKeys.getId(id),
-    }),
+      queryKey: watchlistKeys.getId(user?.id ?? "", id),
+    });
+  },
+  list: () => {
+    const { user } = useAuth();
+    return useQuery({
+      queryKey: watchlistKeys.all(user?.id ?? ""),
+      queryFn: listWatchlist,
+    });
+  },
   update: () =>
     useMutation({
       mutationFn: ({
@@ -40,14 +62,20 @@ export const queryWatchlistService = {
         data,
       }: {
         id: string;
-        data: PATCHWatchlistContentIdBody;
+        data: PUTWatchlistContentIdBody;
       }) => updateWatchlistByContentId(id, data),
+    }),
+  deleteContentId: (contentId: string) =>
+    useMutation({
+      mutationFn: () => deleteWatchlistByContentId(contentId),
     }),
 };
 
 export const watchlistService = {
   create: (params: POSTWatchlistBody) => postWatchlist(params),
   getId: (id: string) => getWatchlistByContentId(id),
-  update: (id: string, data: PATCHWatchlistContentIdBody) =>
+  update: (id: string, data: PUTWatchlistContentIdBody) =>
     updateWatchlistByContentId(id, data),
+  list: () => listWatchlist(),
+  deleteContentId: (contentId: string) => deleteWatchlistByContentId(contentId),
 };
