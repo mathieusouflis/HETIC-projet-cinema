@@ -18,8 +18,6 @@ import { Route as MainWatchlistIndexRouteImport } from './app/_main/watchlist/in
 import { Route as MainSettingsIndexRouteImport } from './app/_main/settings/index'
 import { Route as MainSearchIndexRouteImport } from './app/_main/search/index'
 import { Route as MainProfileIndexRouteImport } from './app/_main/profile/index'
-import { Route as MainSearchIndexRouteImport } from './app/_main/search/index'
-import { Route as MainProfileIndexRouteImport } from './app/_main/profile/index'
 import { Route as MainContentsContentIdIndexRouteImport } from './app/_main/contents/$contentId/index'
 
 const MainRoute = MainRouteImport.update({
