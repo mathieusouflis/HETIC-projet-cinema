@@ -18,6 +18,7 @@ import { Route as MainWatchlistIndexRouteImport } from './app/_main/watchlist/in
 import { Route as MainSettingsIndexRouteImport } from './app/_main/settings/index'
 import { Route as MainSearchIndexRouteImport } from './app/_main/search/index'
 import { Route as MainProfileIndexRouteImport } from './app/_main/profile/index'
+import { Route as MainSearchIndexRouteImport } from './app/_main/search/index'
 import { Route as MainContentsContentIdIndexRouteImport } from './app/_main/contents/$contentId/index'
 
 const MainRoute = MainRouteImport.update({
@@ -64,6 +65,11 @@ const MainProfileIndexRoute = MainProfileIndexRouteImport.update({
   path: '/profile/',
   getParentRoute: () => MainRoute,
 } as any)
+const MainSearchIndexRoute = MainSearchIndexRouteImport.update({
+  id: '/search/',
+  path: '/search/',
+  getParentRoute: () => MainRoute,
+} as any)
 const MainContentsContentIdIndexRoute =
   MainContentsContentIdIndexRouteImport.update({
     id: '/contents/$contentId/',
@@ -76,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/profile/': typeof MainProfileIndexRoute
+  '/search/': typeof MainSearchIndexRoute
   '/search/': typeof MainSearchIndexRoute
   '/settings/': typeof MainSettingsIndexRoute
   '/watchlist/': typeof MainWatchlistIndexRoute
@@ -115,6 +122,7 @@ export interface FileRouteTypes {
     | '/profile/'
     | '/search/'
     | '/profile/'
+    | '/search/'
     | '/settings/'
     | '/watchlist/'
     | '/watchparty/'
@@ -130,6 +138,8 @@ export interface FileRouteTypes {
     | '/profile'
     | '/search'
     | '/profile'
+   
+    | '/search'
     | '/settings'
     | '/watchlist'
     | '/watchparty'
@@ -220,6 +230,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainProfileIndexRouteImport
       parentRoute: typeof MainRoute
     }
+    '/_main/search/': {
+      id: '/_main/search/'
+      path: '/search'
+      fullPath: '/search/'
+      preLoaderRoute: typeof MainSearchIndexRouteImport
+      parentRoute: typeof MainRoute
+    }
     '/_main/contents/$contentId/': {
       id: '/_main/contents/$contentId/'
       path: '/contents/$contentId'
@@ -235,6 +252,7 @@ interface MainRouteChildren {
   MainProfileIndexRoute: typeof MainProfileIndexRoute
   MainSearchIndexRoute: typeof MainSearchIndexRoute
   MainProfileIndexRoute: typeof MainProfileIndexRoute
+  MainSearchIndexRoute: typeof MainSearchIndexRoute
   MainSettingsIndexRoute: typeof MainSettingsIndexRoute
   MainWatchlistIndexRoute: typeof MainWatchlistIndexRoute
   MainWatchpartyIndexRoute: typeof MainWatchpartyIndexRoute
@@ -246,6 +264,7 @@ const MainRouteChildren: MainRouteChildren = {
   MainProfileIndexRoute: MainProfileIndexRoute,
   MainSearchIndexRoute: MainSearchIndexRoute,
   MainProfileIndexRoute: MainProfileIndexRoute,
+  MainSearchIndexRoute: MainSearchIndexRoute,
   MainSettingsIndexRoute: MainSettingsIndexRoute,
   MainWatchlistIndexRoute: MainWatchlistIndexRoute,
   MainWatchpartyIndexRoute: MainWatchpartyIndexRoute,
