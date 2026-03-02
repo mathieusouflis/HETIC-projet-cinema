@@ -1,5 +1,5 @@
 import { Link, redirect, useParams } from "@tanstack/react-router";
-import { Plus } from "lucide-react";
+import { Pen, Plus } from "lucide-react";
 import {
   ContentCard,
   ContentCardSkeleton,
@@ -13,12 +13,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useApi } from "@/lib/api/services";
+import AddContentToWatchlistDialog from "../watchlist/components/add-content-to-watchlist-dialog";
 
 export function ContentPage() {
   const { contentId } = useParams({
     from: "/_main/contents/$contentId/",
   });
   const api = useApi();
+
+  const { data: watchlistData } = api.watchlist.getId(contentId);
 
   const { data, isLoading } = api.contents.get(contentId, {
     withCast: "true",
@@ -33,7 +36,7 @@ export function ContentPage() {
       to: "..",
     });
   }
-  console.log(data);
+
   return (
     <div className="flex flex-col gap-14">
       <div className="flex flex-col gap-14 items-center md:items-start md:flex-row">
@@ -66,14 +69,16 @@ export function ContentPage() {
                 Watch Trailer
               </Button>
             </Link>
-            <Button
-              variant={"default"}
-              color="secondary"
-              size={"icon-xl"}
-              disabled
-            >
-              <Plus />
-            </Button>
+            {data && (
+              <AddContentToWatchlistDialog
+                variant={watchlistData?.data.data ? "edit" : "new"}
+                content={data}
+              >
+                <Button variant={"default"} color="secondary" size={"icon-xl"}>
+                  {watchlistData?.data.data ? <Pen /> : <Plus />}
+                </Button>
+              </AddContentToWatchlistDialog>
+            )}
           </div>
         </div>
         <div className="flex flex-col gap-4">
