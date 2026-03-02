@@ -126,8 +126,13 @@ export interface FileRouteTypes {
   fullPaths:
     |
     | '/'
+   
     | '/login/'
     | '/register/'
+    | '/profile/'
+    | '/search/'
+    | '/profile/'
+    | '/search/'
     | '/profile/'
     | '/search/'
     | '/settings/'
