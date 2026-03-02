@@ -150,11 +150,8 @@ export interface FileRouteTypes {
     | '/contents/$contentId/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    |
     | '/'
-   
     | '/login'
-   
     | '/register'
     | '/profile'
     | '/search'
@@ -163,10 +160,7 @@ export interface FileRouteTypes {
     | '/search'
    
     | '/profile'
-   
     | '/search'
-   
-    | '/profile'
     | '/settings'
     | '/watchlist'
     | '/watchparty'
@@ -312,11 +306,6 @@ interface MainRouteChildren {
 
 const MainRouteChildren: MainRouteChildren = {
   MainIndexRoute: MainIndexRoute,
-  MainProfileIndexRoute: MainProfileIndexRoute,
-  MainSearchIndexRoute: MainSearchIndexRoute,
-  MainProfileIndexRoute: MainProfileIndexRoute,
-  MainSearchIndexRoute: MainSearchIndexRoute,
-  MainProfileIndexRoute: MainProfileIndexRoute,
   MainSearchIndexRoute: MainSearchIndexRoute,
   MainProfileIndexRoute: MainProfileIndexRoute,
   MainSettingsIndexRoute: MainSettingsIndexRoute,
