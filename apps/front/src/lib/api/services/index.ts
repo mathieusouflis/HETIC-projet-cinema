@@ -4,6 +4,7 @@ import { authService } from "./auth";
 import { contentService, queryContentService } from "./contents";
 import { categorieService } from "./genres";
 import { categoriesKeys } from "./genres/keys";
+import { queryPeoplesService } from "./peoples";
 import { queryUserService, usersService } from "./users";
 
 /**
@@ -45,5 +46,7 @@ export const useApi = () => {
           queryFn: () => categorieService.list(props),
         }),
     },
+
+    peoples: queryPeoplesService,
   };
 };
