@@ -11,7 +11,7 @@ import { GetWatchlistByIdUseCase } from "./application/use-cases/get-watchlist.u
 import { GetWatchlistByContentIdUseCase } from "./application/use-cases/get-watchlist-content.use-case.js";
 import { ListWatchlistUseCase } from "./application/use-cases/list-watchlist.use-case.js";
 import { PatchWatchlistByIdUseCase } from "./application/use-cases/patch-watchlist.use-case.js";
-import { PatchWatchlistByContentIdUseCase } from "./application/use-cases/patch-watchlist-by-content.use-case.js";
+import { PutWatchlistByContentIdUseCase } from "./application/use-cases/put-watchlist-by-content.use-case.js";
 import type { IWatchlistRepository } from "./domain/interfaces/IWatchlistRepository.js";
 import { WatchlistRepository } from "./infrastructure/repositories/watchlist.repository.js";
 
@@ -32,7 +32,7 @@ class WatchlistModule extends RestModule {
   private readonly getWatchlistByContentIdUseCase: GetWatchlistByContentIdUseCase;
   private readonly getWatchlistByIdUseCase: GetWatchlistByIdUseCase;
   private readonly patchWatchlistByIdUseCase: PatchWatchlistByIdUseCase;
-  private readonly patchWatchlistByContentIdUseCase: PatchWatchlistByContentIdUseCase;
+  private readonly putWatchlistByContentIdUseCase: PutWatchlistByContentIdUseCase;
   private readonly deleteWatchlistByIdUseCase: DeleteWatchlistByIdUseCase;
   private readonly deleteWatchlistByContentIdUseCase: DeleteWatchlistByContentIdUseCase;
 
@@ -67,8 +67,9 @@ class WatchlistModule extends RestModule {
     this.patchWatchlistByIdUseCase = new PatchWatchlistByIdUseCase(
       this.repository
     );
-    this.patchWatchlistByContentIdUseCase =
-      new PatchWatchlistByContentIdUseCase(this.repository);
+    this.putWatchlistByContentIdUseCase = new PutWatchlistByContentIdUseCase(
+      this.repository
+    );
     this.deleteWatchlistByIdUseCase = new DeleteWatchlistByIdUseCase(
       this.repository
     );
@@ -81,7 +82,7 @@ class WatchlistModule extends RestModule {
       this.getWatchlistByIdUseCase,
       this.getWatchlistByContentIdUseCase,
       this.patchWatchlistByIdUseCase,
-      this.patchWatchlistByContentIdUseCase,
+      this.putWatchlistByContentIdUseCase,
       this.deleteWatchlistByIdUseCase,
       this.deleteWatchlistByContentIdUseCase
     );

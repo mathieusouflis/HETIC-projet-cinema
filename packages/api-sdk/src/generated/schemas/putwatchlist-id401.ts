@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type PATCHWatchlistContentId401 = {
+export type PUTWatchlistId401 = {
   success: boolean;
   error?: string;
 };

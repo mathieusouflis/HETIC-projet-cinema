@@ -8217,8 +8217,8 @@
           }
         }
       },
-      "patch": {
-        "operationId": "PATCH/watchlist/content/{id}",
+      "put": {
+        "operationId": "PUT/watchlist/content/{id}",
         "description": "Update watchlist by content id",
         "tags": [
           "Watchlist"
@@ -8688,8 +8688,8 @@
           }
         }
       },
-      "patch": {
-        "operationId": "PATCH/watchlist/{id}",
+      "put": {
+        "operationId": "PUT/watchlist/{id}",
         "description": "Update watchlist by id",
         "tags": [
           "Watchlist"
