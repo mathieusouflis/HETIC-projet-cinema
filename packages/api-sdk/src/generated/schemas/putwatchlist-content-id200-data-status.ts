@@ -6,10 +6,10 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type PATCHWatchlistIdBodyStatus =
-  (typeof PATCHWatchlistIdBodyStatus)[keyof typeof PATCHWatchlistIdBodyStatus];
+export type PUTWatchlistContentId200DataStatus =
+  (typeof PUTWatchlistContentId200DataStatus)[keyof typeof PUTWatchlistContentId200DataStatus];
 
-export const PATCHWatchlistIdBodyStatus = {
+export const PUTWatchlistContentId200DataStatus = {
   completed: "completed",
   dropped: "dropped",
   not_interested: "not_interested",

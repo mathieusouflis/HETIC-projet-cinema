@@ -55,10 +55,6 @@ import type {
   PATCHUsersIdBody,
   PATCHUsersMe200,
   PATCHUsersMeBody,
-  PATCHWatchlistContentId200,
-  PATCHWatchlistContentIdBody,
-  PATCHWatchlistId200,
-  PATCHWatchlistIdBody,
   PATCHWatchpartyId200,
   PATCHWatchpartyIdBody,
   POSTAuthLogin200,
@@ -76,6 +72,10 @@ import type {
   POSTWatchlistBody,
   POSTWatchparty201,
   POSTWatchpartyBody,
+  PUTWatchlistContentId200,
+  PUTWatchlistContentIdBody,
+  PUTWatchlistId200,
+  PUTWatchlistIdBody,
 } from "./schemas";
 
 /**
@@ -512,14 +512,14 @@ export const gETWatchlistContentId = (
 /**
  * Update watchlist by content id
  */
-export const pATCHWatchlistContentId = (
+export const pUTWatchlistContentId = (
   id: string,
-  pATCHWatchlistContentIdBody: PATCHWatchlistContentIdBody,
+  pUTWatchlistContentIdBody: PUTWatchlistContentIdBody,
   options?: AxiosRequestConfig,
-): Promise<AxiosResponse<PATCHWatchlistContentId200>> => {
-  return axios.patch(
+): Promise<AxiosResponse<PUTWatchlistContentId200>> => {
+  return axios.put(
     `/watchlist/content/${id}`,
-    pATCHWatchlistContentIdBody,
+    pUTWatchlistContentIdBody,
     options,
   );
 };
@@ -547,12 +547,12 @@ export const gETWatchlistId = (
 /**
  * Update watchlist by id
  */
-export const pATCHWatchlistId = (
+export const pUTWatchlistId = (
   id: string,
-  pATCHWatchlistIdBody: PATCHWatchlistIdBody,
+  pUTWatchlistIdBody: PUTWatchlistIdBody,
   options?: AxiosRequestConfig,
-): Promise<AxiosResponse<PATCHWatchlistId200>> => {
-  return axios.patch(`/watchlist/${id}`, pATCHWatchlistIdBody, options);
+): Promise<AxiosResponse<PUTWatchlistId200>> => {
+  return axios.put(`/watchlist/${id}`, pUTWatchlistIdBody, options);
 };
 
 /**
@@ -660,12 +660,12 @@ export type GETWatchlistResult = AxiosResponse<GETWatchlist200>;
 export type POSTWatchlistResult = AxiosResponse<POSTWatchlist201>;
 export type GETWatchlistContentIdResult =
   AxiosResponse<GETWatchlistContentId200>;
-export type PATCHWatchlistContentIdResult =
-  AxiosResponse<PATCHWatchlistContentId200>;
+export type PUTWatchlistContentIdResult =
+  AxiosResponse<PUTWatchlistContentId200>;
 export type DELETEWatchlistContentIdResult =
   AxiosResponse<DELETEWatchlistContentId204>;
 export type GETWatchlistIdResult = AxiosResponse<GETWatchlistId200>;
-export type PATCHWatchlistIdResult = AxiosResponse<PATCHWatchlistId200>;
+export type PUTWatchlistIdResult = AxiosResponse<PUTWatchlistId200>;
 export type DELETEWatchlistIdResult = AxiosResponse<DELETEWatchlistId204>;
 export type GETWatchpartyResult = AxiosResponse<GETWatchparty200>;
 export type POSTWatchpartyResult = AxiosResponse<POSTWatchparty201>;

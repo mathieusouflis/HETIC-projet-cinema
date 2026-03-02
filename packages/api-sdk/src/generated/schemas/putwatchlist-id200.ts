@@ -5,9 +5,9 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { PATCHWatchlistId200Data } from "./patchwatchlist-id200-data";
+import type { PUTWatchlistId200Data } from "./putwatchlist-id200-data";
 
-export type PATCHWatchlistId200 = {
+export type PUTWatchlistId200 = {
   success: boolean;
-  data: PATCHWatchlistId200Data;
+  data: PUTWatchlistId200Data;
 };

@@ -5,10 +5,10 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
-import type { PATCHWatchlistIdBodyStatus } from "./patchwatchlist-id-body-status";
+import type { PUTWatchlistIdBodyStatus } from "./putwatchlist-id-body-status";
 
-export type PATCHWatchlistIdBody = {
-  status: PATCHWatchlistIdBodyStatus;
+export type PUTWatchlistIdBody = {
+  status: PUTWatchlistIdBodyStatus;
   /** @minimum 1 */
   currentEpisode?: number;
   /** @minimum 1 */
