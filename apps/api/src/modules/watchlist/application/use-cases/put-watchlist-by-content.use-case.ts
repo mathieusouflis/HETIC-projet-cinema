@@ -3,7 +3,7 @@ import type { Watchlist } from "../../domain/entities/watchlist.entity";
 import type { IWatchlistRepository } from "../../domain/interfaces/IWatchlistRepository";
 import type { PatchWatchlistBody } from "../dto/request/patch-watchlist.body.validator";
 
-export class PatchWatchlistByContentIdUseCase {
+export class PutWatchlistByContentIdUseCase {
   constructor(private readonly watchlistRepository: IWatchlistRepository) {}
 
   async execute(
@@ -11,21 +11,32 @@ export class PatchWatchlistByContentIdUseCase {
     id: string,
     body: PatchWatchlistBody
   ): Promise<Watchlist> {
-    const watchlist = await this.watchlistRepository.findByContentId(
-      userId,
-      id
-    );
-
-    if (!watchlist) {
-      throw new NotFoundError(`Watchlist with id ${id}`);
-    }
-
-    const updatedWatchlist = await this.watchlistRepository.update(id, {
+    const normalizedBody = {
       ...body,
       completedAt: body.completedAt?.toISOString() ?? undefined,
       startedAt: body.startedAt?.toISOString() ?? undefined,
-    });
+    };
 
-    return updatedWatchlist;
+    try {
+      const existing = await this.watchlistRepository.findByContentId(
+        userId,
+        id
+      );
+
+      if (!existing) {
+        throw new NotFoundError("Existing watchlist content not found");
+      }
+
+      return await this.watchlistRepository.update(existing.id, normalizedBody);
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        return await this.watchlistRepository.create({
+          userId,
+          contentId: id,
+          ...normalizedBody,
+        });
+      }
+      throw error;
+    }
   }
 }

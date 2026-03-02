@@ -7,8 +7,8 @@ import { ApiResponse } from "../../../../shared/infrastructure/decorators/respon
 import {
   Delete,
   Get,
-  Patch,
   Post,
+  Put,
 } from "../../../../shared/infrastructure/decorators/route.decorators.js";
 import {
   ValidateBody,
@@ -84,7 +84,7 @@ import type { GetWatchlistByIdUseCase } from "../use-cases/get-watchlist.use-cas
 import type { GetWatchlistByContentIdUseCase } from "../use-cases/get-watchlist-content.use-case.js";
 import type { ListWatchlistUseCase } from "../use-cases/list-watchlist.use-case.js";
 import type { PatchWatchlistByIdUseCase } from "../use-cases/patch-watchlist.use-case.js";
-import type { PatchWatchlistByContentIdUseCase } from "../use-cases/patch-watchlist-by-content.use-case.js";
+import type { PutWatchlistByContentIdUseCase } from "../use-cases/put-watchlist-by-content.use-case.js";
 
 @Controller({
   tag: "Watchlist",
@@ -98,7 +98,7 @@ export class WatchlistController extends BaseController {
     private readonly getWatchlistByIdUseCase: GetWatchlistByIdUseCase,
     private readonly getWatchlistByContentIdUseCase: GetWatchlistByContentIdUseCase,
     private readonly patchWatchlistByIdUseCase: PatchWatchlistByIdUseCase,
-    private readonly patchWatchlistByContentIdUseCase: PatchWatchlistByContentIdUseCase,
+    private readonly putWatchlistByContentIdUseCase: PutWatchlistByContentIdUseCase,
     private readonly deleteWatchlistByIdUseCase: DeleteWatchlistByIdUseCase,
     private readonly deleteWatchlistByContentIdUseCase: DeleteWatchlistByContentIdUseCase
   ) {
@@ -272,7 +272,7 @@ export class WatchlistController extends BaseController {
     }
   );
 
-  @Patch({
+  @Put({
     path: "/:id",
     description: "Update watchlist by id",
   })
@@ -327,7 +327,7 @@ export class WatchlistController extends BaseController {
     }
   );
 
-  @Patch({
+  @Put({
     path: "/content/:id",
     description: "Update watchlist by content id",
   })
@@ -354,7 +354,7 @@ export class WatchlistController extends BaseController {
     "Watchlist updated successfully",
     createSuccessResponseSchema(patchWatchlistResponseValidator)
   )
-  patchWatchlistByContentId = asyncHandler(
+  putWatchlistByContentId = asyncHandler(
     async (req, res): Promise<PatchWatchlistResponse> => {
       const { id } = req.params as PatchWatchlistByContentIdParams;
       const body = req.body as PatchWatchlistBody;
@@ -366,7 +366,7 @@ export class WatchlistController extends BaseController {
         );
       }
 
-      const movie = await this.patchWatchlistByContentIdUseCase.execute(
+      const movie = await this.putWatchlistByContentIdUseCase.execute(
         userId,
         id,
         body
