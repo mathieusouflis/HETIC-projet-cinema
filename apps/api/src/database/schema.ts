@@ -41,6 +41,11 @@ import {
   episodesSchema,
 } from "../modules/episodes/infrastructure/database/episodes.schema";
 import {
+  friendshipsRelationsSchema,
+  friendshipsSchema,
+  friendshipsStatusEnum,
+} from "../modules/friendships/infrastructure/schemas/friendships.schema";
+import {
   peopleRelationSchema,
   peopleSchema,
 } from "../modules/peoples/infrastructure/schemas/people.schema";
@@ -52,11 +57,6 @@ import {
   seasonsRelationsSchema,
   seasonsSchema,
 } from "../modules/seasons/infrastructure/database/seasons.schema";
-import {
-  friendshipsRelationsSchema,
-  friendshipsSchema,
-  friendshipsStatusEnum,
-} from "../modules/users/infrastructure/database/schemas/friendships.schema";
 import {
   usersRelationSchema,
   users as usersSchema,
