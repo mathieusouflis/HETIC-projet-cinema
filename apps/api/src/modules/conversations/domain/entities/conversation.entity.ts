@@ -39,14 +39,6 @@ export class Conversation {
   }
 
   public toJSON() {
-    return {
-      id: this.id,
-      type: this.type,
-      name: this.name,
-      avatarUrl: this.avatarUrl,
-      createdBy: this.createdBy,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-    };
+    return { ...this };
   }
 }
