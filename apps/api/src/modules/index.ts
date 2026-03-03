@@ -15,6 +15,8 @@ import {
 import { authModule } from "./auth/auth.module.js";
 import { categoriesModule } from "./categories/categories.module.js";
 import { contentsModule } from "./contents/contents.module.js";
+import { conversationsModule } from "./conversations/conversations.module.js";
+import { friendshipsModule } from "./friendships/friendships.module.js";
 import { messagesModule } from "./messages/messages.module.js";
 import { moviesModule } from "./movies/movie.module.js";
 import { peoplesModule } from "./peoples/peoples.module.js";
@@ -33,6 +35,8 @@ function registerModules(): void {
   moduleRegistry.register("watchlist", watchlistModule);
   moduleRegistry.register("peoples", peoplesModule);
   moduleRegistry.register("watchparties", watchpartyModule);
+  moduleRegistry.register("friendships", friendshipsModule);
+  moduleRegistry.register("conversations", conversationsModule);
   moduleRegistry.register("messages", messagesModule);
 }
 
