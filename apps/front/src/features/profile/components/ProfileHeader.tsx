@@ -1,5 +1,7 @@
+import { useNavigate } from "@tanstack/react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { useRoutes } from "@/lib/routes";
 import type { Profile } from "../domain/Profile";
 
 type Props = {
@@ -7,9 +9,11 @@ type Props = {
 };
 
 export function ProfileHeader({ profile }: Props) {
+  const navigate = useNavigate();
+  const routes = useRoutes();
+
   return (
     <div className="flex flex-col gap-4">
-      {/* Top section: avatar + username */}
       <div className="flex items-center gap-4">
         <Avatar className="h-20 w-20">
           <AvatarImage src={profile.avatarUrl} />
@@ -39,13 +43,14 @@ export function ProfileHeader({ profile }: Props) {
         </div>
       </div>
 
-      {/* Action buttons */}
       <div className="flex gap-2 justify-end">
         <Button variant="outline" size="sm">
           Share
         </Button>
 
-        <Button size="sm">Edit Profile</Button>
+        <Button size="sm" onClick={() => navigate({ to: routes.settings })}>
+          Edit Profile
+        </Button>
       </div>
     </div>
   );

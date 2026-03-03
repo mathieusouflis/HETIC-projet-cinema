@@ -1,7 +1,6 @@
 import type { ProfileStats } from "../domain/ProfileStats";
 import { CalendarSection } from "./CalendarSection";
 import { StatsCards } from "./StatsCard";
-import { UpcomingSection } from "./UpcomingSection";
 import { WatchpartySection } from "./WatchpartySection";
 
 type Props = {
@@ -13,7 +12,6 @@ export function DashboardTab({ stats }: Props) {
     <div className="flex flex-col gap-6">
       <StatsCards stats={stats} />
       <CalendarSection />
-      <UpcomingSection />
       <WatchpartySection />
     </div>
   );
