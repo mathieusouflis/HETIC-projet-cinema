@@ -3,6 +3,7 @@ export const baseRoutes = {
   profile: "/me",
   watchlist: "/watchlist",
   messages: "/messages",
+  community: "/community",
   calendar: "/calendar",
   contents: {
     detail: (id: string) => `/contents/${id}`,
