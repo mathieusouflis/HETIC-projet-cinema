@@ -72,6 +72,75 @@ export class ConversationRepository implements IConversationRepository {
     }
   }
 
+  async findByIdForUser(
+    conversationId: string,
+    userId: string
+  ): Promise<ConversationWithMeta | null> {
+    try {
+      const participation = await db.query.conversationParticipants.findFirst({
+        where: and(
+          eq(conversationParticipants.conversationId, conversationId),
+          eq(conversationParticipants.userId, userId)
+        ),
+        with: {
+          conversation: {
+            with: {
+              conversationParticipants: {
+                with: { user: true },
+              },
+              messages: {
+                orderBy: (m, { desc }) => [desc(m.createdAt)],
+                limit: 1,
+              },
+            },
+          },
+        },
+      });
+
+      if (!participation) return null;
+
+      const conv = participation.conversation;
+      const otherParticipantRow = conv.conversationParticipants.find(
+        (cp) => cp.userId !== userId
+      );
+      const other = otherParticipantRow?.user;
+      const lastMsg = conv.messages[0] ?? null;
+
+      const unreadCount =
+        participation.lastReadAt && lastMsg
+          ? conv.messages.filter(
+              (m) =>
+                m.createdAt &&
+                participation.lastReadAt &&
+                m.createdAt > participation.lastReadAt
+            ).length
+          : lastMsg
+            ? 1
+            : 0;
+
+      const base = new Conversation(conv);
+      return Object.assign(Object.create(Object.getPrototypeOf(base)), base, {
+        otherParticipant: {
+          id: other?.id ?? "",
+          username: other?.username ?? "",
+          avatarUrl: other?.avatarUrl ?? null,
+        },
+        lastMessage: lastMsg
+          ? {
+              id: lastMsg.id,
+              content: lastMsg.deletedAt ? null : lastMsg.content,
+              isDeleted: !!lastMsg.deletedAt,
+              createdAt: new Date(lastMsg.createdAt ?? ""),
+              authorId: lastMsg.userId,
+            }
+          : null,
+        unreadCount,
+      }) as ConversationWithMeta;
+    } catch (error) {
+      throw new ServerError(`Failed to find conversation for user: ${error}`);
+    }
+  }
+
   async findById(conversationId: string): Promise<Conversation | null> {
     try {
       const row = await db.query.conversations.findFirst({

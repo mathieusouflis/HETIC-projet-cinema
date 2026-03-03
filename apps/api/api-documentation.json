@@ -3338,6 +3338,67 @@
                           "type": "string",
                           "nullable": true,
                           "format": "date-time"
+                        },
+                        "otherParticipant": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "format": "uuid"
+                            },
+                            "username": {
+                              "type": "string"
+                            },
+                            "avatarUrl": {
+                              "type": "string",
+                              "nullable": true
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "username",
+                            "avatarUrl"
+                          ]
+                        },
+                        "lastMessage": {
+                          "type": "object",
+                          "nullable": true,
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "format": "uuid"
+                            },
+                            "content": {
+                              "type": "string",
+                              "nullable": true
+                            },
+                            "isDeleted": {
+                              "type": "boolean"
+                            },
+                            "createdAt": {
+                              "type": "string",
+                              "nullable": true,
+                              "format": "date-time"
+                            },
+                            "authorId": {
+                              "type": "string",
+                              "minLength": 1,
+                              "format": "uuid"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "content",
+                            "isDeleted",
+                            "createdAt",
+                            "authorId"
+                          ]
+                        },
+                        "unreadCount": {
+                          "type": "integer",
+                          "minimum": 0
                         }
                       },
                       "required": [
@@ -3347,7 +3408,10 @@
                         "avatarUrl",
                         "createdBy",
                         "createdAt",
-                        "updatedAt"
+                        "updatedAt",
+                        "otherParticipant",
+                        "lastMessage",
+                        "unreadCount"
                       ]
                     }
                   },

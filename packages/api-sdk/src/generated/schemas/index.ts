@@ -86,6 +86,8 @@ export * from "./getcontents200-data-items-item";
 export * from "./getcontents200-data-pagination";
 export * from "./getcontents200-data";
 export * from "./getcontents200";
+export * from "./getconversations-id200-data-last-message";
+export * from "./getconversations-id200-data-other-participant";
 export * from "./getconversations-id200-data-type";
 export * from "./getconversations-id200-data";
 export * from "./getconversations-id200";
