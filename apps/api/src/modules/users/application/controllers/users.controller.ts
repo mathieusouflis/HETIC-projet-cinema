@@ -1,8 +1,5 @@
 import type { Request, Response } from "express";
-import {
-  ForbiddenError,
-  UnauthorizedError,
-} from "../../../../shared/errors/index.js";
+import { UnauthorizedError } from "../../../../shared/errors/index.js";
 import { Shared } from "../../../../shared/index.js";
 import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller.js";
 import { Protected } from "../../../../shared/infrastructure/decorators/rest/auth.decorator.js";
@@ -12,7 +9,6 @@ import {
   Delete,
   Get,
   Patch,
-  Post,
 } from "../../../../shared/infrastructure/decorators/rest/route.decorators.js";
 import {
   ValidateBody,
@@ -20,14 +16,6 @@ import {
   ValidateQuery,
 } from "../../../../shared/infrastructure/decorators/rest/validation.decorators.js";
 import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
-import {
-  type CreateFrienshipParams,
-  createFrienshipParamsValidator,
-} from "../dto/requests/create-friendship.params.validator.js";
-import {
-  type DeleteFriendshipParams,
-  deleteFriendshipParamsValidator,
-} from "../dto/requests/delete-friendship.params.validator.js";
 import { deleteIdParamsSchema } from "../dto/requests/delete-id.validator.js";
 import {
   type GetQueryDTO,
@@ -35,26 +23,14 @@ import {
 } from "../dto/requests/get.validator.js";
 import { getIdParamsSchema } from "../dto/requests/get-id.validator.js";
 import {
-  type GetUserFollowersParams,
-  getUserFollowersParamsValidator,
-} from "../dto/requests/get-user-followers.params.validator.js";
-import {
   patchIdBodySchema,
   patchIdParamsSchema,
 } from "../dto/requests/patch-id.validator.js";
 import { patchMeBodySchema } from "../dto/requests/patch-me.validator.js";
 import {
-  type CreateFriendshipResponse,
-  createFriendshipResponseValidator,
-} from "../dto/response/create-friendship.response.validator.js";
-import {
   type GetAllUsersResponse,
   getResponseSchema,
 } from "../dto/response/get.response.validator.js";
-import {
-  type GetFollowersFollowingResponse,
-  getFollowersFollowingResponseValidator,
-} from "../dto/response/get-followers-following.response.validator.js";
 import {
   type GetIdResponse,
   getIdResponseSchema,
@@ -68,16 +44,10 @@ import {
   patchIdResponseSchema,
 } from "../dto/response/patch-id.response.validator.js";
 import { patchMeResponseSchema } from "../dto/response/patch-me.response.validator.js";
-import { toUserResponseDTO } from "../dto/utils/to-user-response.js";
-import type { CreateFriendshipUseCase } from "../use-cases/create-friendship.use-case.js";
 import type { DeleteUserUseCase } from "../use-cases/DeleteUser.usecase.js";
-import type { DeleteFriendshipUseCase } from "../use-cases/delete-friendship.use-case.js";
 import type { GetMeUseCase } from "../use-cases/GetMe.usecase.js";
 import type { GetUserByIdUseCase } from "../use-cases/GetUserById.usecase.js";
 import type { GetUsersUseCase } from "../use-cases/GetUsers.usecase.js";
-import type { GetMyFollowingUseCase } from "../use-cases/get-my-following.use-case.js";
-import type { GetUserFollowersUseCase } from "../use-cases/get-user-followers.use-case.js";
-import type { GetUserFollowingUseCase } from "../use-cases/get-user-following.use-case.js";
 import type { UpdateUserUseCase } from "../use-cases/UpdateUser.usecase.js";
 
 @Controller({
@@ -91,18 +61,7 @@ export class UsersController extends BaseController {
     private readonly getUsersUseCase: GetUsersUseCase,
     private readonly updateUserUseCase: UpdateUserUseCase,
     private readonly deleteUserUseCase: DeleteUserUseCase,
-    private readonly getMeUseCase: GetMeUseCase,
-
-    /*
-     * ========================================
-     *           FOLLOWING FEATURE
-     * ========================================
-     */
-    private readonly createFriendshipUseCase: CreateFriendshipUseCase,
-    private readonly deleteFriendshipUseCase: DeleteFriendshipUseCase,
-    private readonly getMyFollowingUseCase: GetMyFollowingUseCase,
-    private readonly getUserFollowersUseCase: GetUserFollowersUseCase,
-    private readonly getUserFollowingUseCase: GetUserFollowingUseCase
+    private readonly getMeUseCase: GetMeUseCase
   ) {
     super();
   }
@@ -227,158 +186,6 @@ export class UsersController extends BaseController {
 
   /*
    * ========================================
-   *           FOLLOWING FEATURE
-   *   /me/friendships* — before /:id routes
-   * ========================================
-   */
-
-  @Post({
-    path: "/me/friendships/:id",
-    summary: "Follow a user",
-    description: "Follow a user",
-  })
-  @Protected()
-  @ValidateParams(createFrienshipParamsValidator)
-  @ApiResponse(
-    201,
-    "User followed successfully",
-    Shared.Schemas.Base.createSuccessResponseSchema(
-      createFriendshipResponseValidator
-    )
-  )
-  @ApiResponse(
-    400,
-    "Invalid input data",
-    Shared.Schemas.Base.validationErrorResponseSchema
-  )
-  @ApiResponse(
-    401,
-    "Not authenticated",
-    Shared.Schemas.Base.unauthorizedErrorResponseSchema
-  )
-  @ApiResponse(
-    403,
-    "Cannot follow yourself",
-    Shared.Schemas.Base.forbiddenErrorResponseSchema
-  )
-  @ApiResponse(
-    409,
-    "User already followed",
-    Shared.Schemas.Base.conflictErrorResponseSchema
-  )
-  @ApiResponse(
-    404,
-    "User not found",
-    Shared.Schemas.Base.notFoundErrorResponseSchema
-  )
-  createFriendship = asyncHandler(
-    async (req, res): Promise<CreateFriendshipResponse> => {
-      const params = req.params as CreateFrienshipParams;
-      const userId = req.user?.userId;
-      if (!userId) {
-        throw new UnauthorizedError("User not authenticated");
-      }
-
-      if (userId === params.id) {
-        throw new ForbiddenError("Cannot follow yourself");
-      }
-
-      const friendship = await this.createFriendshipUseCase.execute(
-        userId,
-        params
-      );
-
-      res.status(201).json({
-        success: true,
-        data: friendship.toJSON(),
-      });
-
-      return friendship.toJSON();
-    }
-  );
-
-  @Delete({
-    path: "/me/friendships/:id",
-    summary: "Unfollow a user",
-    description: "Unfollow a user (delete friendship)",
-  })
-  @Protected()
-  @ValidateParams(deleteFriendshipParamsValidator)
-  @ApiResponse(204, "User unfollowed successfully")
-  @ApiResponse(
-    400,
-    "Invalid user ID",
-    Shared.Schemas.Base.validationErrorResponseSchema
-  )
-  @ApiResponse(
-    401,
-    "Not authenticated",
-    Shared.Schemas.Base.unauthorizedErrorResponseSchema
-  )
-  @ApiResponse(
-    404,
-    "User or friendship not found",
-    Shared.Schemas.Base.notFoundErrorResponseSchema
-  )
-  deleteFriendship = asyncHandler(
-    async (req: Request, res: Response): Promise<void> => {
-      const params = req.params as DeleteFriendshipParams;
-      const userId = req.user?.userId;
-
-      if (!userId) {
-        throw new UnauthorizedError("User not authenticated");
-      }
-
-      await this.deleteFriendshipUseCase.execute(userId, params.id);
-
-      res.status(204).send();
-    }
-  );
-
-  @Get({
-    path: "/me/friendships",
-    summary: "Get my following list",
-    description:
-      "Get the list of users that the authenticated user is following",
-  })
-  @Protected()
-  @ApiResponse(
-    200,
-    "Following list retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponseSchema(
-      getFollowersFollowingResponseValidator
-    )
-  )
-  @ApiResponse(
-    401,
-    "Not authenticated",
-    Shared.Schemas.Base.unauthorizedErrorResponseSchema
-  )
-  getMyFollowing = asyncHandler(
-    async (
-      req: Request,
-      res: Response
-    ): Promise<GetFollowersFollowingResponse> => {
-      const userId = req.user?.userId;
-
-      if (!userId) {
-        throw new UnauthorizedError("User not authenticated");
-      }
-
-      const following = await this.getMyFollowingUseCase.execute(userId);
-      const followingDTO = following.map(toUserResponseDTO);
-
-      res.status(200).json({
-        success: true,
-        data: followingDTO,
-      });
-
-      return followingDTO;
-    }
-  );
-
-  /*
-   * ========================================
    *   Collection + /:id routes — after /me
    * ========================================
    */
@@ -457,90 +264,6 @@ export class UsersController extends BaseController {
       });
 
       return user;
-    }
-  );
-
-  @Get({
-    path: "/:id/following",
-    summary: "Get user's following list",
-    description: "Get the list of users that a specific user is following",
-  })
-  @ValidateParams(getUserFollowersParamsValidator)
-  @ApiResponse(
-    200,
-    "Following list retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponseSchema(
-      getFollowersFollowingResponseValidator
-    )
-  )
-  @ApiResponse(
-    400,
-    "Invalid user ID",
-    Shared.Schemas.Base.validationErrorResponseSchema
-  )
-  @ApiResponse(
-    404,
-    "User not found",
-    Shared.Schemas.Base.notFoundErrorResponseSchema
-  )
-  getUserFollowing = asyncHandler(
-    async (
-      req: Request,
-      res: Response
-    ): Promise<GetFollowersFollowingResponse> => {
-      const params = req.params as GetUserFollowersParams;
-
-      const following = await this.getUserFollowingUseCase.execute(params.id);
-      const followingDTO = following.map(toUserResponseDTO);
-
-      res.status(200).json({
-        success: true,
-        data: followingDTO,
-      });
-
-      return followingDTO;
-    }
-  );
-
-  @Get({
-    path: "/:id/followers",
-    summary: "Get user's followers list",
-    description: "Get the list of users following a specific user",
-  })
-  @ValidateParams(getUserFollowersParamsValidator)
-  @ApiResponse(
-    200,
-    "Followers list retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponseSchema(
-      getFollowersFollowingResponseValidator
-    )
-  )
-  @ApiResponse(
-    400,
-    "Invalid user ID",
-    Shared.Schemas.Base.validationErrorResponseSchema
-  )
-  @ApiResponse(
-    404,
-    "User not found",
-    Shared.Schemas.Base.notFoundErrorResponseSchema
-  )
-  getUserFollowers = asyncHandler(
-    async (
-      req: Request,
-      res: Response
-    ): Promise<GetFollowersFollowingResponse> => {
-      const params = req.params as GetUserFollowersParams;
-
-      const followers = await this.getUserFollowersUseCase.execute(params.id);
-      const followersDTO = followers.map(toUserResponseDTO);
-
-      res.status(200).json({
-        success: true,
-        data: followersDTO,
-      });
-
-      return followersDTO;
     }
   );
 
