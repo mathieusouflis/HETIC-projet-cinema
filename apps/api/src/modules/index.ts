@@ -5,6 +5,7 @@ import { logger } from "@packages/logger";
 import { Router } from "express";
 import type { Server as SocketIOServer } from "socket.io";
 import swaggerUi from "swagger-ui-express";
+import { asyncAPIGenerator } from "../shared/infrastructure/documentation/asyncapi-generator.js";
 import { moduleRegistry } from "../shared/infrastructure/openapi/module-registry.js";
 import { OpenAPISpecAggregator } from "../shared/infrastructure/openapi/openapi-spec-aggregator.js";
 import {
@@ -14,6 +15,7 @@ import {
 import { authModule } from "./auth/auth.module.js";
 import { categoriesModule } from "./categories/categories.module.js";
 import { contentsModule } from "./contents/contents.module.js";
+import { messagesModule } from "./messages/messages.module.js";
 import { moviesModule } from "./movies/movie.module.js";
 import { peoplesModule } from "./peoples/peoples.module.js";
 import { seriesModule } from "./series/serie.module.js";
@@ -31,6 +33,7 @@ function registerModules(): void {
   moduleRegistry.register("watchlist", watchlistModule);
   moduleRegistry.register("peoples", peoplesModule);
   moduleRegistry.register("watchparties", watchpartyModule);
+  moduleRegistry.register("messages", messagesModule);
 }
 
 function generateOpenAPISpec() {
@@ -93,10 +96,13 @@ export function apiVersion1Router(): Router {
   return router;
 }
 
-export function registerAllWebSocketEvents(_io: SocketIOServer): void {
+export function registerAllWebSocketEvents(io: SocketIOServer): void {
   // TODO: Uncomment when chat module is needed
   // chatModule.registerEvents(io);
   // asyncAPIGenerator.registerController(chatModule.getEventController());
+
+  messagesModule.registerEvents(io);
+  asyncAPIGenerator.registerController(messagesModule.getWSController());
 
   logger.success("All WebSocket events registered");
 }
