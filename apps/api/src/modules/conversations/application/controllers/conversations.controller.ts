@@ -137,7 +137,7 @@ export class ConversationsController extends BaseController {
   @ApiResponse(
     200,
     "Conversation retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponseSchema(conversationBasicSchema)
+    Shared.Schemas.Base.createSuccessResponseSchema(conversationResponseSchema)
   )
   @ApiResponse(
     401,
@@ -164,7 +164,7 @@ export class ConversationsController extends BaseController {
 
     res.status(200).json({
       success: true,
-      data: conversation.toJSON(),
+      data: conversation,
     });
   });
 

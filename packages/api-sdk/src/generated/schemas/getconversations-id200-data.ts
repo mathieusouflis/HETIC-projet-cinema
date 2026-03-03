@@ -5,6 +5,8 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
+import type { GETConversationsId200DataLastMessage } from "./getconversations-id200-data-last-message";
+import type { GETConversationsId200DataOtherParticipant } from "./getconversations-id200-data-other-participant";
 import type { GETConversationsId200DataType } from "./getconversations-id200-data-type";
 
 export type GETConversationsId200Data = {
@@ -24,4 +26,9 @@ export type GETConversationsId200Data = {
   createdAt: string | null;
   /** @nullable */
   updatedAt: string | null;
+  otherParticipant: GETConversationsId200DataOtherParticipant;
+  /** @nullable */
+  lastMessage: GETConversationsId200DataLastMessage;
+  /** @minimum 0 */
+  unreadCount: number;
 };

@@ -38,6 +38,7 @@ export function createMockedConversationRepository(
 ): IConversationRepository {
   const defaults: IConversationRepository = {
     findAllForUser: vi.fn().mockResolvedValue([mockConversationWithMeta]),
+    findByIdForUser: vi.fn().mockResolvedValue(mockConversationWithMeta),
     findById: vi.fn().mockResolvedValue(mockConversation),
     findDirectBetween: vi.fn().mockResolvedValue(null),
     create: vi.fn().mockResolvedValue(mockConversation),

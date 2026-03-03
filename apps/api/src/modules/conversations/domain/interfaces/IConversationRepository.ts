@@ -22,6 +22,10 @@ export interface ConversationWithMeta extends Conversation {
 
 export interface IConversationRepository {
   findAllForUser(userId: string): Promise<ConversationWithMeta[]>;
+  findByIdForUser(
+    conversationId: string,
+    userId: string
+  ): Promise<ConversationWithMeta | null>;
   findById(conversationId: string): Promise<Conversation | null>;
   findDirectBetween(userA: string, userB: string): Promise<Conversation | null>;
   create(
