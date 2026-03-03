@@ -2,18 +2,18 @@ import { config } from "@packages/config";
 import type { Request, Response } from "express";
 import { UnauthorizedError } from "../../../../shared/errors/index.js";
 import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller.js";
-import { Protected } from "../../../../shared/infrastructure/decorators/auth.decorator.js";
-import { Controller } from "../../../../shared/infrastructure/decorators/controller.decorator.js";
+import { Protected } from "../../../../shared/infrastructure/decorators/rest/auth.decorator.js";
+import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator.js";
 import {
   RefreshTokenCookie,
   SetCookie,
-} from "../../../../shared/infrastructure/decorators/header.decorator.js";
-import { ApiResponse } from "../../../../shared/infrastructure/decorators/response.decorator.js";
+} from "../../../../shared/infrastructure/decorators/rest/header.decorator.js";
+import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator.js";
 import {
   Get,
   Post,
-} from "../../../../shared/infrastructure/decorators/route.decorators.js";
-import { ValidateBody } from "../../../../shared/infrastructure/decorators/validation.decorators.js";
+} from "../../../../shared/infrastructure/decorators/rest/route.decorators.js";
+import { ValidateBody } from "../../../../shared/infrastructure/decorators/rest/validation.decorators.js";
 import {
   conflictErrorResponseSchema,
   unauthorizedErrorResponseSchema,

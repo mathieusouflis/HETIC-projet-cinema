@@ -1,6 +1,6 @@
 import type { Router } from "express";
 import { RestModule } from "../../shared/infrastructure/base/modules/rest-module.js";
-import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-generator.js";
+import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator.js";
 import { PeoplesController } from "./application/controllers/peoples.controller.js";
 import { CreatePeopleUseCase } from "./application/use-cases/create-people.use-case.js";
 import { DeletePeopleUseCase } from "./application/use-cases/delete-people.use-case.js";

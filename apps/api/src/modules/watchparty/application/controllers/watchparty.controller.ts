@@ -1,20 +1,20 @@
 import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
 import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error.js";
 import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller.js";
-import { Protected } from "../../../../shared/infrastructure/decorators/auth.decorator.js";
-import { Controller } from "../../../../shared/infrastructure/decorators/controller.decorator.js";
-import { ApiResponse } from "../../../../shared/infrastructure/decorators/response.decorator.js";
+import { Protected } from "../../../../shared/infrastructure/decorators/rest/auth.decorator.js";
+import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator.js";
+import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator.js";
 import {
   Delete,
   Get,
   Patch,
   Post,
-} from "../../../../shared/infrastructure/decorators/route.decorators.js";
+} from "../../../../shared/infrastructure/decorators/rest/route.decorators.js";
 import {
   ValidateBody,
   ValidateParams,
   ValidateQuery,
-} from "../../../../shared/infrastructure/decorators/validation.decorators.js";
+} from "../../../../shared/infrastructure/decorators/rest/validation.decorators.js";
 import {
   commonErrorResponses,
   notFoundErrorResponseSchema,

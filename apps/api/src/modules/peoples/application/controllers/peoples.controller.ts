@@ -11,7 +11,7 @@ import {
   ValidateBody,
   ValidateParams,
   ValidateQuery,
-} from "../../../../shared/infrastructure/decorators";
+} from "../../../../shared/infrastructure/decorators/rest";
 import {
   notFoundErrorResponseSchema,
   unauthorizedErrorResponseSchema,

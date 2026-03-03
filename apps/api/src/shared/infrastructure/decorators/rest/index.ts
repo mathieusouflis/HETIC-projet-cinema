@@ -1,3 +1,4 @@
+export * as WebSockets from "../web-socket";
 export * from "./auth.decorator";
 export * from "./controller.decorator";
 export * from "./header.decorator";
@@ -7,4 +8,3 @@ export * from "./route.decorators";
 export * from "./router-generator";
 export * from "./types";
 export * from "./validation.decorators";
-export * as WebSockets from "./web-socket";

@@ -2,20 +2,20 @@ import type { Request, Response } from "express";
 import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error.js";
 import { Shared } from "../../../../shared/index.js";
 import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller.js";
-import { Controller } from "../../../../shared/infrastructure/decorators/controller.decorator.js";
-import { Protected } from "../../../../shared/infrastructure/decorators/index.js";
-import { ApiResponse } from "../../../../shared/infrastructure/decorators/response.decorator.js";
+import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator.js";
+import { Protected } from "../../../../shared/infrastructure/decorators/rest/index.js";
+import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator.js";
 import {
   Delete,
   Get,
   Patch,
   Post,
-} from "../../../../shared/infrastructure/decorators/route.decorators.js";
+} from "../../../../shared/infrastructure/decorators/rest/route.decorators.js";
 import {
   ValidateBody,
   ValidateParams,
   ValidateQuery,
-} from "../../../../shared/infrastructure/decorators/validation.decorators.js";
+} from "../../../../shared/infrastructure/decorators/rest/validation.decorators.js";
 import { paginationService } from "../../../../shared/services/pagination/index.js";
 import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
 import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";

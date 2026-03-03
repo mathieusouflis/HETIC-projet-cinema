@@ -1,6 +1,6 @@
 import type { Router } from "express";
 import { RestModule } from "../../shared/infrastructure/base/modules/rest-module.js";
-import { DecoratorRouter } from "../../shared/infrastructure/decorators/router-generator.js";
+import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator.js";
 import type { IPasswordService } from "../../shared/services/password/i-password-service.js";
 import { PasswordService } from "../../shared/services/password/password-service.js";
 import type { ITokenService } from "../../shared/services/token/i-token-service.js";

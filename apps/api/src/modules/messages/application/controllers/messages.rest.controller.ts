@@ -1,5 +1,5 @@
 import { BaseController } from "../../../../shared/infrastructure/base/controllers";
-import { Controller } from "../../../../shared/infrastructure/decorators";
+import { Controller } from "../../../../shared/infrastructure/decorators/rest";
 
 @Controller({
   tag: "Messages",
