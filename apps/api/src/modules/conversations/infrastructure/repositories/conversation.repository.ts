@@ -48,8 +48,8 @@ export class ConversationRepository implements IConversationRepository {
               ? 1
               : 0;
 
-        const base = new Conversation(conv);
-        return Object.assign(Object.create(Object.getPrototypeOf(base)), base, {
+        const conversation = new Conversation(conv);
+        return Object.assign(conversation, {
           otherParticipant: {
             id: other?.id ?? "",
             username: other?.username ?? "",
@@ -118,8 +118,8 @@ export class ConversationRepository implements IConversationRepository {
             ? 1
             : 0;
 
-      const base = new Conversation(conv);
-      return Object.assign(Object.create(Object.getPrototypeOf(base)), base, {
+      const conversation = new Conversation(conv);
+      return Object.assign(conversation, {
         otherParticipant: {
           id: other?.id ?? "",
           username: other?.username ?? "",
