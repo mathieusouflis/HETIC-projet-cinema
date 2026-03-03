@@ -9,6 +9,7 @@ import axios from "axios";
 import type { AxiosRequestConfig, AxiosResponse } from "axios";
 
 import type {
+  DELETEMessagesMessageId200,
   DELETEWatchlistContentId204,
   DELETEWatchlistId204,
   DELETEWatchpartyId200,
@@ -20,6 +21,12 @@ import type {
   GETContentsId200,
   GETContentsIdParams,
   GETContentsParams,
+  GETConversations200,
+  GETConversationsId200,
+  GETFriendships200,
+  GETFriendshipsParams,
+  GETMessagesConversationsConversationId200,
+  GETMessagesConversationsConversationIdParams,
   GETMovies200,
   GETMoviesId200,
   GETMoviesIdParams,
@@ -35,10 +42,7 @@ import type {
   GETSeriesParams,
   GETUsers200,
   GETUsersId200,
-  GETUsersIdFollowers200,
-  GETUsersIdFollowing200,
   GETUsersMe200,
-  GETUsersMeFriendships200,
   GETUsersParams,
   GETWatchlist200,
   GETWatchlistContentId200,
@@ -49,6 +53,10 @@ import type {
   GETWatchpartyParams,
   PATCHCategoriesId200,
   PATCHCategoriesIdBody,
+  PATCHFriendshipsId200,
+  PATCHFriendshipsIdBody,
+  PATCHMessagesMessageId200,
+  PATCHMessagesMessageIdBody,
   PATCHPeoplesId200,
   PATCHPeoplesIdBody,
   PATCHUsersId200,
@@ -65,9 +73,13 @@ import type {
   POSTAuthRegisterBody,
   POSTCategories201,
   POSTCategoriesBody,
+  POSTConversations201,
+  POSTConversationsBody,
+  POSTFriendshipsUserId201,
+  POSTMessagesConversationsConversationId201,
+  POSTMessagesConversationsConversationIdBody,
   POSTPeoples201,
   POSTPeoplesBody,
-  POSTUsersMeFriendshipsId201,
   POSTWatchlist201,
   POSTWatchlistBody,
   POSTWatchparty201,
@@ -215,6 +227,155 @@ export const gETContentsId = (
     ...options,
     params: { ...params, ...options?.params },
   });
+};
+
+/**
+ * Get all conversations for the authenticated user, with unread counts and last message
+ * @summary List my conversations
+ */
+export const gETConversations = (
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<GETConversations200>> => {
+  return axios.get(`/conversations/`, options);
+};
+
+/**
+ * Create a 1-to-1 conversation with an accepted friend, or return the existing one
+ * @summary Create or get a direct conversation
+ */
+export const pOSTConversations = (
+  pOSTConversationsBody: POSTConversationsBody,
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<POSTConversations201>> => {
+  return axios.post(`/conversations/`, pOSTConversationsBody, options);
+};
+
+/**
+ * Retrieve a single conversation the authenticated user participates in
+ * @summary Get a conversation by ID
+ */
+export const gETConversationsId = (
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<GETConversationsId200>> => {
+  return axios.get(`/conversations/${id}`, options);
+};
+
+/**
+ * Mark all messages in a conversation as read for the authenticated user
+ * @summary Mark conversation as read
+ */
+export const pOSTConversationsIdRead = (
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<void>> => {
+  return axios.post(`/conversations/${id}/read`, undefined, options);
+};
+
+/**
+ * Get all friendships for the authenticated user, optionally filtered by status
+ * @summary List my friendships
+ */
+export const gETFriendships = (
+  params?: GETFriendshipsParams,
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<GETFriendships200>> => {
+  return axios.get(`/friendships/`, {
+    ...options,
+    params: { ...params, ...options?.params },
+  });
+};
+
+/**
+ * Send a friend request to another user
+ * @summary Send a friend request
+ */
+export const pOSTFriendshipsUserId = (
+  userId: string,
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<POSTFriendshipsUserId201>> => {
+  return axios.post(`/friendships/${userId}`, undefined, options);
+};
+
+/**
+ * Accept or reject a pending friend request (recipient only)
+ * @summary Accept or reject a friend request
+ */
+export const pATCHFriendshipsId = (
+  id: string,
+  pATCHFriendshipsIdBody: PATCHFriendshipsIdBody,
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<PATCHFriendshipsId200>> => {
+  return axios.patch(`/friendships/${id}`, pATCHFriendshipsIdBody, options);
+};
+
+/**
+ * Remove an accepted friendship or cancel a pending request
+ * @summary Remove a friendship
+ */
+export const dELETEFriendshipsId = (
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<void>> => {
+  return axios.delete(`/friendships/${id}`, options);
+};
+
+/**
+ * Get paginated messages for a conversation using cursor-based pagination
+ * @summary Get messages for a conversation
+ */
+export const gETMessagesConversationsConversationId = (
+  conversationId: string,
+  params?: GETMessagesConversationsConversationIdParams,
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<GETMessagesConversationsConversationId200>> => {
+  return axios.get(`/messages/conversations/${conversationId}`, {
+    ...options,
+    params: { ...params, ...options?.params },
+  });
+};
+
+/**
+ * Send a text message in a conversation
+ * @summary Send a message
+ */
+export const pOSTMessagesConversationsConversationId = (
+  conversationId: string,
+  pOSTMessagesConversationsConversationIdBody: POSTMessagesConversationsConversationIdBody,
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<POSTMessagesConversationsConversationId201>> => {
+  return axios.post(
+    `/messages/conversations/${conversationId}`,
+    pOSTMessagesConversationsConversationIdBody,
+    options,
+  );
+};
+
+/**
+ * Edit the content of a message (author only)
+ * @summary Edit a message
+ */
+export const pATCHMessagesMessageId = (
+  messageId: string,
+  pATCHMessagesMessageIdBody: PATCHMessagesMessageIdBody,
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<PATCHMessagesMessageId200>> => {
+  return axios.patch(
+    `/messages/${messageId}`,
+    pATCHMessagesMessageIdBody,
+    options,
+  );
+};
+
+/**
+ * Soft-delete a message (author only) — replaced by a tombstone
+ * @summary Delete a message
+ */
+export const dELETEMessagesMessageId = (
+  messageId: string,
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<DELETEMessagesMessageId200>> => {
+  return axios.delete(`/messages/${messageId}`, options);
 };
 
 /**
@@ -374,38 +535,6 @@ export const dELETEUsersMe = (
 };
 
 /**
- * Follow a user
- * @summary Follow a user
- */
-export const pOSTUsersMeFriendshipsId = (
-  id: string,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<POSTUsersMeFriendshipsId201>> => {
-  return axios.post(`/users/me/friendships/${id}`, undefined, options);
-};
-
-/**
- * Unfollow a user (delete friendship)
- * @summary Unfollow a user
- */
-export const dELETEUsersMeFriendshipsId = (
-  id: string,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<void>> => {
-  return axios.delete(`/users/me/friendships/${id}`, options);
-};
-
-/**
- * Get the list of users that the authenticated user is following
- * @summary Get my following list
- */
-export const gETUsersMeFriendships = (
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<GETUsersMeFriendships200>> => {
-  return axios.get(`/users/me/friendships`, options);
-};
-
-/**
  * Retrieve a paginated list of all users
  * @summary Get all users
  */
@@ -451,28 +580,6 @@ export const dELETEUsersId = (
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<void>> => {
   return axios.delete(`/users/${id}`, options);
-};
-
-/**
- * Get the list of users that a specific user is following
- * @summary Get user's following list
- */
-export const gETUsersIdFollowing = (
-  id: string,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<GETUsersIdFollowing200>> => {
-  return axios.get(`/users/${id}/following`, options);
-};
-
-/**
- * Get the list of users following a specific user
- * @summary Get user's followers list
- */
-export const gETUsersIdFollowers = (
-  id: string,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<GETUsersIdFollowers200>> => {
-  return axios.get(`/users/${id}/followers`, options);
 };
 
 /**
@@ -632,6 +739,23 @@ export type PATCHCategoriesIdResult = AxiosResponse<PATCHCategoriesId200>;
 export type DELETECategoriesIdResult = AxiosResponse<void>;
 export type GETContentsResult = AxiosResponse<GETContents200>;
 export type GETContentsIdResult = AxiosResponse<GETContentsId200>;
+export type GETConversationsResult = AxiosResponse<GETConversations200>;
+export type POSTConversationsResult = AxiosResponse<POSTConversations201>;
+export type GETConversationsIdResult = AxiosResponse<GETConversationsId200>;
+export type POSTConversationsIdReadResult = AxiosResponse<void>;
+export type GETFriendshipsResult = AxiosResponse<GETFriendships200>;
+export type POSTFriendshipsUserIdResult =
+  AxiosResponse<POSTFriendshipsUserId201>;
+export type PATCHFriendshipsIdResult = AxiosResponse<PATCHFriendshipsId200>;
+export type DELETEFriendshipsIdResult = AxiosResponse<void>;
+export type GETMessagesConversationsConversationIdResult =
+  AxiosResponse<GETMessagesConversationsConversationId200>;
+export type POSTMessagesConversationsConversationIdResult =
+  AxiosResponse<POSTMessagesConversationsConversationId201>;
+export type PATCHMessagesMessageIdResult =
+  AxiosResponse<PATCHMessagesMessageId200>;
+export type DELETEMessagesMessageIdResult =
+  AxiosResponse<DELETEMessagesMessageId200>;
 export type GETMoviesResult = AxiosResponse<GETMovies200>;
 export type GETMoviesIdResult = AxiosResponse<GETMoviesId200>;
 export type GETPeoplesResult = AxiosResponse<GETPeoples200>;
@@ -645,17 +769,10 @@ export type GETSeriesIdResult = AxiosResponse<GETSeriesId200>;
 export type GETUsersMeResult = AxiosResponse<GETUsersMe200>;
 export type PATCHUsersMeResult = AxiosResponse<PATCHUsersMe200>;
 export type DELETEUsersMeResult = AxiosResponse<void>;
-export type POSTUsersMeFriendshipsIdResult =
-  AxiosResponse<POSTUsersMeFriendshipsId201>;
-export type DELETEUsersMeFriendshipsIdResult = AxiosResponse<void>;
-export type GETUsersMeFriendshipsResult =
-  AxiosResponse<GETUsersMeFriendships200>;
 export type GETUsersResult = AxiosResponse<GETUsers200>;
 export type GETUsersIdResult = AxiosResponse<GETUsersId200>;
 export type PATCHUsersIdResult = AxiosResponse<PATCHUsersId200>;
 export type DELETEUsersIdResult = AxiosResponse<void>;
-export type GETUsersIdFollowingResult = AxiosResponse<GETUsersIdFollowing200>;
-export type GETUsersIdFollowersResult = AxiosResponse<GETUsersIdFollowers200>;
 export type GETWatchlistResult = AxiosResponse<GETWatchlist200>;
 export type POSTWatchlistResult = AxiosResponse<POSTWatchlist201>;
 export type GETWatchlistContentIdResult =
