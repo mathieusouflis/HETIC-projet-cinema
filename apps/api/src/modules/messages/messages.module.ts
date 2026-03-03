@@ -1,7 +1,7 @@
 import type { Router } from "express";
 import type { Server } from "socket.io";
 import { HybridModule } from "../../shared/infrastructure/base/modules";
-import { DecoratorRouter } from "../../shared/infrastructure/decorators";
+import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest";
 import { MessagesRestController } from "./application/controllers/messages.rest.controller";
 import { MessageWSController } from "./application/controllers/messages.ws.controller";
 

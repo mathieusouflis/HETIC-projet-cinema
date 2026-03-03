@@ -1,5 +1,5 @@
 import { OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
-import type { OpenAPISpec } from "../decorators/router-generator.js";
+import type { OpenAPISpec } from "../decorators/rest/router-generator.js";
 import { getSharedRegistry } from "./shared-registry.js";
 
 export class OpenAPISpecAggregator {

@@ -1,11 +1,11 @@
 import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller.js";
-import { Controller } from "../../../../shared/infrastructure/decorators/controller.decorator.js";
-import { ApiResponse } from "../../../../shared/infrastructure/decorators/response.decorator.js";
-import { Get } from "../../../../shared/infrastructure/decorators/route.decorators.js";
+import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator.js";
+import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator.js";
+import { Get } from "../../../../shared/infrastructure/decorators/rest/route.decorators.js";
 import {
   ValidateParams,
   ValidateQuery,
-} from "../../../../shared/infrastructure/decorators/validation.decorators.js";
+} from "../../../../shared/infrastructure/decorators/rest/validation.decorators.js";
 import { notFoundErrorResponseSchema } from "../../../../shared/schemas/base/error.schemas.js";
 import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
 import {

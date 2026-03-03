@@ -1,5 +1,5 @@
 import type { NextFunction, Request, RequestHandler, Response } from "express";
-import { BaseController } from "../base/controllers";
+import { BaseController } from "../../base/controllers";
 
 export type RouteHandler = (
   req: Request,
