@@ -89,7 +89,6 @@ export interface FileRoutesByFullPath {
   '/register/': typeof RegisterIndexRoute
   '/profile/': typeof MainProfileIndexRoute
   '/search/': typeof MainSearchIndexRoute
-  '/search/': typeof MainSearchIndexRoute
   '/settings/': typeof MainSettingsIndexRoute
   '/watchlist/': typeof MainWatchlistIndexRoute
   '/watchparty/': typeof MainWatchpartyIndexRoute
@@ -153,7 +152,6 @@ export interface FileRouteTypes {
     | '/settings'
     | '/watchlist'
     | '/watchparty'
-   
     | '/contents/$contentId'
   id:
     | '__root__'
