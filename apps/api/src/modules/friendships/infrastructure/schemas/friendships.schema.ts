@@ -9,7 +9,7 @@ import {
   unique,
   uuid,
 } from "drizzle-orm/pg-core";
-import { users } from "../../../../modules/users/infrastructure/database/schemas/users.schema.js";
+import { users } from "../../../../modules/users/infrastructure/database/schemas/users.schema";
 
 export type FriendshipStatus = "pending" | "accepted" | "rejected";
 
