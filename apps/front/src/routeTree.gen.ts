@@ -18,10 +18,6 @@ import { Route as MainWatchlistIndexRouteImport } from './app/_main/watchlist/in
 import { Route as MainSettingsIndexRouteImport } from './app/_main/settings/index'
 import { Route as MainSearchIndexRouteImport } from './app/_main/search/index'
 import { Route as MainProfileIndexRouteImport } from './app/_main/profile/index'
-import { Route as MainSearchIndexRouteImport } from './app/_main/search/index'
-import { Route as MainProfileIndexRouteImport } from './app/_main/profile/index'
-import { Route as MainSearchIndexRouteImport } from './app/_main/search/index'
-import { Route as MainProfileIndexRouteImport } from './app/_main/profile/index'
 import { Route as MainContentsContentIdIndexRouteImport } from './app/_main/contents/$contentId/index'
 
 const MainRoute = MainRouteImport.update({
@@ -139,11 +135,6 @@ export interface FileRouteTypes {
     | '/register/'
     | '/profile/'
     | '/search/'
-    | '/profile/'
-    | '/search/'
-    | '/profile/'
-    | '/search/'
-    | '/profile/'
     | '/settings/'
     | '/watchlist/'
     | '/watchparty/'
@@ -293,11 +284,6 @@ interface MainRouteChildren {
   MainIndexRoute: typeof MainIndexRoute
   MainProfileIndexRoute: typeof MainProfileIndexRoute
   MainSearchIndexRoute: typeof MainSearchIndexRoute
-  MainProfileIndexRoute: typeof MainProfileIndexRoute
-  MainSearchIndexRoute: typeof MainSearchIndexRoute
-  MainProfileIndexRoute: typeof MainProfileIndexRoute
-  MainSearchIndexRoute: typeof MainSearchIndexRoute
-  MainProfileIndexRoute: typeof MainProfileIndexRoute
   MainSettingsIndexRoute: typeof MainSettingsIndexRoute
   MainWatchlistIndexRoute: typeof MainWatchlistIndexRoute
   MainWatchpartyIndexRoute: typeof MainWatchpartyIndexRoute
@@ -306,8 +292,8 @@ interface MainRouteChildren {
 
 const MainRouteChildren: MainRouteChildren = {
   MainIndexRoute: MainIndexRoute,
-  MainSearchIndexRoute: MainSearchIndexRoute,
   MainProfileIndexRoute: MainProfileIndexRoute,
+  MainSearchIndexRoute: MainSearchIndexRoute,
   MainSettingsIndexRoute: MainSettingsIndexRoute,
   MainWatchlistIndexRoute: MainWatchlistIndexRoute,
   MainWatchpartyIndexRoute: MainWatchpartyIndexRoute,
