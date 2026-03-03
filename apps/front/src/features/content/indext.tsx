@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useApi } from "@/lib/api/services";
-import AddContentToWatchlistDialog from "../watchlist/components/add-content-to-watchlist-dialog";
+import AddContentToWatchlistDialog from "../watchlist/components/dialog/add-content-to-watchlist-dialog";
 
 export function ContentPage() {
   const { contentId } = useParams({
