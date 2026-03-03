@@ -3,7 +3,7 @@ import type {
   GETContents200DataItemsItem,
   PUTWatchlistContentIdBody,
 } from "@packages/api-sdk";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { DatePickerInput } from "@/components/common/date-picker-input";
@@ -63,29 +63,34 @@ export default function FormWatchlist(props: {
   );
   const { mutateAsync: updateWatchlist } = services.watchlist.updateContentId();
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      status: "plan_to_watch",
-      currentSeason: undefined,
-      currentEpisode: undefined,
-      startedAt: undefined,
-      completedAt: undefined,
-    },
-  });
-
-  useEffect(() => {
-    if (watchlistData?.data) {
+  const initialValues = useMemo(() => {
+    if (watchlistData?.data?.data) {
       const d = watchlistData.data.data;
-      form.reset({
+      return {
         status: d.status,
         currentSeason: d.currentSeason ?? undefined,
         currentEpisode: d.currentEpisode ?? undefined,
         startedAt: d.startedAt ? d.startedAt.slice(0, 10) : undefined,
         completedAt: d.completedAt ? d.completedAt.slice(0, 10) : undefined,
-      });
+      };
     }
-  }, [watchlistData, form.reset]);
+    return {
+      status: "plan_to_watch" as const,
+      currentSeason: undefined,
+      currentEpisode: undefined,
+      startedAt: undefined,
+      completedAt: undefined,
+    };
+  }, [watchlistData?.data?.data]);
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: initialValues,
+  });
+
+  useEffect(() => {
+    form.reset(initialValues, { keepDefaultValues: false });
+  }, [initialValues, form]);
 
   const onSubmit = async (values: FormValues) => {
     try {
