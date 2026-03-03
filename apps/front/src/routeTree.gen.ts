@@ -14,6 +14,7 @@ import { Route as RegisterIndexRouteImport } from './app/register/index'
 import { Route as LoginIndexRouteImport } from './app/login/index'
 import { Route as MainIndexRouteImport } from './app/_main/index'
 import { Route as MainWatchpartyIndexRouteImport } from './app/_main/watchparty/index'
+import { Route as MainWatchlistIndexRouteImport } from './app/_main/watchlist/index'
 import { Route as MainSettingsIndexRouteImport } from './app/_main/settings/index'
 import { Route as MainSearchIndexRouteImport } from './app/_main/search/index'
 import { Route as MainProfileIndexRouteImport } from './app/_main/profile/index'
@@ -41,6 +42,11 @@ const MainIndexRoute = MainIndexRouteImport.update({
 const MainWatchpartyIndexRoute = MainWatchpartyIndexRouteImport.update({
   id: '/watchparty/',
   path: '/watchparty/',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainWatchlistIndexRoute = MainWatchlistIndexRouteImport.update({
+  id: '/watchlist/',
+  path: '/watchlist/',
   getParentRoute: () => MainRoute,
 } as any)
 const MainSettingsIndexRoute = MainSettingsIndexRouteImport.update({
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/profile/': typeof MainProfileIndexRoute
   '/search/': typeof MainSearchIndexRoute
   '/settings/': typeof MainSettingsIndexRoute
+  '/watchlist/': typeof MainWatchlistIndexRoute
   '/watchparty/': typeof MainWatchpartyIndexRoute
   '/contents/$contentId/': typeof MainContentsContentIdIndexRoute
 }
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/profile': typeof MainProfileIndexRoute
   '/search': typeof MainSearchIndexRoute
   '/settings': typeof MainSettingsIndexRoute
+  '/watchlist': typeof MainWatchlistIndexRoute
   '/watchparty': typeof MainWatchpartyIndexRoute
   '/contents/$contentId': typeof MainContentsContentIdIndexRoute
 }
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/_main/profile/': typeof MainProfileIndexRoute
   '/_main/search/': typeof MainSearchIndexRoute
   '/_main/settings/': typeof MainSettingsIndexRoute
+  '/_main/watchlist/': typeof MainWatchlistIndexRoute
   '/_main/watchparty/': typeof MainWatchpartyIndexRoute
   '/_main/contents/$contentId/': typeof MainContentsContentIdIndexRoute
 }
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/profile/'
     | '/search/'
     | '/settings/'
+    | '/watchlist/'
     | '/watchparty/'
     | '/contents/$contentId/'
   fileRoutesByTo: FileRoutesByTo
@@ -116,6 +126,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/search'
     | '/settings'
+    | '/watchlist'
     | '/watchparty'
     | '/contents/$contentId'
   id:
@@ -127,6 +138,7 @@ export interface FileRouteTypes {
     | '/_main/profile/'
     | '/_main/search/'
     | '/_main/settings/'
+    | '/_main/watchlist/'
     | '/_main/watchparty/'
     | '/_main/contents/$contentId/'
   fileRoutesById: FileRoutesById
@@ -174,6 +186,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainWatchpartyIndexRouteImport
       parentRoute: typeof MainRoute
     }
+    '/_main/watchlist/': {
+      id: '/_main/watchlist/'
+      path: '/watchlist'
+      fullPath: '/watchlist/'
+      preLoaderRoute: typeof MainWatchlistIndexRouteImport
+      parentRoute: typeof MainRoute
+    }
     '/_main/settings/': {
       id: '/_main/settings/'
       path: '/settings'
@@ -210,6 +229,7 @@ interface MainRouteChildren {
   MainProfileIndexRoute: typeof MainProfileIndexRoute
   MainSearchIndexRoute: typeof MainSearchIndexRoute
   MainSettingsIndexRoute: typeof MainSettingsIndexRoute
+  MainWatchlistIndexRoute: typeof MainWatchlistIndexRoute
   MainWatchpartyIndexRoute: typeof MainWatchpartyIndexRoute
   MainContentsContentIdIndexRoute: typeof MainContentsContentIdIndexRoute
 }
@@ -219,6 +239,7 @@ const MainRouteChildren: MainRouteChildren = {
   MainProfileIndexRoute: MainProfileIndexRoute,
   MainSearchIndexRoute: MainSearchIndexRoute,
   MainSettingsIndexRoute: MainSettingsIndexRoute,
+  MainWatchlistIndexRoute: MainWatchlistIndexRoute,
   MainWatchpartyIndexRoute: MainWatchpartyIndexRoute,
   MainContentsContentIdIndexRoute: MainContentsContentIdIndexRoute,
 }
