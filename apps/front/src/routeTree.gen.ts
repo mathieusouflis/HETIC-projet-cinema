@@ -13,10 +13,14 @@ import { Route as MainRouteImport } from './app/_main'
 import { Route as RegisterIndexRouteImport } from './app/register/index'
 import { Route as LoginIndexRouteImport } from './app/login/index'
 import { Route as MainIndexRouteImport } from './app/_main/index'
+import { Route as MainMessagesRouteImport } from './app/_main/messages'
 import { Route as MainWatchpartyIndexRouteImport } from './app/_main/watchparty/index'
 import { Route as MainWatchlistIndexRouteImport } from './app/_main/watchlist/index'
 import { Route as MainSettingsIndexRouteImport } from './app/_main/settings/index'
 import { Route as MainSearchIndexRouteImport } from './app/_main/search/index'
+import { Route as MainMessagesIndexRouteImport } from './app/_main/messages/index'
+import { Route as MainCommunityIndexRouteImport } from './app/_main/community/index'
+import { Route as MainMessagesConversationIdIndexRouteImport } from './app/_main/messages/$conversationId/index'
 import { Route as MainContentsContentIdIndexRouteImport } from './app/_main/contents/$contentId/index'
 
 const MainRoute = MainRouteImport.update({
@@ -36,6 +40,11 @@ const LoginIndexRoute = LoginIndexRouteImport.update({
 const MainIndexRoute = MainIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainMessagesRoute = MainMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
   getParentRoute: () => MainRoute,
 } as any)
 const MainWatchpartyIndexRoute = MainWatchpartyIndexRouteImport.update({
@@ -58,6 +67,22 @@ const MainSearchIndexRoute = MainSearchIndexRouteImport.update({
   path: '/search/',
   getParentRoute: () => MainRoute,
 } as any)
+const MainMessagesIndexRoute = MainMessagesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MainMessagesRoute,
+} as any)
+const MainCommunityIndexRoute = MainCommunityIndexRouteImport.update({
+  id: '/community/',
+  path: '/community/',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainMessagesConversationIdIndexRoute =
+  MainMessagesConversationIdIndexRouteImport.update({
+    id: '/$conversationId/',
+    path: '/$conversationId/',
+    getParentRoute: () => MainMessagesRoute,
+  } as any)
 const MainContentsContentIdIndexRoute =
   MainContentsContentIdIndexRouteImport.update({
     id: '/contents/$contentId/',
@@ -67,68 +92,90 @@ const MainContentsContentIdIndexRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof MainIndexRoute
+  '/messages': typeof MainMessagesRouteWithChildren
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
+  '/community/': typeof MainCommunityIndexRoute
+  '/messages/': typeof MainMessagesIndexRoute
   '/search/': typeof MainSearchIndexRoute
   '/settings/': typeof MainSettingsIndexRoute
   '/watchlist/': typeof MainWatchlistIndexRoute
   '/watchparty/': typeof MainWatchpartyIndexRoute
   '/contents/$contentId/': typeof MainContentsContentIdIndexRoute
+  '/messages/$conversationId/': typeof MainMessagesConversationIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof MainIndexRoute
   '/login': typeof LoginIndexRoute
   '/register': typeof RegisterIndexRoute
+  '/community': typeof MainCommunityIndexRoute
+  '/messages': typeof MainMessagesIndexRoute
   '/search': typeof MainSearchIndexRoute
   '/settings': typeof MainSettingsIndexRoute
   '/watchlist': typeof MainWatchlistIndexRoute
   '/watchparty': typeof MainWatchpartyIndexRoute
   '/contents/$contentId': typeof MainContentsContentIdIndexRoute
+  '/messages/$conversationId': typeof MainMessagesConversationIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_main': typeof MainRouteWithChildren
+  '/_main/messages': typeof MainMessagesRouteWithChildren
   '/_main/': typeof MainIndexRoute
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
+  '/_main/community/': typeof MainCommunityIndexRoute
+  '/_main/messages/': typeof MainMessagesIndexRoute
   '/_main/search/': typeof MainSearchIndexRoute
   '/_main/settings/': typeof MainSettingsIndexRoute
   '/_main/watchlist/': typeof MainWatchlistIndexRoute
   '/_main/watchparty/': typeof MainWatchpartyIndexRoute
   '/_main/contents/$contentId/': typeof MainContentsContentIdIndexRoute
+  '/_main/messages/$conversationId/': typeof MainMessagesConversationIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/messages'
     | '/login/'
     | '/register/'
+    | '/community/'
+    | '/messages/'
     | '/search/'
     | '/settings/'
     | '/watchlist/'
     | '/watchparty/'
     | '/contents/$contentId/'
+    | '/messages/$conversationId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/register'
+    | '/community'
+    | '/messages'
     | '/search'
     | '/settings'
     | '/watchlist'
     | '/watchparty'
     | '/contents/$contentId'
+    | '/messages/$conversationId'
   id:
     | '__root__'
     | '/_main'
+    | '/_main/messages'
     | '/_main/'
     | '/login/'
     | '/register/'
+    | '/_main/community/'
+    | '/_main/messages/'
     | '/_main/search/'
     | '/_main/settings/'
     | '/_main/watchlist/'
     | '/_main/watchparty/'
     | '/_main/contents/$contentId/'
+    | '/_main/messages/$conversationId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -167,6 +214,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainIndexRouteImport
       parentRoute: typeof MainRoute
     }
+    '/_main/messages': {
+      id: '/_main/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof MainMessagesRouteImport
+      parentRoute: typeof MainRoute
+    }
     '/_main/watchparty/': {
       id: '/_main/watchparty/'
       path: '/watchparty'
@@ -195,6 +249,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainSearchIndexRouteImport
       parentRoute: typeof MainRoute
     }
+    '/_main/messages/': {
+      id: '/_main/messages/'
+      path: '/'
+      fullPath: '/messages/'
+      preLoaderRoute: typeof MainMessagesIndexRouteImport
+      parentRoute: typeof MainMessagesRoute
+    }
+    '/_main/community/': {
+      id: '/_main/community/'
+      path: '/community'
+      fullPath: '/community/'
+      preLoaderRoute: typeof MainCommunityIndexRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/messages/$conversationId/': {
+      id: '/_main/messages/$conversationId/'
+      path: '/$conversationId'
+      fullPath: '/messages/$conversationId/'
+      preLoaderRoute: typeof MainMessagesConversationIdIndexRouteImport
+      parentRoute: typeof MainMessagesRoute
+    }
     '/_main/contents/$contentId/': {
       id: '/_main/contents/$contentId/'
       path: '/contents/$contentId'
@@ -205,8 +280,24 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface MainMessagesRouteChildren {
+  MainMessagesIndexRoute: typeof MainMessagesIndexRoute
+  MainMessagesConversationIdIndexRoute: typeof MainMessagesConversationIdIndexRoute
+}
+
+const MainMessagesRouteChildren: MainMessagesRouteChildren = {
+  MainMessagesIndexRoute: MainMessagesIndexRoute,
+  MainMessagesConversationIdIndexRoute: MainMessagesConversationIdIndexRoute,
+}
+
+const MainMessagesRouteWithChildren = MainMessagesRoute._addFileChildren(
+  MainMessagesRouteChildren,
+)
+
 interface MainRouteChildren {
+  MainMessagesRoute: typeof MainMessagesRouteWithChildren
   MainIndexRoute: typeof MainIndexRoute
+  MainCommunityIndexRoute: typeof MainCommunityIndexRoute
   MainSearchIndexRoute: typeof MainSearchIndexRoute
   MainSettingsIndexRoute: typeof MainSettingsIndexRoute
   MainWatchlistIndexRoute: typeof MainWatchlistIndexRoute
@@ -215,7 +306,9 @@ interface MainRouteChildren {
 }
 
 const MainRouteChildren: MainRouteChildren = {
+  MainMessagesRoute: MainMessagesRouteWithChildren,
   MainIndexRoute: MainIndexRoute,
+  MainCommunityIndexRoute: MainCommunityIndexRoute,
   MainSearchIndexRoute: MainSearchIndexRoute,
   MainSettingsIndexRoute: MainSettingsIndexRoute,
   MainWatchlistIndexRoute: MainWatchlistIndexRoute,

@@ -5,6 +5,7 @@ import {
   MessageSquare,
   Search,
   Telescope,
+  Users,
 } from "lucide-react";
 import { baseRoutes } from "@/lib/routes";
 
@@ -54,6 +55,16 @@ export const navConfig: NavConfig = {
     name: "Messages",
     path: baseRoutes.messages,
     icon: MessageSquare,
+    requireAuth: true,
+    devices: {
+      mobile: true,
+      desktop: true,
+    },
+  },
+  community: {
+    name: "Community",
+    path: baseRoutes.community,
+    icon: Users,
     requireAuth: true,
     devices: {
       mobile: true,
