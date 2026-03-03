@@ -2,8 +2,11 @@ import type { GETCategoriesParams } from "@packages/api-sdk";
 import { useQuery } from "@tanstack/react-query";
 import { authService } from "./auth";
 import { contentService, queryContentService } from "./contents";
+import { conversationService, queryConversationService } from "./conversations";
+import { friendshipService, queryFriendshipService } from "./friendships";
 import { categorieService } from "./genres";
 import { categoriesKeys } from "./genres/keys";
+import { messageService, queryMessageService } from "./messages";
 import { queryPeoplesService } from "./peoples";
 import { queryUserService, usersService } from "./users";
 import { queryWatchlistService, watchlistService } from "./watchlists";
@@ -22,6 +25,9 @@ export const getApi = () => ({
   contents: contentService,
   categories: categorieService,
   watchlsit: watchlistService,
+  conversations: conversationService,
+  messages: messageService,
+  friendships: friendshipService,
 });
 
 /**
@@ -52,5 +58,11 @@ export const useApi = () => {
     peoples: queryPeoplesService,
 
     watchlist: queryWatchlistService,
+
+    conversations: queryConversationService,
+
+    messages: queryMessageService,
+
+    friendships: queryFriendshipService,
   };
 };
