@@ -6,7 +6,7 @@ import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useApi } from "@/lib/api/services";
-import AddContentToWatchlistDialog from "./dialog/add-content-to-watchlist-dialog";
+import AddContentToWatchlistDialog from "./dialog";
 import { StarRating } from "./rating";
 
 export function WatchlistRow({

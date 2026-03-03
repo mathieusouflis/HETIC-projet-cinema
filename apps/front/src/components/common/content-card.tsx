@@ -4,7 +4,7 @@ import { Pen, Plus, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import AddContentToWatchlistDialog from "@/features/watchlist/components/dialog/add-content-to-watchlist-dialog";
+import AddContentToWatchlistDialog from "@/features/watchlist/components/dialog";
 import { useApi } from "@/lib/api/services";
 import { baseRoutes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
