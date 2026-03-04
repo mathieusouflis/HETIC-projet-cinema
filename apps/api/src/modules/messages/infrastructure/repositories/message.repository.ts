@@ -36,7 +36,7 @@ export class MessageRepository implements IMessageRepository {
             ? lt(messages.createdAt, cursorDate.toISOString())
             : undefined
         ),
-        orderBy: (m, { desc }) => [desc(m.createdAt)],
+        orderBy: (m, { asc }) => [asc(m.createdAt)],
         limit: limit + 1,
       });
 
