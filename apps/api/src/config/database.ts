@@ -18,8 +18,9 @@ export const databaseConfig = {
  * @returns PostgreSQL connection string
  */
 export const getDatabaseUrl = (): string => {
-  const { host, port, user, password, database } = databaseConfig;
-  return `postgresql://${user}:${password}@${host}:${port}/${database}`;
+  const { host, port, user, password, database, ssl } = databaseConfig;
+  const resolvedPort = Number(port) || 3000;
+  return `postgresql://${user}:${password}@${host}${config.env.NODE_ENV === "production" ? "" : `:${resolvedPort}`}/${database}?sslmode=${ssl ? "required" : ""}${config.env.NODE_ENV === "production" && "&channel_binding=require"}`;
 };
 
 /**

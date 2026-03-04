@@ -1,3 +1,4 @@
+import { config } from "@packages/config";
 import { defineConfig } from "drizzle-kit";
 import { databaseConfig } from "./database";
 
@@ -11,9 +12,11 @@ export const drizzleConfig = defineConfig({
     password: databaseConfig.password,
     host: databaseConfig.host,
     port:
-      typeof databaseConfig.port === "string"
-        ? Number.parseInt(databaseConfig.port, 10)
-        : databaseConfig.port,
+      config.env.NODE_ENV === "production"
+        ? undefined
+        : typeof databaseConfig.port === "string"
+          ? Number.parseInt(databaseConfig.port, 10)
+          : databaseConfig.port,
     ssl: databaseConfig.ssl,
   },
 });

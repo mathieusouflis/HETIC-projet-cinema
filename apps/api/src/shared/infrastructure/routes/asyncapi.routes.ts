@@ -17,7 +17,7 @@ export function createAsyncAPIRouter(): Router {
       title: "Cinema WebSocket API",
       version: "1.0.0",
       description: "Real-time WebSocket API for cinema application",
-      serverUrl: `ws://${req.get("host") || "localhost:5001"}`,
+      serverUrl: `ws://${req.get("host") || "localhost:3000"}`,
     });
 
     res.json(spec);

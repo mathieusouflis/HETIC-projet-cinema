@@ -5,7 +5,7 @@ import { logger } from "@packages/logger";
 import { registerAllWebSocketEvents } from "./modules/index.js";
 import { createServer } from "./server.js";
 
-const port = config.env.backend.port || 5001;
+const port = config.env.backend.port || 3000;
 const { httpServer, io } = createServer();
 
 registerAllWebSocketEvents(io);

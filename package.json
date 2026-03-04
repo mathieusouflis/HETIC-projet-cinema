@@ -18,7 +18,8 @@
     "start": "phase run turbo run start",
     "test": "turbo run test -- --coverage",
     "setup-project": "pnpm install && phase auth && phase init && husky",
-    "prepare": "husky"
+    "prepare": "husky",
+    "deploy-prod": "phase secrets export --app hetic-cinema --env production > /tmp/.cinema-prod.env && docker compose --env-file /tmp/.cinema-prod.env -f docker-compose.prod.yaml up --build -d; rm -f /tmp/.cinema-prod.env"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.4",

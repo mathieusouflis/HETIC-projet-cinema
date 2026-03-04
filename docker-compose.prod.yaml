@@ -1,0 +1,63 @@
+services:
+  api:
+    container_name: cinema-api
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    networks:
+      - cinema
+    ports:
+      - "${API_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      TMDB_API_KEY: ${TMDB_API_KEY}
+      CORS_ORIGIN: ${FRONTEND_URL}
+      SESSION_SECRET: ${SESSION_SECRET}
+      COOKIE_SECURE: ${COOKIE_SECURE}
+      BACKEND_PORT: ${BACKEND_PORT}
+      BACKEND_HOST: ${BACKEND_HOST}
+      BACKEND_API_URL: ${BACKEND_API_URL}
+      FRONTEND_PORT: ${FRONTEND_PORT}
+      FRONTEND_HOST: ${FRONTEND_HOST}
+      FRONTEND_URL: ${FRONTEND_URL}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SSL: ${DB_SSL}
+      API_SECRET_KEY: ${API_SECRET_KEY}
+      JWT_SECRET: ${JWT_SECRET}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qS -O /dev/null http://localhost:3000/api/v1 2>&1 | grep -q 'HTTP/' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+  frontend:
+    container_name: cinema-frontend
+    build:
+      context: .
+      dockerfile: apps/front/Dockerfile
+    restart: unless-stopped
+    networks:
+      - cinema
+    ports:
+      - "${FRONT_PORT:-3001}:3001"
+    environment:
+      NODE_ENV: production
+      BACKEND_PORT: ${BACKEND_PORT}
+      BACKEND_HOST: ${BACKEND_HOST}
+      BACKEND_API_URL: ${BACKEND_API_URL}
+      FRONTEND_PORT: ${FRONTEND_PORT}
+      FRONTEND_HOST: ${FRONTEND_HOST}
+      FRONTEND_URL: ${FRONTEND_URL}
+
+    depends_on:
+      api:
+        condition: service_healthy
+
+networks:
+  cinema:
+    driver: bridge

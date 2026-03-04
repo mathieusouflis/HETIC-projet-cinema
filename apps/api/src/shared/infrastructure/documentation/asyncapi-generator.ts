@@ -119,7 +119,7 @@ export class AsyncAPIGenerator {
       this.processController(controller, namespacePath);
     });
 
-    const serverUrl = options.serverUrl || "ws://localhost:5001";
+    const serverUrl = options.serverUrl || "ws://localhost:3000";
     const { host, pathname, protocol } = this.parseServerUrl(serverUrl);
 
     const asyncAPIDoc: AsyncAPIv3Document = {
@@ -175,7 +175,7 @@ export class AsyncAPIGenerator {
     } catch (_error) {
       return {
         protocol: "ws",
-        host: "localhost:5001",
+        host: "localhost:3000",
         pathname: undefined,
       };
     }
