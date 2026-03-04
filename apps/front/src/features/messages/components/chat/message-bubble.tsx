@@ -1,4 +1,4 @@
-import { Pencil, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -24,6 +24,7 @@ export function MessageBubble({
   isOwn,
   showAvatar,
   sender,
+  // @ts-expect-error
   onEdit,
   onDelete,
 }: MessageBubbleProps) {
@@ -78,10 +79,11 @@ export function MessageBubble({
           <div
             className={cn(
               "absolute top-0 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100 [@media(hover:none)]:opacity-30 [@media(hover:none)]:group-active:opacity-100",
-              isOwn ? "-left-20" : "-right-20"
+              isOwn ? "-left-10" : "-right-10"
             )}
           >
-            {isOwn && onEdit && (
+            {/*EDIT COMMING SOON*/}
+            {/*{isOwn && onEdit && (
               <Button
                 variant="ghost"
                 size="icon-xs"
@@ -90,7 +92,7 @@ export function MessageBubble({
               >
                 <Pencil />
               </Button>
-            )}
+            )}*/}
             {isOwn && onDelete && (
               <Button
                 variant="ghost"
