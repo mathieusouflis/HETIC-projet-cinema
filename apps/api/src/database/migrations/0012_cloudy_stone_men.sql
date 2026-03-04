@@ -1,0 +1,3 @@
+UPDATE "content" SET "average_rating" = 0, "total_ratings" = 0;--> statement-breakpoint
+DROP VIEW "public"."popular_content";--> statement-breakpoint
+CREATE VIEW "public"."popular_content" AS (SELECT c.id, c.type, c.title, c.original_title, c.slug, c.synopsis, c.poster_url, c.backdrop_url, c.trailer_url, c.release_date, c.year, c.duration_minutes, c.tmdb_id, COALESCE(AVG(r.rating), 0)::numeric(3,2) AS average_rating, COUNT(r.id)::integer AS total_ratings, c.total_views, c.created_at, c.updated_at, COALESCE(COUNT(r.id)::numeric * AVG(r.rating), 0::numeric) AS popularity_score FROM content c LEFT JOIN ratings r ON r.content_id = c.id GROUP BY c.id ORDER BY (COALESCE(COUNT(r.id)::numeric * AVG(r.rating), 0::numeric)) DESC);
