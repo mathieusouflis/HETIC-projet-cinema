@@ -24,11 +24,14 @@ const deleteMe = async () => {
 };
 
 export const queryUserService = {
-  getMe: () =>
-    useQuery({
+  getMe: () => {
+    const { user } = useAuth();
+    return useQuery({
       queryKey: usersKeys.me(),
       queryFn: usersService.getMe,
-    }),
+      enabled: !!user?.id,
+    });
+  },
 
   patchMe: () =>
     useMutation({

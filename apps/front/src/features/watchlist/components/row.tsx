@@ -83,7 +83,7 @@ export function WatchlistRow({
 
       {/* rating — desktop only */}
       <div className="hidden shrink-0 sm:block">
-        <StarRating rating={content.averageRating} />
+        <StarRating rating={item.rating ?? null} />
       </div>
 
       {/* edit */}

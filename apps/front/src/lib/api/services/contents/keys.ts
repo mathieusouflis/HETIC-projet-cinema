@@ -2,15 +2,10 @@ import type { GETContentsIdParams, GETContentsParams } from "@packages/api-sdk";
 
 const BASEKEY = "contents";
 export const contentsKeys = {
-  discover: (params: GETContentsParams) => [
-    BASEKEY,
-    "discover",
-    ...Object.values(params),
-  ],
-  get: (contentId: string, params?: GETContentsIdParams) => [
-    BASEKEY,
-    "get",
-    contentId,
-    params,
-  ],
+  all: () => [BASEKEY] as const,
+  discoverAll: () => [BASEKEY, "discover"] as const,
+  discover: (params: GETContentsParams) =>
+    [BASEKEY, "discover", params] as const,
+  get: (contentId: string, params?: GETContentsIdParams) =>
+    [BASEKEY, "get", contentId, params] as const,
 };
