@@ -15,4 +15,10 @@ export type PUTWatchlistIdBody = {
   currentSeason?: number;
   startedAt?: string;
   completedAt?: string;
+  /**
+   * @minimum 1
+   * @maximum 5
+   * @nullable
+   */
+  rating?: number | null;
 };

@@ -21,7 +21,7 @@ export const contentSchema = z.object({
   averageRating: z
     .number()
     .min(0, "Average rating must be 0 or higher")
-    .max(10, "Average rating must be 10 or lower"),
+    .max(5, "Average rating must be 5 or lower"),
   totalRatings: z.number().int().min(0, "Total ratings must be 0 or higher"),
   totalViews: z.number().int().min(0, "Total views must be 0 or higher"),
   createdAt: z.date("Invalid date-time format for createdAt"),

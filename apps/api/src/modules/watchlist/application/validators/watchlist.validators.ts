@@ -21,4 +21,5 @@ export const watchlistSchema = z.object({
   addedAt: z.date(),
   startedAt: z.date().nullable(),
   completedAt: z.date().nullable(),
+  rating: z.number().min(1).max(5).nullable(),
 });

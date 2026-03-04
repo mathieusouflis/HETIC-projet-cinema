@@ -741,7 +741,7 @@ export const popularContent = pgView("popular_content", {
   updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" }),
   popularityScore: numeric("popularity_score"),
 }).as(
-  sql`SELECT id, type, title, original_title, slug, synopsis, poster_url, backdrop_url, trailer_url, release_date, year, duration_minutes, tmdb_id, average_rating, total_ratings, total_views, created_at, updated_at, COALESCE(total_ratings::numeric * average_rating, 0::numeric) AS popularity_score FROM content c ORDER BY (COALESCE(total_ratings::numeric * average_rating, 0::numeric)) DESC`
+  sql`SELECT c.id, c.type, c.title, c.original_title, c.slug, c.synopsis, c.poster_url, c.backdrop_url, c.trailer_url, c.release_date, c.year, c.duration_minutes, c.tmdb_id, COALESCE(AVG(r.rating), 0)::numeric(3,2) AS average_rating, COUNT(r.id)::integer AS total_ratings, c.total_views, c.created_at, c.updated_at, COALESCE(COUNT(r.id)::numeric * AVG(r.rating), 0::numeric) AS popularity_score FROM content c LEFT JOIN ratings r ON r.content_id = c.id GROUP BY c.id ORDER BY (COALESCE(COUNT(r.id)::numeric * AVG(r.rating), 0::numeric)) DESC`
 );
 
 export const upcomingWatchparties = pgView("upcoming_watchparties", {

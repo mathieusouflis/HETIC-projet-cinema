@@ -30,4 +30,10 @@ export type POSTWatchlist201Data = {
   startedAt: string | null;
   /** @nullable */
   completedAt: string | null;
+  /**
+   * @minimum 1
+   * @maximum 5
+   * @nullable
+   */
+  rating: number | null;
 };
