@@ -19,8 +19,9 @@ export class Watchlist {
   public readonly addedAt: Date;
   public readonly startedAt: Date | null;
   public readonly completedAt: Date | null;
+  public readonly rating: number | null;
 
-  constructor(props: WatchlistRow) {
+  constructor(props: WatchlistRow & { rating?: string | number | null }) {
     this.id = props.id;
     this.userId = props.userId;
     this.contentId = props.contentId;
@@ -30,6 +31,7 @@ export class Watchlist {
     this.addedAt = props.addedAt ? new Date(props.addedAt) : new Date();
     this.startedAt = props.startedAt ? new Date(props.startedAt) : null;
     this.completedAt = props.completedAt ? new Date(props.completedAt) : null;
+    this.rating = props.rating != null ? Number(props.rating) : null;
   }
 
   /**
@@ -77,6 +79,7 @@ export class Watchlist {
       addedAt: this.addedAt,
       startedAt: this.startedAt,
       completedAt: this.completedAt,
+      rating: this.rating,
     };
   }
 }

@@ -42,7 +42,7 @@ export type GETContentsId200Data = {
   tmdbId: number | null;
   /**
    * @minimum 0
-   * @maximum 10
+   * @maximum 5
    */
   averageRating: number;
   /** @minimum 0 */

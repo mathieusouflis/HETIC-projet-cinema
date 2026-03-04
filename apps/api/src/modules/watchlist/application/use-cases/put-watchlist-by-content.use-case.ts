@@ -1,20 +1,25 @@
 import { NotFoundError } from "../../../../shared/errors";
+import type { IRatingRepository } from "../../../ratings/domain/interfaces/IRatingRepository";
 import type { Watchlist } from "../../domain/entities/watchlist.entity";
 import type { IWatchlistRepository } from "../../domain/interfaces/IWatchlistRepository";
 import type { PatchWatchlistBody } from "../dto/request/patch-watchlist.body.validator";
 
 export class PutWatchlistByContentIdUseCase {
-  constructor(private readonly watchlistRepository: IWatchlistRepository) {}
+  constructor(
+    private readonly watchlistRepository: IWatchlistRepository,
+    private readonly ratingRepository: IRatingRepository
+  ) {}
 
   async execute(
     userId: string,
     id: string,
     body: PatchWatchlistBody
   ): Promise<Watchlist> {
+    const { rating, ...rest } = body;
     const normalizedBody = {
-      ...body,
-      completedAt: body.completedAt?.toISOString() ?? undefined,
-      startedAt: body.startedAt?.toISOString() ?? undefined,
+      ...rest,
+      completedAt: rest.completedAt?.toISOString() ?? undefined,
+      startedAt: rest.startedAt?.toISOString() ?? undefined,
     };
 
     try {
@@ -22,21 +27,33 @@ export class PutWatchlistByContentIdUseCase {
         userId,
         id
       );
-
       if (!existing) {
         throw new NotFoundError("Existing watchlist content not found");
       }
-
-      return await this.watchlistRepository.update(existing.id, normalizedBody);
+      await this.watchlistRepository.update(existing.id, normalizedBody);
     } catch (error) {
       if (error instanceof NotFoundError) {
-        return await this.watchlistRepository.create({
+        await this.watchlistRepository.create({
           userId,
           contentId: id,
           ...normalizedBody,
         });
+      } else {
+        throw error;
       }
-      throw error;
     }
+
+    if (rating !== undefined) {
+      if (rating === null) {
+        await this.ratingRepository.delete(userId, id);
+      } else {
+        await this.ratingRepository.upsert(userId, id, rating);
+      }
+    }
+
+    return this.watchlistRepository.findByContentId(
+      userId,
+      id
+    ) as Promise<Watchlist>;
   }
 }

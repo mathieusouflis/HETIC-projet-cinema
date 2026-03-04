@@ -1,6 +1,6 @@
 import { and, count, eq } from "drizzle-orm";
 import { db } from "../../../../database";
-import { watchlist } from "../../../../database/schema";
+import { ratings, watchlist } from "../../../../database/schema";
 import { NotFoundError } from "../../../../shared/errors";
 import { ServerError } from "../../../../shared/errors/server-error";
 import {
@@ -62,8 +62,18 @@ export class WatchlistRepository implements IWatchlistRepository {
   ): Promise<Watchlist | null> {
     try {
       const resolvedContent = await db
-        .select()
+        .select({
+          watchlist: watchlist,
+          rating: ratings.rating,
+        })
         .from(watchlist)
+        .leftJoin(
+          ratings,
+          and(
+            eq(ratings.userId, watchlist.userId),
+            eq(ratings.contentId, watchlist.contentId)
+          )
+        )
         .where(
           and(eq(watchlist.userId, userId), eq(watchlist.contentId, contentId))
         );
@@ -75,7 +85,7 @@ export class WatchlistRepository implements IWatchlistRepository {
         );
       }
 
-      return content ? new Watchlist(content) : null;
+      return new Watchlist({ ...content.watchlist, rating: content.rating });
     } catch (error) {
       if (error instanceof NotFoundError) {
         throw error;
@@ -95,11 +105,19 @@ export class WatchlistRepository implements IWatchlistRepository {
   }> {
     try {
       const [resolvedContent, totalResult] = await Promise.all([
-        db.select().from(watchlist).where(eq(watchlist.userId, userId)),
         db
-          .select({
-            total: count(),
-          })
+          .select({ watchlist: watchlist, rating: ratings.rating })
+          .from(watchlist)
+          .leftJoin(
+            ratings,
+            and(
+              eq(ratings.userId, watchlist.userId),
+              eq(ratings.contentId, watchlist.contentId)
+            )
+          )
+          .where(eq(watchlist.userId, userId)),
+        db
+          .select({ total: count() })
           .from(watchlist)
           .where(eq(watchlist.userId, userId)),
       ]);
@@ -107,7 +125,9 @@ export class WatchlistRepository implements IWatchlistRepository {
       const total = totalResult[0]?.total ?? 0;
 
       return {
-        data: resolvedContent.map((content) => new Watchlist(content)),
+        data: resolvedContent.map(
+          (row) => new Watchlist({ ...row.watchlist, rating: row.rating })
+        ),
         total,
       };
     } catch (error) {

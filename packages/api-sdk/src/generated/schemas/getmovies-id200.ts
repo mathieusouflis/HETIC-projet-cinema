@@ -38,7 +38,7 @@ export type GETMoviesId200 = {
   tmdbId: number | null;
   /**
    * @minimum 0
-   * @maximum 10
+   * @maximum 5
    */
   averageRating: number;
   /** @minimum 0 */

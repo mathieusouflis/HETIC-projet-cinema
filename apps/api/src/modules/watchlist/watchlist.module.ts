@@ -3,6 +3,8 @@ import { RestModule } from "../../shared/infrastructure/base/modules/rest-module
 import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator.js";
 import type { IContentRepository } from "../contents/domain/interfaces/IContentRepository.js";
 import { ContentsRepository } from "../contents/infrastructure/database/repositories/contents.repository.js";
+import type { IRatingRepository } from "../ratings/domain/interfaces/IRatingRepository.js";
+import { RatingRepository } from "../ratings/infrastructure/repositories/rating.repository.js";
 import { WatchlistController } from "./application/controllers/watchlist.controller.js";
 import { AddWatchlistContentUseCase } from "./application/use-cases/add-watchlist-content.use-case.js";
 import { DeleteWatchlistByIdUseCase } from "./application/use-cases/delete-watchlist.use-case.js";
@@ -22,6 +24,7 @@ class WatchlistModule extends RestModule {
 
   private readonly repository: IWatchlistRepository;
   private readonly contentRepository: IContentRepository;
+  private readonly ratingRepository: IRatingRepository;
 
   // ============================================
   // Application Layer (Use Cases)
@@ -54,6 +57,7 @@ class WatchlistModule extends RestModule {
 
     this.repository = new WatchlistRepository();
     this.contentRepository = new ContentsRepository();
+    this.ratingRepository = new RatingRepository();
 
     this.listWatchlistUseCase = new ListWatchlistUseCase(this.repository);
     this.addWatchlistContentUseCase = new AddWatchlistContentUseCase(
@@ -68,7 +72,8 @@ class WatchlistModule extends RestModule {
       this.repository
     );
     this.putWatchlistByContentIdUseCase = new PutWatchlistByContentIdUseCase(
-      this.repository
+      this.repository,
+      this.ratingRepository
     );
     this.deleteWatchlistByIdUseCase = new DeleteWatchlistByIdUseCase(
       this.repository

@@ -7,6 +7,7 @@ export const patchWatchlistBodyValidator = z.object({
   currentSeason: z.number().min(1).optional(),
   startedAt: z.date().optional(),
   completedAt: z.date().optional(),
+  rating: z.number().int().min(1).max(5).nullable().optional(),
 });
 
 export type PatchWatchlistBody = z.infer<typeof patchWatchlistBodyValidator>;

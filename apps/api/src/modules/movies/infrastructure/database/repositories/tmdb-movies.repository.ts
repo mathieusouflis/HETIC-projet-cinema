@@ -164,8 +164,6 @@ export class TMDBMoviesRepository extends BaseTMDBRepository<
         trailerUrl: trailerUrl,
         releaseDate: result.release_date || null,
         tmdbId: result.id,
-        averageRating: result.vote_average.toString(),
-        totalRatings: result.vote_count,
         totalViews: 0,
         durationMinutes: result.runtime,
         // Store genres as metadata to be processed by the composite repository

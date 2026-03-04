@@ -1086,7 +1086,7 @@
                                     "averageRating": {
                                       "type": "number",
                                       "minimum": 0,
-                                      "maximum": 10
+                                      "maximum": 5
                                     },
                                     "totalRatings": {
                                       "type": "integer",
@@ -1969,7 +1969,7 @@
                               "averageRating": {
                                 "type": "number",
                                 "minimum": 0,
-                                "maximum": 10
+                                "maximum": 5
                               },
                               "totalRatings": {
                                 "type": "integer",
@@ -2466,7 +2466,7 @@
                         "averageRating": {
                           "type": "number",
                           "minimum": 0,
-                          "maximum": 10
+                          "maximum": 5
                         },
                         "totalRatings": {
                           "type": "integer",
@@ -5339,7 +5339,7 @@
                               "averageRating": {
                                 "type": "number",
                                 "minimum": 0,
-                                "maximum": 10
+                                "maximum": 5
                               },
                               "totalRatings": {
                                 "type": "integer",
@@ -5778,7 +5778,7 @@
                     "averageRating": {
                       "type": "number",
                       "minimum": 0,
-                      "maximum": 10
+                      "maximum": 5
                     },
                     "totalRatings": {
                       "type": "integer",
@@ -7182,7 +7182,7 @@
                               "averageRating": {
                                 "type": "number",
                                 "minimum": 0,
-                                "maximum": 10
+                                "maximum": 5
                               },
                               "totalRatings": {
                                 "type": "integer",
@@ -7621,7 +7621,7 @@
                     "averageRating": {
                       "type": "number",
                       "minimum": 0,
-                      "maximum": 10
+                      "maximum": 5
                     },
                     "totalRatings": {
                       "type": "integer",
@@ -9217,6 +9217,12 @@
                                 "type": "string",
                                 "nullable": true,
                                 "format": "date-time"
+                              },
+                              "rating": {
+                                "type": "number",
+                                "nullable": true,
+                                "minimum": 1,
+                                "maximum": 5
                               }
                             },
                             "required": [
@@ -9228,7 +9234,8 @@
                               "currentSeason",
                               "addedAt",
                               "startedAt",
-                              "completedAt"
+                              "completedAt",
+                              "rating"
                             ]
                           }
                         },
@@ -9395,6 +9402,12 @@
                           "type": "string",
                           "nullable": true,
                           "format": "date-time"
+                        },
+                        "rating": {
+                          "type": "number",
+                          "nullable": true,
+                          "minimum": 1,
+                          "maximum": 5
                         }
                       },
                       "required": [
@@ -9406,7 +9419,8 @@
                         "currentSeason",
                         "addedAt",
                         "startedAt",
-                        "completedAt"
+                        "completedAt",
+                        "rating"
                       ]
                     }
                   },
@@ -9619,6 +9633,12 @@
                           "type": "string",
                           "nullable": true,
                           "format": "date-time"
+                        },
+                        "rating": {
+                          "type": "number",
+                          "nullable": true,
+                          "minimum": 1,
+                          "maximum": 5
                         }
                       },
                       "required": [
@@ -9630,7 +9650,8 @@
                         "currentSeason",
                         "addedAt",
                         "startedAt",
-                        "completedAt"
+                        "completedAt",
+                        "rating"
                       ]
                     }
                   },
@@ -9749,6 +9770,12 @@
                   "completedAt": {
                     "type": "string",
                     "format": "date-time"
+                  },
+                  "rating": {
+                    "type": "integer",
+                    "nullable": true,
+                    "minimum": 1,
+                    "maximum": 5
                   }
                 },
                 "required": [
@@ -9824,6 +9851,12 @@
                           "type": "string",
                           "nullable": true,
                           "format": "date-time"
+                        },
+                        "rating": {
+                          "type": "number",
+                          "nullable": true,
+                          "minimum": 1,
+                          "maximum": 5
                         }
                       },
                       "required": [
@@ -9835,7 +9868,8 @@
                         "currentSeason",
                         "addedAt",
                         "startedAt",
-                        "completedAt"
+                        "completedAt",
+                        "rating"
                       ]
                     }
                   },
@@ -10090,6 +10124,12 @@
                           "type": "string",
                           "nullable": true,
                           "format": "date-time"
+                        },
+                        "rating": {
+                          "type": "number",
+                          "nullable": true,
+                          "minimum": 1,
+                          "maximum": 5
                         }
                       },
                       "required": [
@@ -10101,7 +10141,8 @@
                         "currentSeason",
                         "addedAt",
                         "startedAt",
-                        "completedAt"
+                        "completedAt",
+                        "rating"
                       ]
                     }
                   },
@@ -10220,6 +10261,12 @@
                   "completedAt": {
                     "type": "string",
                     "format": "date-time"
+                  },
+                  "rating": {
+                    "type": "integer",
+                    "nullable": true,
+                    "minimum": 1,
+                    "maximum": 5
                   }
                 },
                 "required": [
@@ -10295,6 +10342,12 @@
                           "type": "string",
                           "nullable": true,
                           "format": "date-time"
+                        },
+                        "rating": {
+                          "type": "number",
+                          "nullable": true,
+                          "minimum": 1,
+                          "maximum": 5
                         }
                       },
                       "required": [
@@ -10306,7 +10359,8 @@
                         "currentSeason",
                         "addedAt",
                         "startedAt",
-                        "completedAt"
+                        "completedAt",
+                        "rating"
                       ]
                     }
                   },
