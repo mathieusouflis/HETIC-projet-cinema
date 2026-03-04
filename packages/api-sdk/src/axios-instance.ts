@@ -1,6 +1,7 @@
+import { config } from "@packages/config";
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: config.env.backend.apiUrl,
   withCredentials: true,
 });
