@@ -42,7 +42,6 @@ export default function SearchPage() {
     withCast: "true",
     page,
     year,
-    averageRating: minRating,
     categories,
   });
 

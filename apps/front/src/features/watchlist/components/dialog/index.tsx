@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { getApi } from "@/lib/api/services";
+import { useApi } from "@/lib/api/services";
 import { cn } from "@/lib/utils";
 import FormWatchlist, { WATCHLIST_FORM_ID } from "./form";
 
@@ -26,10 +26,13 @@ export default function AddContentToWatchlistDialog({
   children,
 }: AddContentToWatchlistDialogProps) {
   const [open, setOpen] = useState(false);
-  async function handleDelete() {
-    const services = getApi();
-    await services.watchlsit.deleteContentId(content.id);
-    setOpen(false);
+  const { mutate: deleteContentId } = useApi().watchlist.deleteContentId();
+
+  function handleDelete() {
+    deleteContentId(
+      { contentId: content.id },
+      { onSuccess: () => setOpen(false) }
+    );
   }
 
   return (

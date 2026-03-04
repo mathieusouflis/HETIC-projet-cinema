@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { parseApiError } from "@/lib/api/parse-error";
 import { useApi } from "@/lib/api/services";
+import { StarPicker } from "../rating";
 
 export const WATCHLIST_FORM_ID = "watchlist-form";
 
@@ -48,6 +49,7 @@ const formSchema = z.object({
   currentEpisode: z.number().min(1).optional(),
   startedAt: z.string().optional(),
   completedAt: z.string().optional(),
+  rating: z.number().int().min(1).max(5).nullable().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -72,6 +74,7 @@ export default function FormWatchlist(props: {
         currentEpisode: d.currentEpisode ?? undefined,
         startedAt: d.startedAt ? d.startedAt.slice(0, 10) : undefined,
         completedAt: d.completedAt ? d.completedAt.slice(0, 10) : undefined,
+        rating: (d as { rating?: number | null }).rating ?? null,
       };
     }
     return {
@@ -80,6 +83,7 @@ export default function FormWatchlist(props: {
       currentEpisode: undefined,
       startedAt: undefined,
       completedAt: undefined,
+      rating: null,
     };
   }, [watchlistData?.data?.data]);
 
@@ -224,6 +228,20 @@ export default function FormWatchlist(props: {
                 value={field.value}
                 onChange={field.onChange}
                 placeholder="Pick a completion date"
+              />
+              {fieldState.error && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+        <Controller
+          name="rating"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel>Rating</FieldLabel>
+              <StarPicker
+                value={field.value ?? null}
+                onChange={field.onChange}
               />
               {fieldState.error && <FieldError errors={[fieldState.error]} />}
             </Field>

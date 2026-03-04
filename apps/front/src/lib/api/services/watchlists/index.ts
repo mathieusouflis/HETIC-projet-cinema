@@ -10,8 +10,9 @@ import {
   pUTWatchlistContentId,
   pUTWatchlistId,
 } from "@packages/api-sdk";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/features/auth/stores/auth.store";
+import { contentsKeys } from "../contents/keys";
 import { watchlistKeys } from "./keys";
 
 const postWatchlist = async (data: POSTWatchlistBody) => {
@@ -48,31 +49,62 @@ const deleteWatchlistById = async (id: string) => {
 };
 
 export const queryWatchlistService = {
-  create: (params: POSTWatchlistBody) =>
-    useMutation({
-      mutationFn: () => postWatchlist(params),
-    }),
+  create: () => {
+    const { user } = useAuth();
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn: (params: POSTWatchlistBody) => postWatchlist(params),
+      onSuccess: (_, params) => {
+        queryClient.invalidateQueries({
+          queryKey: watchlistKeys.all(user?.id ?? ""),
+        });
+        queryClient.invalidateQueries({
+          queryKey: contentsKeys.discoverAll(),
+        });
+        if (params.contentId) {
+          queryClient.invalidateQueries({
+            queryKey: contentsKeys.get(params.contentId),
+          });
+        }
+      },
+    });
+  },
+
   getId: (id: string) => {
     const { user } = useAuth();
     return useQuery({
       queryFn: () => getWatchlistByContentId(id),
       queryKey: watchlistKeys.getId(user?.id ?? "", id),
+      enabled: !!user?.id,
     });
   },
+
   list: () => {
     const { user } = useAuth();
     return useQuery({
       queryKey: watchlistKeys.all(user?.id ?? ""),
       queryFn: listWatchlist,
+      enabled: !!user?.id,
     });
   },
 
-  updateId: (id: string, data: PUTWatchlistIdBody) =>
-    useMutation({
+  updateId: (id: string, data: PUTWatchlistIdBody) => {
+    const { user } = useAuth();
+    const queryClient = useQueryClient();
+    return useMutation({
       mutationFn: () => updateWatchlistById(id, data),
-    }),
-  updateContentId: () =>
-    useMutation({
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: watchlistKeys.all(user?.id ?? ""),
+        });
+      },
+    });
+  },
+
+  updateContentId: () => {
+    const { user } = useAuth();
+    const queryClient = useQueryClient();
+    return useMutation({
       mutationFn: ({
         id,
         data,
@@ -80,15 +112,52 @@ export const queryWatchlistService = {
         id: string;
         data: PUTWatchlistContentIdBody;
       }) => updateWatchlistByContentId(id, data),
-    }),
-  deleteContentId: (contentId: string) =>
-    useMutation({
-      mutationFn: () => deleteWatchlistByContentId(contentId),
-    }),
-  deleteId: (id: string) =>
-    useMutation({
-      mutationFn: () => dELETEWatchlistId(id),
-    }),
+      onSuccess: (_, { id }) => {
+        queryClient.invalidateQueries({
+          queryKey: watchlistKeys.all(user?.id ?? ""),
+        });
+        queryClient.invalidateQueries({
+          queryKey: contentsKeys.get(id),
+        });
+        queryClient.invalidateQueries({
+          queryKey: contentsKeys.discoverAll(),
+        });
+      },
+    });
+  },
+
+  deleteContentId: () => {
+    const { user } = useAuth();
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn: ({ contentId }: { contentId: string }) =>
+        deleteWatchlistByContentId(contentId),
+      onSuccess: (_, { contentId }) => {
+        queryClient.invalidateQueries({
+          queryKey: watchlistKeys.all(user?.id ?? ""),
+        });
+        queryClient.invalidateQueries({
+          queryKey: contentsKeys.get(contentId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: contentsKeys.discoverAll(),
+        });
+      },
+    });
+  },
+
+  deleteId: () => {
+    const { user } = useAuth();
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn: ({ id }: { id: string }) => deleteWatchlistById(id),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: watchlistKeys.all(user?.id ?? ""),
+        });
+      },
+    });
+  },
 };
 
 export const watchlistService = {

@@ -227,10 +227,15 @@ function ResultCard({
           {[year, category, country].filter(Boolean).join(" - ")}
         </p>
 
-        <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-700 rounded-full px-2 py-0.5 text-xs font-semibold w-fit">
-          <Star className="size-3 fill-amber-500 stroke-amber-500" />
-          {content.averageRating.toFixed(1)}
-        </span>
+        {(content.totalRatings ?? 0) > 0 && (
+          <span className="flex items-center gap-1 text-sm text-amber-500 font-medium">
+            <Star className="size-3.5 fill-amber-500" />
+            {Number(content.averageRating).toFixed(1)}
+            <span className="text-muted-foreground font-normal">
+              ({content.totalRatings})
+            </span>
+          </span>
+        )}
 
         {actors.length > 0 && (
           <div className="hidden lg:flex flex-col gap-1 mt-1">

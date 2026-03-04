@@ -8,6 +8,7 @@ import {
   pOSTFriendshipsUserId,
 } from "@packages/api-sdk";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/features/auth/stores/auth.store";
 import { friendshipKeys } from "./keys";
 
 export interface Friendship {
@@ -54,11 +55,14 @@ const removeFriendship = async (id: string): Promise<void> => {
 };
 
 export const queryFriendshipService = {
-  list: (status?: GETFriendshipsStatus) =>
-    useQuery({
+  list: (status?: GETFriendshipsStatus) => {
+    const { user } = useAuth();
+    return useQuery({
       queryKey: status ? friendshipKeys.byStatus(status) : friendshipKeys.all(),
       queryFn: () => listFriendships(status),
-    }),
+      enabled: !!user?.id,
+    });
+  },
 
   send: () => {
     const queryClient = useQueryClient();
