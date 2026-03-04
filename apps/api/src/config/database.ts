@@ -20,7 +20,10 @@ export const databaseConfig = {
 export const getDatabaseUrl = (): string => {
   const { host, port, user, password, database, ssl } = databaseConfig;
   const resolvedPort = Number(port) || 3000;
-  return `postgresql://${user}:${password}@${host}${config.env.NODE_ENV === "production" ? "" : `:${resolvedPort}`}/${database}?sslmode=${ssl ? "required" : ""}${config.env.NODE_ENV === "production" && "&channel_binding=require"}`;
+  const sslmode = ssl ? "required" : "disable";
+  const channelBinding =
+    config.env.NODE_ENV === "production" ? "&channel_binding=require" : "";
+  return `postgresql://${user}:${password}@${host}${config.env.NODE_ENV === "production" ? "" : `:${resolvedPort}`}/${database}?sslmode=${sslmode}${channelBinding}`;
 };
 
 /**

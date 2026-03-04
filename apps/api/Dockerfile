@@ -24,11 +24,10 @@ ENV PORT=3000
 RUN addgroup -S app && adduser -S app -G app
 
 COPY --from=builder /deploy .
-COPY --from=builder /app/apps/api/src/database/migrations ./migrations
 RUN chown -R app:app /app
 
 USER app
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "node dist/migrate.js && node dist/index.js"]
+CMD ["sh", "-c", "node dist/index.js"]

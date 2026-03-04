@@ -2,8 +2,19 @@ import "reflect-metadata";
 import "./shared/infrastructure/openapi/zod-openapi.js";
 import { config } from "@packages/config";
 import { logger } from "@packages/logger";
+import { migrate } from "drizzle-orm/node-postgres/migrator";
+import { db } from "./database/index.js";
 import { registerAllWebSocketEvents } from "./modules/index.js";
 import { createServer } from "./server.js";
+
+logger.info("Migration starting...");
+try {
+  await migrate(db, { migrationsFolder: "./src/database/migrations" });
+  logger.info("Migration complete");
+} catch (error) {
+  logger.error("Migration failed:", error);
+  process.exit(1);
+}
 
 const port = config.env.backend.port || 3000;
 const { httpServer, io } = createServer();
