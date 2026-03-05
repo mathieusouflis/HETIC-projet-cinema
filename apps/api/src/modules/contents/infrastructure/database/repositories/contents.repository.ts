@@ -96,7 +96,6 @@ export class ContentsRepository implements IContentRepository {
               season.episodes.map((ep) => new Episode(ep))
             );
           }
-          logger.info(seasonEntity.toJSONWithRelations());
           return seasonEntity;
         });
 

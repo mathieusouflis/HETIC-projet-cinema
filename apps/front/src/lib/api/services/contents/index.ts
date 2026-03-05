@@ -7,8 +7,13 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { contentsKeys } from "./keys";
 
-const discover = async (props: GETContentsParams) => {
-  const response = await gETContents({ ...props });
+const discover = async ({ categories, ...rest }: GETContentsParams) => {
+  const response = await gETContents({
+    ...rest,
+    ...(categories?.length
+      ? { categories: `[${categories.join(",")}]` as unknown as string[] }
+      : {}),
+  });
   return response.data.data;
 };
 

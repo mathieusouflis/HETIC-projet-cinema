@@ -37,7 +37,7 @@ export class SeasonTmdbRepository {
         seasons.push(season);
       } catch {
         logger.error(
-          `Season ${seasonNumber} not found for serie ${tmdbSerieId}           (CONTINUE)`
+          `Season ${seasonNumber} not found for serie ${tmdbSerieId} (CONTINUE)`
         );
       }
     }

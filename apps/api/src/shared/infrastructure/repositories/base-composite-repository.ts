@@ -165,14 +165,25 @@ export abstract class BaseCompositeRepository<
   ): Promise<{ data: TEntity[]; total: number }> {
     try {
       const page = options?.page || 1;
-
+      const categoriesTmdbIds: string[] = [];
+      if (categories) {
+        for (const categoryDbId of categories) {
+          const categoryEntity =
+            await this.categoryRepository.findById(categoryDbId);
+          if (categoryEntity) {
+            const categoryEntityJson = categoryEntity.toJSON();
+            if (categoryEntityJson.tmdbId) {
+              categoriesTmdbIds.push(categoryEntityJson.tmdbId.toString());
+            }
+          }
+        }
+      }
       let tmdbResult: { ids: number[]; results: unknown[]; total: number };
-
       if (title) {
         tmdbResult = await this.tmdbRepository.search({
           query: title,
           page,
-          withCategories: categories,
+          withCategories: categoriesTmdbIds,
         });
         logger.info(
           `Found ${tmdbResult.ids.length} ${this.entityType} IDs from TMDB search for "${title}"`
@@ -180,7 +191,7 @@ export abstract class BaseCompositeRepository<
       } else {
         tmdbResult = await this.tmdbRepository.discover({
           page,
-          withCategories: categories,
+          withCategories: categoriesTmdbIds,
         });
         logger.info(
           `Found ${tmdbResult.ids.length} ${this.entityType} IDs from TMDB discover (page ${page})`

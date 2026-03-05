@@ -66,7 +66,6 @@ export class ContentsController extends BaseController {
   queryContents = asyncHandler(
     async (req, res): Promise<QueryContentResponse> => {
       const query = req.query as QueryContentRequest;
-
       const response = await this.queryContentsUseCase.execute(query);
 
       res.status(200).json(response);
