@@ -1,4 +1,5 @@
 import type { GETContents200DataItemsItem } from "@packages/api-sdk";
+import { Link } from "@tanstack/react-router";
 import {
   ContentCard,
   ContentCardSkeleton,
@@ -56,14 +57,20 @@ export const HomePage = () => {
           <ScrollArea className="w-full">
             <div className="flex gap-3 p-2 items-center">
               {categories?.map((category) => (
-                <Button
+                <Link
                   key={category.id}
-                  variant={"secondary"}
-                  size={"2xl"}
-                  className="py-7 sm:py-9"
+                  to={"/search"}
+                  search={{ categories: [category.id] }}
                 >
-                  {category.name}
-                </Button>
+                  <Button
+                    key={category.id}
+                    variant={"secondary"}
+                    size={"2xl"}
+                    className="py-7 sm:py-9"
+                  >
+                    {category.name}
+                  </Button>
+                </Link>
               ))}
             </div>
             <ScrollBar orientation="horizontal" className="opacity-0" />
