@@ -1,5 +1,6 @@
 import { and, count, eq } from "drizzle-orm";
 import { db } from "../../../../../database/index";
+import { friendships, userStats } from "../../../../../database/schema.js";
 import {
   type CreateUserProps,
   type UpdateUserProps,
@@ -24,7 +25,48 @@ export class UserRepository implements IUserRepository {
       return null;
     }
 
-    return this.mapToDomain(row);
+    const [[followersResult], [followingResult], [statsRow]] =
+      await Promise.all([
+        db
+          .select({ count: count() })
+          .from(friendships)
+          .where(
+            and(
+              eq(friendships.friendId, id),
+              eq(friendships.status, "accepted")
+            )
+          ),
+        db
+          .select({ count: count() })
+          .from(friendships)
+          .where(
+            and(eq(friendships.userId, id), eq(friendships.status, "accepted"))
+          ),
+        db
+          .select({
+            totalWatchTimeMinutes: userStats.totalWatchTimeMinutes,
+            totalMoviesWatched: userStats.totalMoviesWatched,
+            totalEpisodesWatched: userStats.totalEpisodesWatched,
+          })
+          .from(userStats)
+          .where(eq(userStats.userId, id))
+          .limit(1),
+      ]);
+
+    const totalWatchTimeMinutes = statsRow?.totalWatchTimeMinutes ?? 0;
+
+    return new User({
+      ...row,
+      followersCount: Number(followersResult?.count ?? 0),
+      followingCount: Number(followingResult?.count ?? 0),
+      stats: {
+        // TODO: Split movie/series hours when dedicated metrics are available.
+        totalSeriesHours: 0,
+        totalMovieHours: Math.floor(totalWatchTimeMinutes / 60),
+        totalEpisodes: statsRow?.totalEpisodesWatched ?? 0,
+        totalMovies: statsRow?.totalMoviesWatched ?? 0,
+      },
+    });
   }
 
   async findByEmail(email: string): Promise<User | null> {

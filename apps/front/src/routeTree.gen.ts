@@ -22,6 +22,7 @@ import { Route as MainWatchpartyIndexRouteImport } from './app/_main/watchparty/
 import { Route as MainWatchlistIndexRouteImport } from './app/_main/watchlist/index'
 import { Route as MainSettingsIndexRouteImport } from './app/_main/settings/index'
 import { Route as MainSearchIndexRouteImport } from './app/_main/search/index'
+import { Route as MainProfileIndexRouteImport } from './app/_main/profile/index'
 import { Route as MainMessagesIndexRouteImport } from './app/_main/messages/index'
 import { Route as MainCommunityIndexRouteImport } from './app/_main/community/index'
 import { Route as MainMessagesConversationIdIndexRouteImport } from './app/_main/messages/$conversationId/index'
@@ -91,6 +92,11 @@ const MainSearchIndexRoute = MainSearchIndexRouteImport.update({
   path: '/search/',
   getParentRoute: () => MainRoute,
 } as any)
+const MainProfileIndexRoute = MainProfileIndexRouteImport.update({
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => MainRoute,
+} as any)
 const MainMessagesIndexRoute = MainMessagesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/verify-email/': typeof VerifyEmailIndexRoute
   '/community/': typeof MainCommunityIndexRoute
   '/messages/': typeof MainMessagesIndexRoute
+  '/profile/': typeof MainProfileIndexRoute
   '/search/': typeof MainSearchIndexRoute
   '/settings/': typeof MainSettingsIndexRoute
   '/watchlist/': typeof MainWatchlistIndexRoute
@@ -142,6 +149,7 @@ export interface FileRoutesByTo {
   '/verify-email': typeof VerifyEmailIndexRoute
   '/community': typeof MainCommunityIndexRoute
   '/messages': typeof MainMessagesIndexRoute
+  '/profile': typeof MainProfileIndexRoute
   '/search': typeof MainSearchIndexRoute
   '/settings': typeof MainSettingsIndexRoute
   '/watchlist': typeof MainWatchlistIndexRoute
@@ -162,6 +170,7 @@ export interface FileRoutesById {
   '/verify-email/': typeof VerifyEmailIndexRoute
   '/_main/community/': typeof MainCommunityIndexRoute
   '/_main/messages/': typeof MainMessagesIndexRoute
+  '/_main/profile/': typeof MainProfileIndexRoute
   '/_main/search/': typeof MainSearchIndexRoute
   '/_main/settings/': typeof MainSettingsIndexRoute
   '/_main/watchlist/': typeof MainWatchlistIndexRoute
@@ -182,6 +191,7 @@ export interface FileRouteTypes {
     | '/verify-email/'
     | '/community/'
     | '/messages/'
+    | '/profile/'
     | '/search/'
     | '/settings/'
     | '/watchlist/'
@@ -199,6 +209,7 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/community'
     | '/messages'
+    | '/profile'
     | '/search'
     | '/settings'
     | '/watchlist'
@@ -218,6 +229,7 @@ export interface FileRouteTypes {
     | '/verify-email/'
     | '/_main/community/'
     | '/_main/messages/'
+    | '/_main/profile/'
     | '/_main/search/'
     | '/_main/settings/'
     | '/_main/watchlist/'
@@ -329,6 +341,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainSearchIndexRouteImport
       parentRoute: typeof MainRoute
     }
+    '/_main/profile/': {
+      id: '/_main/profile/'
+      path: '/profile'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof MainProfileIndexRouteImport
+      parentRoute: typeof MainRoute
+    }
     '/_main/messages/': {
       id: '/_main/messages/'
       path: '/'
@@ -378,6 +397,7 @@ interface MainRouteChildren {
   MainMessagesRoute: typeof MainMessagesRouteWithChildren
   MainIndexRoute: typeof MainIndexRoute
   MainCommunityIndexRoute: typeof MainCommunityIndexRoute
+  MainProfileIndexRoute: typeof MainProfileIndexRoute
   MainSearchIndexRoute: typeof MainSearchIndexRoute
   MainSettingsIndexRoute: typeof MainSettingsIndexRoute
   MainWatchlistIndexRoute: typeof MainWatchlistIndexRoute
@@ -389,6 +409,7 @@ const MainRouteChildren: MainRouteChildren = {
   MainMessagesRoute: MainMessagesRouteWithChildren,
   MainIndexRoute: MainIndexRoute,
   MainCommunityIndexRoute: MainCommunityIndexRoute,
+  MainProfileIndexRoute: MainProfileIndexRoute,
   MainSearchIndexRoute: MainSearchIndexRoute,
   MainSettingsIndexRoute: MainSettingsIndexRoute,
   MainWatchlistIndexRoute: MainWatchlistIndexRoute,

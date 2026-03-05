@@ -8424,12 +8424,56 @@
                           "minLength": 3,
                           "maxLength": 30,
                           "pattern": "^[a-zA-Z0-9_-]+$"
+                        },
+                        "avatarUrl": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "uri"
+                        },
+                        "followersCount": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "followingCount": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "stats": {
+                          "type": "object",
+                          "properties": {
+                            "totalSeriesHours": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "totalMovieHours": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "totalEpisodes": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "totalMovies": {
+                              "type": "integer",
+                              "minimum": 0
+                            }
+                          },
+                          "required": [
+                            "totalSeriesHours",
+                            "totalMovieHours",
+                            "totalEpisodes",
+                            "totalMovies"
+                          ]
                         }
                       },
                       "required": [
                         "userId",
                         "email",
-                        "username"
+                        "username",
+                        "avatarUrl",
+                        "followersCount",
+                        "followingCount",
+                        "stats"
                       ]
                     }
                   },
