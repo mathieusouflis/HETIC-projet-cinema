@@ -46,12 +46,18 @@ pnpm dev # Start db + run migrations + start apps
 
 ## Features
 
+| Emoji | Meaning |
+|-------|---------|
+| ✅ | Implemented |
+| 🚧 | In progress |
+| ❌ | Not started |
+
 ### Web App
 
 | Feature | Status |
 |---------|--------|
 | Auth — email/password | ✅ |
-| Auth — OAuth (Google / GitHub) | Not started |
+| Auth — OAuth (Google / GitHub) | ❌ |
 | User profile & avatar | ✅ |
 | Content pages (movie / series) | ✅ |
 | Search & filters (genre, year, rating) | ✅ |
@@ -59,32 +65,32 @@ pnpm dev # Start db + run migrations + start apps
 | Watchlist | ✅ |
 | Friendships (send / accept / reject) | ✅ |
 | Direct messaging (real-time) | ✅ |
-| Reviews & comments | Not started |
-| Forums | Not started |
-| Release calendar | Not started |
-| Watchparty planning | Not started |
-| Email / push notifications | Not started |
+| Reviews & comments | ❌ |
+| Forums | ❌ |
+| Release calendar | ❌ |
+| Watchparty planning | ❌ |
+| Email / push notifications | ❌ |
 
 ### Browser Extension (Watchparty)
 
 | Feature | Status |
 |---------|--------|
-| Chrome / Edge extension (Manifest v3) | Not started |
-| Netflix page detection | Not started |
-| Create / join watchparty | Not started |
-| Video sync (play / pause / seek via WebSocket) | Not started |
-| Real-time text chat in extension | Not started |
-| Join by link | Not started |
+| Chrome / Edge extension (Manifest v3) | ❌ |
+| Netflix page detection | ❌ |
+| Create / join watchparty | ❌ |
+| Video sync (play / pause / seek via WebSocket) | ❌ |
+| Real-time text chat in extension | ❌ |
+| Join by link | ❌ |
 
 ### Post-MVP
 
 | Feature | Status |
 |---------|--------|
-| Voice chat (WebRTC) | Not started |
-| Mobile app / PWA | Not started |
-| Personalized recommendations | Not started |
-| Moderation & reporting | Not started |
-| Premium features (private rooms, themes…) | Not started |
+| Voice chat (WebRTC) | ❌ |
+| Mobile app / PWA | ❌ |
+| Personalized recommendations | ❌ |
+| Moderation & reporting | ❌ |
+| Premium features (private rooms, themes…) | ❌ |
 
 ---
 
