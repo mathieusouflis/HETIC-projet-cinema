@@ -21,6 +21,10 @@ export class GetMeUseCase {
       email: user.email,
       userId: user.id,
       username: user.username,
+      avatarUrl: user.avatarUrl,
+      followersCount: user.followersCount,
+      followingCount: user.followingCount,
+      stats: user.stats,
     };
   }
 }
