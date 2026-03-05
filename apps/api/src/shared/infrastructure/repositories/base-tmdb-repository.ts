@@ -93,7 +93,7 @@ export abstract class BaseTMDBRepository<
       const queryParams: Record<string, string> = {
         page: params.page.toString(),
       };
-
+      logger.info(params.withCategories);
       if (params.withCategories && params.withCategories.length > 0) {
         queryParams.with_genres = params.withCategories.join(",");
       }
