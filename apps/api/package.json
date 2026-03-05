@@ -18,7 +18,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@asteasolutions/zod-to-openapi": "^8.4.2",
+    "@asteasolutions/zod-to-openapi": "^8.4.3",
     "@packages/config": "workspace:*",
     "@packages/logger": "workspace:*",
     "bcrypt": "^6.0.0",
