@@ -3,6 +3,19 @@ import type {
   UserRow,
 } from "../../infrastructure/database/schemas/users.schema";
 
+export type UserStats = {
+  totalSeriesHours: number;
+  totalMovieHours: number;
+  totalEpisodes: number;
+  totalMovies: number;
+};
+
+type UserWithComputedProps = UserRow & {
+  followersCount?: number;
+  followingCount?: number;
+  stats?: Partial<UserStats> | null;
+};
+
 export class User {
   public readonly id: string;
   public readonly email: string;
@@ -20,8 +33,11 @@ export class User {
   public readonly updatedAt: Date;
   public readonly lastLoginAt: Date | null;
   public readonly emailVerifiedAt: Date | null;
+  public readonly followersCount: number;
+  public readonly followingCount: number;
+  public readonly stats: UserStats;
 
-  constructor(props: UserRow) {
+  constructor(props: UserWithComputedProps) {
     this.id = props.id;
     this.email = props.email;
     this.username = props.username;
@@ -40,6 +56,14 @@ export class User {
     this.emailVerifiedAt = props.emailVerifiedAt
       ? new Date(props.emailVerifiedAt)
       : null;
+    this.followersCount = props.followersCount ?? 0;
+    this.followingCount = props.followingCount ?? 0;
+    this.stats = {
+      totalSeriesHours: props.stats?.totalSeriesHours ?? 0,
+      totalMovieHours: props.stats?.totalMovieHours ?? 0,
+      totalEpisodes: props.stats?.totalEpisodes ?? 0,
+      totalMovies: props.stats?.totalMovies ?? 0,
+    };
   }
 
   /**
@@ -141,6 +165,9 @@ export class User {
       updatedAt: this.updatedAt,
       lastLoginAt: this.lastLoginAt,
       emailVerifiedAt: this.emailVerifiedAt,
+      followersCount: this.followersCount,
+      followingCount: this.followingCount,
+      stats: this.stats,
     };
   }
 }

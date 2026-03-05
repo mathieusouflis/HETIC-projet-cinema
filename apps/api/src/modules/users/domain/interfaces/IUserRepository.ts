@@ -9,7 +9,7 @@ export interface IUserRepository {
    * Find a user by their unique ID
    *
    * @param id - User's unique identifier
-   * @returns Promise resolving to User entity or null if not found
+   * @returns Promise resolving to User entity (including profile counters/stats when available) or null if not found
    */
   findById(id: string): Promise<User | null>;
 

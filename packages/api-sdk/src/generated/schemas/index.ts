@@ -178,6 +178,7 @@ export * from "./getusers-id200";
 export * from "./getusers-id400-details-item";
 export * from "./getusers-id400";
 export * from "./getusers-id404";
+export * from "./getusers-me200-data-stats";
 export * from "./getusers-me200-data";
 export * from "./getusers-me200";
 export * from "./getusers-me401";
