@@ -5,6 +5,7 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
+import type { GETUsersMe200DataStats } from "./getusers-me200-data-stats";
 
 export type GETUsersMe200Data = {
   /** @minLength 1 */
@@ -20,4 +21,11 @@ export type GETUsersMe200Data = {
    * @pattern ^[a-zA-Z0-9_-]+$
    */
   username: string;
+  /** @nullable */
+  avatarUrl: string | null;
+  /** @minimum 0 */
+  followersCount: number;
+  /** @minimum 0 */
+  followingCount: number;
+  stats: GETUsersMe200DataStats;
 };
