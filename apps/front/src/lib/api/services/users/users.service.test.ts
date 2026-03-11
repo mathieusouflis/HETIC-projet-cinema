@@ -10,9 +10,27 @@ vi.mock("@packages/api-sdk", () => ({
 import * as sdk from "@packages/api-sdk";
 import { usersService } from "./index";
 
-const mockData = {
+const mockPatchData = {
   success: true,
   data: { userId: "abc", email: "test@example.com", username: "testuser" },
+};
+
+const mockGetMeData = {
+  success: true,
+  data: {
+    userId: "abc",
+    email: "test@example.com",
+    username: "testuser",
+    avatarUrl: null,
+    followersCount: 12,
+    followingCount: 7,
+    stats: {
+      totalSeriesHours: 0,
+      totalMovieHours: 14,
+      totalEpisodes: 42,
+      totalMovies: 18,
+    },
+  },
 };
 
 describe("usersService", () => {
@@ -23,7 +41,7 @@ describe("usersService", () => {
   describe("patchMe", () => {
     it("should call pATCHUsersMe with the correct payload", async () => {
       vi.mocked(sdk.pATCHUsersMe).mockResolvedValue({
-        data: mockData,
+        data: mockPatchData,
         status: 200,
         statusText: "OK",
         headers: {},
@@ -38,7 +56,7 @@ describe("usersService", () => {
 
     it("should return response.data", async () => {
       vi.mocked(sdk.pATCHUsersMe).mockResolvedValue({
-        data: mockData,
+        data: mockPatchData,
         status: 200,
         statusText: "OK",
         headers: {},
@@ -46,7 +64,7 @@ describe("usersService", () => {
       });
 
       const result = await usersService.patchMe({ username: "foo" });
-      expect(result).toEqual(mockData);
+      expect(result).toEqual(mockPatchData);
     });
 
     it("should propagate errors from pATCHUsersMe", async () => {
@@ -60,7 +78,7 @@ describe("usersService", () => {
   describe("getMe", () => {
     it("should call gETUsersMe", async () => {
       vi.mocked(sdk.gETUsersMe).mockResolvedValue({
-        data: mockData,
+        data: mockGetMeData,
         status: 200,
         statusText: "OK",
         headers: {},
@@ -73,7 +91,7 @@ describe("usersService", () => {
 
     it("should return response.data", async () => {
       vi.mocked(sdk.gETUsersMe).mockResolvedValue({
-        data: mockData,
+        data: mockGetMeData,
         status: 200,
         statusText: "OK",
         headers: {},
@@ -81,7 +99,7 @@ describe("usersService", () => {
       });
 
       const result = await usersService.getMe();
-      expect(result).toEqual(mockData);
+      expect(result).toEqual(mockGetMeData);
     });
   });
 
