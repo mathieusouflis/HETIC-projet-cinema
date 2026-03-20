@@ -22,15 +22,15 @@
     "deploy-prod": "phase secrets export --app hetic-cinema --env production > /tmp/.cinema-prod.env && docker compose --env-file /tmp/.cinema-prod.env -f docker-compose.prod.yaml up --build -d; rm -f /tmp/.cinema-prod.env"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.5",
+    "@biomejs/biome": "^2.4.8",
     "husky": "^9.1.7",
-    "turbo": "^2.8.12"
+    "turbo": "^2.8.17"
   },
   "packageManager": "pnpm@10.28.2",
   "engines": {
     "node": ">=18"
   },
   "dependencies": {
-    "lint-staged": "^16.3.1"
+    "lint-staged": "^16.4.0"
   }
 }
