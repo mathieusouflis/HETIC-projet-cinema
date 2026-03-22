@@ -162,7 +162,7 @@ export abstract class WebSocketController {
     const eventTree = events
       .map(
         (event, idx) =>
-          `\n\t\t\t\t\t       ${idx !== events.length - 1 ? "├── " : "└── "}${event.eventName}`
+          `\n\t\t\t\t\t       ${idx === events.length - 1 ? "└── " : "├── "}${event.eventName}`
       )
       .join("");
 

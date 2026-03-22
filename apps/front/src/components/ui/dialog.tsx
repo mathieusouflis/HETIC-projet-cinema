@@ -164,12 +164,12 @@ export {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogPrimitiveContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogOverlay,
   DialogPortal,
+  DialogPrimitiveContent,
   DialogTitle,
   DialogTrigger,
 };

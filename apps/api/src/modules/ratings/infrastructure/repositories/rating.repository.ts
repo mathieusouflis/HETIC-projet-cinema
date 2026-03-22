@@ -60,7 +60,7 @@ export class RatingRepository implements IRatingRepository {
     if (!row) return { average: null, count: 0 };
 
     return {
-      average: row.average != null ? Number(row.average) : null,
+      average: row.average == null ? null : Number(row.average),
       count: row.count,
     };
   }
