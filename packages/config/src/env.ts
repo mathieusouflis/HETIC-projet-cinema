@@ -5,14 +5,14 @@ const getEnvVar = (
 ): string | number | boolean => {
   if (typeof process !== "undefined" && process?.env) {
     const value = process.env[key];
-    return value !== undefined ? value : defaultValue;
+    return value === undefined ? defaultValue : value;
   }
 
   // @ts-expect-error - import.meta.env is available in Vite but not in Node
   if (typeof import.meta !== "undefined" && import.meta?.env) {
     // @ts-expect-error - import.meta.env is available in Vite but not in Node
     const value = import.meta.env[key];
-    return value !== undefined ? value : defaultValue;
+    return value === undefined ? defaultValue : value;
   }
 
   return defaultValue;

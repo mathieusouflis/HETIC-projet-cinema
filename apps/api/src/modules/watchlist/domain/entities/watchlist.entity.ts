@@ -31,7 +31,7 @@ export class Watchlist {
     this.addedAt = props.addedAt ? new Date(props.addedAt) : new Date();
     this.startedAt = props.startedAt ? new Date(props.startedAt) : null;
     this.completedAt = props.completedAt ? new Date(props.completedAt) : null;
-    this.rating = props.rating != null ? Number(props.rating) : null;
+    this.rating = props.rating == null ? null : Number(props.rating);
   }
 
   /**

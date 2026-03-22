@@ -27,8 +27,8 @@ export function SearchFilters({ values, onApply }: SearchFiltersProps) {
   const allCategories = categoriesData?.items ?? [];
 
   const activeCount =
-    (values.year !== undefined ? 1 : 0) +
-    (values.minRating !== undefined ? 1 : 0) +
+    (values.year === undefined ? 0 : 1) +
+    (values.minRating === undefined ? 0 : 1) +
     ((values.categories?.length ?? 0) > 0 ? 1 : 0);
 
   const applyNext = (next: FilterValues) => {
