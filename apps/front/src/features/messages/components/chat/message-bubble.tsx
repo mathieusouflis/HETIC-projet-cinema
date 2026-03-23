@@ -24,8 +24,6 @@ export function MessageBubble({
   isOwn,
   showAvatar,
   sender,
-  // @ts-expect-error
-  onEdit,
   onDelete,
 }: MessageBubbleProps) {
   const { content, isDeleted } = message;

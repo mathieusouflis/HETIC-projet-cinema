@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/features/auth/stores/auth.store";
+import { queryClient } from "@/lib/api/client";
 import { getApi } from "@/lib/api/services";
 import { useRoutes } from "@/lib/routes";
 import { navConfig } from "./common";
@@ -26,6 +27,7 @@ export const AssideNav = () => {
     try {
       await getApi().auth.logout();
     } catch {}
+    queryClient.clear();
     clear();
     navigate({ to: "/login", replace: true });
   };

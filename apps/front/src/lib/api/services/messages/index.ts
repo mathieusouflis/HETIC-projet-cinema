@@ -68,7 +68,9 @@ export const queryMessageService = {
       queryFn: ({ pageParam }) =>
         fetchMessages(conversationId, pageParam as string | undefined),
       initialPageParam: undefined as string | undefined,
-      getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+      getNextPageParam: () => undefined,
+      getPreviousPageParam: (firstPage: MessagePage) =>
+        firstPage.nextCursor ?? undefined,
       enabled: !!conversationId,
     }),
 

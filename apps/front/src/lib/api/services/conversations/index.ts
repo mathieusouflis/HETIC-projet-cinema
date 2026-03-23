@@ -84,12 +84,12 @@ export const queryConversationService = {
 
   create: () => {
     const queryClient = useQueryClient();
-    const { user } = useAuth();
     return useMutation({
       mutationFn: (friendId: string) => createConversation(friendId),
       onSuccess: () => {
+        const userId = useAuth.getState().user?.id ?? "";
         queryClient.invalidateQueries({
-          queryKey: conversationKeys.all(user?.id ?? ""),
+          queryKey: conversationKeys.all(userId),
         });
       },
     });
@@ -97,7 +97,6 @@ export const queryConversationService = {
 
   markRead: () => {
     const queryClient = useQueryClient();
-    const { user } = useAuth();
 
     const pendingIds = useRef(new Set<string>());
 
@@ -115,8 +114,9 @@ export const queryConversationService = {
       },
 
       onSuccess: (_data, id) => {
+        const userId = useAuth.getState().user?.id ?? "";
         queryClient.setQueryData<Conversation[]>(
-          conversationKeys.all(user?.id ?? ""),
+          conversationKeys.all(userId),
           (old) =>
             old?.map((c) => (c.id === id ? { ...c, unreadCount: 0 } : c)) ?? old
         );

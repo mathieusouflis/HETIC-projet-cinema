@@ -47,7 +47,7 @@ export function ChatPanel({ conversationId }: ChatPanelProps) {
 
   const { emitTyping } = useTyping(conversationId);
 
-  const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
+  const { data, hasPreviousPage, isFetchingPreviousPage, fetchPreviousPage } =
     queryMessageService.infiniteList(conversationId);
 
   const sendMutation = queryMessageService.send(conversationId);
@@ -56,6 +56,12 @@ export function ChatPanel({ conversationId }: ChatPanelProps) {
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [failedContent, setFailedContent] = useState<string | null>(null);
+
+  // Reset transient UI state when switching conversations
+  useEffect(() => {
+    setEditingId(null);
+    setFailedContent(null);
+  }, [conversationId]);
 
   const handleSend = (content: string) => {
     if (editingId) {
@@ -145,9 +151,9 @@ export function ChatPanel({ conversationId }: ChatPanelProps) {
             pages={pages}
             currentUserId={user?.id ?? ""}
             otherParticipant={otherParticipant}
-            hasNextPage={hasNextPage}
-            isFetchingNextPage={isFetchingNextPage}
-            onFetchNextPage={fetchNextPage}
+            hasNextPage={hasPreviousPage}
+            isFetchingNextPage={isFetchingPreviousPage}
+            onFetchNextPage={fetchPreviousPage}
             onEdit={(id) => setEditingId(id)}
             onDelete={(id) => deleteMutation.mutate(id)}
           />

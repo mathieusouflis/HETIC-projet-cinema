@@ -2,6 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/stores/auth.store";
+import { queryClient } from "@/lib/api/client";
 import { getApi } from "@/lib/api/services";
 import { baseRoutes } from "@/lib/routes";
 import { navConfig } from "./common";
@@ -15,6 +16,7 @@ export const BottomNav = () => {
     try {
       await getApi().auth.logout();
     } catch {}
+    queryClient.clear();
     clear();
     navigate({ to: "/login", replace: true });
   };
