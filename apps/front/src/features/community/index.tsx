@@ -314,54 +314,57 @@ export function CommunityPage() {
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
-        {tab === "friends" && acceptedFriends.length === 0 ? (
-          <p className="py-12 text-center text-sm text-muted-foreground">
-            No friends yet — discover people in the Discover tab!
-          </p>
-        ) : (
-          acceptedFriends.map((f) => (
-            <FriendRow
-              key={f.id}
-              friendship={f}
-              currentUserId={currentUserId}
-            />
-          ))
-        )}
-
-        {tab === "requests" && pendingFriendships.length === 0 ? (
-          <p className="py-12 text-center text-sm text-muted-foreground">
-            No pending requests
-          </p>
-        ) : (
-          pendingFriendships.map((f) => (
-            <RequestRow
-              key={f.id}
-              friendship={f}
-              currentUserId={currentUserId}
-            />
-          ))
-        )}
-
-        {tab === "discover" && filteredUsers.length === 0 ? (
-          <p className="py-12 text-center text-sm text-muted-foreground">
-            {search ? "No users found" : "Loading users…"}
-          </p>
-        ) : (
-          filteredUsers.map((u) => {
-            const friendship = allFriendships.find(
-              (f) => f.userId === u.id || f.friendId === u.id
-            );
-            return (
-              <DiscoverRow
-                key={u.id}
-                userId={u.id}
-                username={u.username}
-                avatarUrl={u.avatarUrl}
-                friendship={friendship}
+        {tab === "friends" &&
+          (acceptedFriends.length === 0 ? (
+            <p className="py-12 text-center text-sm text-muted-foreground">
+              No friends yet — discover people in the Discover tab!
+            </p>
+          ) : (
+            acceptedFriends.map((f) => (
+              <FriendRow
+                key={f.id}
+                friendship={f}
+                currentUserId={currentUserId}
               />
-            );
-          })
-        )}
+            ))
+          ))}
+
+        {tab === "requests" &&
+          (pendingFriendships.length === 0 ? (
+            <p className="py-12 text-center text-sm text-muted-foreground">
+              No pending requests
+            </p>
+          ) : (
+            pendingFriendships.map((f) => (
+              <RequestRow
+                key={f.id}
+                friendship={f}
+                currentUserId={currentUserId}
+              />
+            ))
+          ))}
+
+        {tab === "discover" &&
+          (filteredUsers.length === 0 ? (
+            <p className="py-12 text-center text-sm text-muted-foreground">
+              {search ? "No users found" : "Loading users…"}
+            </p>
+          ) : (
+            filteredUsers.map((u) => {
+              const friendship = allFriendships.find(
+                (f) => f.userId === u.id || f.friendId === u.id
+              );
+              return (
+                <DiscoverRow
+                  key={u.id}
+                  userId={u.id}
+                  username={u.username}
+                  avatarUrl={u.avatarUrl}
+                  friendship={friendship}
+                />
+              );
+            })
+          ))}
       </div>
     </div>
   );
