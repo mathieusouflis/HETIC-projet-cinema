@@ -15,19 +15,39 @@ declare module "socket.io" {
 const jwtService = new JWTService();
 
 /**
- * Extract Bearer token from socket handshake
- * Checks both auth object and authorization header
+ * Parse a cookie string and return the value for the given name.
+ */
+const parseCookie = (cookieHeader: string, name: string): string | null => {
+  const match = cookieHeader
+    .split(";")
+    .map((c) => c.trim())
+    .find((c) => c.startsWith(`${name}=`));
+  return match ? match.slice(name.length + 1) : null;
+};
+
+/**
+ * Extract access token from socket handshake.
+ * Priority: httpOnly cookie → auth object → Authorization header (fallback for non-browser clients).
  *
  * @param socket - Socket.IO socket instance
  * @returns Token string or null if not found
  */
 const extractSocketToken = (socket: Socket): string | null => {
-  // Check auth object (socket.io-client sends it here)
+  // 1. Cookie (primary — httpOnly cookie sent automatically by browser)
+  const cookieHeader = socket.handshake.headers.cookie;
+  if (cookieHeader) {
+    const cookieToken = parseCookie(cookieHeader, "accessToken");
+    if (cookieToken) {
+      return cookieToken;
+    }
+  }
+
+  // 2. Auth object (legacy / non-browser clients)
   if (socket.handshake.auth?.token) {
     return socket.handshake.auth.token;
   }
 
-  // Check authorization header
+  // 3. Authorization header (non-browser clients)
   const authHeader = socket.handshake.headers.authorization;
   if (authHeader) {
     const parts = authHeader.split(" ");

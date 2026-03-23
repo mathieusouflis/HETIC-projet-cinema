@@ -38,6 +38,19 @@ const extractBearerToken = (authHeader: string | undefined): string | null => {
 };
 
 /**
+ * Extract access token: cookie first, then Authorization header as fallback.
+ * Cookie takes priority so httpOnly cookie-based clients work correctly.
+ * The Authorization header fallback supports non-browser clients (e.g. Postman, CLI tools).
+ */
+const extractToken = (req: Request): string | null => {
+  const cookieToken = req.cookies?.accessToken;
+  if (cookieToken) {
+    return cookieToken;
+  }
+  return extractBearerToken(req.headers.authorization);
+};
+
+/**
  * Authentication middleware
  *
  * Verifies JWT token from Authorization header and attaches user info to request
@@ -53,7 +66,7 @@ export const authMiddleware = (
   next: NextFunction
 ): void => {
   try {
-    const token = extractBearerToken(req.headers.authorization);
+    const token = extractToken(req);
 
     if (!token) {
       throw new UnauthorizedError("No authentication token provided");
@@ -101,7 +114,7 @@ export const optionalAuthMiddleware = (
   _res: Response,
   next: NextFunction
 ): void => {
-  const token = extractBearerToken(req.headers.authorization);
+  const token = extractToken(req);
 
   if (!token) {
     return next();

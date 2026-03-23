@@ -5,19 +5,16 @@ import type { ApiClientConfig } from "./types";
 
 let isRefreshing = false;
 let failedQueue: Array<{
-  resolve: (value?: string) => void;
+  resolve: () => void;
   reject: (reason?: AxiosError) => void;
 }> = [];
 
-const processQueue = (
-  error: AxiosError | null,
-  token: string | null = null
-) => {
+const processQueue = (error: AxiosError | null) => {
   failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
     } else {
-      prom.resolve(token || undefined);
+      prom.resolve();
     }
   });
   failedQueue = [];
@@ -33,24 +30,10 @@ export class ApiClient {
 
   private setupInterceptors() {
     axios.defaults.baseURL = `${config.env.backend.apiUrl}/api/v1`;
+    // Cookies (accessToken + refreshToken) are sent automatically by the browser
     axios.defaults.withCredentials = true;
 
-    axios.interceptors.request.use(
-      (requestConfig: InternalAxiosRequestConfig) => {
-        const token = this.config.getAccessToken();
-
-        if (token) {
-          requestConfig.headers.Authorization = `Bearer ${token}`;
-        }
-
-        return requestConfig;
-      },
-      (error: AxiosError) => {
-        return Promise.reject(error);
-      }
-    );
-
-    // Response interceptor: handle 401 with token refresh
+    // Response interceptor: handle 401 with silent token refresh via cookie
     axios.interceptors.response.use(
       (response) => response,
       async (error: AxiosError) => {
@@ -70,15 +53,10 @@ export class ApiClient {
         ) {
           // If already refreshing, queue this request
           if (isRefreshing) {
-            return new Promise((resolve, reject) => {
+            return new Promise<void>((resolve, reject) => {
               failedQueue.push({ resolve, reject });
             })
-              .then((token) => {
-                if (token) {
-                  originalRequest.headers.Authorization = `Bearer ${token}`;
-                }
-                return axios(originalRequest);
-              })
+              .then(() => axios(originalRequest))
               .catch((err) => Promise.reject(err));
           }
 
@@ -86,20 +64,17 @@ export class ApiClient {
           isRefreshing = true;
 
           try {
-            const response = await pOSTAuthRefresh();
-            const newAccessToken = response.data.data.accessToken;
+            // The refresh token is in an httpOnly cookie — no explicit token needed
+            await pOSTAuthRefresh();
 
-            this.config.onTokenRefreshed(newAccessToken);
+            this.config.onTokenRefreshed();
 
-            // Process queued requests with new token
-            processQueue(null, newAccessToken);
+            // Unblock queued requests — they will retry with the new accessToken cookie
+            processQueue(null);
 
-            // Retry original request with new token
-            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             return axios(originalRequest);
           } catch (refreshError) {
-            // Refresh failed: clear auth and notify
-            processQueue(refreshError as AxiosError, null);
+            processQueue(refreshError as AxiosError);
             this.config.clearAuth();
             this.config.onUnauthorized();
 

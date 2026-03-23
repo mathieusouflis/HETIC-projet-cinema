@@ -7,6 +7,9 @@ export const refreshTokenResponseValidator = z.object({
   accessToken: Shared.Services.Token.Schemas.tokenSchema,
 });
 
+export const refreshTokenResponseBodyValidator =
+  refreshTokenResponseValidator.omit({ accessToken: true });
+
 export type RefreshTokenResponse = z.infer<
   typeof refreshTokenResponseValidator
 >;

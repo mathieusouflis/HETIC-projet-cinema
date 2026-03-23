@@ -1,6 +1,5 @@
 import { config } from "@packages/config";
 import { io } from "socket.io-client";
-import { useAuth } from "@/features/auth/stores/auth.store";
 import type {
   ConversationJoinedPayload,
   MessageDTO,
@@ -15,12 +14,13 @@ function getSocket(): TypedSocket {
     return socket;
   }
 
-  const token = useAuth.getState().accessToken;
   const baseUrl = config.env.backend.apiUrl;
 
+  // The accessToken httpOnly cookie is sent automatically by the browser
+  // during the Socket.IO handshake — no explicit token needed here.
   socket = io(`${baseUrl}/messages`, {
-    auth: { token },
     transports: ["websocket"],
+    withCredentials: true,
     autoConnect: true,
   }) as TypedSocket;
 
@@ -39,13 +39,11 @@ function destroySocket(): void {
 }
 
 /**
- * Refresh the auth token on an existing (or new) socket.
- * Useful when the access token is silently refreshed.
+ * Reconnect the socket so the new accessToken cookie is picked up
+ * in the next handshake. Called after a silent token refresh.
  */
 function refreshSocketAuth(): void {
-  const token = useAuth.getState().accessToken;
   if (socket) {
-    socket.auth = { token };
     socket.disconnect().connect();
   }
 }

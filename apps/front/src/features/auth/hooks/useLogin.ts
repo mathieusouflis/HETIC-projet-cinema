@@ -12,7 +12,7 @@ export type LoginApiError = {
 export function useLogin() {
   const services = getApi();
   const navigate = useNavigate();
-  const { setUser, setAccessToken } = useAuth();
+  const { setUser } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
   async function login(email: string, password: string) {
@@ -20,9 +20,8 @@ export function useLogin() {
       setIsLoading(true);
 
       const response = await services.auth.login({ email, password });
-      const { accessToken, user } = response.data;
+      const { user } = response.data;
 
-      setAccessToken(accessToken);
       setUser(user);
 
       navigate({ to: "/" });

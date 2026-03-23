@@ -129,15 +129,10 @@
                             "username",
                             "createdAt"
                           ]
-                        },
-                        "accessToken": {
-                          "type": "string",
-                          "description": "JWT access token for API authentication"
                         }
                       },
                       "required": [
-                        "user",
-                        "accessToken"
+                        "user"
                       ]
                     }
                   },
@@ -345,15 +340,10 @@
                             "username",
                             "createdAt"
                           ]
-                        },
-                        "accessToken": {
-                          "type": "string",
-                          "description": "JWT access token for API authentication"
                         }
                       },
                       "required": [
-                        "user",
-                        "accessToken"
+                        "user"
                       ]
                     }
                   },
@@ -537,15 +527,10 @@
                             "username",
                             "createdAt"
                           ]
-                        },
-                        "accessToken": {
-                          "type": "string",
-                          "description": "JWT access token for API authentication"
                         }
                       },
                       "required": [
-                        "user",
-                        "accessToken"
+                        "user"
                       ]
                     }
                   },

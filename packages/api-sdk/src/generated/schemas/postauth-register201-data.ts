@@ -9,6 +9,4 @@ import type { POSTAuthRegister201DataUser } from "./postauth-register201-data-us
 
 export type POSTAuthRegister201Data = {
   user: POSTAuthRegister201DataUser;
-  /** JWT access token for API authentication */
-  accessToken: string;
 };

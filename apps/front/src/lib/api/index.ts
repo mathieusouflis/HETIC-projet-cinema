@@ -8,11 +8,12 @@ export function setNavigateCallback(callback: () => void) {
   navigateCallback = callback;
 }
 
-// Create singleton ApiClient with auth callbacks
+// Create singleton ApiClient.
+// The access token is stored in an httpOnly cookie — no JS token management needed.
 new ApiClient({
-  getAccessToken: () => useAuth.getState().accessToken,
-  onTokenRefreshed: (token: string) => {
-    useAuth.getState().setAccessToken(token);
+  onTokenRefreshed: () => {
+    // Nothing to store — the new accessToken cookie is set by the server automatically.
+    // If a WebSocket is open, it will reconnect with the new cookie on next handshake.
   },
   clearAuth: () => {
     useAuth.getState().clear();

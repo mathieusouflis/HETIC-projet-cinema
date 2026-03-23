@@ -9,6 +9,4 @@ import type { POSTAuthRefresh200DataUser } from "./postauth-refresh200-data-user
 
 export type POSTAuthRefresh200Data = {
   user: POSTAuthRefresh200DataUser;
-  /** JWT access token for API authentication */
-  accessToken: string;
 };

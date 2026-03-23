@@ -30,8 +30,9 @@ import {
 } from "../../../users/application/validators/user.validator.js";
 import { loginValidator } from "../dto/request/login.dto.js";
 import { registerValidator } from "../dto/request/register.dto.js";
-import { authResponseDataValidator } from "../dto/response/auth-response.response.validator.js";
+import { authResponseBodyValidator } from "../dto/response/auth-response.response.validator.js";
 import type { RefreshTokenResponse } from "../dto/response/refresh-token.response.validator.js";
+import { refreshTokenResponseBodyValidator } from "../dto/response/refresh-token.response.validator.js";
 import type { LoginUseCase } from "../use-cases/login.usecase.js";
 import type { RefreshTokenUseCase } from "../use-cases/refresh-token.usecase.js";
 import type { RegisterUseCase } from "../use-cases/register.usecase.js";
@@ -39,9 +40,19 @@ import type { RegisterUseCase } from "../use-cases/register.usecase.js";
 const REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
 const REFRESH_TOKEN_COOKIE_OPTIONS = {
   domain: config.env.backend.host,
-  maxAge: 7 * 24 * 60 * 60,
+  maxAge: 7 * 24 * 60 * 60 * 1000,
   sameSite: "strict",
   secure: config.env.NODE_ENV === "production",
+  httpOnly: true,
+} as const;
+
+const ACCESS_TOKEN_COOKIE_NAME = "accessToken";
+const ACCESS_TOKEN_COOKIE_OPTIONS = {
+  domain: config.env.backend.host,
+  maxAge: 15 * 60 * 1000,
+  sameSite: "strict",
+  secure: config.env.NODE_ENV === "production",
+  httpOnly: true,
 } as const;
 
 @Controller({
@@ -67,7 +78,7 @@ export class AuthController extends BaseController {
   @ApiResponse(
     201,
     "User registered successfully",
-    createSuccessResponseSchema(authResponseDataValidator)
+    createSuccessResponseSchema(authResponseBodyValidator)
   )
   @ApiResponse(400, "Invalid input data", validationErrorResponseSchema)
   @ApiResponse(
@@ -76,6 +87,7 @@ export class AuthController extends BaseController {
     conflictErrorResponseSchema
   )
   @SetCookie(REFRESH_TOKEN_COOKIE_NAME, REFRESH_TOKEN_COOKIE_OPTIONS)
+  @SetCookie(ACCESS_TOKEN_COOKIE_NAME, ACCESS_TOKEN_COOKIE_OPTIONS)
   register = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
       const { email, username, password } = req.body;
@@ -91,11 +103,16 @@ export class AuthController extends BaseController {
         refreshToken,
         REFRESH_TOKEN_COOKIE_OPTIONS
       );
+      res.cookie(
+        ACCESS_TOKEN_COOKIE_NAME,
+        result.accessToken,
+        ACCESS_TOKEN_COOKIE_OPTIONS
+      );
 
       res.status(201).json({
         success: true,
         message: "User registered successfully",
-        data: result,
+        data: { user: result.user },
       });
     }
   );
@@ -110,7 +127,7 @@ export class AuthController extends BaseController {
   @ApiResponse(
     200,
     "Login successful",
-    createSuccessResponseSchema(authResponseDataValidator)
+    createSuccessResponseSchema(authResponseBodyValidator)
   )
   @ApiResponse(400, "Invalid credentials", validationErrorResponseSchema)
   @ApiResponse(
@@ -119,6 +136,7 @@ export class AuthController extends BaseController {
     unauthorizedErrorResponseSchema
   )
   @SetCookie(REFRESH_TOKEN_COOKIE_NAME, REFRESH_TOKEN_COOKIE_OPTIONS)
+  @SetCookie(ACCESS_TOKEN_COOKIE_NAME, ACCESS_TOKEN_COOKIE_OPTIONS)
   login = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { email, password } = req.body;
 
@@ -132,11 +150,16 @@ export class AuthController extends BaseController {
       refreshToken,
       REFRESH_TOKEN_COOKIE_OPTIONS
     );
+    res.cookie(
+      ACCESS_TOKEN_COOKIE_NAME,
+      result.accessToken,
+      ACCESS_TOKEN_COOKIE_OPTIONS
+    );
 
     res.status(200).json({
       success: true,
       message: "Login successful",
-      data: result,
+      data: { user: result.user },
     });
   });
 
@@ -150,7 +173,7 @@ export class AuthController extends BaseController {
   @ApiResponse(
     200,
     "Tokens refreshed successfully",
-    createSuccessResponseSchema(authResponseDataValidator)
+    createSuccessResponseSchema(refreshTokenResponseBodyValidator)
   )
   @ApiResponse(
     401,
@@ -172,11 +195,16 @@ export class AuthController extends BaseController {
         refreshToken,
         REFRESH_TOKEN_COOKIE_OPTIONS
       );
+      res.cookie(
+        ACCESS_TOKEN_COOKIE_NAME,
+        responseData.accessToken,
+        ACCESS_TOKEN_COOKIE_OPTIONS
+      );
 
       res.status(200).json({
         success: true,
         message: "Tokens refreshed successfully",
-        data: responseData,
+        data: { user: responseData.user },
       });
       return responseData;
     }
@@ -192,6 +220,18 @@ export class AuthController extends BaseController {
   @ApiResponse(401, "Not authenticated", unauthorizedErrorResponseSchema)
   logout = asyncHandler(async (_req: Request, res: Response): Promise<void> => {
     // TODO: Implement token invalidation/blacklisting
+    res.clearCookie(REFRESH_TOKEN_COOKIE_NAME, {
+      domain: config.env.backend.host,
+      sameSite: "strict",
+      secure: config.env.NODE_ENV === "production",
+      httpOnly: true,
+    });
+    res.clearCookie(ACCESS_TOKEN_COOKIE_NAME, {
+      domain: config.env.backend.host,
+      sameSite: "strict",
+      secure: config.env.NODE_ENV === "production",
+      httpOnly: true,
+    });
     res.status(200).json({
       success: true,
       message: "Logged out successfully",

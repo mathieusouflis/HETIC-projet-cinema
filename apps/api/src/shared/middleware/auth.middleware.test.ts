@@ -17,6 +17,7 @@ describe("authMiddleware", () => {
   beforeEach(() => {
     req = {
       headers: {},
+      cookies: {},
       params: {},
     };
     res = {};
@@ -30,7 +31,7 @@ describe("authMiddleware", () => {
   const jwtService = new JWTService();
 
   describe("authMiddleware", () => {
-    it("should authenticate user with valid token", () => {
+    it("should authenticate user with valid token in Authorization header", () => {
       const userId = "user-123";
       const email = "test@example.com";
       const token = jwtService.generateAccessToken({ userId, email });
@@ -44,6 +45,44 @@ describe("authMiddleware", () => {
       expect(req.user).toBeDefined();
       expect(req.user?.userId).toBe(userId);
       expect(req.user?.email).toBe(email);
+    });
+
+    it("should authenticate user with valid token in accessToken cookie", () => {
+      const userId = "user-456";
+      const email = "cookie@example.com";
+      const token = jwtService.generateAccessToken({ userId, email });
+
+      req.cookies = { accessToken: token };
+
+      authMiddleware(req as Request, res as Response, next);
+
+      expect(req.user).toBeDefined();
+      expect(req.user?.userId).toBe(userId);
+      expect(req.user?.email).toBe(email);
+    });
+
+    it("should prefer cookie token over Authorization header", () => {
+      const cookieUserId = "cookie-user";
+      const cookieEmail = "cookie@example.com";
+      const cookieToken = jwtService.generateAccessToken({
+        userId: cookieUserId,
+        email: cookieEmail,
+      });
+
+      const headerUserId = "header-user";
+      const headerEmail = "header@example.com";
+      const headerToken = jwtService.generateAccessToken({
+        userId: headerUserId,
+        email: headerEmail,
+      });
+
+      req.cookies = { accessToken: cookieToken };
+      req.headers = { authorization: `Bearer ${headerToken}` };
+
+      authMiddleware(req as Request, res as Response, next);
+
+      expect(req.user?.userId).toBe(cookieUserId);
+      expect(req.user?.email).toBe(cookieEmail);
     });
 
     it("should throw UnauthorizedError when no authorization header", () => {
@@ -187,7 +226,7 @@ describe("authMiddleware", () => {
   });
 
   describe("optionalAuthMiddleware", () => {
-    it("should authenticate user with valid token", () => {
+    it("should authenticate user with valid token in Authorization header", () => {
       const userId = "user-456";
       const email = "optional@example.com";
       const token = jwtService.generateAccessToken({ userId, email });

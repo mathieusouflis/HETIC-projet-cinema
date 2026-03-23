@@ -1,29 +1,24 @@
 /**
  * API Client Configuration Interface
- * Provides callbacks for token management and authentication flow
+ * Provides callbacks for authentication lifecycle events.
+ * The access token is managed entirely via httpOnly cookies — no JS token access needed.
  */
 export interface ApiClientConfig {
   /**
-   * Get the current access token
-   * Called before each request to inject the token into Authorization header
+   * Called when token refresh succeeds.
+   * Use this to trigger any post-refresh side effects (e.g. reconnect WebSocket).
    */
-  getAccessToken: () => string | null;
+  onTokenRefreshed: () => void;
 
   /**
-   * Called when token refresh succeeds
-   * @param token The new access token
-   */
-  onTokenRefreshed: (token: string) => void;
-
-  /**
-   * Called to clear authentication state
-   * Invoked when refresh fails
+   * Called to clear authentication state (e.g. Zustand store).
+   * Invoked when refresh fails.
    */
   clearAuth: () => void;
 
   /**
-   * Called when user is unauthorized and cannot be refreshed
-   * Typically triggers redirect to login
+   * Called when user is unauthorized and cannot be refreshed.
+   * Typically triggers redirect to login.
    */
   onUnauthorized: () => void;
 }

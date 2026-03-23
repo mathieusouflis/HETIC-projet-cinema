@@ -9,6 +9,4 @@ import type { POSTAuthLogin200DataUser } from "./postauth-login200-data-user";
 
 export type POSTAuthLogin200Data = {
   user: POSTAuthLogin200DataUser;
-  /** JWT access token for API authentication */
-  accessToken: string;
 };

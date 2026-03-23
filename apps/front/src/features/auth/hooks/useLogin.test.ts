@@ -31,11 +31,9 @@ vi.mock("@tanstack/react-router", () => ({
 }));
 
 const setUserMock = vi.fn();
-const setAccessTokenMock = vi.fn();
 vi.mock("../stores/auth.store", () => ({
   useAuth: () => ({
     setUser: setUserMock,
-    setAccessToken: setAccessTokenMock,
   }),
 }));
 
@@ -58,7 +56,6 @@ const successResponse = {
   data: {
     success: true,
     data: {
-      accessToken: "tok_123",
       user: {
         userId: "u1",
         id: "u1",
@@ -79,13 +76,12 @@ describe("useLogin", () => {
     vi.clearAllMocks();
   });
 
-  it("stores user and token then navigates to / on success", async () => {
+  it("stores user then navigates to / on success", async () => {
     vi.mocked(sdk.pOSTAuthLogin).mockResolvedValue(successResponse);
 
     const { login } = useLogin();
     await login("user@example.com", "Abcdef1!");
 
-    expect(setAccessTokenMock).toHaveBeenCalledWith("tok_123");
     expect(setUserMock).toHaveBeenCalledWith(successResponse.data.data.user);
     expect(navigateMock).toHaveBeenCalledWith({ to: "/" });
   });
