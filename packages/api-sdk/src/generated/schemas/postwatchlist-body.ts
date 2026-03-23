@@ -15,6 +15,8 @@ export type POSTWatchlistBody = {
   currentEpisode?: number;
   /** @minimum 1 */
   currentSeason?: number;
-  startedAt?: string;
-  completedAt?: string;
+  /** @nullable */
+  startedAt?: string | null;
+  /** @nullable */
+  completedAt?: string | null;
 };

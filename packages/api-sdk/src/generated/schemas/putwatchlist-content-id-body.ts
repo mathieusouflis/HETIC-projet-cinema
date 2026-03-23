@@ -13,8 +13,10 @@ export type PUTWatchlistContentIdBody = {
   currentEpisode?: number;
   /** @minimum 1 */
   currentSeason?: number;
-  startedAt?: string;
-  completedAt?: string;
+  /** @nullable */
+  startedAt?: string | null;
+  /** @nullable */
+  completedAt?: string | null;
   /**
    * @minimum 1
    * @maximum 5
