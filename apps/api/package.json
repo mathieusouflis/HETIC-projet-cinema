@@ -21,6 +21,7 @@
     "@asteasolutions/zod-to-openapi": "^8.4.3",
     "@packages/config": "workspace:*",
     "@packages/logger": "workspace:*",
+    "@sentry/node": "^10.45.0",
     "bcrypt": "^6.0.0",
     "body-parser": "^2.2.2",
     "cookie-parser": "^1.4.7",

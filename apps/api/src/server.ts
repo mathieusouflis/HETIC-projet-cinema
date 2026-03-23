@@ -1,3 +1,4 @@
+import "./instrument";
 import "reflect-metadata";
 import { createServer as createHttpServer } from "node:http";
 import bodyParser from "body-parser";
@@ -8,6 +9,7 @@ import { Server as SocketIOServer } from "socket.io";
 import "./shared/infrastructure/openapi/zod-openapi.js";
 import { config } from "@packages/config";
 import { logger } from "@packages/logger";
+import * as Sentry from "@sentry/node";
 import cookieParser from "cookie-parser";
 import { apiVersion1Router } from "./modules";
 import { createAsyncAPIRouter } from "./shared/infrastructure/routes/asyncapi.routes.js";
@@ -46,6 +48,8 @@ export const createServer = (): AppServer => {
         },
       });
     });
+
+  Sentry.setupExpressErrorHandler(app);
 
   const httpServer = createHttpServer(app);
 
