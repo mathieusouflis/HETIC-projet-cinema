@@ -1,5 +1,4 @@
 import {
-  Calendar1,
   ListTodo,
   type LucideIcon,
   MessageSquare,
@@ -37,15 +36,6 @@ export const navConfig: NavConfig = {
     name: "Search",
     path: baseRoutes.search.root,
     icon: Search,
-    devices: {
-      mobile: true,
-      desktop: true,
-    },
-  },
-  calendar: {
-    name: "Calendar",
-    path: baseRoutes.calendar,
-    icon: Calendar1,
     devices: {
       mobile: true,
       desktop: true,

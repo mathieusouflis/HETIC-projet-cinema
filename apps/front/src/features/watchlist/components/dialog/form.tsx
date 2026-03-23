@@ -47,8 +47,8 @@ const formSchema = z.object({
   ]),
   currentSeason: z.number().min(1).optional(),
   currentEpisode: z.number().min(1).optional(),
-  startedAt: z.string().optional(),
-  completedAt: z.string().optional(),
+  startedAt: z.date().optional(),
+  completedAt: z.date().optional(),
   rating: z.number().int().min(1).max(5).nullable().optional(),
 });
 
@@ -72,8 +72,8 @@ export default function FormWatchlist(props: {
         status: d.status,
         currentSeason: d.currentSeason ?? undefined,
         currentEpisode: d.currentEpisode ?? undefined,
-        startedAt: d.startedAt ? d.startedAt.slice(0, 10) : undefined,
-        completedAt: d.completedAt ? d.completedAt.slice(0, 10) : undefined,
+        startedAt: d.startedAt ? new Date(d.startedAt) : undefined,
+        completedAt: d.completedAt ? new Date(d.completedAt) : undefined,
         rating: (d as { rating?: number | null }).rating ?? null,
       };
     }
@@ -98,9 +98,10 @@ export default function FormWatchlist(props: {
 
   const onSubmit = async (values: FormValues) => {
     try {
+      console.log(values.completedAt);
       await updateWatchlist({
         id: props.content.id,
-        data: values as PUTWatchlistContentIdBody,
+        data: values as unknown as PUTWatchlistContentIdBody,
       });
       props.onSubmit?.();
     } catch (err) {

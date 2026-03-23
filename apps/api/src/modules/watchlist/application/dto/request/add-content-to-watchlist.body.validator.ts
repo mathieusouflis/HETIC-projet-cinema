@@ -7,8 +7,8 @@ export const addContentToWatchlistBodyValidator = z.object({
   status: watchlistStatusSchema.optional(),
   currentEpisode: z.number().min(1).optional(),
   currentSeason: z.number().min(1).optional(),
-  startedAt: z.date().optional(),
-  completedAt: z.date().optional(),
+  startedAt: z.coerce.date().optional(),
+  completedAt: z.coerce.date().optional(),
 });
 
 export type AddContentToWatchlistBody = z.infer<

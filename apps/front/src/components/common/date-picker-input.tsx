@@ -21,30 +21,30 @@ function formatDate(date: Date | undefined) {
     return "";
   }
 
-  return date.toLocaleDateString("en-US", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
 }
 
 function isValidDate(date: Date | undefined) {
   if (!date) {
     return false;
   }
-  return !isNaN(date.getTime());
+  return !Number.isNaN(date.getTime());
 }
 
-function toISODate(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
+function parseDDMMYYYY(input: string): Date | undefined {
+  const match = input.match(/^(\d{2})-(\d{2})-(\d{4})$/);
+  if (!match) return undefined;
+  const [, day, month, year] = match;
+  const date = new Date(`${year}-${month}-${day}T12:00:00`);
+  return isValidDate(date) ? date : undefined;
 }
 
 interface DatePickerInputProps {
-  value?: string;
-  onChange?: (value: string | undefined) => void;
+  value?: Date;
+  onChange?: (value: Date | undefined) => void;
   placeholder?: string;
   id?: string;
 }
@@ -52,19 +52,16 @@ interface DatePickerInputProps {
 export function DatePickerInput({
   value,
   onChange,
-  placeholder = "June 01, 2025",
+  placeholder = "01-06-2025",
   id,
 }: DatePickerInputProps) {
-  const dateFromValue = value ? new Date(`${value}T12:00:00`) : undefined;
-
   const [open, setOpen] = React.useState(false);
-  const [month, setMonth] = React.useState<Date | undefined>(dateFromValue);
-  const [inputValue, setInputValue] = React.useState(formatDate(dateFromValue));
+  const [month, setMonth] = React.useState<Date | undefined>(value);
+  const [inputValue, setInputValue] = React.useState(formatDate(value));
 
   React.useEffect(() => {
-    const next = value ? new Date(`${value}T12:00:00`) : undefined;
-    setInputValue(formatDate(next));
-    setMonth(next);
+    setInputValue(formatDate(value));
+    setMonth(value);
   }, [value]);
 
   return (
@@ -76,10 +73,10 @@ export function DatePickerInput({
         onChange={(e) => {
           const typed = e.target.value;
           setInputValue(typed);
-          const parsed = new Date(typed);
-          if (isValidDate(parsed)) {
+          const parsed = parseDDMMYYYY(typed);
+          if (parsed) {
             setMonth(parsed);
-            onChange?.(toISODate(parsed));
+            onChange?.(parsed);
           } else if (!typed) {
             onChange?.(undefined);
           }
@@ -104,19 +101,19 @@ export function DatePickerInput({
             </InputGroupButton>
           </PopoverTrigger>
           <PopoverContent
-            className="z-[52] w-auto overflow-hidden p-0"
+            className="z-52 w-auto overflow-hidden p-0"
             align="end"
             alignOffset={-8}
             sideOffset={10}
           >
             <Calendar
               mode="single"
-              selected={dateFromValue}
+              selected={value}
               month={month}
               onMonthChange={setMonth}
               onSelect={(selected) => {
                 setInputValue(formatDate(selected));
-                onChange?.(selected ? toISODate(selected) : undefined);
+                onChange?.(selected ?? undefined);
                 setOpen(false);
               }}
             />
@@ -127,7 +124,10 @@ export function DatePickerInput({
             variant={"ghost"}
             size={"sm"}
             className="aspect-square w-fit"
-            onClick={() => setInputValue("")}
+            onClick={() => {
+              setInputValue("");
+              onChange?.(undefined);
+            }}
           >
             <X />
           </Button>
