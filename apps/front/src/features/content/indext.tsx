@@ -40,7 +40,7 @@ export function ContentPage() {
   return (
     <div className="flex flex-col gap-14">
       <div className="flex flex-col gap-14 items-center md:items-start md:flex-row">
-        <div className="flex flex-col gap-2 items-center md:items-baseline w-fit md:w-80">
+        <div className="flex flex-col gap-2 max-w-full items-center md:items-baseline w-fit md:w-80">
           {isLoading || !data ? (
             <ContentCardSkeleton
               variant="thumbnail"
@@ -50,7 +50,7 @@ export function ContentPage() {
             <ContentCard
               variant="thumbnail"
               content={data}
-              className="h-[70vh] md:max-w-2/3 max-h-fit max-w-full w-fit sm:h-[70vh]"
+              className="h-[70vh] max-w-full"
             />
           )}
           <div className="flex flex-row gap-3 w-full md:w-auto">
