@@ -50,6 +50,12 @@ export function ChatPanel({ conversationId }: ChatPanelProps) {
   const { data, hasPreviousPage, isFetchingPreviousPage, fetchPreviousPage } =
     queryMessageService.infiniteList(conversationId);
 
+  const lastMessageId = data?.pages.at(-1)?.items.at(-1)?.id;
+  useEffect(() => {
+    if (!lastMessageId) return;
+    markRead.mutate(conversationId);
+  }, [conversationId, lastMessageId]);
+
   const sendMutation = queryMessageService.send(conversationId);
   const editMutation = queryMessageService.edit();
   const deleteMutation = queryMessageService.delete();

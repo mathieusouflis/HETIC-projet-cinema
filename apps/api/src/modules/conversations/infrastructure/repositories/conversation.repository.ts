@@ -1,8 +1,9 @@
-import { and, eq, or, sql } from "drizzle-orm";
+import { and, count, eq, gt, isNull, ne, or, sql } from "drizzle-orm";
 import { db } from "../../../../database/index.js";
 import {
   conversationParticipants,
   conversations,
+  messages,
 } from "../../../../database/schema.js";
 import { ServerError } from "../../../../shared/errors/server-error.js";
 import { Conversation } from "../../domain/entities/conversation.entity.js";
@@ -14,22 +15,55 @@ import type {
 export class ConversationRepository implements IConversationRepository {
   async findAllForUser(userId: string): Promise<ConversationWithMeta[]> {
     try {
-      const participations = await db.query.conversationParticipants.findMany({
-        where: eq(conversationParticipants.userId, userId),
-        with: {
-          conversation: {
-            with: {
-              conversationParticipants: {
-                with: { user: true },
-              },
-              messages: {
-                orderBy: (m, { desc }) => [desc(m.createdAt)],
-                limit: 1,
+      const [participations, unreadRows] = await Promise.all([
+        db.query.conversationParticipants.findMany({
+          where: eq(conversationParticipants.userId, userId),
+          with: {
+            conversation: {
+              with: {
+                conversationParticipants: {
+                  with: { user: true },
+                },
+                messages: {
+                  orderBy: (m, { desc }) => [desc(m.createdAt)],
+                  limit: 1,
+                },
               },
             },
           },
-        },
-      });
+        }),
+        db
+          .select({
+            conversationId: messages.conversationId,
+            count: count(messages.id),
+          })
+          .from(messages)
+          .innerJoin(
+            conversationParticipants,
+            and(
+              eq(
+                conversationParticipants.conversationId,
+                messages.conversationId
+              ),
+              eq(conversationParticipants.userId, userId)
+            )
+          )
+          .where(
+            and(
+              isNull(messages.deletedAt),
+              ne(messages.userId, userId),
+              or(
+                isNull(conversationParticipants.lastReadAt),
+                gt(messages.createdAt, conversationParticipants.lastReadAt)
+              )
+            )
+          )
+          .groupBy(messages.conversationId),
+      ]);
+
+      const unreadMap = new Map(
+        unreadRows.map((r) => [r.conversationId, r.count])
+      );
 
       return participations.map((p) => {
         const conv = p.conversation;
@@ -38,15 +72,6 @@ export class ConversationRepository implements IConversationRepository {
         );
         const other = otherParticipantRow?.user;
         const lastMsg = conv.messages[0] ?? null;
-
-        const unreadCount =
-          p.lastReadAt && lastMsg
-            ? conv.messages.filter(
-                (m) => m.createdAt && p.lastReadAt && m.createdAt > p.lastReadAt
-              ).length
-            : lastMsg
-              ? 1
-              : 0;
 
         const conversation = new Conversation(conv);
         return Object.assign(conversation, {
@@ -64,7 +89,7 @@ export class ConversationRepository implements IConversationRepository {
                 authorId: lastMsg.userId,
               }
             : null,
-          unreadCount,
+          unreadCount: unreadMap.get(conv.id) ?? 0,
         }) as ConversationWithMeta;
       });
     } catch (error) {
@@ -77,25 +102,51 @@ export class ConversationRepository implements IConversationRepository {
     userId: string
   ): Promise<ConversationWithMeta | null> {
     try {
-      const participation = await db.query.conversationParticipants.findFirst({
-        where: and(
-          eq(conversationParticipants.conversationId, conversationId),
-          eq(conversationParticipants.userId, userId)
-        ),
-        with: {
-          conversation: {
-            with: {
-              conversationParticipants: {
-                with: { user: true },
-              },
-              messages: {
-                orderBy: (m, { desc }) => [desc(m.createdAt)],
-                limit: 1,
+      const [participation, unreadRow] = await Promise.all([
+        db.query.conversationParticipants.findFirst({
+          where: and(
+            eq(conversationParticipants.conversationId, conversationId),
+            eq(conversationParticipants.userId, userId)
+          ),
+          with: {
+            conversation: {
+              with: {
+                conversationParticipants: {
+                  with: { user: true },
+                },
+                messages: {
+                  orderBy: (m, { desc }) => [desc(m.createdAt)],
+                  limit: 1,
+                },
               },
             },
           },
-        },
-      });
+        }),
+        db
+          .select({ count: count(messages.id) })
+          .from(messages)
+          .innerJoin(
+            conversationParticipants,
+            and(
+              eq(
+                conversationParticipants.conversationId,
+                messages.conversationId
+              ),
+              eq(conversationParticipants.userId, userId)
+            )
+          )
+          .where(
+            and(
+              eq(messages.conversationId, conversationId),
+              isNull(messages.deletedAt),
+              ne(messages.userId, userId),
+              or(
+                isNull(conversationParticipants.lastReadAt),
+                gt(messages.createdAt, conversationParticipants.lastReadAt)
+              )
+            )
+          ),
+      ]);
 
       if (!participation) return null;
 
@@ -105,18 +156,6 @@ export class ConversationRepository implements IConversationRepository {
       );
       const other = otherParticipantRow?.user;
       const lastMsg = conv.messages[0] ?? null;
-
-      const unreadCount =
-        participation.lastReadAt && lastMsg
-          ? conv.messages.filter(
-              (m) =>
-                m.createdAt &&
-                participation.lastReadAt &&
-                m.createdAt > participation.lastReadAt
-            ).length
-          : lastMsg
-            ? 1
-            : 0;
 
       const conversation = new Conversation(conv);
       return Object.assign(conversation, {
@@ -134,7 +173,7 @@ export class ConversationRepository implements IConversationRepository {
               authorId: lastMsg.userId,
             }
           : null,
-        unreadCount,
+        unreadCount: unreadRow[0]?.count ?? 0,
       }) as ConversationWithMeta;
     } catch (error) {
       throw new ServerError(`Failed to find conversation for user: ${error}`);
