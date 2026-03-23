@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import * as Sentry from "@sentry/react";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { ThemeProvider } from "./features/theme/components/theme-provider";
 import { setNavigateCallback } from "./lib/api";
 // Import the generated route tree
 // biome-ignore lint: Ts ignore needed
@@ -56,7 +57,9 @@ if (el) {
           debug: import.meta.env.NODE_ENV === "development",
         }}
       >*/}
-      <RouterProvider router={router} />
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>
       {/*</PostHogProvider>*/}
     </React.StrictMode>
   );

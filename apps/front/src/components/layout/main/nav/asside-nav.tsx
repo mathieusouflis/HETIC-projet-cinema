@@ -1,5 +1,13 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Bell, LogOut, Settings, User2 } from "lucide-react";
+import {
+  Bell,
+  LogOut,
+  Monitor,
+  Moon,
+  Settings,
+  Sun,
+  User2,
+} from "lucide-react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,10 +16,15 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/features/auth/stores/auth.store";
+import { useThemeStore } from "@/features/theme/stores/theme.store";
 import { queryClient } from "@/lib/api/client";
 import { getApi } from "@/lib/api/services";
 import { useRoutes } from "@/lib/routes";
@@ -21,6 +34,7 @@ import { NavLink } from "./components/nav-link";
 export const AssideNav = () => {
   const routes = useRoutes();
   const { user, clear } = useAuth();
+  const { setTheme } = useThemeStore();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -85,6 +99,29 @@ export const AssideNav = () => {
                         Profile
                       </DropdownMenuItem>
                     </Link>
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger>
+                        <Sun className="h-4 w-4 dark:hidden" />
+                        <Moon className="hidden h-4 w-4 dark:block" />
+                        <span>Theme</span>
+                      </DropdownMenuSubTrigger>
+                      <DropdownMenuPortal>
+                        <DropdownMenuSubContent>
+                          <DropdownMenuItem onClick={() => setTheme("light")}>
+                            <Sun className="mr-2 h-4 w-4" />
+                            <span>Light</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => setTheme("dark")}>
+                            <Moon className="mr-2 h-4 w-4" />
+                            <span>Dark</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => setTheme("system")}>
+                            <Monitor className="mr-2 h-4 w-4" />
+                            <span>System</span>
+                          </DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                      </DropdownMenuPortal>
+                    </DropdownMenuSub>
                     <Link to={routes.settings}>
                       <DropdownMenuItem>
                         <Settings />
