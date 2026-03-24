@@ -1,4 +1,5 @@
 import { config } from "@packages/config";
+import { logger } from "@packages/logger";
 
 /**
  * Database configuration object
@@ -19,11 +20,15 @@ export const databaseConfig = {
  */
 export const getDatabaseUrl = (): string => {
   const { host, port, user, password, database, ssl } = databaseConfig;
-  const resolvedPort = Number(port) || 3000;
-  const sslmode = ssl ? "required" : "disable";
-  const channelBinding =
+  const resolvedPort = Number(port);
+  const sslmode = ssl ? "require" : "disable";
+  const portSegment =
+    config.env.NODE_ENV === "production" ? "" : `:${resolvedPort}`;
+  const requireChannelBinding =
     config.env.NODE_ENV === "production" ? "&channel_binding=require" : "";
-  return `postgresql://${user}:${password}@${host}${config.env.NODE_ENV === "production" ? "" : `:${resolvedPort}`}/${database}?sslmode=${sslmode}${channelBinding}`;
+  const url = `postgresql://${user}:${password}@${host}${portSegment}/${database}?sslmode=${sslmode}${requireChannelBinding}`;
+  logger.info(url);
+  return url;
 };
 
 /**
@@ -32,5 +37,5 @@ export const getDatabaseUrl = (): string => {
 export const connectionOptions = {
   max: 20,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  connectionTimeoutMillis: 10000,
 };

@@ -1,0 +1,43 @@
+# Git
+.git
+.gitignore
+
+# Node modules (rebuilt in Docker)
+node_modules
+**/node_modules
+
+# Build outputs (rebuilt in Docker)
+dist
+**/dist
+build
+**/build
+
+# Test artifacts
+coverage
+**/coverage
+**/*.test.ts
+**/*.spec.ts
+
+# Dev config files
+.env
+.env.*
+!.env.example
+docker-compose.dev.yaml
+
+# Turbo cache
+.turbo
+**/.turbo
+
+# Editor
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs

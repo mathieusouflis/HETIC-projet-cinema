@@ -1,4 +1,3 @@
-# apps/web/Dockerfile
 
 FROM node:lts-alpine AS base
 WORKDIR /app
@@ -12,22 +11,22 @@ COPY packages ./packages
 
 RUN pnpm install --frozen-lockfile
 
+ARG VITE_PUBLIC_POSTHOG_KEY
+ARG VITE_PUBLIC_POSTHOG_HOST
+ARG BACKEND_API_URL
+
+ENV VITE_PUBLIC_POSTHOG_KEY=$VITE_PUBLIC_POSTHOG_KEY
+ENV VITE_PUBLIC_POSTHOG_HOST=$VITE_PUBLIC_POSTHOG_HOST
+ENV BACKEND_API_URL=$BACKEND_API_URL
+
 RUN pnpm turbo run build --filter @apps/front
 
-FROM node:lts-alpine AS runner
-WORKDIR /app
-ENV NODE_ENV=production
-ENV PORT=3001
+FROM nginx:alpine AS runner
 
-RUN npm install -g serve
+# envsubst is used to replace ${PORT} in nginx.conf at container start
+RUN apk add --no-cache gettext
 
-RUN addgroup -S app && adduser -S app -G app
+COPY apps/front/nginx.conf /etc/nginx/templates/default.conf.template
+COPY --from=builder /app/apps/front/dist /usr/share/nginx/html
 
-COPY --from=builder /app/apps/front/dist ./dist
-RUN chown -R app:app /app/dist
-
-USER app
-
-EXPOSE 3001
-
-CMD ["serve", "-s", "dist", "-l", "3001"]
+CMD ["nginx", "-g", "daemon off;"]
