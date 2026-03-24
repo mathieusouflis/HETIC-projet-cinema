@@ -28,14 +28,18 @@ import {
   type UserProfile,
   userProfileValidator,
 } from "../../../users/application/validators/user.validator.js";
+import { forgotPasswordValidator } from "../dto/request/forgot-password.dto.js";
 import { loginValidator } from "../dto/request/login.dto.js";
 import { registerValidator } from "../dto/request/register.dto.js";
+import { resetPasswordValidator } from "../dto/request/reset-password.dto.js";
 import { authResponseBodyValidator } from "../dto/response/auth-response.response.validator.js";
 import type { RefreshTokenResponse } from "../dto/response/refresh-token.response.validator.js";
 import { refreshTokenResponseBodyValidator } from "../dto/response/refresh-token.response.validator.js";
+import type { ForgotPasswordUseCase } from "../use-cases/forgot-password.usecase.js";
 import type { LoginUseCase } from "../use-cases/login.usecase.js";
 import type { RefreshTokenUseCase } from "../use-cases/refresh-token.usecase.js";
 import type { RegisterUseCase } from "../use-cases/register.usecase.js";
+import type { ResetPasswordUseCase } from "../use-cases/reset-password.usecase.js";
 
 const REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
 const REFRESH_TOKEN_COOKIE_OPTIONS = {
@@ -64,7 +68,9 @@ export class AuthController extends BaseController {
   constructor(
     private readonly registerUseCase: RegisterUseCase,
     private readonly loginUseCase: LoginUseCase,
-    private readonly refreshTokenUseCase: RefreshTokenUseCase
+    private readonly refreshTokenUseCase: RefreshTokenUseCase,
+    private readonly forgotPasswordUseCase: ForgotPasswordUseCase,
+    private readonly resetPasswordUseCase: ResetPasswordUseCase
   ) {
     super();
   }
@@ -271,4 +277,53 @@ export class AuthController extends BaseController {
       data: userProfile,
     });
   });
+
+  @Post({
+    path: "/forgot-password",
+    summary: "Request password reset",
+    description:
+      "Send a password reset email to the given address. Always returns 200 to prevent user enumeration.",
+  })
+  @ValidateBody(forgotPasswordValidator)
+  @ApiResponse(
+    200,
+    "Password reset email sent (if email exists)",
+    successResponseSchema
+  )
+  @ApiResponse(400, "Invalid input data", validationErrorResponseSchema)
+  forgotPassword = asyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      await this.forgotPasswordUseCase.execute({ email: req.body.email });
+
+      res.status(200).json({
+        success: true,
+        message:
+          "If that email address is registered, you will receive a reset link shortly.",
+      });
+    }
+  );
+
+  @Post({
+    path: "/reset-password",
+    summary: "Reset password with token",
+    description:
+      "Reset the user password using a valid reset token from email.",
+  })
+  @ValidateBody(resetPasswordValidator)
+  @ApiResponse(200, "Password reset successfully", successResponseSchema)
+  @ApiResponse(400, "Invalid input data", validationErrorResponseSchema)
+  @ApiResponse(401, "Invalid or expired token", unauthorizedErrorResponseSchema)
+  resetPassword = asyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      await this.resetPasswordUseCase.execute({
+        token: req.body.token,
+        newPassword: req.body.newPassword,
+      });
+
+      res.status(200).json({
+        success: true,
+        message: "Password reset successfully.",
+      });
+    }
+  );
 }

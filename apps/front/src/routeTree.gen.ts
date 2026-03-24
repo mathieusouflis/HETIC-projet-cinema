@@ -10,8 +10,10 @@
 
 import { Route as rootRouteImport } from './app/__root'
 import { Route as MainRouteImport } from './app/_main'
+import { Route as ResetPasswordIndexRouteImport } from './app/reset-password/index'
 import { Route as RegisterIndexRouteImport } from './app/register/index'
 import { Route as LoginIndexRouteImport } from './app/login/index'
+import { Route as ForgotPasswordIndexRouteImport } from './app/forgot-password/index'
 import { Route as MainIndexRouteImport } from './app/_main/index'
 import { Route as MainMessagesRouteImport } from './app/_main/messages'
 import { Route as MainWatchpartyIndexRouteImport } from './app/_main/watchparty/index'
@@ -27,6 +29,11 @@ const MainRoute = MainRouteImport.update({
   id: '/_main',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordIndexRoute = ResetPasswordIndexRouteImport.update({
+  id: '/reset-password/',
+  path: '/reset-password/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterIndexRoute = RegisterIndexRouteImport.update({
   id: '/register/',
   path: '/register/',
@@ -35,6 +42,11 @@ const RegisterIndexRoute = RegisterIndexRouteImport.update({
 const LoginIndexRoute = LoginIndexRouteImport.update({
   id: '/login/',
   path: '/login/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordIndexRoute = ForgotPasswordIndexRouteImport.update({
+  id: '/forgot-password/',
+  path: '/forgot-password/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MainIndexRoute = MainIndexRouteImport.update({
@@ -93,8 +105,10 @@ const MainContentsContentIdIndexRoute =
 export interface FileRoutesByFullPath {
   '/': typeof MainIndexRoute
   '/messages': typeof MainMessagesRouteWithChildren
+  '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
+  '/reset-password/': typeof ResetPasswordIndexRoute
   '/community/': typeof MainCommunityIndexRoute
   '/messages/': typeof MainMessagesIndexRoute
   '/search/': typeof MainSearchIndexRoute
@@ -106,8 +120,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof MainIndexRoute
+  '/forgot-password': typeof ForgotPasswordIndexRoute
   '/login': typeof LoginIndexRoute
   '/register': typeof RegisterIndexRoute
+  '/reset-password': typeof ResetPasswordIndexRoute
   '/community': typeof MainCommunityIndexRoute
   '/messages': typeof MainMessagesIndexRoute
   '/search': typeof MainSearchIndexRoute
@@ -122,8 +138,10 @@ export interface FileRoutesById {
   '/_main': typeof MainRouteWithChildren
   '/_main/messages': typeof MainMessagesRouteWithChildren
   '/_main/': typeof MainIndexRoute
+  '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
+  '/reset-password/': typeof ResetPasswordIndexRoute
   '/_main/community/': typeof MainCommunityIndexRoute
   '/_main/messages/': typeof MainMessagesIndexRoute
   '/_main/search/': typeof MainSearchIndexRoute
@@ -138,8 +156,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/messages'
+    | '/forgot-password/'
     | '/login/'
     | '/register/'
+    | '/reset-password/'
     | '/community/'
     | '/messages/'
     | '/search/'
@@ -151,8 +171,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/forgot-password'
     | '/login'
     | '/register'
+    | '/reset-password'
     | '/community'
     | '/messages'
     | '/search'
@@ -166,8 +188,10 @@ export interface FileRouteTypes {
     | '/_main'
     | '/_main/messages'
     | '/_main/'
+    | '/forgot-password/'
     | '/login/'
     | '/register/'
+    | '/reset-password/'
     | '/_main/community/'
     | '/_main/messages/'
     | '/_main/search/'
@@ -180,8 +204,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   MainRoute: typeof MainRouteWithChildren
+  ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
+  ResetPasswordIndexRoute: typeof ResetPasswordIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -191,6 +217,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof MainRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password/': {
+      id: '/reset-password/'
+      path: '/reset-password'
+      fullPath: '/reset-password/'
+      preLoaderRoute: typeof ResetPasswordIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register/': {
@@ -205,6 +238,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login/'
       preLoaderRoute: typeof LoginIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password/': {
+      id: '/forgot-password/'
+      path: '/forgot-password'
+      fullPath: '/forgot-password/'
+      preLoaderRoute: typeof ForgotPasswordIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_main/': {
@@ -320,8 +360,10 @@ const MainRouteWithChildren = MainRoute._addFileChildren(MainRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   MainRoute: MainRouteWithChildren,
+  ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
+  ResetPasswordIndexRoute: ResetPasswordIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

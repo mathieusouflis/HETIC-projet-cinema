@@ -87,6 +87,12 @@ export const env = {
 
   SESSION_SECRET: getEnvVar("SESSION_SECRET", "") as string,
   COOKIE_SECURE: parseBool(getEnvVar("COOKIE_SECURE", false)),
+
+  mailgun: {
+    apiKey: getEnvVar("MAILGUN_API_KEY", "") as string,
+    apiUrl: getEnvVar("MAILGUN_API_URL", "") as string,
+    baseUrl: getEnvVar("MAILGUN_BASE_URL", "") as string,
+  },
 };
 
 export { getEnvVar };

@@ -1,11 +1,15 @@
 import {
   gETAuthMe,
+  type POSTAuthForgotPasswordBody,
   type POSTAuthLoginBody,
   type POSTAuthRegisterBody,
+  type POSTAuthResetPasswordBody,
+  pOSTAuthForgotPassword,
   pOSTAuthLogin,
   pOSTAuthLogout,
   pOSTAuthRefresh,
   pOSTAuthRegister,
+  pOSTAuthResetPassword,
 } from "@packages/api-sdk";
 
 export const authService = {
@@ -30,6 +34,16 @@ export const authService = {
 
   me: async () => {
     const response = await gETAuthMe();
+    return response.data;
+  },
+
+  forgotPassword: async (params: POSTAuthForgotPasswordBody) => {
+    const response = await pOSTAuthForgotPassword(params);
+    return response.data;
+  },
+
+  resetPassword: async (params: POSTAuthResetPasswordBody) => {
+    const response = await pOSTAuthResetPassword(params);
     return response.data;
   },
 };
