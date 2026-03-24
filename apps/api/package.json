@@ -18,7 +18,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@asteasolutions/zod-to-openapi": "^8.4.3",
+    "@asteasolutions/zod-to-openapi": "^8.5.0",
     "@packages/config": "workspace:*",
     "@packages/logger": "workspace:*",
     "@sentry/node": "^10.45.0",
@@ -50,7 +50,7 @@
     "@types/jsonwebtoken": "^9.0.9",
     "@types/morgan": "^1.9.9",
     "@types/node": "^25.5.0",
-    "@types/pg": "^8.18.0",
+    "@types/pg": "^8.20.0",
     "@types/socket.io": "^3.0.2",
     "@types/supertest": "^7.2.0",
     "@types/swagger-ui-express": "^4.1.8",
