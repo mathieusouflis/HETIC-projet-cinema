@@ -65,12 +65,16 @@ import type {
   PATCHUsersMeBody,
   PATCHWatchpartyId200,
   PATCHWatchpartyIdBody,
+  POSTAuthForgotPassword200,
+  POSTAuthForgotPasswordBody,
   POSTAuthLogin200,
   POSTAuthLoginBody,
   POSTAuthLogout200,
   POSTAuthRefresh200,
   POSTAuthRegister201,
   POSTAuthRegisterBody,
+  POSTAuthResetPassword200,
+  POSTAuthResetPasswordBody,
   POSTCategories201,
   POSTCategoriesBody,
   POSTConversations201,
@@ -140,6 +144,32 @@ export const gETAuthMe = (
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<GETAuthMe200>> => {
   return axios.get(`/auth/me`, options);
+};
+
+/**
+ * Send a password reset email to the given address. Always returns 200 to prevent user enumeration.
+ * @summary Request password reset
+ */
+export const pOSTAuthForgotPassword = (
+  pOSTAuthForgotPasswordBody: POSTAuthForgotPasswordBody,
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<POSTAuthForgotPassword200>> => {
+  return axios.post(
+    `/auth/forgot-password`,
+    pOSTAuthForgotPasswordBody,
+    options,
+  );
+};
+
+/**
+ * Reset the user password using a valid reset token from email.
+ * @summary Reset password with token
+ */
+export const pOSTAuthResetPassword = (
+  pOSTAuthResetPasswordBody: POSTAuthResetPasswordBody,
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<POSTAuthResetPassword200>> => {
+  return axios.post(`/auth/reset-password`, pOSTAuthResetPasswordBody, options);
 };
 
 /**
@@ -732,6 +762,10 @@ export type POSTAuthLoginResult = AxiosResponse<POSTAuthLogin200>;
 export type POSTAuthRefreshResult = AxiosResponse<POSTAuthRefresh200>;
 export type POSTAuthLogoutResult = AxiosResponse<POSTAuthLogout200>;
 export type GETAuthMeResult = AxiosResponse<GETAuthMe200>;
+export type POSTAuthForgotPasswordResult =
+  AxiosResponse<POSTAuthForgotPassword200>;
+export type POSTAuthResetPasswordResult =
+  AxiosResponse<POSTAuthResetPassword200>;
 export type POSTCategoriesResult = AxiosResponse<POSTCategories201>;
 export type GETCategoriesResult = AxiosResponse<GETCategories200>;
 export type GETCategoriesIdResult = AxiosResponse<GETCategoriesId200>;
