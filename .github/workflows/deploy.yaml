@@ -41,7 +41,10 @@ jobs:
   deploy:
     name: Deploy to Cloud Run
     runs-on: ubuntu-latest
-    # needs: [build, check-types, lint, test]
+    needs: [build, check-types, lint, test]
+    environment:
+      name: production
+      deployment: true
     steps:
       - uses: actions/checkout@v4
 
