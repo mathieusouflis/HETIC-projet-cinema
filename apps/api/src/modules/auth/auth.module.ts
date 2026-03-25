@@ -14,8 +14,12 @@ import { ForgotPasswordUseCase } from "./application/use-cases/forgot-password.u
 import { LoginUseCase } from "./application/use-cases/login.usecase.js";
 import { RefreshTokenUseCase } from "./application/use-cases/refresh-token.usecase.js";
 import { RegisterUseCase } from "./application/use-cases/register.usecase.js";
+import { ResendVerificationUseCase } from "./application/use-cases/resend-verification.usecase.js";
 import { ResetPasswordUseCase } from "./application/use-cases/reset-password.usecase.js";
+import { VerifyEmailUseCase } from "./application/use-cases/verify-email.usecase.js";
+import type { IEmailVerificationTokenRepository } from "./domain/interfaces/IEmailVerificationTokenRepository.js";
 import type { IPasswordResetTokenRepository } from "./domain/interfaces/IPasswordResetTokenRepository.js";
+import { EmailVerificationTokenRepository } from "./infrastructure/repositories/email-verification-token.repository.js";
 import { PasswordResetTokenRepository } from "./infrastructure/repositories/password-reset-token.repository.js";
 
 class AuthModule extends RestModule {
@@ -30,6 +34,8 @@ class AuthModule extends RestModule {
   private readonly tokenService: ITokenService;
 
   private readonly passwordResetTokenRepository: IPasswordResetTokenRepository;
+
+  private readonly emailVerificationTokenRepository: IEmailVerificationTokenRepository;
 
   private readonly emailService: IEmailService;
 
@@ -46,6 +52,10 @@ class AuthModule extends RestModule {
   private readonly forgotPasswordUseCase: ForgotPasswordUseCase;
 
   private readonly resetPasswordUseCase: ResetPasswordUseCase;
+
+  private readonly verifyEmailUseCase: VerifyEmailUseCase;
+
+  private readonly resendVerificationUseCase: ResendVerificationUseCase;
 
   // ============================================
   // Presentation Layer (Controller & Router)
@@ -73,6 +83,7 @@ class AuthModule extends RestModule {
     this.registerUseCase = new RegisterUseCase(
       this.userRepository,
       this.passwordService,
+      this.emailVerificationTokenRepository,
       this.emailService
     );
 
@@ -99,12 +110,27 @@ class AuthModule extends RestModule {
       this.passwordService
     );
 
+    this.verifyEmailUseCase = new VerifyEmailUseCase(
+      this.emailVerificationTokenRepository,
+      this.userRepository,
+      this.tokenService,
+      this.emailService
+    );
+
+    this.resendVerificationUseCase = new ResendVerificationUseCase(
+      this.emailVerificationTokenRepository,
+      this.userRepository,
+      this.emailService
+    );
+
     this.controller = new AuthController(
       this.registerUseCase,
       this.loginUseCase,
       this.refreshTokenUseCase,
       this.forgotPasswordUseCase,
-      this.resetPasswordUseCase
+      this.resetPasswordUseCase,
+      this.verifyEmailUseCase,
+      this.resendVerificationUseCase
     );
 
     this.decoratorRouter = new DecoratorRouter();
