@@ -36,6 +36,10 @@ export class ForgotPasswordUseCase {
 
     const resetUrl = `${config.env.frontend.url}/reset-password?token=${rawToken}`;
 
-    await this.emailService.sendPasswordResetEmail(user.email, resetUrl);
+    await this.emailService.send(
+      user.email,
+      "Reset your password",
+      `You requested a password reset. Click the link below to reset your password (expires in 1 hour):\n\n${resetUrl}\n\nIf you did not request this, please ignore this email.`
+    );
   }
 }

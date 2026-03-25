@@ -66,12 +66,14 @@ class AuthModule extends RestModule {
     this.passwordService = new PasswordService();
     this.tokenService = new JWTService();
     this.passwordResetTokenRepository = new PasswordResetTokenRepository();
+    this.emailVerificationTokenRepository =
+      new EmailVerificationTokenRepository();
     this.emailService = new MailgunEmailService();
 
     this.registerUseCase = new RegisterUseCase(
       this.userRepository,
       this.passwordService,
-      this.tokenService
+      this.emailService
     );
 
     this.loginUseCase = new LoginUseCase(
