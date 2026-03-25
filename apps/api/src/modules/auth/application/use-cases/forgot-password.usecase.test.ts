@@ -5,7 +5,7 @@ import { createMockedPasswordResetTokenRepository } from "../../domain/interface
 import { ForgotPasswordUseCase } from "./forgot-password.usecase";
 
 const mockEmailService: IEmailService = {
-  sendPasswordResetEmail: vi.fn().mockResolvedValue(undefined),
+  send: vi.fn().mockResolvedValue(undefined),
 };
 
 describe("ForgotPasswordUseCase", () => {
@@ -31,7 +31,7 @@ describe("ForgotPasswordUseCase", () => {
       useCase.execute({ email: "nonexistent@example.com" })
     ).resolves.toBeUndefined();
 
-    expect(mockEmailService.sendPasswordResetEmail).not.toHaveBeenCalled();
+    expect(mockEmailService.send).not.toHaveBeenCalled();
     expect(tokenRepository.create).not.toHaveBeenCalled();
   });
 
@@ -44,15 +44,13 @@ describe("ForgotPasswordUseCase", () => {
       "52dfbd95-b2ba-4b76-8aa5-9fe818bda2a2"
     );
     expect(tokenRepository.create).toHaveBeenCalledOnce();
-    expect(mockEmailService.sendPasswordResetEmail).toHaveBeenCalledOnce();
+    expect(mockEmailService.send).toHaveBeenCalledOnce();
 
-    const sendMock = mockEmailService.sendPasswordResetEmail as ReturnType<
-      typeof vi.fn
-    >;
+    const sendMock = mockEmailService.send as ReturnType<typeof vi.fn>;
     const firstCall = sendMock.mock.calls[0];
     expect(firstCall).toBeDefined();
     const emailTo = firstCall?.[0] as string;
-    const resetUrl = firstCall?.[1] as string;
+    const resetUrl = firstCall?.[2] as string;
     expect(emailTo).toBe("test1@example.com");
     expect(resetUrl).toContain("/reset-password?token=");
   });

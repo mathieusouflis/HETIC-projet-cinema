@@ -6,14 +6,11 @@ import { ServerError } from "../../errors/server-error.js";
 import type { IEmailService } from "./i-email-service.js";
 
 export class MailgunEmailService implements IEmailService {
-  async sendPasswordResetEmail(
-    toEmail: string,
-    resetUrl: string
-  ): Promise<void> {
+  async send(toEmail: string, subject: string, text: string): Promise<void> {
     const { apiKey, apiUrl, baseUrl } = config.env.mailgun;
     if (config.env.NODE_ENV === "development") {
       logger.info(
-        `[MAILGUN] Password reset email to ${toEmail}. Reset URL: ${resetUrl}`
+        `[MAILGUN] Email to ${toEmail} | Subject: ${subject}\n${text}`
       );
       return;
     }
@@ -25,13 +22,13 @@ export class MailgunEmailService implements IEmailService {
       const data = await mg.messages.create(apiUrl, {
         from: `Kirona <noreply@${apiUrl}>`,
         to: [toEmail],
-        subject: "Reset your password",
-        text: `You requested a password reset. Click the link below to reset your password (expires in 1 hour):\n\n${resetUrl}\n\nIf you did not request this, please ignore this email.`,
+        subject,
+        text,
       });
       logger.info(data);
     } catch (err) {
       logger.error(err);
-      throw new ServerError(`Mailgun error: ${err}`);
+      throw new ServerError("Failed to send email. Please try again later.");
     }
   }
 }
