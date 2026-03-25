@@ -19,6 +19,7 @@ export class User {
   public readonly createdAt: Date;
   public readonly updatedAt: Date;
   public readonly lastLoginAt: Date | null;
+  public readonly emailVerifiedAt: Date | null;
 
   constructor(props: UserRow) {
     this.id = props.id;
@@ -36,6 +37,17 @@ export class User {
     this.createdAt = props.createdAt ? new Date(props.createdAt) : new Date();
     this.updatedAt = props.updatedAt ? new Date(props.updatedAt) : new Date();
     this.lastLoginAt = props.lastLoginAt ? new Date(props.lastLoginAt) : null;
+    this.emailVerifiedAt = props.emailVerifiedAt
+      ? new Date(props.emailVerifiedAt)
+      : null;
+  }
+
+  /**
+   * Check if the user's email address has been verified
+   * @returns true if email has been verified
+   */
+  public isEmailVerified(): boolean {
+    return this.emailVerifiedAt !== null;
   }
 
   /**
@@ -111,6 +123,7 @@ export class User {
     | "hasAvatar"
     | "getDisplayName"
     | "isAccountOlderThan"
+    | "isEmailVerified"
   > & { passwordHash?: never } {
     return {
       id: this.id,
@@ -127,6 +140,7 @@ export class User {
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       lastLoginAt: this.lastLoginAt,
+      emailVerifiedAt: this.emailVerifiedAt,
     };
   }
 }

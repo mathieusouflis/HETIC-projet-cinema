@@ -82,6 +82,14 @@ export interface IUserRepository {
   delete(id: string): Promise<void>;
 
   /**
+   * Mark a user's email as verified
+   *
+   * @param userId - User's unique identifier
+   * @returns Promise resolving when update is complete
+   */
+  markEmailVerified(userId: string): Promise<void>;
+
+  /**
    * Get all users with pagination
    *
    * @param options - Pagination options
