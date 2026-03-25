@@ -3,13 +3,17 @@ import {
   type POSTAuthForgotPasswordBody,
   type POSTAuthLoginBody,
   type POSTAuthRegisterBody,
+  type POSTAuthResendVerificationBody,
   type POSTAuthResetPasswordBody,
+  type POSTAuthVerifyEmailBody,
   pOSTAuthForgotPassword,
   pOSTAuthLogin,
   pOSTAuthLogout,
   pOSTAuthRefresh,
   pOSTAuthRegister,
+  pOSTAuthResendVerification,
   pOSTAuthResetPassword,
+  pOSTAuthVerifyEmail,
 } from "@packages/api-sdk";
 
 export const authService = {
@@ -44,6 +48,16 @@ export const authService = {
 
   resetPassword: async (params: POSTAuthResetPasswordBody) => {
     const response = await pOSTAuthResetPassword(params);
+    return response.data;
+  },
+
+  verifyEmail: async (params: POSTAuthVerifyEmailBody) => {
+    const response = await pOSTAuthVerifyEmail(params);
+    return response.data;
+  },
+
+  resendVerification: async (params: POSTAuthResendVerificationBody) => {
+    const response = await pOSTAuthResendVerification(params);
     return response.data;
   },
 };

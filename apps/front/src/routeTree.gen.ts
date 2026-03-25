@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './app/__root'
 import { Route as MainRouteImport } from './app/_main'
+import { Route as VerifyEmailIndexRouteImport } from './app/verify-email/index'
+import { Route as VerifyEmailPendingIndexRouteImport } from './app/verify-email-pending/index'
 import { Route as ResetPasswordIndexRouteImport } from './app/reset-password/index'
 import { Route as RegisterIndexRouteImport } from './app/register/index'
 import { Route as LoginIndexRouteImport } from './app/login/index'
@@ -27,6 +29,16 @@ import { Route as MainContentsContentIdIndexRouteImport } from './app/_main/cont
 
 const MainRoute = MainRouteImport.update({
   id: '/_main',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerifyEmailIndexRoute = VerifyEmailIndexRouteImport.update({
+  id: '/verify-email/',
+  path: '/verify-email/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerifyEmailPendingIndexRoute = VerifyEmailPendingIndexRouteImport.update({
+  id: '/verify-email-pending/',
+  path: '/verify-email-pending/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordIndexRoute = ResetPasswordIndexRouteImport.update({
@@ -109,6 +121,8 @@ export interface FileRoutesByFullPath {
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/reset-password/': typeof ResetPasswordIndexRoute
+  '/verify-email-pending/': typeof VerifyEmailPendingIndexRoute
+  '/verify-email/': typeof VerifyEmailIndexRoute
   '/community/': typeof MainCommunityIndexRoute
   '/messages/': typeof MainMessagesIndexRoute
   '/search/': typeof MainSearchIndexRoute
@@ -124,6 +138,8 @@ export interface FileRoutesByTo {
   '/login': typeof LoginIndexRoute
   '/register': typeof RegisterIndexRoute
   '/reset-password': typeof ResetPasswordIndexRoute
+  '/verify-email-pending': typeof VerifyEmailPendingIndexRoute
+  '/verify-email': typeof VerifyEmailIndexRoute
   '/community': typeof MainCommunityIndexRoute
   '/messages': typeof MainMessagesIndexRoute
   '/search': typeof MainSearchIndexRoute
@@ -142,6 +158,8 @@ export interface FileRoutesById {
   '/login/': typeof LoginIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/reset-password/': typeof ResetPasswordIndexRoute
+  '/verify-email-pending/': typeof VerifyEmailPendingIndexRoute
+  '/verify-email/': typeof VerifyEmailIndexRoute
   '/_main/community/': typeof MainCommunityIndexRoute
   '/_main/messages/': typeof MainMessagesIndexRoute
   '/_main/search/': typeof MainSearchIndexRoute
@@ -160,6 +178,8 @@ export interface FileRouteTypes {
     | '/login/'
     | '/register/'
     | '/reset-password/'
+    | '/verify-email-pending/'
+    | '/verify-email/'
     | '/community/'
     | '/messages/'
     | '/search/'
@@ -175,6 +195,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/reset-password'
+    | '/verify-email-pending'
+    | '/verify-email'
     | '/community'
     | '/messages'
     | '/search'
@@ -192,6 +214,8 @@ export interface FileRouteTypes {
     | '/login/'
     | '/register/'
     | '/reset-password/'
+    | '/verify-email-pending/'
+    | '/verify-email/'
     | '/_main/community/'
     | '/_main/messages/'
     | '/_main/search/'
@@ -208,6 +232,8 @@ export interface RootRouteChildren {
   LoginIndexRoute: typeof LoginIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
   ResetPasswordIndexRoute: typeof ResetPasswordIndexRoute
+  VerifyEmailPendingIndexRoute: typeof VerifyEmailPendingIndexRoute
+  VerifyEmailIndexRoute: typeof VerifyEmailIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -217,6 +243,20 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof MainRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verify-email/': {
+      id: '/verify-email/'
+      path: '/verify-email'
+      fullPath: '/verify-email/'
+      preLoaderRoute: typeof VerifyEmailIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verify-email-pending/': {
+      id: '/verify-email-pending/'
+      path: '/verify-email-pending'
+      fullPath: '/verify-email-pending/'
+      preLoaderRoute: typeof VerifyEmailPendingIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password/': {
@@ -364,6 +404,8 @@ const rootRouteChildren: RootRouteChildren = {
   LoginIndexRoute: LoginIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
   ResetPasswordIndexRoute: ResetPasswordIndexRoute,
+  VerifyEmailPendingIndexRoute: VerifyEmailPendingIndexRoute,
+  VerifyEmailIndexRoute: VerifyEmailIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

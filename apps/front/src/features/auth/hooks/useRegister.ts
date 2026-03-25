@@ -1,6 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { toast } from "sonner";
 import { parseApiError } from "@/lib/api/parse-error";
 import { getApi } from "@/lib/api/services";
 
@@ -24,10 +23,9 @@ export function useRegister() {
         password,
       });
 
-      toast.success("Account created successfully!");
-      navigate({ to: "/login" });
+      navigate({ to: "/verify-email-pending", search: { email } });
 
-      return response.data;
+      return response;
     } catch (err: unknown) {
       const { fieldErrors, globalError } = parseApiError(err);
       throw { fieldErrors, globalError } satisfies RegisterApiError;
