@@ -58,6 +58,10 @@ export const users = pgTable(
       withTimezone: true,
       mode: "string",
     }),
+    emailVerifiedAt: timestamp("email_verified_at", {
+      withTimezone: true,
+      mode: "string",
+    }),
   },
   (table) => [
     index("idx_users_email").using(
