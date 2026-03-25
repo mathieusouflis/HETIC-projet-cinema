@@ -328,6 +328,10 @@ export abstract class BaseCompositeRepository<
       await this.ensureCastsExist(allCast);
     }
 
+    logger.info(`Creating ${entityProps.length} ${this.entityType}...`);
+    let createdCount = 0;
+    let errorCount = 0;
+
     for (const entityProp of entityProps) {
       try {
         const { genres, providers, cast, seasons, ...entityData } = entityProp;
@@ -335,6 +339,7 @@ export abstract class BaseCompositeRepository<
         const entity = await this.drizzleRepository.create(
           entityData as TCreateProps
         );
+        createdCount++;
 
         if (genres && genres.length > 0) {
           const categoryIds: string[] = [];
@@ -388,11 +393,16 @@ export abstract class BaseCompositeRepository<
           await this.ensureSeasonsExist(seasons, entity.id);
         }
       } catch (error) {
+        errorCount++;
         logger.error(
           `Error creating ${this.entityType} with TMDB ID ${entityProp.tmdbId}: ${error}`
         );
       }
     }
+
+    logger.success(
+      `${createdCount} ${this.entityType} created${errorCount > 0 ? `, ${errorCount} failed` : ""}`
+    );
 
     const allTmdbIds = entityProps
       .map((prop) => prop.tmdbId)
@@ -440,6 +450,9 @@ export abstract class BaseCompositeRepository<
       return;
     }
 
+    logger.info(`Syncing ${missingGenres.length} categories...`);
+    let createdCategories = 0;
+
     for (const genre of missingGenres) {
       if (categoryCache.has(genre.id)) {
         continue;
@@ -452,7 +465,6 @@ export abstract class BaseCompositeRepository<
 
         if (existingBySlug) {
           categoryCache.set(genre.id, existingBySlug.id);
-          logger.info(`Found existing category by slug: ${genre.name}`);
           continue;
         }
 
@@ -463,6 +475,7 @@ export abstract class BaseCompositeRepository<
         });
 
         categoryCache.set(genre.id, newCategory.id);
+        createdCategories++;
       } catch (error) {
         logger.error(`Error creating category ${genre.name}: ${error}`);
         try {
@@ -471,12 +484,15 @@ export abstract class BaseCompositeRepository<
           ]);
           if (retryFind.length > 0 && retryFind[0]) {
             categoryCache.set(genre.id, retryFind[0].id);
-            logger.info(`Found category ${genre.name} on retry`);
           }
         } catch (retryError) {
           logger.error(`Retry also failed for ${genre.name}: ${retryError}`);
         }
       }
+    }
+
+    if (createdCategories > 0) {
+      logger.success(`${createdCategories} categories created`);
     }
   }
 
@@ -516,6 +532,9 @@ export abstract class BaseCompositeRepository<
       return;
     }
 
+    logger.info(`Syncing ${missingProviders.length} providers...`);
+    let createdProviders = 0;
+
     for (const provider of missingProviders) {
       if (providerCache.has(provider.provider_id)) {
         continue;
@@ -531,12 +550,16 @@ export abstract class BaseCompositeRepository<
         });
 
         providerCache.set(provider.provider_id, newProvider.toJSON().id);
-        logger.info(`Created provider: ${provider.provider_name}`);
+        createdProviders++;
       } catch (error) {
         logger.error(
           `Error creating provider ${provider.provider_name}: ${error}`
         );
       }
+    }
+
+    if (createdProviders > 0) {
+      logger.success(`${createdProviders} providers created`);
     }
   }
 
@@ -571,6 +594,9 @@ export abstract class BaseCompositeRepository<
       return;
     }
 
+    logger.info(`Syncing ${missingCasts.length} cast members...`);
+    let createdCasts = 0;
+
     for (const cast of missingCasts) {
       if (castCache.has(cast.cast_id)) {
         continue;
@@ -585,10 +611,16 @@ export abstract class BaseCompositeRepository<
         });
 
         castCache.set(cast.cast_id, newCast.toJSON().id);
-        logger.info(`Created cast ${newCast.toJSON().name}`);
+        createdCasts++;
       } catch (error) {
-        logger.error(`Error creating provider ${cast.original_name}: ${error}`);
+        logger.error(
+          `Error creating cast member ${cast.original_name}: ${error}`
+        );
       }
+    }
+
+    if (createdCasts > 0) {
+      logger.success(`${createdCasts} cast members created`);
     }
   }
 
@@ -633,6 +665,9 @@ export abstract class BaseCompositeRepository<
       return;
     }
 
+    logger.info(`Syncing ${missingSeasons.length} seasons...`);
+    let createdSeasons = 0;
+
     for (const season of missingSeasons) {
       if (seasonCache.has(season.id)) {
         continue;
@@ -650,12 +685,16 @@ export abstract class BaseCompositeRepository<
         });
 
         seasonCache.set(season.id, newSeason.toJSON().id);
-        logger.info(`Created season ${newSeason.toJSON().name}`);
+        createdSeasons++;
 
         await this.ensureEpisodesExist(season.episodes, newSeason.id);
       } catch (error) {
         logger.error(`Error creating season ${season.id}: ${error}`);
       }
+    }
+
+    if (createdSeasons > 0) {
+      logger.success(`${createdSeasons} seasons created`);
     }
   }
 
@@ -700,6 +739,8 @@ export abstract class BaseCompositeRepository<
       return;
     }
 
+    let createdEpisodes = 0;
+
     for (const episode of missingEpisodes) {
       if (episodeCache.has(episode.id)) {
         continue;
@@ -718,10 +759,14 @@ export abstract class BaseCompositeRepository<
         });
 
         episodeCache.set(episode.id, newEpisode.toJSON().id);
-        logger.info(`Created Episode ${newEpisode.toJSON().name}`);
+        createdEpisodes++;
       } catch (error) {
         logger.error(`Error creating episode ${episode.id}: ${error}`);
       }
+    }
+
+    if (createdEpisodes > 0) {
+      logger.success(`${createdEpisodes} episodes created`);
     }
   }
 }
