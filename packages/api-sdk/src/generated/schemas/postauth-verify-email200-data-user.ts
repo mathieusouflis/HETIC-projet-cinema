@@ -6,7 +6,10 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type POSTAuthRegister201 = {
-  success: boolean;
-  message?: string;
+export type POSTAuthVerifyEmail200DataUser = {
+  id: string;
+  username: string;
+  /** @nullable */
+  avatarUrl?: string | null;
+  createdAt: string | null | unknown;
 };
