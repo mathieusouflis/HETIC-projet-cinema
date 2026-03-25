@@ -52,6 +52,7 @@ export const env = {
       "VITE_BACKEND_API_URL",
       "http://localhost:3000"
     ) as string,
+    cookieDomain: getEnvVar("COOKIE_DOMAIN", "localhost") as string,
     version: 1,
   },
 

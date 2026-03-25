@@ -45,7 +45,7 @@ const isProduction = config.env.NODE_ENV === "production";
 
 const REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
 const REFRESH_TOKEN_COOKIE_OPTIONS: CookieOptions = {
-  domain: config.env.backend.host,
+  domain: config.env.backend.cookieDomain,
   maxAge: 7 * 24 * 60 * 60 * 1000,
   sameSite: "lax",
   secure: isProduction,
@@ -54,7 +54,7 @@ const REFRESH_TOKEN_COOKIE_OPTIONS: CookieOptions = {
 
 const ACCESS_TOKEN_COOKIE_NAME = "accessToken";
 const ACCESS_TOKEN_COOKIE_OPTIONS: CookieOptions = {
-  domain: config.env.backend.host,
+  domain: config.env.backend.cookieDomain,
   maxAge: 15 * 60 * 1000,
   sameSite: "lax",
   secure: isProduction,
@@ -229,13 +229,13 @@ export class AuthController extends BaseController {
   logout = asyncHandler(async (_req: Request, res: Response): Promise<void> => {
     // TODO: Implement token invalidation/blacklisting
     res.clearCookie(REFRESH_TOKEN_COOKIE_NAME, {
-      domain: config.env.backend.host,
+      domain: config.env.backend.cookieDomain,
       sameSite: "lax",
       secure: isProduction,
       httpOnly: true,
     });
     res.clearCookie(ACCESS_TOKEN_COOKIE_NAME, {
-      domain: config.env.backend.host,
+      domain: config.env.backend.cookieDomain,
       sameSite: "lax",
       secure: isProduction,
       httpOnly: true,
