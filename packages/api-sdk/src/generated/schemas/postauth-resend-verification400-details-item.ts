@@ -6,7 +6,8 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type POSTAuthRegister201 = {
-  success: boolean;
-  message?: string;
+export type POSTAuthResendVerification400DetailsItem = {
+  field: string;
+  message: string;
+  code?: string;
 };

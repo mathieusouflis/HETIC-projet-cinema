@@ -5,8 +5,8 @@
  * Comprehensive API documentation for the Cinema application
  * OpenAPI spec version: 1.0.0
  */
+import type { POSTAuthVerifyEmail200DataUser } from "./postauth-verify-email200-data-user";
 
-export type POSTAuthRegister201 = {
-  success: boolean;
-  message?: string;
+export type POSTAuthVerifyEmail200Data = {
+  user: POSTAuthVerifyEmail200DataUser;
 };

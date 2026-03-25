@@ -6,10 +6,6 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type POSTAuthRegister201DataUser = {
-  id: string;
-  username: string;
-  /** @nullable */
-  avatarUrl?: string | null;
-  createdAt: string | null | unknown;
+export type POSTAuthResendVerificationBody = {
+  email: string;
 };

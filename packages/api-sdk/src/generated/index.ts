@@ -73,8 +73,12 @@ import type {
   POSTAuthRefresh200,
   POSTAuthRegister201,
   POSTAuthRegisterBody,
+  POSTAuthResendVerification200,
+  POSTAuthResendVerificationBody,
   POSTAuthResetPassword200,
   POSTAuthResetPasswordBody,
+  POSTAuthVerifyEmail200,
+  POSTAuthVerifyEmailBody,
   POSTCategories201,
   POSTCategoriesBody,
   POSTConversations201,
@@ -95,7 +99,7 @@ import type {
 } from "./schemas";
 
 /**
- * Create a new user account with email, username, and password
+ * Create a new user account with email, username, and password. A verification email will be sent.
  * @summary Register a new user
  */
 export const pOSTAuthRegister = (
@@ -170,6 +174,32 @@ export const pOSTAuthResetPassword = (
   options?: AxiosRequestConfig,
 ): Promise<AxiosResponse<POSTAuthResetPassword200>> => {
   return axios.post(`/auth/reset-password`, pOSTAuthResetPasswordBody, options);
+};
+
+/**
+ * Verify a user's email using the token received by email. Returns JWT tokens on success.
+ * @summary Verify email address
+ */
+export const pOSTAuthVerifyEmail = (
+  pOSTAuthVerifyEmailBody: POSTAuthVerifyEmailBody,
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<POSTAuthVerifyEmail200>> => {
+  return axios.post(`/auth/verify-email`, pOSTAuthVerifyEmailBody, options);
+};
+
+/**
+ * Resend a verification email to an unverified user. Always returns 200 to prevent user enumeration.
+ * @summary Resend verification email
+ */
+export const pOSTAuthResendVerification = (
+  pOSTAuthResendVerificationBody: POSTAuthResendVerificationBody,
+  options?: AxiosRequestConfig,
+): Promise<AxiosResponse<POSTAuthResendVerification200>> => {
+  return axios.post(
+    `/auth/resend-verification`,
+    pOSTAuthResendVerificationBody,
+    options,
+  );
 };
 
 /**
@@ -766,6 +796,9 @@ export type POSTAuthForgotPasswordResult =
   AxiosResponse<POSTAuthForgotPassword200>;
 export type POSTAuthResetPasswordResult =
   AxiosResponse<POSTAuthResetPassword200>;
+export type POSTAuthVerifyEmailResult = AxiosResponse<POSTAuthVerifyEmail200>;
+export type POSTAuthResendVerificationResult =
+  AxiosResponse<POSTAuthResendVerification200>;
 export type POSTCategoriesResult = AxiosResponse<POSTCategories201>;
 export type GETCategoriesResult = AxiosResponse<GETCategories200>;
 export type GETCategoriesIdResult = AxiosResponse<GETCategoriesId200>;

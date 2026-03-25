@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type POSTAuthRegister201 = {
+export type POSTAuthLogin403 = {
   success: boolean;
-  message?: string;
+  error?: string;
 };

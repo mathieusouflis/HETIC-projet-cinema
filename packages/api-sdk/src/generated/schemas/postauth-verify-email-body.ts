@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type POSTAuthRegister201 = {
-  success: boolean;
-  message?: string;
+export type POSTAuthVerifyEmailBody = {
+  /** @minLength 1 */
+  token: string;
 };
