@@ -1,5 +1,3 @@
-// import { asyncAPIGenerator } from "../shared/infrastructure/documentation/asyncapi-generator.js"; // TODO: Uncomment when chat module is needed
-// import { chatModule } from "./chat/chat.module.js"; // TODO: Uncomment when chat module is needed
 import fs from "node:fs";
 import { logger } from "@packages/logger";
 import { Router } from "express";
@@ -8,10 +6,6 @@ import swaggerUi from "swagger-ui-express";
 import { asyncAPIGenerator } from "../shared/infrastructure/documentation/asyncapi-generator.js";
 import { moduleRegistry } from "../shared/infrastructure/openapi/module-registry.js";
 import { OpenAPISpecAggregator } from "../shared/infrastructure/openapi/openapi-spec-aggregator.js";
-import {
-  errorMiddleware,
-  notFoundMiddleware,
-} from "../shared/middleware/error.middleware.js";
 import { authModule } from "./auth/auth.module.js";
 import { categoriesModule } from "./categories/categories.module.js";
 import { contentsModule } from "./contents/contents.module.js";
@@ -93,9 +87,6 @@ export function apiVersion1Router(): Router {
       customSiteTitle: "Cinema API Documentation",
     })
   );
-
-  router.use(notFoundMiddleware);
-  router.use(errorMiddleware);
 
   return router;
 }

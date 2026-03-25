@@ -13,6 +13,7 @@ import * as Sentry from "@sentry/node";
 import cookieParser from "cookie-parser";
 import { apiVersion1Router } from "./modules";
 import { createAsyncAPIRouter } from "./shared/infrastructure/routes/asyncapi.routes.js";
+import { errorMiddleware, notFoundMiddleware } from "./shared/middleware";
 
 const { json, urlencoded } = bodyParser;
 
@@ -49,7 +50,12 @@ export const createServer = (): AppServer => {
       });
     });
 
-  Sentry.setupExpressErrorHandler(app);
+  if (config.env.NODE_ENV === "production") {
+    Sentry.setupExpressErrorHandler(app);
+  }
+
+  app.use(notFoundMiddleware);
+  app.use(errorMiddleware);
 
   const httpServer = createHttpServer(app);
 
