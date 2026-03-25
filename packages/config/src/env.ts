@@ -48,7 +48,10 @@ export const env = {
   backend: {
     port: parseNumber(getEnvVar("BACKEND_PORT", 3000), 3000),
     host: getEnvVar("BACKEND_HOST", "localhost") as string,
-    apiUrl: getEnvVar("BACKEND_API_URL", "http://localhost:3000") as string,
+    apiUrl: getEnvVar(
+      "VITE_BACKEND_API_URL",
+      "http://localhost:3000"
+    ) as string,
     version: 1,
   },
 
