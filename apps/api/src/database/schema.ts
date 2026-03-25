@@ -19,6 +19,7 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+import { emailVerificationTokensSchema } from "../modules/auth/infrastructure/schemas/email-verification-tokens.schema";
 import { passwordResetTokensSchema } from "../modules/auth/infrastructure/schemas/reset-tokens.schema";
 import {
   categoriesRelationsSchema,
@@ -114,6 +115,8 @@ export const refreshTokens = pgTable(
 );
 
 export const passwordResetTokens = passwordResetTokensSchema;
+
+export const emailVerificationTokens = emailVerificationTokensSchema;
 
 export const friendsshipStatus = friendshipsStatusEnum;
 export const friendships = friendshipsSchema;
