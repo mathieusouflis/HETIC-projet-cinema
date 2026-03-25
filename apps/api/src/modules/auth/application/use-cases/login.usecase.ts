@@ -1,3 +1,4 @@
+import { ForbiddenError } from "../../../../shared/errors/forbidden-error.js";
 import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error.js";
 import type { IPasswordService } from "../../../../shared/services/password/i-password-service.js";
 import type { ITokenService } from "../../../../shared/services/token/i-token-service.js";
@@ -43,6 +44,10 @@ export class LoginUseCase {
 
     if (!isPasswordValid) {
       throw new UnauthorizedError("Invalid email or password");
+    }
+
+    if (!user.isEmailVerified()) {
+      throw new ForbiddenError("EMAIL_NOT_VERIFIED");
     }
 
     const { accessToken, refreshToken } = this.tokenService.generateTokenPair(

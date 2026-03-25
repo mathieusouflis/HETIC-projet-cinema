@@ -1,35 +1,42 @@
+import { config } from "@packages/config";
+import type { IEmailService } from "../../../../shared/services/email/i-email-service.js";
 import type { IPasswordService } from "../../../../shared/services/password/i-password-service.js";
-import type { ITokenService } from "../../../../shared/services/token/i-token-service.js";
-import { toUserResponseDTO } from "../../../users/application/dto/utils/to-user-response.js";
+import {
+  generateSecureToken,
+  getExpiryDate,
+  hashToken,
+} from "../../../../shared/utils/crypto.utils.js";
 import { EmailAlreadyExistsError } from "../../../users/domain/errors/EmailAlreadyExistsError.js";
 import { UsernameAlreadyExistsError } from "../../../users/domain/errors/UsernameAlreadyExistsError.js";
 import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";
+import { EMAIL_VERIFICATION_TOKEN_EXPIRY_MS } from "../../domain/constants.js";
+import type { IEmailVerificationTokenRepository } from "../../domain/interfaces/IEmailVerificationTokenRepository.js";
 import type { RegisterDTO } from "../dto/request/register.dto.js";
-import type { AuthResponse } from "../dto/response/auth-response.response.validator.js";
-import { toAuthResponseDTO } from "../dto/utils/to-auth-response-dto.js";
 
 /**
  * Register Use Case
  *
- * Handles user registration business logic
+ * Handles user registration business logic.
+ * After registration, sends a verification email instead of logging in immediately.
  */
 export class RegisterUseCase {
   constructor(
     private readonly userRepository: IUserRepository,
     private readonly passwordService: IPasswordService,
-    private readonly tokenService: ITokenService
+    private readonly emailVerificationTokenRepository: IEmailVerificationTokenRepository,
+    private readonly emailService: IEmailService
   ) {}
 
   /**
    * @param data - Registration data (email, username, password)
-   * @returns Promise resolving to AuthResponseDTO with user and tokens
-   * @throws EmailAlreadyExistsError if email is already registered
+   * @returns Promise resolving to void — user must verify email before login
+   * @throws EmailAlreadyExistsError if email is already registered and verified
    * @throws UsernameAlreadyExistsError if username is already taken
    */
-  async execute(data: RegisterDTO): Promise<[AuthResponse, string]> {
-    const emailExists = await this.userRepository.existsByEmail(data.email);
+  async execute(data: RegisterDTO): Promise<void> {
+    const existingUser = await this.userRepository.findByEmail(data.email);
 
-    if (emailExists) {
+    if (existingUser?.isEmailVerified()) {
       throw new EmailAlreadyExistsError(data.email);
     }
 
@@ -41,6 +48,10 @@ export class RegisterUseCase {
       throw new UsernameAlreadyExistsError(data.username);
     }
 
+    if (existingUser && !existingUser.isEmailVerified()) {
+      await this.userRepository.delete(existingUser.id);
+    }
+
     const passwordHash = await this.passwordService.hash(data.password);
 
     const user = await this.userRepository.create({
@@ -49,13 +60,22 @@ export class RegisterUseCase {
       passwordHash,
     });
 
-    const { accessToken, refreshToken } = this.tokenService.generateTokenPair(
+    const rawToken = generateSecureToken();
+    const tokenHash = hashToken(rawToken);
+    const expiresAt = getExpiryDate(EMAIL_VERIFICATION_TOKEN_EXPIRY_MS);
+
+    await this.emailVerificationTokenRepository.create(
       user.id,
-      user.email
+      tokenHash,
+      expiresAt
     );
 
-    const userResponse = toUserResponseDTO(user);
+    const verificationUrl = `${config.env.frontend.url}/verify-email?token=${rawToken}`;
 
-    return [toAuthResponseDTO(userResponse, accessToken), refreshToken];
+    await this.emailService.send(
+      user.email,
+      "Verify your email address",
+      `Welcome to Kirona! Click the link below to verify your email address (expires in 24h):\n\n${verificationUrl}\n\nIf you did not create an account, please ignore this email.`
+    );
   }
 }
