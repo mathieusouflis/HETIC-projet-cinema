@@ -40,7 +40,7 @@ export function ContentPage() {
   return (
     <div className="flex flex-col gap-14">
       <div className="flex flex-col gap-14 items-center md:items-start md:flex-row">
-        <div className="flex flex-col gap-2 max-w-full items-center md:items-baseline w-fit md:w-80">
+        <div className="flex flex-col gap-3 max-w-full items-center md:items-baseline w-fit md:w-80">
           {isLoading || !data ? (
             <ContentCardSkeleton
               variant="thumbnail"
@@ -61,10 +61,10 @@ export function ContentPage() {
             >
               <Button
                 variant={"default"}
-                color="secondary"
+                color="blue"
                 size={"xl"}
                 disabled={!data?.trailerUrl}
-                className="w-full"
+                className="w-full dark:text-white"
               >
                 Watch Trailer
               </Button>
@@ -74,8 +74,12 @@ export function ContentPage() {
                 variant={watchlistData?.data.data ? "edit" : "new"}
                 content={data}
               >
-                <Button variant={"default"} color="secondary" size={"icon-xl"}>
-                  {watchlistData?.data.data ? <Pen /> : <Plus />}
+                <Button variant={"default"} color="blue" size={"icon-xl"}>
+                  {watchlistData?.data.data ? (
+                    <Pen className="dark:bg-white" />
+                  ) : (
+                    <Plus className="dark:stroke-white" />
+                  )}
                 </Button>
               </AddContentToWatchlistDialog>
             )}
