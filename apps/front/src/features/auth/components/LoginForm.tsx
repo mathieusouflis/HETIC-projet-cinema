@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -24,11 +24,16 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { useLogin } from "../hooks/useLogin";
+import { useResendVerification } from "../hooks/useResendVerification";
 import { type LoginFormValues, loginSchema } from "../schemas/auth.schemas";
 
 export function LoginForm() {
   const { login, isLoading } = useLogin();
+  const { resend, isLoading: isResending } = useResendVerification();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [emailNotVerified, setEmailNotVerified] = useState(false);
+  const [unverifiedEmail, setUnverifiedEmail] = useState("");
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -38,6 +43,8 @@ export function LoginForm() {
   const globalError = form.formState.errors.root?.message;
 
   async function onSubmit(values: LoginFormValues) {
+    setEmailNotVerified(false);
+
     try {
       await login(values.email, values.password);
     } catch (err: unknown) {
@@ -45,6 +52,12 @@ export function LoginForm() {
         fieldErrors?: Record<string, string>;
         globalError?: string | null;
       };
+
+      if (error.globalError === "EMAIL_NOT_VERIFIED") {
+        setEmailNotVerified(true);
+        setUnverifiedEmail(values.email);
+        return;
+      }
 
       if (error.fieldErrors) {
         for (const [field, message] of Object.entries(error.fieldErrors)) {
@@ -56,6 +69,14 @@ export function LoginForm() {
         form.setError("root", { message: error.globalError });
       }
     }
+  }
+
+  async function handleResendAndNavigate() {
+    await resend(unverifiedEmail);
+    navigate({
+      to: "/verify-email-pending",
+      search: { email: unverifiedEmail },
+    });
   }
 
   return (
@@ -141,6 +162,27 @@ export function LoginForm() {
 
               {globalError && (
                 <FieldError errors={[{ message: globalError }]} />
+              )}
+
+              {emailNotVerified && (
+                <div className="rounded-md border border-yellow-400 bg-yellow-50 p-4 text-sm text-yellow-800 space-y-2 text-left">
+                  <p className="font-medium">
+                    Your email address has not been verified yet.
+                  </p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleResendAndNavigate}
+                    disabled={isResending}
+                    className="w-full"
+                  >
+                    {isResending ? (
+                      <Loader2 className="animate-spin mr-2" size={14} />
+                    ) : null}
+                    Resend verification email
+                  </Button>
+                </div>
               )}
 
               <div className="flex justify-end gap-4 pt-12">
