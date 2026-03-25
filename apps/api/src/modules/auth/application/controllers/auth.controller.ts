@@ -1,5 +1,5 @@
 import { config } from "@packages/config";
-import type { Request, Response } from "express";
+import type { CookieOptions, Request, Response } from "express";
 import { UnauthorizedError } from "../../../../shared/errors/index.js";
 import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller.js";
 import { Protected } from "../../../../shared/infrastructure/decorators/rest/auth.decorator.js";
@@ -41,23 +41,25 @@ import type { RefreshTokenUseCase } from "../use-cases/refresh-token.usecase.js"
 import type { RegisterUseCase } from "../use-cases/register.usecase.js";
 import type { ResetPasswordUseCase } from "../use-cases/reset-password.usecase.js";
 
+const isProduction = config.env.NODE_ENV === "production";
+
 const REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
-const REFRESH_TOKEN_COOKIE_OPTIONS = {
+const REFRESH_TOKEN_COOKIE_OPTIONS: CookieOptions = {
   domain: config.env.backend.host,
   maxAge: 7 * 24 * 60 * 60 * 1000,
-  sameSite: "strict",
-  secure: config.env.NODE_ENV === "production",
+  sameSite: "lax",
+  secure: isProduction,
   httpOnly: true,
-} as const;
+};
 
 const ACCESS_TOKEN_COOKIE_NAME = "accessToken";
-const ACCESS_TOKEN_COOKIE_OPTIONS = {
+const ACCESS_TOKEN_COOKIE_OPTIONS: CookieOptions = {
   domain: config.env.backend.host,
   maxAge: 15 * 60 * 1000,
-  sameSite: "strict",
-  secure: config.env.NODE_ENV === "production",
+  sameSite: "lax",
+  secure: isProduction,
   httpOnly: true,
-} as const;
+};
 
 @Controller({
   tag: "Authentication",
@@ -228,14 +230,14 @@ export class AuthController extends BaseController {
     // TODO: Implement token invalidation/blacklisting
     res.clearCookie(REFRESH_TOKEN_COOKIE_NAME, {
       domain: config.env.backend.host,
-      sameSite: "strict",
-      secure: config.env.NODE_ENV === "production",
+      sameSite: "lax",
+      secure: isProduction,
       httpOnly: true,
     });
     res.clearCookie(ACCESS_TOKEN_COOKIE_NAME, {
       domain: config.env.backend.host,
-      sameSite: "strict",
-      secure: config.env.NODE_ENV === "production",
+      sameSite: "lax",
+      secure: isProduction,
       httpOnly: true,
     });
     res.status(200).json({
