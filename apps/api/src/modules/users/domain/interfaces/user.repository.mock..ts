@@ -20,6 +20,7 @@ export function createMockedUserRepository(
     oauthProvider: null,
     theme: "dark",
     lastLoginAt: new Date().toISOString(),
+    emailVerifiedAt: new Date().toISOString(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   });
@@ -38,6 +39,7 @@ export function createMockedUserRepository(
     oauthProvider: null,
     theme: "dark",
     lastLoginAt: new Date().toISOString(),
+    emailVerifiedAt: new Date().toISOString(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   });
@@ -55,6 +57,7 @@ export function createMockedUserRepository(
     oauthProvider: null,
     theme: "dark",
     lastLoginAt: new Date().toISOString(),
+    emailVerifiedAt: new Date().toISOString(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   });
@@ -64,6 +67,7 @@ export function createMockedUserRepository(
     create: vi.fn().mockResolvedValue(mockUser1),
     delete: vi.fn().mockResolvedValue(true),
     update: vi.fn().mockResolvedValue(mockUser1),
+    markEmailVerified: vi.fn().mockResolvedValue(undefined),
     existsByEmail: (email: string) =>
       Promise.resolve(usersMocked.some((user) => user.email === email)),
     existsByUsername: (username: string) =>

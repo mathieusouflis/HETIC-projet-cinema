@@ -162,6 +162,13 @@ export class UserRepository implements IUserRepository {
     await db.delete(users).where(eq(users.id, id));
   }
 
+  async markEmailVerified(userId: string): Promise<void> {
+    await db
+      .update(users)
+      .set({ emailVerifiedAt: new Date().toISOString() })
+      .where(eq(users.id, userId));
+  }
+
   async findAll(options: {
     page: number;
     limit: number;
