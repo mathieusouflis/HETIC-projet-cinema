@@ -12,10 +12,11 @@ export const usernameSchema = z
   .min(3, "Username must be at least 3 characters")
   .max(30, "Username must be less than 30 characters")
   .regex(
-    /^[a-zA-Z0-9_-]+$/,
-    "Username can only contain letters, numbers, underscores, and hyphens"
+    /^[a-z0-9_-]+$/,
+    "Username can only contain lowercase letters, numbers, underscores, and hyphens"
   )
-  .trim();
+  .trim()
+  .toLowerCase();
 
 export const passwordSchema = z
   .string()

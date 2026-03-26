@@ -18,7 +18,8 @@ export const usernameSchema = z
     /^[a-zA-Z0-9_-]+$/,
     "Username can only contain letters, numbers, underscores, and hyphens"
   )
-  .trim();
+  .trim()
+  .toLowerCase();
 
 export const usernameSchemaOptional = usernameSchema.optional();
 

@@ -45,7 +45,7 @@ export class UserRepository implements IUserRepository {
     const [row] = await db
       .select()
       .from(users)
-      .where(eq(users.username, username))
+      .where(eq(users.username, username.toLowerCase()))
       .limit(1);
 
     if (!row) {
@@ -82,7 +82,7 @@ export class UserRepository implements IUserRepository {
     const [result] = await db
       .select({ count: count() })
       .from(users)
-      .where(eq(users.username, username));
+      .where(eq(users.username, username.toLowerCase()));
 
     return (result?.count ?? 0) > 0;
   }
@@ -92,7 +92,7 @@ export class UserRepository implements IUserRepository {
       .insert(users)
       .values({
         email: data.email.toLowerCase(),
-        username: data.username,
+        username: data.username.toLowerCase(),
         passwordHash: data.passwordHash ?? null,
         displayName: data.displayName ?? null,
         avatarUrl: data.avatarUrl ?? null,
@@ -121,7 +121,7 @@ export class UserRepository implements IUserRepository {
       updateData.email = data.email.toLowerCase();
     }
     if (data.username !== undefined) {
-      updateData.username = data.username;
+      updateData.username = data.username.toLowerCase();
     }
     if (data.passwordHash !== undefined) {
       updateData.passwordHash = data.passwordHash;
