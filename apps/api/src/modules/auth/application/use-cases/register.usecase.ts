@@ -75,7 +75,7 @@ export class RegisterUseCase {
     await this.emailService.send(
       user.email,
       "Verify your email address",
-      `Welcome to Kirona! Click the link below to verify your email address (expires in 24h):\n\n${verificationUrl}\n\nIf you did not create an account, please ignore this email.`
+      `Welcome to Kirona! Click the link below to verify your email address (expires in 15 minutes):\n\n${verificationUrl}\n\nIf you did not create an account, please ignore this email.`
     );
   }
 }

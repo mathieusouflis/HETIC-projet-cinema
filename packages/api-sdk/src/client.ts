@@ -41,7 +41,7 @@ export class ApiClient {
           _retry?: boolean;
         };
 
-        if (originalRequest?.url?.includes("/auth/refresh")) {
+        if (originalRequest?.url?.includes("/auth")) {
           return Promise.reject(error);
         }
 

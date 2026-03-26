@@ -165,8 +165,8 @@ export function LoginForm() {
               )}
 
               {emailNotVerified && (
-                <div className="rounded-md border border-yellow-400 bg-yellow-50 p-4 text-sm text-yellow-800 space-y-2 text-left">
-                  <p className="font-medium">
+                <div className="space-y-2 rounded-md border border-zinc-800 bg-zinc-900/70 p-4 text-left text-sm text-zinc-200">
+                  <p className="font-medium text-zinc-100">
                     Your email address has not been verified yet.
                   </p>
                   <Button
@@ -175,10 +175,10 @@ export function LoginForm() {
                     size="sm"
                     onClick={handleResendAndNavigate}
                     disabled={isResending}
-                    className="w-full"
+                    className="w-full border-zinc-700 bg-zinc-900 text-zinc-100 hover:bg-zinc-800 hover:border-zinc-600 disabled:opacity-60"
                   >
                     {isResending ? (
-                      <Loader2 className="animate-spin mr-2" size={14} />
+                      <Loader2 className="mr-2 animate-spin" size={14} />
                     ) : null}
                     Resend verification email
                   </Button>

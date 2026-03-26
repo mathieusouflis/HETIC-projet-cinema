@@ -42,11 +42,10 @@ export class ResendVerificationUseCase {
     await this.tokenRepository.create(user.id, tokenHash, expiresAt);
 
     const verificationUrl = `${config.env.frontend.url}/verify-email?token=${rawToken}`;
-
     await this.emailService.send(
       user.email,
       "Verify your email address",
-      `Welcome to Kirona! Click the link below to verify your email address (expires in 24h):\n\n${verificationUrl}\n\nIf you did not create an account, please ignore this email.`
+      `Welcome to Kirona! Click the link below to verify your email address (expires in 15 minutes):\n\n${verificationUrl}\n\nIf you did not create an account, please ignore this email.`
     );
   }
 }

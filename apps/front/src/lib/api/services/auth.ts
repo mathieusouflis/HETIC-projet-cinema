@@ -15,6 +15,8 @@ import {
   pOSTAuthResetPassword,
   pOSTAuthVerifyEmail,
 } from "@packages/api-sdk";
+import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/features/auth/stores/auth.store";
 
 export const authService = {
   register: async (params: POSTAuthRegisterBody) => {
@@ -60,4 +62,20 @@ export const authService = {
     const response = await pOSTAuthResendVerification(params);
     return response.data;
   },
+};
+
+export const queryAuthService = {
+  verifyEmail: (token: string | undefined, onSuccess?: () => void) =>
+    useQuery({
+      queryKey: ["verify-email", token],
+      queryFn: async () => {
+        const data = await authService.verifyEmail({ token: token! });
+        useAuth.getState().setUser(data.data.user);
+        onSuccess?.();
+        return data;
+      },
+      enabled: !!token,
+      retry: false,
+      staleTime: Infinity,
+    }),
 };
