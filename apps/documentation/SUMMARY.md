@@ -1,33 +1,46 @@
-# Table of contents
+# Summary
 
-- [🎬 Cinema Project Documentation](README.md)
+* [Introduction](README.md)
 
-## 🔧 Developer Guide
+## Getting Started
+* [Computer Setup](getting-started/computer-setup.md)
+* [Quick Start](getting-started/README.md)
+* [Development Workflow](getting-started/development-workflow.md)
 
-- [👨‍💻 Developer Overview](developer/README.md)
-- [🛠️ Tools & Setup](developer/tools-and-setup/README.md)
-  - [💻 Computer Setup](developer/tools-and-setup/computer-setup/README.md)
-    - [🪟 Windows Setup](developer/tools-and-setup/computer-setup/windows-setup.md)
-  - [🗃️ Database Setup](developer-guide/tools-and-setup/database-setup.md)
-  - [📚 Tools Documentation](developer/tools-and-setup/tools-documentation/README.md)
-    - [🐧 WSL for VS Code](developer/tools-and-setup/tools-documentation/wsl-for-vscode.md)
-- [Strategy](developer-guide/strategy/README.md)
-  - [API](developer-guide/strategy/api/README.md)
-    - [🆕 Creating a New Module](developer-guide/strategy/api/creating-a-new-module.md)
-    - [🔗 Adding Endpoints](developer-guide/strategy/api/adding-endpoints.md)
-    - [🧪 Writing Tests](developer-guide/strategy/api/writing-tests.md)
-    - [🚨 Error Handling](developer-guide/strategy/api/error-handling.md)
-- [API](developer-guide/api/README.md)
-  - [🎯 API Overview](developer-guide/api/api-documentation.md)
-  - [Architecture](developer-guide/api/architecture/README.md)
-    - [🧹 Clean Architecture Principles](developer-guide/api/architecture/clean-architecture.md)
-    - [💉 Dependency Injection](developer-guide/api/architecture/dependency-injection.md)
-    - [📁 Project Structure](developer-guide/api/architecture/project-structure.md)
-    - [🧩 Module Pattern](developer-guide/api/architecture/module-pattern.md)
-    - [🗄️ Database Layer](developer-guide/api/architecture/database-layer.md)
-  - [▶️ Running the API](developer-guide/api/running-the-api.md)
-- [Guidelines](developer-guide/guidelines/README.md)
-  - [Testing Guidelines](developer-guide/guidelines/testing-guidelines.md)
-  - [Commit Message Guidelines](developer-guide/guidelines/commit-message-guidelines.md)
-  - [Bug reports](developer-guide/guidelines/bug-reports.md)
-- [❓ FAQ](developer-guide/faq.md)
+## Architecture
+* [System Overview](architecture/README.md)
+* [Backend](architecture/backend.md)
+* [Frontend](architecture/frontend.md)
+* [Real-time (Socket.IO)](architecture/realtime.md)
+* [CI/CD & Turborepo](architecture/ci-cd.md)
+
+## Database & API
+* [Data Model](database/README.md)
+* [REST API Reference](api/README.md)
+
+## Technical Reference
+* [Technical Choices](technical-choices.md)
+* [Technical Specification](spec.md)
+* [Project Report](rapport.md)
+
+## Developer Guide
+
+### Architecture Deep-dives
+* [Overview](developer-guide/README.md)
+* [Module Pattern](developer-guide/architecture/module-pattern.md)
+* [Decorator System](developer-guide/architecture/decorator-system.md)
+* [TMDB Integration](developer-guide/architecture/tmdb-integration.md)
+* [Error Handling](developer-guide/architecture/error-handling.md)
+
+### Step-by-step Guides
+* [Creating a Module](developer-guide/guides/creating-a-module.md)
+* [Adding an Endpoint](developer-guide/guides/adding-an-endpoint.md)
+* [Writing Tests](developer-guide/guides/writing-tests.md)
+
+### Team Conventions
+* [Commit Conventions](developer-guide/guidelines/commit-conventions.md)
+* [Code Style](developer-guide/guidelines/code-style.md)
+* [Pull Request Guide](developer-guide/guidelines/pull-request.md)
+
+### Reference
+* [FAQ](developer-guide/faq.md)

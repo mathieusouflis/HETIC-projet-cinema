@@ -1,33 +1,44 @@
-## Description
+## Summary
 
-Brief description of changes made.
+<!-- What does this PR do and why? 2-3 sentences max. -->
 
-## Type of Change
+Closes #<!-- issue number -->
 
-- [ ] Bug fix (non-breaking change that fixes an issue)
-- [ ] New feature (non-breaking change that adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] Documentation update
+## Type of change
+
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Refactor (no behavior change)
+- [ ] Performance improvement
+- [ ] Documentation
+- [ ] CI/CD / tooling
+- [ ] Breaking change
+
+## Changes
+
+<!-- Bullet list of notable changes. Focus on the "what", not the "how". -->
+
+-
+-
 
 ## Testing
 
-- [ ] Added/updated unit tests
-- [ ] Added/updated integration tests
-- [ ] Manual testing completed
+<!-- How did you verify this works? What test cases were added or updated? -->
 
-## Related Issues
-
-Closes #[issue number]
-
-## Screenshots (if applicable)
-
-Add screenshots to help explain your changes.
+- [ ] Added / updated unit tests
+- [ ] Manually tested locally (`pnpm dev:local`)
+- [ ] All existing tests pass (`pnpm test`)
 
 ## Checklist
 
-- [ ] My code follows the project's coding standards
-- [ ] I have performed a self-review of my code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] New and existing unit tests pass locally with my changes
+- [ ] `pnpm lint` passes
+- [ ] `pnpm check-types` passes
+- [ ] `pnpm test` passes
+- [ ] `pnpm build` passes
+- [ ] API endpoint added/changed → ran `pnpm generate-sdk`
+- [ ] DB schema changed → generated and applied a migration
+- [ ] Documentation updated if applicable
+
+## Screenshots
+
+<!-- If this changes UI behavior, add before/after screenshots. Remove this section if not applicable. -->

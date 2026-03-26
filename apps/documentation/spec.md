@@ -161,25 +161,19 @@ POST /api/v1/auth/refresh
 
 **Token rotation**: every successful refresh issues a new pair. The old token is implicitly discarded by overwriting the cookie.
 
-### Logout Flow & Current Revocation Gap
+### Logout Flow
 
 ```
 POST /api/v1/auth/logout  (requires valid Bearer access token)
-  → responds 200 OK
-  → does NOT clear the cookie server-side
-  → does NOT invalidate the JWT
+  → read refreshToken from httpOnly cookie
+  → hash the token and set revoked_at = NOW() in refresh_tokens table
+  → clear the refreshToken cookie (Set-Cookie: ...; Max-Age=0)
+  → respond 200 OK
 ```
 
-Logout is currently **client-side only**. The server confirms authentication then it is the client's responsibility to drop the access token from memory and clear the cookie locally.
+Logout is **server-side**. The refresh token is revoked in the database immediately, so a stolen token cannot be used after logout even within the 7-day window.
 
-**Security implication**: a stolen refresh token remains exploitable for up to 7 days after logout.
-
-The `refresh_tokens` table (`token_hash`, `revoked_at`, `ip_address`, `user_agent`, `device_fingerprint`) was designed to close this gap. Implementing server-side revocation would require:
-1. On login/register: hash the refresh JWT, insert a row into `refresh_tokens`
-2. On refresh: look up the hash, reject if `revoked_at IS NOT NULL`
-3. On logout: set `revoked_at = NOW()` for the user's active tokens
-
-This is tracked as a `// TODO` in `auth.controller.ts`.
+The `refresh_tokens` table stores `token_hash`, `revoked_at`, `ip_address`, `user_agent`, and `device_fingerprint` for audit purposes.
 
 ### Authorization
 

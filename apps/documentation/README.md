@@ -1,170 +1,56 @@
----
-icon: hand-wave
-layout:
-  width: default
-  title:
-    visible: true
-  description:
-    visible: true
-  tableOfContents:
-    visible: true
-  outline:
-    visible: true
-  pagination:
-    visible: true
-  metadata:
-    visible: true
-metaLinks: {}
----
+# Kirona — Documentation
 
-# 🎬 Cinema Project Documentation
+![Stack](https://img.shields.io/badge/stack-React%2019%20%7C%20Express%205%20%7C%20PostgreSQL%20%7C%20Socket.IO-blue)
+![Monorepo](https://img.shields.io/badge/monorepo-pnpm%20%2B%20Turborepo-orange)
+![Tests](https://img.shields.io/badge/tests-Vitest-green)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-Welcome to the **Cinema Project** - a modern, community-driven cinema platform built with cutting-edge web technologies. This documentation provides comprehensive guides for developers, API references, and project information.
-
-## 🎬 About the Project
-
-The Cinema Project is a full-stack application that enables users to discover movies, create watch parties, and engage with a vibrant cinema community. Built as a monorepo using Turborepo, it showcases modern development practices and scalable architecture.
-
-### Key Features
-
-- **🎥 Movie Discovery** - Browse and search extensive movie catalogs
-- **👥 Community Features** - User profiles, reviews, and social interactions
-- **🎉 Watch Parties** - Real-time synchronized viewing experiences
-- **🔐 Secure Authentication** - JWT-based authentication system
-- **📱 Responsive Design** - Optimized for all devices
-- **⚡ Real-time Updates** - WebSocket-powered live features
-
-## 🏗️ Architecture Overview
-
-This project follows a **monorepo architecture** with clear separation of concerns:
-
-```
-HETIC-projet-cinema/
-├── apps/
-│   ├── api/           # Express.js Backend API
-│   ├── front/         # Next.js Frontend Application
-│   └── documentation/ # GitBook Documentation
-├── packages/
-│   ├── ui/            # Shared React Components
-│   ├── eslint-config/ # Shared ESLint Configuration
-│   └── typescript-config/ # Shared TypeScript Configuration
-└── docs/              # Additional Documentation
-```
-
-## 🚀 Quick Navigation
-
-<table data-card-size="large" data-view="cards"><thead><tr><th></th><th></th><th></th><th data-hidden data-card-target data-type="content-ref"></th></tr></thead><tbody><tr><td><strong>🔧 Developer Guide</strong></td><td>Development setup, tools, and workflows</td><td>Get started with development environment setup and best practices</td><td><a href="/broken/pages/sZBRXeDqXGFvPP0A1dVL">Broken link</a></td></tr></tbody></table>
-
-## 🛠️ Technology Stack
-
-### Frontend
-
-- **Next.js 14** - React framework with App Router
-- **TypeScript** - Type-safe development
-- **Tailwind CSS** - Utility-first styling
-- **React Query** - Server state management
-
-### Backend
-
-- **Node.js 20+** - JavaScript runtime
-- **Express.js** - Web application framework
-- **PostgreSQL** - Primary database
-- **Drizzle ORM** - Type-safe database operations
-- **JWT** - Authentication tokens
-- **WebSocket** - Real-time communication
-
-### Development Tools
-
-- **Turborepo** - Monorepo build system
-- **ESLint** - Code linting
-- **Prettier** - Code formatting
-- **Vitest** - Unit testing framework
-- **Docker** - Containerization
-- **pnpm** - Package management
-
-## 📚 Documentation Sections
-
-### For Developers
-
-- [**Developer Setup**](developer/) - Environment setup and development tools
-- [**Tools & Configuration**](developer/tools-and-setup/) - IDE setup, WSL, and development environment
-
-### For API Integration
-
-- [**API Overview**](developer-guide/api/api-documentation.md) - Complete API documentation
-- [**Architecture Guide**](/broken/pages/nQOSVe3FoMTuVtJZnSRT) - System design and patterns
-- [**Getting Started**](/broken/pages/fSwmLZy5kejanh52JtIH) - Quick start and setup guides
-- [**API Reference**](/broken/pages/t2Lhz6M6HzL4FdUt2w8h) - Endpoint documentation
-- [**Examples**](/broken/pages/SKW7YUUEqmIti47kic96) - Practical implementation examples
-
-## 🚦 Getting Started
-
-### Prerequisites
-
-- **Node.js 20+**
-- **pnpm** (recommended package manager)
-- **PostgreSQL 14+**
-- **Git**
-
-### Quick Start
-
-```bash
-# Clone the repository
-git clone <repository-url>
-cd HETIC-projet-cinema
-
-# Install dependencies
-pnpm install
-
-# Setup environment variables
-cp apps/api/.env.example apps/api/.env
-# Edit .env files with your configuration
-
-# Start the database (Docker required)
-pnpm db:start
-
-# Run database migrations
-pnpm db:migrate
-
-# Start all applications in development mode
-pnpm dev
-```
-
-### Access Points
-
-- **Frontend**: http://localhost:3000
-- **API**: http://localhost:3001
-- **Documentation**: Available in this GitBook
-
-## 🤝 Contributing
-
-We welcome contributions! Please follow these guidelines:
-
-1. **Read the Documentation** - Familiarize yourself with the project structure
-2. **Follow Coding Standards** - Use ESLint and Prettier configurations
-3. **Write Tests** - Ensure your code is properly tested
-4. **Update Documentation** - Keep documentation current with changes
-
-### Development Workflow
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests and linting
-5. Submit a pull request
-
-## 📖 Additional Resources
-
-- [**Project Repository**](https://github.com/your-org/HETIC-projet-cinema) - Source code and issues
-- [**API Playground**](http://localhost:3001/docs) - Interactive API documentation
-- [**Design System**](packages/ui/) - Shared component library
-
-## 📞 Support & Contact
-
-- **Issues**: Report bugs and request features on GitHub
-- **Discussions**: Join community discussions
-- **Documentation**: This GitBook for comprehensive guides
+Kirona is a social platform centered around cinema and TV series, allowing users to discover content, manage their watchlist, interact with a community of friends, and communicate in real time. Built as a TypeScript monorepo with an Express 5 REST API, a React 19 frontend, and PostgreSQL.
 
 ---
 
-**Ready to start?** Jump to the [Developer Guide](developer/) to set up your development environment, or explore the [API Documentation](developer-guide/api/api-documentation.md) to understand the backend architecture.
+## Quick navigation
+
+### For contributors
+
+| Resource | Description |
+|---|---|
+| [Computer Setup](getting-started/computer-setup.md) | Install VS Code, Node, pnpm, Docker — macOS and Windows (WSL2 + Devenv) |
+| [Getting Started](getting-started/README.md) | Set up the project locally (with or without Phase access) |
+| [Development Workflow](getting-started/development-workflow.md) | Daily dev cycle, commands, and conventions |
+| [Developer Guide](developer-guide/README.md) | Architecture deep-dives and step-by-step guides |
+| [CONTRIBUTING.md](../../../CONTRIBUTING.md) | How to contribute, PR process, commit conventions |
+
+### Architecture
+
+| Resource | Description |
+|---|---|
+| [System Overview](architecture/README.md) | Monorepo structure, packages, Turborepo pipeline |
+| [Backend](architecture/backend.md) | Clean Architecture, modules, middleware chain |
+| [Frontend](architecture/frontend.md) | File-based routing, feature modules, SDK pipeline |
+| [Real-time](architecture/realtime.md) | Socket.IO namespace, events, client singleton |
+| [CI/CD](architecture/ci-cd.md) | GitHub Actions workflows, Google Cloud Run deployment |
+
+### Reference
+
+| Resource | Description |
+|---|---|
+| [REST API](api/README.md) | All endpoints, JWT auth flow, response formats |
+| [Data Model](database/README.md) | ERD, table descriptions, indexes, migration strategy |
+| [Technical Choices](technical-choices.md) | Why each technology was selected |
+| [Project Report](rapport.md) | Functional scope, team roles, architecture summary |
+
+---
+
+## Developer Guide highlights
+
+The [Developer Guide](developer-guide/README.md) covers the internal mechanics that every contributor needs to understand:
+
+- **[Decorator System](developer-guide/architecture/decorator-system.md)** — How `@Controller`, `@Get`, `@Protected`, `@ValidateBody` etc. work and how `DecoratorRouter` builds Express routes and the OpenAPI spec from metadata
+- **[TMDB Integration](developer-guide/architecture/tmdb-integration.md)** — The composite repository pattern: how content is fetched on demand from TMDB, stored in PostgreSQL, and served — with full sequence diagrams
+- **[Error Handling](developer-guide/architecture/error-handling.md)** — The `AppError` hierarchy and how errors propagate through all layers to a consistent JSON response
+- **[Creating a Module](developer-guide/guides/creating-a-module.md)** — End-to-end walkthrough: DB schema → migration → entity → repository → use cases → controller → registration → SDK regeneration
+- **[Adding an Endpoint](developer-guide/guides/adding-an-endpoint.md)** — Fastest path to adding one route to an existing module
+- **[Commit Conventions](developer-guide/guidelines/commit-conventions.md)** — Message format, types, scopes
+- **[Code Style](developer-guide/guidelines/code-style.md)** — Biome rules, naming conventions, patterns
+- **[Pull Request Guide](developer-guide/guidelines/pull-request.md)** — Branch strategy, PR size, review process
