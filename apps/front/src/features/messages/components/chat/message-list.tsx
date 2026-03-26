@@ -10,7 +10,6 @@ interface MessageListProps {
   isFetchingNextPage: boolean;
   onFetchNextPage: () => void;
   onEdit?: (messageId: string) => void;
-  onDelete?: (messageId: string) => void;
 }
 
 /**
@@ -33,7 +32,6 @@ export function MessageList({
   isFetchingNextPage,
   onFetchNextPage,
   onEdit,
-  onDelete,
 }: MessageListProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -105,34 +103,35 @@ export function MessageList({
   return (
     <div
       ref={scrollRef}
-      className="flex flex-col flex-1 overflow-y-auto px-4 py-2 gap-1"
+      className="flex flex-col overflow-x-hidden overflow-y-scroll"
     >
-      <div ref={sentinelRef} className="h-1 shrink-0" />
+      <div className="flex flex-col px-4 py-2 gap-1">
+        <div ref={sentinelRef} className="h-1 shrink-0" />
 
-      {isFetchingNextPage && (
-        <p className="text-center text-xs text-muted-foreground py-2">
-          Loading…
-        </p>
-      )}
+        {isFetchingNextPage && (
+          <p className="text-center text-xs text-muted-foreground py-2">
+            Loading…
+          </p>
+        )}
 
-      {allMessages.map((message, i) => {
-        const isOwn = message.userId === currentUserId;
-        const prevMessage = allMessages[i - 1];
-        const showAvatar =
-          !isOwn && (i === 0 || prevMessage?.userId !== message.userId);
+        {allMessages.map((message, i) => {
+          const isOwn = message.userId === currentUserId;
+          const prevMessage = allMessages[i - 1];
+          const showAvatar =
+            !isOwn && (i === 0 || prevMessage?.userId !== message.userId);
 
-        return (
-          <MessageBubble
-            key={message.id}
-            message={message}
-            isOwn={isOwn}
-            showAvatar={showAvatar}
-            sender={isOwn ? undefined : otherParticipant}
-            onEdit={isOwn ? onEdit : undefined}
-            onDelete={isOwn ? onDelete : undefined}
-          />
-        );
-      })}
+          return (
+            <MessageBubble
+              key={message.id}
+              message={message}
+              isOwn={isOwn}
+              showAvatar={showAvatar}
+              sender={isOwn ? undefined : otherParticipant}
+              onEdit={isOwn ? onEdit : undefined}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }

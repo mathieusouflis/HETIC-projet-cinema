@@ -6,16 +6,19 @@ export const NavLink = ({
   startIcon: StartIcon,
   href,
   variant = "desktop",
+  matchPrefix = false,
   children,
 }: {
   startIcon?: LucideIcon;
   href: string;
   variant?: "mobile" | "desktop";
+  matchPrefix?: boolean;
   children: React.ReactNode;
 }) => {
   const { pathname } = useLocation();
-  const pathnameMatch =
-    pathname === "/" ? pathname === href : href.startsWith(pathname);
+  const pathnameMatch = matchPrefix
+    ? pathname.startsWith(href)
+    : pathname === href;
 
   return (
     <Link to={href} className="w-fit">

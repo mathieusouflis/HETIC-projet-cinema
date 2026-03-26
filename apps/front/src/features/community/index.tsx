@@ -197,7 +197,7 @@ function DiscoverRow({
       </Avatar>
       <span className="flex-1 font-medium truncate">{username}</span>
       {isAccepted ? (
-        <span className="text-xs text-muted-foreground flex items-center gap-1 shrink-0">
+        <span className="text-xs text-emerald-600 dark:text-emerald-400 flex items-center gap-1 shrink-0">
           <UserCheck className="size-4" /> Friends
         </span>
       ) : isPending ? (
@@ -289,7 +289,7 @@ export function CommunityPage() {
             >
               {label}
               {badge && badge > 0 ? (
-                <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
+                <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
                   {badge}
                 </span>
               ) : null}

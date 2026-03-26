@@ -46,7 +46,12 @@ export const BottomNav = () => {
           {Object.values(navConfig).map((v, idx) => {
             return v.requireAuth && !user ? null : (
               <li key={idx}>
-                <NavLink href={v.path} variant="mobile" startIcon={v.icon}>
+                <NavLink
+                  href={v.path}
+                  variant="mobile"
+                  startIcon={v.icon}
+                  matchPrefix={v.matchPrefix}
+                >
                   {v.name}
                 </NavLink>
               </li>
