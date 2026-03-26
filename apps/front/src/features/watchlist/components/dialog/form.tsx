@@ -13,7 +13,6 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -59,11 +58,42 @@ export default function FormWatchlist(props: {
   onSubmit?: () => void;
 }) {
   const services = useApi();
+  const isSeries = props.content.type === "serie";
 
   const { data: watchlistData, isLoading } = services.watchlist.getId(
     props.content.id
   );
+  const { data: contentDetails } = services.contents.get(
+    props.content.id,
+    isSeries
+      ? {
+          withSeasons: "true",
+          withEpisodes: "true",
+        }
+      : undefined
+  );
   const { mutateAsync: updateWatchlist } = services.watchlist.updateContentId();
+
+  type SeasonOption = {
+    id: string;
+    seasonNumber: number;
+    episodeCount: number | null;
+    episodes?: Array<{
+      episodeNumber: number;
+    }>;
+  };
+
+  const availableSeasons = useMemo(() => {
+    if (!isSeries) {
+      return [];
+    }
+
+    const seasons = (contentDetails?.seasons ??
+      props.content.seasons ??
+      []) as SeasonOption[];
+
+    return [...seasons].sort((a, b) => a.seasonNumber - b.seasonNumber);
+  }, [contentDetails?.seasons, isSeries, props.content.seasons]);
 
   const initialValues = useMemo(() => {
     if (watchlistData?.data?.data) {
@@ -92,9 +122,68 @@ export default function FormWatchlist(props: {
     defaultValues: initialValues,
   });
 
+  const selectedSeasonNumber = form.watch("currentSeason");
+  const selectedSeason = useMemo(
+    () =>
+      availableSeasons.find(
+        (season) => season.seasonNumber === selectedSeasonNumber
+      ),
+    [availableSeasons, selectedSeasonNumber]
+  );
+
+  const availableEpisodes = useMemo(() => {
+    if (!selectedSeason) {
+      return [];
+    }
+
+    if (selectedSeason.episodes?.length) {
+      return [...selectedSeason.episodes].sort(
+        (a, b) => a.episodeNumber - b.episodeNumber
+      );
+    }
+
+    const episodeCount = selectedSeason.episodeCount ?? 0;
+
+    return Array.from({ length: episodeCount }, (_, index) => ({
+      episodeNumber: index + 1,
+    }));
+  }, [selectedSeason]);
+
   useEffect(() => {
     form.reset(initialValues, { keepDefaultValues: false });
   }, [initialValues, form]);
+
+  useEffect(() => {
+    if (!isSeries) {
+      return;
+    }
+
+    const currentEpisode = form.getValues("currentEpisode");
+
+    if (!selectedSeason) {
+      if (currentEpisode !== undefined) {
+        form.setValue("currentEpisode", undefined, {
+          shouldDirty: true,
+          shouldValidate: true,
+        });
+      }
+      return;
+    }
+
+    const availableEpisodeNumbers = new Set(
+      availableEpisodes.map((episode) => episode.episodeNumber)
+    );
+
+    if (
+      currentEpisode !== undefined &&
+      !availableEpisodeNumbers.has(currentEpisode)
+    ) {
+      form.setValue("currentEpisode", undefined, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+    }
+  }, [availableEpisodes, form, isSeries, selectedSeason]);
 
   const onSubmit = async (values: FormValues) => {
     try {
@@ -144,7 +233,7 @@ export default function FormWatchlist(props: {
             </Field>
           )}
         />
-        {props.content.type === "serie" && (
+        {isSeries && (
           <>
             <Controller
               name="currentSeason"
@@ -152,22 +241,35 @@ export default function FormWatchlist(props: {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor={field.name}>Current Season</FieldLabel>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    type="number"
-                    min={1}
-                    aria-invalid={fieldState.invalid}
-                    placeholder="e.g. 1"
-                    value={field.value ?? ""}
-                    required
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value ? Number(e.target.value) : undefined
-                      )
-                    }
-                    onBlur={field.onBlur}
-                  />
+                  <Select
+                    value={field.value ? String(field.value) : undefined}
+                    onValueChange={(value) => {
+                      const nextSeason = Number(value);
+                      field.onChange(nextSeason);
+                      form.setValue("currentEpisode", undefined, {
+                        shouldDirty: true,
+                        shouldValidate: true,
+                      });
+                    }}
+                  >
+                    <SelectTrigger
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                      className="w-full"
+                    >
+                      <SelectValue placeholder="Select a season" />
+                    </SelectTrigger>
+                    <SelectContent className="z-[52]">
+                      {availableSeasons.map((season) => (
+                        <SelectItem
+                          key={season.id}
+                          value={String(season.seasonNumber)}
+                        >
+                          {`Season ${season.seasonNumber}`}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   {fieldState.error && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -180,22 +282,29 @@ export default function FormWatchlist(props: {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor={field.name}>Current Episode</FieldLabel>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    type="number"
-                    min={1}
-                    required
-                    aria-invalid={fieldState.invalid}
-                    placeholder="e.g. 1"
-                    value={field.value ?? ""}
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value ? Number(e.target.value) : undefined
-                      )
-                    }
-                    onBlur={field.onBlur}
-                  />
+                  <Select
+                    value={field.value ? String(field.value) : undefined}
+                    onValueChange={(value) => field.onChange(Number(value))}
+                    disabled={!selectedSeason || availableEpisodes.length === 0}
+                  >
+                    <SelectTrigger
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                      className="w-full"
+                    >
+                      <SelectValue placeholder="Select an episode" />
+                    </SelectTrigger>
+                    <SelectContent className="z-[52]">
+                      {availableEpisodes.map((episode) => (
+                        <SelectItem
+                          key={episode.episodeNumber}
+                          value={String(episode.episodeNumber)}
+                        >
+                          {`Episode ${episode.episodeNumber}`}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   {fieldState.error && (
                     <FieldError errors={[fieldState.error]} />
                   )}
