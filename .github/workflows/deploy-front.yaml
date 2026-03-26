@@ -1,0 +1,104 @@
+name: "deploy"
+run-name: ${{ github.actor }} is deploying FRONTEND  to production
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "./apps/api/**"
+      - "./apps/docs/**"
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/install-dependencies
+      - run: pnpm build
+
+  check-types:
+    name: Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/install-dependencies
+      - run: pnpm check-types
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/install-dependencies
+      - run: pnpm lint
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/install-dependencies
+      - run: pnpm test
+
+  deploy:
+    name: Deploy to Cloud Run
+    runs-on: ubuntu-latest
+    needs: [build, check-types, lint, test]
+    environment:
+      name: production
+      deployment: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          install_components: beta
+
+      - name: Configure Docker for GCR
+        run: gcloud auth configure-docker
+
+      - name: Install phase CLI
+        run: curl -fsSL https://pkg.phase.dev/install.sh | bash
+
+      - name: Export secrets from phase
+        run: |
+          phase secrets export --app hetic-cinema --env production --format yaml > /tmp/.env.prod.raw.yaml
+
+          # Cloud Run env file: force all values to strings
+          yq e -o=yaml 'with_entries(.value |= tostring)' /tmp/.env.prod.raw.yaml > /tmp/.env.prod.yaml
+
+          # GitHub Actions env file format
+          yq e -r 'to_entries | .[] | "\(.key)=\(.value|tostring)"' /tmp/.env.prod.raw.yaml >> "$GITHUB_ENV"
+        env:
+          PHASE_SERVICE_TOKEN: ${{ secrets.PHASE_SERVICE_TOKEN }}
+
+      - name: Build and push frontend image
+        run: |
+          docker build \
+            --file apps/front/Dockerfile \
+            --build-arg "VITE_BACKEND_API_URL=$VITE_BACKEND_API_URL" \
+            --build-arg "VITE_PUBLIC_POSTHOG_KEY=${VITE_PUBLIC_POSTHOG_KEY:-}" \
+            --build-arg "VITE_PUBLIC_POSTHOG_HOST=${VITE_PUBLIC_POSTHOG_HOST:-https://eu.i.posthog.com}" \
+            --tag "gcr.io/$GCP_PROJECT/cinema-front:$GITHUB_SHA" \
+            .
+          docker push "gcr.io/$GCP_PROJECT/cinema-front:$GITHUB_SHA"
+
+      - name: Deploy frontend
+        run: |
+          FRONTEND_PORT_INT=$((FRONTEND_PORT + 0))
+          gcloud run deploy cinema-front \
+            --image "gcr.io/$GCP_PROJECT/cinema-front:$GITHUB_SHA" \
+            --region "europe-west1" \
+            --platform managed \
+            --env-vars-file /tmp/.env.prod.yaml \
+            --port $FRONTEND_PORT_INT \
+            --allow-unauthenticated \
+            --project "$GCP_PROJECT"
+          rm -f /tmp/.env.prod.yaml
