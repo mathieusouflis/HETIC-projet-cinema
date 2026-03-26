@@ -1,6 +1,12 @@
-import { and, count, eq } from "drizzle-orm";
-import { db } from "../../../../../database/index";
-import { friendships, userStats } from "../../../../../database/schema.js";
+import { and, count, eq, sql, sum } from "drizzle-orm";
+import { db } from "../../../../../database/index.js";
+import {
+  content,
+  episodes,
+  friendships,
+  seasons,
+  watchlist,
+} from "../../../../../database/schema.js";
 import {
   type CreateUserProps,
   type UpdateUserProps,
@@ -25,46 +31,93 @@ export class UserRepository implements IUserRepository {
       return null;
     }
 
-    const [[followersResult], [followingResult], [statsRow]] =
-      await Promise.all([
-        db
-          .select({ count: count() })
-          .from(friendships)
-          .where(
-            and(
-              eq(friendships.friendId, id),
-              eq(friendships.status, "accepted")
-            )
-          ),
-        db
-          .select({ count: count() })
-          .from(friendships)
-          .where(
-            and(eq(friendships.userId, id), eq(friendships.status, "accepted"))
-          ),
-        db
-          .select({
-            totalWatchTimeMinutes: userStats.totalWatchTimeMinutes,
-            totalMoviesWatched: userStats.totalMoviesWatched,
-            totalEpisodesWatched: userStats.totalEpisodesWatched,
-          })
-          .from(userStats)
-          .where(eq(userStats.userId, id))
-          .limit(1),
-      ]);
+    const viewedSeriesEpisodesCondition = sql`
+      ${watchlist.status} = 'completed'
+      OR (
+        ${watchlist.currentSeason} IS NOT NULL
+        AND ${watchlist.currentEpisode} IS NOT NULL
+        AND ${watchlist.status} <> 'plan_to_watch'
+        AND ${watchlist.status} <> 'not_interested'
+        AND ${watchlist.status} <> 'undecided'
+        AND (
+          ${seasons.seasonNumber} < ${watchlist.currentSeason}
+          OR (
+            ${seasons.seasonNumber} = ${watchlist.currentSeason}
+            AND ${episodes.episodeNumber} <= ${watchlist.currentEpisode}
+          )
+        )
+      )
+    `;
 
-    const totalWatchTimeMinutes = statsRow?.totalWatchTimeMinutes ?? 0;
+    const [
+      [followersResult],
+      [followingResult],
+      [movieStatsRow],
+      [seriesStatsRow],
+    ] = await Promise.all([
+      db
+        .select({ count: count() })
+        .from(friendships)
+        .where(
+          and(eq(friendships.friendId, id), eq(friendships.status, "accepted"))
+        ),
+      db
+        .select({ count: count() })
+        .from(friendships)
+        .where(
+          and(eq(friendships.userId, id), eq(friendships.status, "accepted"))
+        ),
+      db
+        .select({
+          totalMovieMinutes: sql<number>`coalesce(${sum(
+            content.durationMinutes
+          )}, 0)`,
+          totalMoviesWatched: count(),
+        })
+        .from(watchlist)
+        .innerJoin(content, eq(content.id, watchlist.contentId))
+        .where(
+          and(
+            eq(watchlist.userId, id),
+            eq(watchlist.status, "completed"),
+            eq(content.type, "movie")
+          )
+        ),
+      db
+        .select({
+          totalSeriesMinutes: sql<number>`coalesce(${sum(
+            episodes.durationMinutes
+          )}, 0)`,
+          totalEpisodesWatched: count(episodes.id),
+        })
+        .from(watchlist)
+        .innerJoin(content, eq(content.id, watchlist.contentId))
+        .leftJoin(seasons, eq(seasons.seriesId, content.id))
+        .leftJoin(episodes, eq(episodes.seasonId, seasons.id))
+        .where(
+          and(
+            eq(watchlist.userId, id),
+            eq(content.type, "serie"),
+            viewedSeriesEpisodesCondition
+          )
+        ),
+    ]);
+    const totalMovieMinutes = Number(movieStatsRow?.totalMovieMinutes ?? 0);
+    const totalSeriesMinutes = Number(seriesStatsRow?.totalSeriesMinutes ?? 0);
+    const totalMoviesWatched = Number(movieStatsRow?.totalMoviesWatched ?? 0);
+    const totalEpisodesWatched = Number(
+      seriesStatsRow?.totalEpisodesWatched ?? 0
+    );
 
     return new User({
       ...row,
       followersCount: Number(followersResult?.count ?? 0),
       followingCount: Number(followingResult?.count ?? 0),
       stats: {
-        // TODO: Split movie/series hours when dedicated metrics are available.
-        totalSeriesHours: 0,
-        totalMovieHours: Math.floor(totalWatchTimeMinutes / 60),
-        totalEpisodes: statsRow?.totalEpisodesWatched ?? 0,
-        totalMovies: statsRow?.totalMoviesWatched ?? 0,
+        totalSeriesHours: Math.floor(totalSeriesMinutes / 60),
+        totalMovieHours: Math.floor(totalMovieMinutes / 60),
+        totalEpisodes: totalEpisodesWatched,
+        totalMovies: totalMoviesWatched,
       },
     });
   }
