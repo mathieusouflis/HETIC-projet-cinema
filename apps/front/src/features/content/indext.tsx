@@ -76,7 +76,7 @@ export function ContentPage() {
               >
                 <Button variant={"default"} color="blue" size={"icon-xl"}>
                   {watchlistData?.data.data ? (
-                    <Pen className="dark:bg-white" />
+                    <Pen />
                   ) : (
                     <Plus className="dark:stroke-white" />
                   )}

@@ -41,7 +41,7 @@ export function WatchlistRow({
   return (
     <div className="bg-card flex items-center gap-3 rounded-xl p-3 sm:gap-4 sm:p-4">
       {/* rank */}
-      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-neutral-100 text-sm font-semibold text-neutral-700 sm:h-7 sm:w-7">
+      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-neutral-100 dark:bg-neutral-800 text-sm font-semibold text-neutral-700 dark:text-neutral-200 sm:h-7 sm:w-7">
         {rank}
       </div>
 

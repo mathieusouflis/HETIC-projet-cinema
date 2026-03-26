@@ -1,6 +1,6 @@
 export function TableHeader() {
   return (
-    <div className="text-muted-foreground mb-2 hidden items-center px-3 p-2 rounded-lg bg-neutral-100 text-sm font-medium sm:flex">
+    <div className="text-muted-foreground mb-2 hidden items-center px-3 p-2 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-sm font-medium sm:flex">
       <span className="w-8 shrink-0">#ID</span>
       <span className="ml-3 w-14 shrink-0" />
       <span className="ml-3 flex-1" />

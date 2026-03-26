@@ -35,7 +35,7 @@ export const SearchResults = ({
 
   return (
     <Tabs defaultValue="all">
-      <div className="sticky top-0 w-full bg-linear-to-b from-white from-80% to-white/0 pb-4">
+      <div className="sticky top-0 w-full bg-linear-to-b from-background from-80% to-background/0 pb-4">
         <TabsList variant={"none"}>
           <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="movies">Movies</TabsTrigger>
