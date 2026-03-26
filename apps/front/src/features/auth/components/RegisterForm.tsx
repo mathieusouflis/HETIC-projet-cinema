@@ -120,6 +120,9 @@ export function RegisterForm() {
                       <InputGroup>
                         <InputGroupInput
                           {...field}
+                          onChange={(e) =>
+                            field.onChange(e.target.value.toLowerCase())
+                          }
                           id={field.name}
                           type="text"
                           placeholder="yourusername"

@@ -19,9 +19,10 @@ const changeUsernameSchema = z.object({
     .min(3, "Username must be at least 3 characters")
     .max(30, "Username must be less than 30 characters")
     .regex(
-      /^[a-zA-Z0-9_-]+$/,
-      "Username can only contain letters, numbers, hyphens, and underscores"
-    ),
+      /^[a-z0-9_-]+$/,
+      "Username can only contain lowercase letters, numbers, hyphens, and underscores"
+    )
+    .toLowerCase(),
 });
 
 type ChangeUsernameFormValues = z.infer<typeof changeUsernameSchema>;
@@ -79,6 +80,7 @@ export function ChangeUsernameForm({
               <InputGroup>
                 <InputGroupInput
                   {...field}
+                  onChange={(e) => field.onChange(e.target.value.toLowerCase())}
                   id={field.name}
                   aria-invalid={fieldState.invalid}
                   placeholder="your-username"
