@@ -58,7 +58,6 @@ export function ChatPanel({ conversationId }: ChatPanelProps) {
 
   const sendMutation = queryMessageService.send(conversationId);
   const editMutation = queryMessageService.edit();
-  const deleteMutation = queryMessageService.delete();
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [failedContent, setFailedContent] = useState<string | null>(null);
@@ -96,8 +95,8 @@ export function ChatPanel({ conversationId }: ChatPanelProps) {
   const otherParticipant = conversation?.otherParticipant;
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex items-center gap-3 border-b px-4 py-3 shrink-0">
+    <div className="flex flex-col h-[calc(100vh-40px)]">
+      <div className="flex items-center gap-3 border-b px-4 py-3 shrink-0 ">
         <Button
           variant="ghost"
           size="icon-sm"
@@ -151,7 +150,7 @@ export function ChatPanel({ conversationId }: ChatPanelProps) {
         )}
       </div>
 
-      <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+      <div className="min-h-0 h-max flex flex-col overflow-hidden">
         {otherParticipant && (
           <MessageList
             pages={pages}
@@ -161,7 +160,6 @@ export function ChatPanel({ conversationId }: ChatPanelProps) {
             isFetchingNextPage={isFetchingPreviousPage}
             onFetchNextPage={fetchPreviousPage}
             onEdit={(id) => setEditingId(id)}
-            onDelete={(id) => deleteMutation.mutate(id)}
           />
         )}
       </div>

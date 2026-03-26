@@ -1,6 +1,4 @@
-import { Trash2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { Message, Participant } from "../../types";
 
@@ -16,7 +14,6 @@ interface MessageBubbleProps {
   showAvatar: boolean;
   sender?: Participant;
   onEdit?: (messageId: string) => void;
-  onDelete?: (messageId: string) => void;
 }
 
 export function MessageBubble({
@@ -24,7 +21,6 @@ export function MessageBubble({
   isOwn,
   showAvatar,
   sender,
-  onDelete,
 }: MessageBubbleProps) {
   const { content, isDeleted } = message;
 
@@ -55,12 +51,12 @@ export function MessageBubble({
       <div className="relative max-w-[70%]">
         <div
           className={cn(
-            "rounded-2xl px-3 py-2 text-sm",
+            "rounded-2xl px-3 py-2 text-sm max-w-full wrap-break-word",
             isOwn ? "bg-primary/10 rounded-br-sm" : "bg-muted rounded-bl-sm",
             isDeleted && "italic text-muted-foreground"
           )}
         >
-          {isDeleted ? <span>Message deleted</span> : <span>{content}</span>}
+          {isDeleted ? <span>Message deleted</span> : content}
         </div>
 
         <p
@@ -91,16 +87,6 @@ export function MessageBubble({
                 <Pencil />
               </Button>
             )}*/}
-            {isOwn && onDelete && (
-              <Button
-                variant="ghost"
-                size="icon-xs"
-                onClick={() => onDelete(message.id)}
-                aria-label="Delete message"
-              >
-                <Trash2 />
-              </Button>
-            )}
           </div>
         )}
       </div>

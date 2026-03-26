@@ -72,6 +72,8 @@ export const queryMessageService = {
       getPreviousPageParam: (firstPage: MessagePage) =>
         firstPage.nextCursor ?? undefined,
       enabled: !!conversationId,
+      staleTime: 0,
+      gcTime: 0,
     }),
 
   send: (conversationId: string) => {

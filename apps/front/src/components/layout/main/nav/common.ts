@@ -19,6 +19,7 @@ type NavConfig = Record<
       desktop: boolean;
     };
     requireAuth?: boolean;
+    matchPrefix?: boolean;
   }
 >;
 
@@ -46,6 +47,7 @@ export const navConfig: NavConfig = {
     path: baseRoutes.messages,
     icon: MessageSquare,
     requireAuth: true,
+    matchPrefix: true,
     devices: {
       mobile: true,
       desktop: true,
