@@ -13,6 +13,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/features/auth/stores/auth.store";
 import { contentsKeys } from "../contents/keys";
+import { usersKeys } from "../users/keys";
 import { watchlistKeys } from "./keys";
 
 const postWatchlist = async (data: POSTWatchlistBody) => {
@@ -59,6 +60,9 @@ export const queryWatchlistService = {
           queryKey: watchlistKeys.all(user?.id ?? ""),
         });
         queryClient.invalidateQueries({
+          queryKey: usersKeys.me(),
+        });
+        queryClient.invalidateQueries({
           queryKey: contentsKeys.discoverAll(),
         });
         if (params.contentId) {
@@ -97,6 +101,9 @@ export const queryWatchlistService = {
         queryClient.invalidateQueries({
           queryKey: watchlistKeys.all(user?.id ?? ""),
         });
+        queryClient.invalidateQueries({
+          queryKey: usersKeys.me(),
+        });
       },
     });
   },
@@ -115,6 +122,9 @@ export const queryWatchlistService = {
       onSuccess: (_, { id }) => {
         queryClient.invalidateQueries({
           queryKey: watchlistKeys.all(user?.id ?? ""),
+        });
+        queryClient.invalidateQueries({
+          queryKey: usersKeys.me(),
         });
         queryClient.invalidateQueries({
           queryKey: contentsKeys.get(id),
@@ -137,6 +147,9 @@ export const queryWatchlistService = {
           queryKey: watchlistKeys.all(user?.id ?? ""),
         });
         queryClient.invalidateQueries({
+          queryKey: usersKeys.me(),
+        });
+        queryClient.invalidateQueries({
           queryKey: contentsKeys.get(contentId),
         });
         queryClient.invalidateQueries({
@@ -154,6 +167,9 @@ export const queryWatchlistService = {
       onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: watchlistKeys.all(user?.id ?? ""),
+        });
+        queryClient.invalidateQueries({
+          queryKey: usersKeys.me(),
         });
       },
     });
