@@ -2,17 +2,20 @@ import { describe, it } from "vitest";
 import { PasswordService } from "../../../../shared/services/password";
 import { JWTService } from "../../../../shared/services/token";
 import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock.";
+import { createMockedRefreshTokenRepository } from "../../domain/interfaces/refresh-token.repository.mock.";
 import { LoginUseCase } from "./login.usecase";
 
 describe("LoginUseCase", () => {
   const mockedUserRepository = createMockedUserRepository();
   const tokenService = new JWTService();
   const passwordService = new PasswordService();
+  const mockedRefreshTokenRepository = createMockedRefreshTokenRepository();
 
   const useCase = new LoginUseCase(
     mockedUserRepository,
     passwordService,
-    tokenService
+    tokenService,
+    mockedRefreshTokenRepository
   );
 
   it("should throw an error when user not found", async () => {

@@ -39,6 +39,7 @@ import type { RefreshTokenResponse } from "../dto/response/refresh-token.respons
 import { refreshTokenResponseBodyValidator } from "../dto/response/refresh-token.response.validator.js";
 import type { ForgotPasswordUseCase } from "../use-cases/forgot-password.usecase.js";
 import type { LoginUseCase } from "../use-cases/login.usecase.js";
+import type { LogoutUseCase } from "../use-cases/logout.usecase.js";
 import type { RefreshTokenUseCase } from "../use-cases/refresh-token.usecase.js";
 import type { RegisterUseCase } from "../use-cases/register.usecase.js";
 import type { ResendVerificationUseCase } from "../use-cases/resend-verification.usecase.js";
@@ -75,6 +76,7 @@ export class AuthController extends BaseController {
     private readonly registerUseCase: RegisterUseCase,
     private readonly loginUseCase: LoginUseCase,
     private readonly refreshTokenUseCase: RefreshTokenUseCase,
+    private readonly logoutUseCase: LogoutUseCase,
     private readonly forgotPasswordUseCase: ForgotPasswordUseCase,
     private readonly resetPasswordUseCase: ResetPasswordUseCase,
     private readonly verifyEmailUseCase: VerifyEmailUseCase,
@@ -221,8 +223,8 @@ export class AuthController extends BaseController {
   @Protected()
   @ApiResponse(200, "Logged out successfully", successResponseSchema)
   @ApiResponse(401, "Not authenticated", unauthorizedErrorResponseSchema)
-  logout = asyncHandler(async (_req: Request, res: Response): Promise<void> => {
-    // TODO: Implement token invalidation/blacklisting
+  logout = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    await this.logoutUseCase.execute(req.cookies[REFRESH_TOKEN_COOKIE_NAME]);
     res.clearCookie(REFRESH_TOKEN_COOKIE_NAME, {
       domain: config.env.backend.cookieDomain,
       sameSite: "lax",
