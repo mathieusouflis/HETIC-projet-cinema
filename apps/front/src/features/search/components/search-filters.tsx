@@ -74,7 +74,7 @@ export function SearchFilters({ values, onApply }: SearchFiltersProps) {
           className={cn(
             "rounded-full gap-1.5 transition-colors shrink-0",
             open &&
-              "bg-foreground text-background border-foreground hover:bg-foreground/90 hover:text-background"
+              "bg-foreground text-background dark:bg-foreground dark:hover:bg-foreground/90 border-foreground hover:bg-foreground/90 hover:text-background"
           )}
         >
           <SlidersHorizontal className="size-3.5" />
