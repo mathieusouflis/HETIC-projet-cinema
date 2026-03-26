@@ -128,12 +128,6 @@ export function LoginForm() {
                     <Field data-invalid={fieldState.invalid}>
                       <div className="flex items-center justify-between">
                         <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-                        <Link
-                          to="/forgot-password"
-                          className="text-xs underline text-muted-foreground"
-                        >
-                          Forgot password?
-                        </Link>
                       </div>
                       <InputGroup>
                         <InputGroupInput
@@ -159,6 +153,14 @@ export function LoginForm() {
                   )}
                 />
               </FieldGroup>
+              <div className="flex justify-end">
+                <Link
+                  to="/forgot-password"
+                  className="text-xs underline text-muted-foreground"
+                >
+                  Forgot password?
+                </Link>
+              </div>
 
               {globalError && (
                 <FieldError errors={[{ message: globalError }]} />
