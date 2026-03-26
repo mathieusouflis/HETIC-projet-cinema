@@ -57,6 +57,11 @@ import type { GetUserByIdUseCase } from "../use-cases/GetUserById.usecase";
 import type { GetUsersUseCase } from "../use-cases/GetUsers.usecase";
 import type { UpdateUserUseCase } from "../use-cases/UpdateUser.usecase";
 
+const getSingleParamId = (req: Request): string => {
+  const { id } = req.params;
+  return Array.isArray(id) ? (id[0] ?? "") : (id ?? "");
+};
+
 @Controller({
   tag: "Users",
   prefix: "/users",
@@ -269,7 +274,7 @@ export class UsersController extends BaseController {
   @ApiResponse(404, "User not found", notFoundErrorResponseSchema)
   update = asyncHandler(
     async (req: Request, res: Response): Promise<PatchIdResponse> => {
-      const id = req.params.id!;
+      const id = getSingleParamId(req);
       const updateData = req.body;
 
       const updatedUser = await this.updateUserUseCase.execute(id, updateData);
@@ -300,7 +305,7 @@ export class UsersController extends BaseController {
   )
   @ApiResponse(404, "User not found", notFoundErrorResponseSchema)
   delete = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const id = req.params.id!;
+    const id = getSingleParamId(req);
 
     await this.deleteUserUseCase.execute(id);
 
