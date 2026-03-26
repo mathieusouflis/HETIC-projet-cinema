@@ -13,6 +13,7 @@
     "db:start": "docker compose -f docker-compose.dev.yaml up -d --wait",
     "db:stop": "docker compose -f docker-compose.dev.yaml down",
     "dev": "phase run pnpm db:start && phase run turbo run dev",
+    "dev:local": "docker compose -f docker-compose.dev.yaml up -d --wait && dotenv -- turbo run dev",
     "format": "pnpm lint --write",
     "lint": "biome check --max-diagnostics=500 --diagnostic-level=error",
     "start": "phase run turbo run start",
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.8",
+    "dotenv-cli": "^8.0.0",
     "husky": "^9.1.7",
     "turbo": "^2.8.20"
   },

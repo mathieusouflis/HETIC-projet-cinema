@@ -47,7 +47,6 @@ export const env = {
 
   backend: {
     port: parseNumber(getEnvVar("BACKEND_PORT", 3000), 3000),
-    host: getEnvVar("BACKEND_HOST", "localhost") as string,
     apiUrl: getEnvVar(
       "VITE_BACKEND_API_URL",
       "http://localhost:3000"
@@ -57,39 +56,23 @@ export const env = {
   },
 
   externalApi: {
-    omdbApiKey: getEnvVar("OMDB_API_KEY", "") as string,
     tmdbApiKey: getEnvVar("TMDB_API_KEY", "") as string,
   },
 
   frontend: {
-    port: parseNumber(getEnvVar("FRONTEND_PORT", 3001), 3001),
-    host: getEnvVar("FRONTEND_HOST", "localhost") as string,
     url: getEnvVar("FRONTEND_URL", "http://localhost:3001") as string,
-    posthog: {
-      key: getEnvVar("VITE_PUBLIC_POSTHOG_KEY", "") as string,
-      host: getEnvVar(
-        "VITE_PUBLIC_POSTHOG_HOST",
-        "https://eu.i.posthog.com"
-      ) as string,
-    },
   },
 
   database: {
     host: getEnvVar("DB_HOST", "localhost") as string,
     port: parseNumber(getEnvVar("DB_PORT", 5432), 5432),
-    name: getEnvVar("DB_DATABASE", "myapp") as string,
+    database: getEnvVar("DB_DATABASE", "myapp") as string,
     user: getEnvVar("DB_USER", "postgres") as string,
     password: getEnvVar("DB_PASSWORD", "") as string,
-    database: getEnvVar("DB_DATABASE", "the_database") as string,
     ssl: parseBool(getEnvVar("DB_SSL", false)),
   },
 
-  API_SECRET_KEY: getEnvVar("API_SECRET_KEY", "") as string,
   JWT_SECRET: getEnvVar("JWT_SECRET", "") as string,
-
-  CORS_ORIGIN: getEnvVar("CORS_ORIGIN", "http://localhost:3001") as string,
-
-  SESSION_SECRET: getEnvVar("SESSION_SECRET", "") as string,
   COOKIE_SECURE: parseBool(getEnvVar("COOKIE_SECURE", false)),
 
   mailgun: {

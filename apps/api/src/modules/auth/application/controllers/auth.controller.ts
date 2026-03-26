@@ -46,14 +46,12 @@ import type { ResendVerificationUseCase } from "../use-cases/resend-verification
 import type { ResetPasswordUseCase } from "../use-cases/reset-password.usecase.js";
 import type { VerifyEmailUseCase } from "../use-cases/verify-email.usecase.js";
 
-const isProduction = config.env.NODE_ENV === "production";
-
 const REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
 const REFRESH_TOKEN_COOKIE_OPTIONS: CookieOptions = {
   domain: config.env.backend.cookieDomain,
   maxAge: 7 * 24 * 60 * 60 * 1000,
   sameSite: "lax",
-  secure: isProduction,
+  secure: config.env.COOKIE_SECURE,
   httpOnly: true,
 };
 
@@ -62,7 +60,7 @@ const ACCESS_TOKEN_COOKIE_OPTIONS: CookieOptions = {
   domain: config.env.backend.cookieDomain,
   maxAge: 15 * 60 * 1000,
   sameSite: "lax",
-  secure: isProduction,
+  secure: config.env.COOKIE_SECURE,
   httpOnly: true,
 };
 
@@ -228,13 +226,13 @@ export class AuthController extends BaseController {
     res.clearCookie(REFRESH_TOKEN_COOKIE_NAME, {
       domain: config.env.backend.cookieDomain,
       sameSite: "lax",
-      secure: isProduction,
+      secure: config.env.COOKIE_SECURE,
       httpOnly: true,
     });
     res.clearCookie(ACCESS_TOKEN_COOKIE_NAME, {
       domain: config.env.backend.cookieDomain,
       sameSite: "lax",
-      secure: isProduction,
+      secure: config.env.COOKIE_SECURE,
       httpOnly: true,
     });
     res.status(200).json({

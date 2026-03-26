@@ -35,7 +35,7 @@ export const createServer = (): AppServer => {
     .use(json())
     .use(
       cors({
-        origin: process.env.FRONTEND_URL || "http://localhost:3000",
+        origin: config.env.frontend.url,
         credentials: true,
       })
     )
@@ -63,7 +63,7 @@ export const createServer = (): AppServer => {
 
   const io = new SocketIOServer(httpServer, {
     cors: {
-      origin: process.env.FRONTEND_URL || "http://localhost:3000",
+      origin: config.env.frontend.url,
       credentials: true,
     },
     path: "/socket.io",
