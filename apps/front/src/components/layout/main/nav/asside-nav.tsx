@@ -1,13 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import {
-  Bell,
-  LogOut,
-  Monitor,
-  Moon,
-  Settings,
-  Sun,
-  User2,
-} from "lucide-react";
+import { LogOut, Monitor, Moon, Settings, Sun, User2 } from "lucide-react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -77,70 +69,65 @@ export const AssideNav = () => {
             </Link>
           )}
           {user && (
-            <>
-              <Button variant={"ghost"} size={"icon-2xl"}>
-                <Bell />
-              </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <Avatar size="2xl">
-                    {user?.avatarUrl ? (
-                      <AvatarImage src={user.avatarUrl} alt="Avatar" />
-                    ) : (
-                      <span className="w-full h-full bg-neutral-400" />
-                    )}
-                  </Avatar>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuGroup>
-                    <DropdownMenuLabel className="text-muted-foreground">
-                      {user.username}
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <Link to={routes.profile}>
-                      <DropdownMenuItem>
-                        <User2 />
-                        Profile
-                      </DropdownMenuItem>
-                    </Link>
-                    <DropdownMenuSub>
-                      <DropdownMenuSubTrigger>
-                        <Sun className="h-4 w-4 dark:hidden" />
-                        <Moon className="hidden h-4 w-4 dark:block" />
-                        <span>Theme</span>
-                      </DropdownMenuSubTrigger>
-                      <DropdownMenuPortal>
-                        <DropdownMenuSubContent>
-                          <DropdownMenuItem onClick={() => setTheme("light")}>
-                            <Sun className="mr-2 h-4 w-4" />
-                            <span>Light</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => setTheme("dark")}>
-                            <Moon className="mr-2 h-4 w-4" />
-                            <span>Dark</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => setTheme("system")}>
-                            <Monitor className="mr-2 h-4 w-4" />
-                            <span>System</span>
-                          </DropdownMenuItem>
-                        </DropdownMenuSubContent>
-                      </DropdownMenuPortal>
-                    </DropdownMenuSub>
-                    <Link to={routes.settings}>
-                      <DropdownMenuItem>
-                        <Settings />
-                        Settings
-                      </DropdownMenuItem>
-                    </Link>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogout}>
-                      <LogOut />
-                      Sign out
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Avatar size="2xl">
+                  {user?.avatarUrl ? (
+                    <AvatarImage src={user.avatarUrl} alt="Avatar" />
+                  ) : (
+                    <span className="w-full h-full bg-neutral-400" />
+                  )}
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel className="text-muted-foreground">
+                    {user.username}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <Link to={routes.profile}>
+                    <DropdownMenuItem>
+                      <User2 />
+                      Profile
                     </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </>
+                  </Link>
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                      <Sun className="h-4 w-4 dark:hidden" />
+                      <Moon className="hidden h-4 w-4 dark:block" />
+                      <span>Theme</span>
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                      <DropdownMenuSubContent>
+                        <DropdownMenuItem onClick={() => setTheme("light")}>
+                          <Sun className="mr-2 h-4 w-4" />
+                          <span>Light</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setTheme("dark")}>
+                          <Moon className="mr-2 h-4 w-4" />
+                          <span>Dark</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setTheme("system")}>
+                          <Monitor className="mr-2 h-4 w-4" />
+                          <span>System</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                  </DropdownMenuSub>
+                  <Link to={routes.settings}>
+                    <DropdownMenuItem>
+                      <Settings />
+                      Settings
+                    </DropdownMenuItem>
+                  </Link>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut />
+                    Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
         </div>
       </div>
