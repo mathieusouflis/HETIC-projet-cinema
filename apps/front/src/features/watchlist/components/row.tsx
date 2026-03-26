@@ -35,7 +35,7 @@ export function WatchlistRow({
 
   const progress =
     content.type === "serie" && item.currentEpisode != null
-      ? `${item.currentSeason ?? 1} / ${item.currentEpisode}`
+      ? `S.${item.currentSeason ?? 1} / Ep.${item.currentEpisode}`
       : null;
 
   return (
@@ -77,7 +77,7 @@ export function WatchlistRow({
       </div>
 
       {/* progress — desktop only */}
-      <div className="text-muted-foreground hidden w-14 shrink-0 text-center text-sm sm:block">
+      <div className="text-muted-foreground hidden w-fit-content shrink-0 text-center text-sm sm:block">
         {progress ?? "—"}
       </div>
 
