@@ -30,6 +30,7 @@
 * [Module Pattern](developer-guide/architecture/module-pattern.md)
 * [Decorator System](developer-guide/architecture/decorator-system.md)
 * [TMDB Integration](developer-guide/architecture/tmdb-integration.md)
+* [Content Ingestion](developer-guide/architecture/content-ingestion.md)
 * [Error Handling](developer-guide/architecture/error-handling.md)
 
 ### Step-by-step Guides
