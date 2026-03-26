@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SearchInput } from "@/components/common/search-input";
 
 interface SearchBarProps {
@@ -26,6 +26,13 @@ export function SearchBar({
       },
     });
   };
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      submit(query);
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [query]);
 
   return (
     <SearchInput

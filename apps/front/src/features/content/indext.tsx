@@ -54,21 +54,28 @@ export function ContentPage() {
             />
           )}
           <div className="flex flex-row gap-3 w-full md:w-auto">
-            <Link
-              target="_blank"
-              to={data?.trailerUrl ?? undefined}
-              className="w-full"
-            >
+            {data?.trailerUrl ? (
+              <Link target="_blank" to={data.trailerUrl} className="w-full">
+                <Button
+                  variant={"default"}
+                  color="blue"
+                  size={"xl"}
+                  className="w-full dark:text-white"
+                >
+                  Watch Trailer
+                </Button>
+              </Link>
+            ) : (
               <Button
                 variant={"default"}
                 color="blue"
                 size={"xl"}
-                disabled={!data?.trailerUrl}
+                disabled
                 className="w-full dark:text-white"
               >
                 Watch Trailer
               </Button>
-            </Link>
+            )}
             {data && (
               <AddContentToWatchlistDialog
                 variant={watchlistData?.data.data ? "edit" : "new"}
