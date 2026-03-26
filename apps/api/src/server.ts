@@ -11,6 +11,7 @@ import { config } from "@packages/config";
 import { logger } from "@packages/logger";
 import * as Sentry from "@sentry/node";
 import cookieParser from "cookie-parser";
+import { rateLimitConfig } from "./config/rate-limiter";
 import { apiVersion1Router } from "./modules";
 import { createAsyncAPIRouter } from "./shared/infrastructure/routes/asyncapi.routes.js";
 import { errorMiddleware, notFoundMiddleware } from "./shared/middleware";
@@ -28,6 +29,7 @@ export const createServer = (): AppServer => {
 
   app
     .disable("x-powered-by")
+    .use(rateLimitConfig)
     .use(morgan("dev"))
     .use(urlencoded({ extended: true }))
     .use(json())
