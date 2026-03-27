@@ -46,7 +46,7 @@ export default function WatchlistPage() {
       <Tabs defaultValue="all">
         {/* tab pills */}
         <TabsList
-          variant="none"
+          variant="premium"
           className="mb-6 flex h-auto w-full flex-wrap gap-2 justify-start"
         >
           {STATUS_TABS.map((tab) => (

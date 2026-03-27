@@ -31,6 +31,8 @@ const tabsListVariants = cva(
         default: "bg-muted",
         line: "gap-1 bg-transparent",
         none: "bg-transparent gap-2",
+        premium:
+          "rounded-full border border-border/70 bg-muted/70 p-1.5 dark:border-white/10 dark:bg-white/5",
       },
     },
     defaultVariants: {
@@ -68,6 +70,7 @@ function TabsTrigger({
         "data-[state=active]:bg-background dark:data-[state=active]:text-foreground dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 data-[state=active]:text-foreground",
         "after:bg-foreground after:absolute after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 group-data-[orientation=vertical]/tabs:after:-right-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-[state=active]:after:opacity-100",
         "group-data-[variant=none]/tabs-list:bg-secondary group-data-[variant=none]/tabs-list:text-secondary-foreground group-data-[variant=none]/tabs-list:rounded-full group-data-[variant=none]/tabs-list:px-4 group-data-[variant=none]/tabs-list:py-4  group-data-[variant=none]/tabs-list:data-[state=active]:bg-foreground group-data-[variant=none]/tabs-list:data-[state=active]:text-white",
+        "group-data-[variant=premium]/tabs-list:rounded-full group-data-[variant=premium]/tabs-list:px-4 group-data-[variant=premium]/tabs-list:py-2.5 group-data-[variant=premium]/tabs-list:data-[state=active]:bg-background group-data-[variant=premium]/tabs-list:data-[state=active]:text-foreground group-data-[variant=premium]/tabs-list:data-[state=active]:shadow-sm group-data-[variant=premium]/tabs-list:hover:bg-background/70 dark:group-data-[variant=premium]/tabs-list:data-[state=active]:border-white/10 dark:group-data-[variant=premium]/tabs-list:data-[state=active]:bg-white/10 dark:group-data-[variant=premium]/tabs-list:hover:bg-white/8",
         className
       )}
       {...props}

@@ -25,7 +25,7 @@ export function ProfileHeader({ profile }: Props) {
         <div className="flex flex-col">
           <h2 className="text-xl font-semibold">{profile.username}</h2>
 
-          <div className="flex gap-4 text-sm text-muted-foreground mt-1">
+          <div className="mt-1 flex gap-4 text-sm text-muted-foreground">
             <span>
               <span className="font-medium text-foreground">
                 {profile.followingCount}
@@ -43,7 +43,7 @@ export function ProfileHeader({ profile }: Props) {
         </div>
       </div>
 
-      <div className="flex gap-2 justify-end">
+      <div className="flex justify-end gap-2">
         <Button variant="outline" size="sm">
           Share
         </Button>
