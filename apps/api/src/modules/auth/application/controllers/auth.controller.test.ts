@@ -20,6 +20,7 @@ const makeController = () => {
   const registerUseCase: ExecuteMock = { execute: vi.fn() };
   const loginUseCase: ExecuteMock = { execute: vi.fn() };
   const refreshTokenUseCase: ExecuteMock = { execute: vi.fn() };
+  const logoutUseCase: ExecuteMock = { execute: vi.fn() };
   const forgotPasswordUseCase: ExecuteMock = { execute: vi.fn() };
   const resetPasswordUseCase: ExecuteMock = { execute: vi.fn() };
   const verifyEmailUseCase: ExecuteMock = { execute: vi.fn() };
@@ -29,13 +30,20 @@ const makeController = () => {
     registerUseCase as never,
     loginUseCase as never,
     refreshTokenUseCase as never,
+    logoutUseCase as never,
     forgotPasswordUseCase as never,
     resetPasswordUseCase as never,
     verifyEmailUseCase as never,
     resendVerificationUseCase as never
   );
 
-  return { controller, registerUseCase, loginUseCase, refreshTokenUseCase };
+  return {
+    controller,
+    registerUseCase,
+    loginUseCase,
+    refreshTokenUseCase,
+    logoutUseCase,
+  };
 };
 
 describe("AuthController", () => {
@@ -119,14 +127,16 @@ describe("AuthController", () => {
   });
 
   it("logout should return 200 success payload", async () => {
-    const { controller } = makeController();
-    const req = makeReq({});
+    const { controller, logoutUseCase } = makeController();
+    const req = makeReq({ cookies: { refreshToken: "refresh-1" } as never });
     const res = makeRes();
     const next = makeNext();
+    logoutUseCase.execute.mockResolvedValue(undefined);
 
     controller.logout(req, res, next);
     await flush();
 
+    expect(logoutUseCase.execute).toHaveBeenCalledWith("refresh-1");
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.clearCookie).toHaveBeenCalledTimes(2);
     expect(res.json).toHaveBeenCalledWith({

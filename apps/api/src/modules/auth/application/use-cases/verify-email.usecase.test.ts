@@ -5,6 +5,7 @@ import type { ITokenService } from "../../../../shared/services/token/i-token-se
 import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";
 import { EmailVerificationToken } from "../../domain/entities/email-verification-token.entity.js";
 import type { IEmailVerificationTokenRepository } from "../../domain/interfaces/IEmailVerificationTokenRepository.js";
+import type { IRefreshTokenRepository } from "../../domain/interfaces/IRefreshTokenRepository.js";
 import { VerifyEmailUseCase } from "./verify-email.usecase.js";
 
 const makeToken = (overrides?: Partial<{ usedAt: string | null }>) =>
@@ -31,11 +32,18 @@ describe("VerifyEmailUseCase", () => {
       generateTokenPair: vi.fn(),
     } as unknown as ITokenService;
     const emailService: IEmailService = { send: vi.fn() };
+    const refreshTokenRepository: IRefreshTokenRepository = {
+      create: vi.fn(),
+      findByTokenHash: vi.fn(),
+      revokeByTokenHash: vi.fn(),
+      revokeAllByUserId: vi.fn(),
+    } as unknown as IRefreshTokenRepository;
     const useCase = new VerifyEmailUseCase(
       tokenRepository,
       userRepository,
       tokenService,
-      emailService
+      emailService,
+      refreshTokenRepository
     );
 
     await expect(
@@ -78,11 +86,18 @@ describe("VerifyEmailUseCase", () => {
     const emailService: IEmailService = {
       send: vi.fn().mockResolvedValue(undefined),
     };
+    const refreshTokenRepository: IRefreshTokenRepository = {
+      create: vi.fn().mockResolvedValue(undefined),
+      findByTokenHash: vi.fn(),
+      revokeByTokenHash: vi.fn(),
+      revokeAllByUserId: vi.fn(),
+    } as unknown as IRefreshTokenRepository;
     const useCase = new VerifyEmailUseCase(
       tokenRepository,
       userRepository,
       tokenService,
-      emailService
+      emailService,
+      refreshTokenRepository
     );
 
     const [authPayload, refreshToken] = await useCase.execute({
@@ -92,6 +107,7 @@ describe("VerifyEmailUseCase", () => {
     expect(tokenRepository.markUsed).toHaveBeenCalledWith("token-1");
     expect(userRepository.markEmailVerified).toHaveBeenCalledWith("user-1");
     expect(emailService.send).toHaveBeenCalledTimes(1);
+    expect(refreshTokenRepository.create).toHaveBeenCalledTimes(1);
     expect(refreshToken).toBe("refresh-token");
     expect(authPayload.accessToken).toBe("access-token");
     expect(authPayload.user.id).toBe("user-1");
