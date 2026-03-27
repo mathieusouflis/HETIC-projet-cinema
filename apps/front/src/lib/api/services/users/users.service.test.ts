@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 vi.mock("@packages/api-sdk", () => ({
   pATCHUsersMe: vi.fn(),
   gETUsersMe: vi.fn(),
-  deleteUsersMe: vi.fn(),
+  dELETEUsersMe: vi.fn(),
 }));
 
 import * as sdk from "@packages/api-sdk";

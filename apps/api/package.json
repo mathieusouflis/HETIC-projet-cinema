@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
-    "generate-sdk": "rm -rf ../../packages/api-sdk/src/generated && pnpm orval",
+    "generate-sdk": "node -e \"require('fs').rmSync('../../packages/api-sdk/src/generated',{recursive:true,force:true})\" && pnpm orval",
     "build": "tsup",
     "build:watch": "pnpm build --watch",
     "check-types": "tsc --noEmit",

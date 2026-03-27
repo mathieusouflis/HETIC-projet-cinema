@@ -30,13 +30,6 @@ vi.mock("@tanstack/react-router", () => ({
   useNavigate: () => navigateMock,
 }));
 
-const { toastSuccessMock } = vi.hoisted(() => ({
-  toastSuccessMock: vi.fn(),
-}));
-vi.mock("sonner", () => ({
-  toast: { success: toastSuccessMock },
-}));
-
 import * as sdk from "@packages/api-sdk";
 import { useRegister } from "./useRegister";
 
@@ -77,14 +70,16 @@ describe("useRegister", () => {
     vi.clearAllMocks();
   });
 
-  it("shows a success toast and navigates to /login on success", async () => {
+  it("navigates to verify-email-pending with email on success", async () => {
     vi.mocked(sdk.pOSTAuthRegister).mockResolvedValue(successResponse);
 
     const { register } = useRegister();
     await register("user@example.com", "johndoe", "Abcdef1!");
 
-    expect(toastSuccessMock).toHaveBeenCalledOnce();
-    expect(navigateMock).toHaveBeenCalledWith({ to: "/login" });
+    expect(navigateMock).toHaveBeenCalledWith({
+      to: "/verify-email-pending",
+      search: { email: "user@example.com" },
+    });
   });
 
   it("throws { fieldErrors.email, globalError: null } on duplicate email", async () => {
