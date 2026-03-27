@@ -1,4 +1,10 @@
+import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import type { ProfileStats } from "../domain/ProfileStats";
+import {
+  profileInsetPanelClassName,
+  profileMetricCardClassName,
+} from "./profile.styles";
 
 type Props = {
   stats: ProfileStats;
@@ -6,22 +12,57 @@ type Props = {
 
 export function StatsCards({ stats }: Props) {
   return (
-    <div className="flex gap-4">
-      <div className="w-full text-center border rounded-lg p-4">
-        <h3 className="font-semibold mb-2">Series</h3>
-        <p>{stats.totalSeriesHours}h watched</p>
-        <p className="text-sm text-muted-foreground">
-          {stats.totalEpisodes} episodes
-        </p>
-      </div>
-
-      <div className="w-full text-center border rounded-lg p-4">
-        <h3 className="font-semibold mb-2">Movies</h3>
-        <p>{stats.totalMovieHours}h watched</p>
-        <p className="text-sm text-muted-foreground">
-          {stats.totalMovies} movies
-        </p>
-      </div>
+    <div className="grid gap-4 lg:grid-cols-2">
+      <StatsShowcaseCard
+        title="Series"
+        headline={`${stats.totalSeriesHours}h watched`}
+        detail={`${stats.totalEpisodes} episodes tracked`}
+        accentClassName="border-sky-200/80 bg-gradient-to-br from-sky-50 via-white to-sky-100/70"
+      />
+      <StatsShowcaseCard
+        title="Movies"
+        headline={`${stats.totalMovieHours}h watched`}
+        detail={`${stats.totalMovies} movies completed`}
+        accentClassName="border-amber-200/80 bg-gradient-to-br from-amber-50 via-white to-amber-100/70"
+      />
     </div>
+  );
+}
+
+function StatsShowcaseCard({
+  title,
+  headline,
+  detail,
+  accentClassName,
+}: {
+  title: string;
+  headline: string;
+  detail: string;
+  accentClassName: string;
+}) {
+  return (
+    <Card className={cn(profileMetricCardClassName, accentClassName)}>
+      <CardContent className="flex h-full flex-col gap-6 p-6">
+        <div className="space-y-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+              {title}
+            </p>
+            <h3 className="mt-3 text-3xl font-semibold leading-tight">
+              {headline}
+            </h3>
+          </div>
+        </div>
+
+        <div
+          className={cn(
+            "mt-auto px-4 py-3 text-sm text-muted-foreground",
+            profileInsetPanelClassName
+          )}
+        >
+          {detail}
+        </div>
+      </CardContent>
+    </Card>
   );
 }
