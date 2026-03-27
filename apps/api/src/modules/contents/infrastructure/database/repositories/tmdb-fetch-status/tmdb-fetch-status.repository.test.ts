@@ -1,12 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-
 import { MetadataNotFoundError } from "./errors/metadata-not-found";
-
 import { TMDBFetchStatusRepository } from "./tmdb-fetch-status.repository";
 
 const {
   dbMock,
   deleteReturning,
+  deleteWhere,
   findFirstMock,
   insertConflictUpdate,
   insertValues,
@@ -93,7 +92,9 @@ describe("TMDBFetchStatusRepository", () => {
     deleteReturning.mockResolvedValueOnce([{ id: "1" }, { id: "2" }]);
     await expect(repo.cleanupExpiredSearches()).resolves.toBe(2);
 
+    deleteWhere.mockReturnValueOnce(Promise.resolve(undefined));
     await repo.deleteDiscoverMetadata("movie");
+    deleteWhere.mockReturnValueOnce(Promise.resolve(undefined));
     await repo.deleteSearchMetadata("query");
 
     expect(dbMock.delete).toHaveBeenCalledTimes(3);

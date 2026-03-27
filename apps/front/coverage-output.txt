@@ -1,0 +1,67 @@
+﻿
+ RUN  v4.1.1 C:/Users/HP.COM/Desktop/HETIC-projet-cinema/apps/front
+      Coverage enabled with v8
+
+
+ Test Files  25 passed (25)
+      Tests  117 passed (117)
+   Start at  10:53:29
+   Duration  5.87s (transform 9.69s, setup 0ms, import 17.31s, tests 744ms, environment 10ms)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   90.38 |    74.71 |   87.17 |   92.01 |                   
+ components/ui     |     100 |      100 |     100 |     100 |                   
+  button.tsx       |     100 |      100 |     100 |     100 |                   
+ ...nts/ui/filters |     100 |      100 |     100 |     100 |                   
+  glass-filter.tsx |     100 |      100 |     100 |     100 |                   
+ ...res/auth/hooks |     100 |      100 |     100 |     100 |                   
+  useLogin.ts      |     100 |      100 |     100 |     100 |                   
+  useRegister.ts   |     100 |      100 |     100 |     100 |                   
+ ...s/auth/schemas |     100 |      100 |     100 |     100 |                   
+  auth.schemas.ts  |     100 |      100 |     100 |     100 |                   
+ ...es/auth/stores |   91.66 |      100 |    90.9 |    87.5 |                   
+  auth.store.ts    |   91.66 |      100 |    90.9 |    87.5 | 35                
+ ...versation-list |      80 |    66.66 |     100 |   85.71 |                   
+  ...tion-item.tsx |      80 |    66.66 |     100 |   85.71 | 13,16             
+ ...messages/hooks |   48.64 |       60 |   33.33 |      50 |                   
+  use-typing.ts    |   48.64 |       60 |   33.33 |      50 | 51-80             
+ ...essages/stores |     100 |    83.33 |     100 |     100 |                   
+  typing.store.ts  |     100 |    83.33 |     100 |     100 | 26                
+ lib               |     100 |      100 |     100 |     100 |                   
+  utils.ts         |     100 |      100 |     100 |     100 |                   
+ lib/api           |     100 |    94.11 |     100 |     100 |                   
+  client.ts        |     100 |      100 |     100 |     100 |                   
+  parse-error.ts   |     100 |     87.5 |     100 |     100 | 56,68             
+ lib/api/services  |   96.66 |      100 |   93.33 |   96.55 |                   
+  auth.ts          |     100 |      100 |     100 |     100 |                   
+  index.ts         |   83.33 |      100 |      75 |      80 | 54                
+ ...vices/contents |   88.88 |      100 |      80 |   88.88 |                   
+  index.ts         |   83.33 |      100 |   66.66 |   83.33 | 29,35             
+  keys.ts          |     100 |      100 |     100 |     100 |                   
+ .../conversations |   90.24 |    58.82 |   83.33 |    92.5 |                   
+  index.ts         |   89.18 |    58.82 |   81.25 |   91.66 | 80,106,121        
+  keys.ts          |     100 |      100 |     100 |     100 |                   
+ ...es/friendships |    87.5 |       75 |   77.77 |    87.5 |                   
+  index.ts         |   85.71 |       75 |      75 |   85.71 | 62,72,88,98       
+  keys.ts          |     100 |      100 |     100 |     100 |                   
+ ...ervices/genres |     100 |      100 |     100 |     100 |                   
+  index.ts         |     100 |      100 |     100 |     100 |                   
+  keys.ts          |     100 |      100 |     100 |     100 |                   
+ ...vices/messages |   85.41 |    71.42 |   84.61 |   93.18 |                   
+  index.ts         |   84.44 |    71.42 |      84 |   92.68 | 45,69-71          
+  keys.ts          |     100 |      100 |     100 |     100 |                   
+ ...rvices/peoples |   88.88 |      100 |      75 |   88.88 |                   
+  index.ts         |   85.71 |      100 |   66.66 |   85.71 | 19                
+  keys.ts          |     100 |      100 |     100 |     100 |                   
+ ...services/users |     100 |     62.5 |     100 |     100 |                   
+  index.ts         |     100 |     62.5 |     100 |     100 | 43-51             
+  keys.ts          |     100 |      100 |     100 |     100 |                   
+ ...ces/watchlists |   98.41 |    68.75 |   97.05 |   98.41 |                   
+  index.ts         |   98.33 |    68.75 |   96.87 |   98.33 | 76                
+  keys.ts          |     100 |      100 |     100 |     100 |                   
+ lib/socket        |     100 |      100 |     100 |     100 |                   
+  socket-client.ts |     100 |      100 |     100 |     100 |                   
+-------------------|---------|----------|---------|---------|-------------------
