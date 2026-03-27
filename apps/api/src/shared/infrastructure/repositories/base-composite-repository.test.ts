@@ -176,7 +176,7 @@ describe("BaseCompositeRepository", () => {
       sut.listPublic(
         "my-title",
         undefined,
-        ["cat-1"],
+        undefined,
         true,
         false,
         false,
@@ -213,7 +213,7 @@ describe("BaseCompositeRepository", () => {
 
     expect(tmdbRepository.discover).toHaveBeenCalledWith({
       page: 1,
-      withCategories: undefined,
+      withCategories: [],
     });
     expect(result.total).toBe(1);
     expect(result.data).toHaveLength(1);
@@ -233,7 +233,7 @@ describe("BaseCompositeRepository", () => {
     const result = await sut.listPublic(
       "matrix",
       undefined,
-      ["action"],
+      undefined,
       true,
       false,
       false,
@@ -245,7 +245,7 @@ describe("BaseCompositeRepository", () => {
     expect(tmdbRepository.search).toHaveBeenCalledWith({
       query: "matrix",
       page: 2,
-      withCategories: ["action"],
+      withCategories: [],
     });
     expect(result.data).toEqual([entity]);
   });
