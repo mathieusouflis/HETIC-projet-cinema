@@ -278,7 +278,7 @@ export function createRequiredCookieMiddleware(
   cookieName: string
 ): RequestHandler {
   return (req: Request, res: Response, next: NextFunction) => {
-    if (!req.cookies || !req.cookies[cookieName]) {
+    if (!req.cookies?.[cookieName]) {
       res.status(401).json({
         success: false,
         error: `Missing required cookie: ${cookieName}`,

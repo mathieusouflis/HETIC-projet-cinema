@@ -42,7 +42,7 @@ export class VerifyEmailUseCase {
 
     const tokenRecord = await this.tokenRepository.findByTokenHash(tokenHash);
 
-    if (!tokenRecord || !tokenRecord.isValid()) {
+    if (!tokenRecord?.isValid()) {
       throw new UnauthorizedError("Invalid or expired token");
     }
 
