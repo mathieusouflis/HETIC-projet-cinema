@@ -18,6 +18,10 @@ export default defineConfig({
     project: "javascript-react"
   })],
 
+  experimental: {
+    bundledDev: true
+  },
+
   resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
