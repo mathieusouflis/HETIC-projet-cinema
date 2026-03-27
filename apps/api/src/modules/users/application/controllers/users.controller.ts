@@ -238,7 +238,7 @@ export class UsersController extends BaseController {
   @ApiResponse(404, "User not found", notFoundErrorResponseSchema)
   getById = asyncHandler(
     async (req: Request, res: Response): Promise<GetIdResponse> => {
-      const id = req.params.id!;
+      const id = getSingleParamId(req);
 
       const user = await this.getUserByIdUseCase.execute(id);
 

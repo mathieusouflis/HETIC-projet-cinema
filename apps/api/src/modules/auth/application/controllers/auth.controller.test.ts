@@ -11,6 +11,7 @@ const makeRes = () =>
     status: vi.fn().mockReturnThis(),
     json: vi.fn(),
     cookie: vi.fn(),
+    clearCookie: vi.fn(),
   }) as unknown as Response;
 const makeNext = () => vi.fn() as NextFunction;
 const flush = () => new Promise((resolve) => setImmediate(resolve));
@@ -19,26 +20,33 @@ const makeController = () => {
   const registerUseCase: ExecuteMock = { execute: vi.fn() };
   const loginUseCase: ExecuteMock = { execute: vi.fn() };
   const refreshTokenUseCase: ExecuteMock = { execute: vi.fn() };
+  const forgotPasswordUseCase: ExecuteMock = { execute: vi.fn() };
+  const resetPasswordUseCase: ExecuteMock = { execute: vi.fn() };
+  const verifyEmailUseCase: ExecuteMock = { execute: vi.fn() };
+  const resendVerificationUseCase: ExecuteMock = { execute: vi.fn() };
 
   const controller = new AuthController(
     registerUseCase as never,
     loginUseCase as never,
-    refreshTokenUseCase as never
+    refreshTokenUseCase as never,
+    forgotPasswordUseCase as never,
+    resetPasswordUseCase as never,
+    verifyEmailUseCase as never,
+    resendVerificationUseCase as never
   );
 
   return { controller, registerUseCase, loginUseCase, refreshTokenUseCase };
 };
 
 describe("AuthController", () => {
-  it("register should call use case, set cookie and return 201", async () => {
+  it("register should call use case and return 201", async () => {
     const { controller, registerUseCase } = makeController();
     const req = makeReq({
       body: { email: "john@doe.com", username: "john", password: "secret" },
     });
     const res = makeRes();
     const next = makeNext();
-    const result = { accessToken: "access-1" };
-    registerUseCase.execute.mockResolvedValue([result, "refresh-1"]);
+    registerUseCase.execute.mockResolvedValue(undefined);
 
     controller.register(req, res, next);
     await flush();
@@ -48,12 +56,12 @@ describe("AuthController", () => {
       username: "john",
       password: "secret",
     });
-    expect(res.cookie).toHaveBeenCalledTimes(1);
+    expect(res.cookie).not.toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith({
       success: true,
-      message: "User registered successfully",
-      data: result,
+      message:
+        "Un email de vérification a été envoyé. Vérifiez votre boîte mail.",
     });
     expect(next).not.toHaveBeenCalled();
   });
@@ -65,7 +73,7 @@ describe("AuthController", () => {
     });
     const res = makeRes();
     const next = makeNext();
-    const result = { accessToken: "access-2" };
+    const result = { accessToken: "access-2", user: { id: "u-1" } };
     loginUseCase.execute.mockResolvedValue([result, "refresh-2"]);
 
     controller.login(req, res, next);
@@ -75,12 +83,12 @@ describe("AuthController", () => {
       email: "john@doe.com",
       password: "secret",
     });
-    expect(res.cookie).toHaveBeenCalledTimes(1);
+    expect(res.cookie).toHaveBeenCalledTimes(2);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
       success: true,
       message: "Login successful",
-      data: result,
+      data: { user: result.user },
     });
   });
 
@@ -89,7 +97,7 @@ describe("AuthController", () => {
     const req = makeReq({ cookies: { refreshToken: "old-refresh" } as never });
     const res = makeRes();
     const next = makeNext();
-    const responseData = { accessToken: "access-3" };
+    const responseData = { accessToken: "access-3", user: { id: "u-2" } };
     refreshTokenUseCase.execute.mockResolvedValue([
       responseData,
       "new-refresh",
@@ -101,12 +109,12 @@ describe("AuthController", () => {
     expect(refreshTokenUseCase.execute).toHaveBeenCalledWith({
       refreshToken: "old-refresh",
     });
-    expect(res.cookie).toHaveBeenCalledTimes(1);
+    expect(res.cookie).toHaveBeenCalledTimes(2);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
       success: true,
       message: "Tokens refreshed successfully",
-      data: responseData,
+      data: { user: responseData.user },
     });
   });
 
@@ -120,6 +128,7 @@ describe("AuthController", () => {
     await flush();
 
     expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.clearCookie).toHaveBeenCalledTimes(2);
     expect(res.json).toHaveBeenCalledWith({
       success: true,
       message: "Logged out successfully",
