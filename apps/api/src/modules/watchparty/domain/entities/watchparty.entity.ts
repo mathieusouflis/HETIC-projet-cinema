@@ -1,11 +1,11 @@
-import type { watchpartiesRelations } from "../../../../database/schema.js";
-import { Entity } from "../../../../shared/domain/entity.js";
-import type { Content } from "../../../contents/domain/entities/content.entity.js";
-import type { Platform } from "../../../platforms/domain/entities/platforms.entity.js";
+import type { watchpartiesRelations } from "../../../../database/schema";
+import { Entity } from "../../../../shared/domain/entity";
+import type { Content } from "../../../contents/domain/entities/content.entity";
+import type { Platform } from "../../../platforms/domain/entities/platforms.entity";
 import type {
   NewWatchpartyRow,
   WatchpartyRow,
-} from "../../infrastructure/schemas/watchparty.schema.js";
+} from "../../infrastructure/schemas/watchparty.schema";
 
 export type WatchpartyStatus = "scheduled" | "active" | "ended" | "cancelled";
 

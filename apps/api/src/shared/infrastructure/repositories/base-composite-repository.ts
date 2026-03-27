@@ -7,7 +7,7 @@ import { PeoplesRepository } from "../../../modules/peoples/infrastructure/repos
 import { PlatformsRepository } from "../../../modules/platforms/infrastructure/database/platforms.repository";
 import { SeasonsDatabaseRepository } from "../../../modules/seasons/infrastructure/database/seasons.database.repository";
 import type { TMDBSeason } from "../../../modules/seasons/infrastructure/tmdb/seasons.tmdb.repository";
-import type { PagePaginationQuery } from "../../../shared/services/pagination";
+import type { PagePaginationQuery } from "../../services/pagination/pagination.schemas";
 import type {
   BaseContentProps,
   BaseDrizzleRepository,

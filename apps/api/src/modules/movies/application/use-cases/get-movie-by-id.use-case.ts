@@ -1,6 +1,6 @@
-import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
-import type { IMoviesRepository } from "../../domain/interfaces/IMoviesRepository.js";
-import type { GetMovieByIdResponse } from "../dto/response/get-movie-by-id-response.validator.js";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
+import type { IMoviesRepository } from "../../domain/interfaces/IMoviesRepository";
+import type { GetMovieByIdResponse } from "../dto/response/get-movie-by-id-response.validator";
 
 export class GetMovieByIdUseCase {
   constructor(private readonly movieRepository: IMoviesRepository) {}

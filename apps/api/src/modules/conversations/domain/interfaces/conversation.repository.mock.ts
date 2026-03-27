@@ -1,9 +1,9 @@
 import { vi } from "vitest";
-import { Conversation } from "../entities/conversation.entity.js";
+import { Conversation } from "../entities/conversation.entity";
 import type {
   ConversationWithMeta,
   IConversationRepository,
-} from "./IConversationRepository.js";
+} from "./IConversationRepository";
 
 export const MOCK_CONVERSATION_ID = "cccccccc-cccc-cccc-cccc-cccccccccccc";
 export const MOCK_CONV_USER_A_ID = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";

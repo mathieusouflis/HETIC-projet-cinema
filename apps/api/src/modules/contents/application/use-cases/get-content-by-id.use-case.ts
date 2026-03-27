@@ -1,6 +1,6 @@
-import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
-import type { IContentRepository } from "../../domain/interfaces/IContentRepository.js";
-import type { GetContentByIdResponse } from "../dto/response/get-content-by-id-response.validator.js";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
+import type { IContentRepository } from "../../domain/interfaces/IContentRepository";
+import type { GetContentByIdResponse } from "../dto/response/get-content-by-id-response.validator";
 
 type ParamsInterface = {
   id: string;

@@ -1,8 +1,8 @@
-import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
-import type { IContentRepository } from "../../../contents/domain/interfaces/IContentRepository.js";
-import type { Watchparty } from "../../domain/entities/watchparty.entity.js";
-import type { IWatchpartyRepository } from "../../domain/interfaces/IWatchpartyRepository.js";
-import type { CreateWatchpartyBody } from "../dto/request/create-watchparty.body.validator.js";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
+import type { IContentRepository } from "../../../contents/domain/interfaces/IContentRepository";
+import type { Watchparty } from "../../domain/entities/watchparty.entity";
+import type { IWatchpartyRepository } from "../../domain/interfaces/IWatchpartyRepository";
+import type { CreateWatchpartyBody } from "../dto/request/create-watchparty.body.validator";
 
 export class CreateWatchpartyUseCase {
   constructor(

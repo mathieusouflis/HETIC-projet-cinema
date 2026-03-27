@@ -1,7 +1,7 @@
 import z from "zod";
-import { uuidSchema } from "../../../../../shared/schemas/fields/index.js";
-import { optionalFlexiblePaginationQuerySchema } from "../../../../../shared/services/pagination";
-import { watchpartyStatusSchema } from "../../validators/watchparty.validators.js";
+import { uuidSchema } from "../../../../../shared/schemas/fields/uuid.schema";
+import { optionalFlexiblePaginationQuerySchema } from "../../../../../shared/services/pagination/pagination.schemas";
+import { watchpartyStatusSchema } from "../../validators/watchparty.validators";
 
 export const queryWatchpartiesValidator = z.object({
   status: watchpartyStatusSchema.optional(),

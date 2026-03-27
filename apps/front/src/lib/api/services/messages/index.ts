@@ -10,7 +10,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import type { Message, MessagePage } from "@/features/messages/types";
-import { getSocket } from "@/lib/socket";
+import { getSocket } from "@/lib/socket/socket-client";
 import { messageKeys } from "./keys";
 
 export function toMessage(

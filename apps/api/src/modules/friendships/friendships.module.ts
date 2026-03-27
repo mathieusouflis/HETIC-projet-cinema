@@ -1,13 +1,13 @@
 import type { Router } from "express";
-import { RestModule } from "../../shared/infrastructure/base/modules/rest-module.js";
-import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator.js";
-import { UserRepository } from "../users/infrastructure/database/repositories/user.repository.js";
-import { FriendshipsController } from "./application/controllers/friendships.controller.js";
-import { GetMyFriendshipsUseCase } from "./application/use-cases/get-my-friendships.use-case.js";
-import { RemoveFriendshipUseCase } from "./application/use-cases/remove-friendship.use-case.js";
-import { RespondToFriendRequestUseCase } from "./application/use-cases/respond-to-friend-request.use-case.js";
-import { SendFriendRequestUseCase } from "./application/use-cases/send-friend-request.use-case.js";
-import { FriendshipsRepository } from "./infrastructure/repositories/friendships.repository.js";
+import { RestModule } from "../../shared/infrastructure/base/modules/rest-module";
+import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator";
+import { UserRepository } from "../users/infrastructure/database/repositories/user.repository";
+import { FriendshipsController } from "./application/controllers/friendships.controller";
+import { GetMyFriendshipsUseCase } from "./application/use-cases/get-my-friendships.use-case";
+import { RemoveFriendshipUseCase } from "./application/use-cases/remove-friendship.use-case";
+import { RespondToFriendRequestUseCase } from "./application/use-cases/respond-to-friend-request.use-case";
+import { SendFriendRequestUseCase } from "./application/use-cases/send-friend-request.use-case";
+import { FriendshipsRepository } from "./infrastructure/repositories/friendships.repository";
 
 class FriendshipsModule extends RestModule {
   private readonly friendshipsRepository: FriendshipsRepository;

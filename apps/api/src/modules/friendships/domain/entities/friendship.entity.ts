@@ -2,7 +2,7 @@ import type {
   FriendshipRow,
   FriendshipStatus,
   NewFriendshipRow,
-} from "../../infrastructure/schemas/friendships.schema.js";
+} from "../../infrastructure/schemas/friendships.schema";
 
 export class Friendship {
   public readonly id: string;

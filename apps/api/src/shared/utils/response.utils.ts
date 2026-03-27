@@ -3,13 +3,13 @@ import type {
   PaginatedResponse,
   SuccessResponse,
   SuccessWithMessage,
-} from "../schemas/base/response.schemas.js";
+} from "../schemas/base/response.schemas";
 import type {
   OffsetPaginatedResult,
   OffsetPaginationMeta,
   PaginatedResult,
   PaginationMeta,
-} from "../services/pagination/index.js";
+} from "../services/pagination/pagination.types";
 
 export type ApiResponse<T = unknown> =
   | SuccessResponse<T>

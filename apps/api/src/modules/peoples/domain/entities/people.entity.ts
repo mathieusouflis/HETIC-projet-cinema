@@ -1,7 +1,7 @@
 import type {
   NewPeopleRow,
   PeopleRow,
-} from "../../infrastructure/schemas/people.schema.js";
+} from "../../infrastructure/schemas/people.schema";
 
 /**
  * Domain entity representing a person (actor, director, etc.)

@@ -1,5 +1,5 @@
 import z from "zod";
-import { uuidSchema } from "../../../../../shared/schemas/fields/index.js";
+import { uuidSchema } from "../../../../../shared/schemas/fields/uuid.schema";
 
 export const sendMessageEventValidator = z.object({
   conversationId: uuidSchema,

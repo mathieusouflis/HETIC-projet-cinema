@@ -1,7 +1,7 @@
 import type {
   ConversationWithMeta,
   IConversationRepository,
-} from "../../domain/interfaces/IConversationRepository.js";
+} from "../../domain/interfaces/IConversationRepository";
 
 export class GetConversationsUseCase {
   constructor(

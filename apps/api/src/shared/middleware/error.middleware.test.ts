@@ -20,13 +20,13 @@ vi.mock("@packages/logger", () => ({
   },
 }));
 
-import { AppError } from "../errors/app-error.js";
-import { ConflictError } from "../errors/conflict-error.js";
-import { ForbiddenError } from "../errors/forbidden-error.js";
-import { NotFoundError } from "../errors/not-found-error.js";
-import { UnauthorizedError } from "../errors/unauthorized-error.js";
-import { ValidationError } from "../errors/validation-error.js";
-import { errorMiddleware, notFoundMiddleware } from "./error.middleware.js";
+import { AppError } from "../errors/app-error";
+import { ConflictError } from "../errors/conflict-error";
+import { ForbiddenError } from "../errors/forbidden-error";
+import { NotFoundError } from "../errors/not-found-error";
+import { UnauthorizedError } from "../errors/unauthorized-error";
+import { ValidationError } from "../errors/validation-error";
+import { errorMiddleware, notFoundMiddleware } from "./error.middleware";
 
 describe("errorMiddleware", () => {
   let req: Partial<Request>;

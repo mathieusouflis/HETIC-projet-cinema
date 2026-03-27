@@ -1,7 +1,7 @@
 import type {
   NewUserRow,
   UserRow,
-} from "../../infrastructure/database/schemas/users.schema.js";
+} from "../../infrastructure/database/schemas/users.schema";
 
 export class User {
   public readonly id: string;

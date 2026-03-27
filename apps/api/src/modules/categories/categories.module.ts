@@ -1,13 +1,13 @@
 import type { Router } from "express";
-import { RestModule } from "../../shared/infrastructure/base/modules/rest-module.js";
-import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator.js";
-import { CategoriesController } from "./application/controllers/categories.controller.js";
-// import { CreateCategoryUseCase } from "./application/use-cases/category/create-category.use-case.js";
-// import { DeleteCategoryUseCase } from "./application/use-cases/category/delete-category.use-case.js";
-import { GetCategoryByIdUseCase } from "./application/use-cases/category/get-category-by-id.use-case.js";
-import { ListCategoriesUseCase } from "./application/use-cases/category/list-categories.use-case.js";
-// import { UpdateCategoryUseCase } from "./application/use-cases/category/update-category.use-case.js";
-import { CategoryRepository } from "./infrastructure/database/repositories/category/category.repository.js";
+import { RestModule } from "../../shared/infrastructure/base/modules/rest-module";
+import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator";
+import { CategoriesController } from "./application/controllers/categories.controller";
+// import { CreateCategoryUseCase } from "./application/use-cases/category/create-category.use-case";
+// import { DeleteCategoryUseCase } from "./application/use-cases/category/delete-category.use-case";
+import { GetCategoryByIdUseCase } from "./application/use-cases/category/get-category-by-id.use-case";
+import { ListCategoriesUseCase } from "./application/use-cases/category/list-categories.use-case";
+// import { UpdateCategoryUseCase } from "./application/use-cases/category/update-category.use-case";
+import { CategoryRepository } from "./infrastructure/database/repositories/category/category.repository";
 
 class CategoriesModule extends RestModule {
   // ============================================

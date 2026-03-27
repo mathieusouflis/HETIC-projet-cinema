@@ -1,4 +1,4 @@
-import type { Conversation } from "../entities/conversation.entity.js";
+import type { Conversation } from "../entities/conversation.entity";
 
 export interface ConversationParticipantInfo {
   id: string;

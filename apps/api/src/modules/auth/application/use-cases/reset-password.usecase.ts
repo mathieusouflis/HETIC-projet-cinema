@@ -1,9 +1,9 @@
-import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error.js";
-import type { IPasswordService } from "../../../../shared/services/password/i-password-service.js";
-import { hashToken } from "../../../../shared/utils/crypto.utils.js";
-import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";
-import type { IPasswordResetTokenRepository } from "../../domain/interfaces/IPasswordResetTokenRepository.js";
-import type { ResetPasswordDTO } from "../dto/request/reset-password.dto.js";
+import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error";
+import type { IPasswordService } from "../../../../shared/services/password/i-password-service";
+import { hashToken } from "../../../../shared/utils/crypto.utils";
+import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository";
+import type { IPasswordResetTokenRepository } from "../../domain/interfaces/IPasswordResetTokenRepository";
+import type { ResetPasswordDTO } from "../dto/request/reset-password.dto";
 
 export class ResetPasswordUseCase {
   constructor(

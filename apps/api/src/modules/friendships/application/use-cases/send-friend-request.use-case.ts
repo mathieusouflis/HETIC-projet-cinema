@@ -1,11 +1,9 @@
-import {
-  ConflictError,
-  ForbiddenError,
-  NotFoundError,
-} from "../../../../shared/errors/index.js";
-import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";
-import type { Friendship } from "../../domain/entities/friendship.entity.js";
-import type { IFriendshipsRepository } from "../../domain/interfaces/IFriendshipsRepository.js";
+import { ConflictError } from "../../../../shared/errors/conflict-error";
+import { ForbiddenError } from "../../../../shared/errors/forbidden-error";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
+import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository";
+import type { Friendship } from "../../domain/entities/friendship.entity";
+import type { IFriendshipsRepository } from "../../domain/interfaces/IFriendshipsRepository";
 
 export class SendFriendRequestUseCase {
   constructor(

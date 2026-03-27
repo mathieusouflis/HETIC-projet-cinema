@@ -1,11 +1,11 @@
 import { eq } from "drizzle-orm";
-import { db } from "../../../../database/index.js";
-import { passwordResetTokens } from "../../../../database/schema.js";
+import { db } from "../../../../database/index";
+import { passwordResetTokens } from "../../../../database/schema";
 import {
   PasswordResetToken,
   type PasswordResetTokenRow,
-} from "../../domain/entities/password-reset-token.entity.js";
-import type { IPasswordResetTokenRepository } from "../../domain/interfaces/IPasswordResetTokenRepository.js";
+} from "../../domain/entities/password-reset-token.entity";
+import type { IPasswordResetTokenRepository } from "../../domain/interfaces/IPasswordResetTokenRepository";
 
 export class PasswordResetTokenRepository
   implements IPasswordResetTokenRepository

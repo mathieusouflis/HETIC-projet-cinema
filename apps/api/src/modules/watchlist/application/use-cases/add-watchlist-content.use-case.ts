@@ -1,8 +1,6 @@
-import {
-  ConflictError,
-  NotFoundError,
-  ServerError,
-} from "../../../../shared/errors";
+import { ConflictError } from "../../../../shared/errors/conflict-error";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
+import { ServerError } from "../../../../shared/errors/server-error";
 import type { IContentRepository } from "../../../contents/domain/interfaces/IContentRepository";
 import type { Watchlist } from "../../domain/entities/watchlist.entity";
 import type { IWatchlistRepository } from "../../domain/interfaces/IWatchlistRepository";

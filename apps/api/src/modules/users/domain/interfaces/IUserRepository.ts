@@ -2,7 +2,7 @@ import type {
   CreateUserProps,
   UpdateUserProps,
   User,
-} from "../entities/user.entity.js";
+} from "../entities/user.entity";
 
 export interface IUserRepository {
   /**

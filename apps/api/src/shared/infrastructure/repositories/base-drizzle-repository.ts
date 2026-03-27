@@ -20,7 +20,7 @@ import { People } from "../../../modules/peoples/domain/entities/people.entity";
 import { Platform } from "../../../modules/platforms/domain/entities/platforms.entity";
 import { Season } from "../../../modules/seasons/domain/seasons.entity";
 import { ServerError } from "../../errors/server-error";
-import type { PagePaginationQuery } from "../../services/pagination";
+import type { PagePaginationQuery } from "../../services/pagination/pagination.schemas";
 
 /**
  * Base interface for entities that can be created

@@ -1,7 +1,7 @@
 import { and, count, eq } from "drizzle-orm";
 import { db } from "../../../../database";
 import { ratings, watchlist } from "../../../../database/schema";
-import { NotFoundError } from "../../../../shared/errors";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
 import { ServerError } from "../../../../shared/errors/server-error";
 import {
   type CreateWatchlistProps,

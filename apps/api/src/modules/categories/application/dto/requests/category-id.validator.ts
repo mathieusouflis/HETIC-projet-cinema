@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { uuidSchema } from "../../../../../shared/schemas/fields/uuid.schema.js";
+import { uuidSchema } from "../../../../../shared/schemas/fields/uuid.schema";
 
 export const categoryIdParamsSchema = z.object({
   id: uuidSchema,

@@ -1,6 +1,6 @@
-import { UserNotFoundError } from "../../domain/errors/UserNotFoundError.js";
-import type { IUserRepository } from "../../domain/interfaces/IUserRepository.js";
-import type { GetMeResponse } from "../dto/response/get-me.response.validator.js";
+import { UserNotFoundError } from "../../domain/errors/UserNotFoundError";
+import type { IUserRepository } from "../../domain/interfaces/IUserRepository";
+import type { GetMeResponse } from "../dto/response/get-me.response.validator";
 
 export class GetMeUseCase {
   constructor(private readonly userRepository: IUserRepository) {}

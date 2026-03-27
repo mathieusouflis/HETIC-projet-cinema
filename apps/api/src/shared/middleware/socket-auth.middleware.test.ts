@@ -33,7 +33,7 @@ vi.mock("@packages/logger", () => ({
 import {
   socketAuthMiddleware,
   socketAuthNamespaceMiddleware,
-} from "./socket-auth.middleware.js";
+} from "./socket-auth.middleware";
 
 describe("Socket Authentication Middleware", () => {
   let mockSocket: Partial<Socket>;

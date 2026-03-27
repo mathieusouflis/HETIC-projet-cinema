@@ -1,34 +1,40 @@
-import { UnauthorizedError } from "../../../../shared/errors/index.js";
-import { Shared } from "../../../../shared/index.js";
-import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller.js";
-import { Protected } from "../../../../shared/infrastructure/decorators/rest/auth.decorator.js";
-import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator.js";
-import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator.js";
+import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error";
+import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller";
+import { Protected } from "../../../../shared/infrastructure/decorators/rest/auth.decorator";
+import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator";
+import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator";
 import {
   Get,
   Post,
-} from "../../../../shared/infrastructure/decorators/rest/route.decorators.js";
+} from "../../../../shared/infrastructure/decorators/rest/route.decorators";
 import {
   ValidateBody,
   ValidateParams,
-} from "../../../../shared/infrastructure/decorators/rest/validation.decorators.js";
-import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
+} from "../../../../shared/infrastructure/decorators/rest/validation.decorators";
+import {
+  forbiddenErrorResponseSchema,
+  notFoundErrorResponseSchema,
+  unauthorizedErrorResponseSchema,
+  validationErrorResponseSchema,
+} from "../../../../shared/schemas/base/error.schemas";
+import { createSuccessResponseSchema } from "../../../../shared/schemas/base/response.schemas";
+import { asyncHandler } from "../../../../shared/utils/asyncHandler";
 import {
   type ConversationParams,
   conversationParamsValidator,
-} from "../dto/request/conversation-params.validator.js";
+} from "../dto/request/conversation-params.validator";
 import {
   type CreateConversationBody,
   createConversationBodyValidator,
-} from "../dto/request/create-conversation-body.validator.js";
+} from "../dto/request/create-conversation-body.validator";
 import {
   conversationBasicSchema,
   conversationResponseSchema,
-} from "../dto/response/conversation.response.validator.js";
-import type { CreateConversationUseCase } from "../use-cases/create-conversation.use-case.js";
-import type { GetConversationUseCase } from "../use-cases/get-conversation.use-case.js";
-import type { GetConversationsUseCase } from "../use-cases/get-conversations.use-case.js";
-import type { MarkConversationReadUseCase } from "../use-cases/mark-conversation-read.use-case.js";
+} from "../dto/response/conversation.response.validator";
+import type { CreateConversationUseCase } from "../use-cases/create-conversation.use-case";
+import type { GetConversationUseCase } from "../use-cases/get-conversation.use-case";
+import type { GetConversationsUseCase } from "../use-cases/get-conversations.use-case";
+import type { MarkConversationReadUseCase } from "../use-cases/mark-conversation-read.use-case";
 
 @Controller({
   tag: "Conversations",
@@ -55,15 +61,9 @@ export class ConversationsController extends BaseController {
   @ApiResponse(
     200,
     "Conversations retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponseSchema(
-      conversationResponseSchema.array()
-    )
+    createSuccessResponseSchema(conversationResponseSchema.array())
   )
-  @ApiResponse(
-    401,
-    "Not authenticated",
-    Shared.Schemas.Base.unauthorizedErrorResponseSchema
-  )
+  @ApiResponse(401, "Not authenticated", unauthorizedErrorResponseSchema)
   getConversations = asyncHandler(async (req, res) => {
     const userId = req.user?.userId;
     if (!userId) throw new UnauthorizedError("Not authenticated");
@@ -87,28 +87,12 @@ export class ConversationsController extends BaseController {
   @ApiResponse(
     201,
     "Conversation created",
-    Shared.Schemas.Base.createSuccessResponseSchema(conversationBasicSchema)
+    createSuccessResponseSchema(conversationBasicSchema)
   )
-  @ApiResponse(
-    400,
-    "Invalid input",
-    Shared.Schemas.Base.validationErrorResponseSchema
-  )
-  @ApiResponse(
-    401,
-    "Not authenticated",
-    Shared.Schemas.Base.unauthorizedErrorResponseSchema
-  )
-  @ApiResponse(
-    403,
-    "Not friends or self-DM",
-    Shared.Schemas.Base.forbiddenErrorResponseSchema
-  )
-  @ApiResponse(
-    404,
-    "User not found",
-    Shared.Schemas.Base.notFoundErrorResponseSchema
-  )
+  @ApiResponse(400, "Invalid input", validationErrorResponseSchema)
+  @ApiResponse(401, "Not authenticated", unauthorizedErrorResponseSchema)
+  @ApiResponse(403, "Not friends or self-DM", forbiddenErrorResponseSchema)
+  @ApiResponse(404, "User not found", notFoundErrorResponseSchema)
   createConversation = asyncHandler(async (req, res) => {
     const callerId = req.user?.userId;
     if (!callerId) throw new UnauthorizedError("Not authenticated");
@@ -137,23 +121,11 @@ export class ConversationsController extends BaseController {
   @ApiResponse(
     200,
     "Conversation retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponseSchema(conversationResponseSchema)
+    createSuccessResponseSchema(conversationResponseSchema)
   )
-  @ApiResponse(
-    401,
-    "Not authenticated",
-    Shared.Schemas.Base.unauthorizedErrorResponseSchema
-  )
-  @ApiResponse(
-    403,
-    "Not a participant",
-    Shared.Schemas.Base.forbiddenErrorResponseSchema
-  )
-  @ApiResponse(
-    404,
-    "Conversation not found",
-    Shared.Schemas.Base.notFoundErrorResponseSchema
-  )
+  @ApiResponse(401, "Not authenticated", unauthorizedErrorResponseSchema)
+  @ApiResponse(403, "Not a participant", forbiddenErrorResponseSchema)
+  @ApiResponse(404, "Conversation not found", notFoundErrorResponseSchema)
   getConversation = asyncHandler(async (req, res) => {
     const userId = req.user?.userId;
     if (!userId) throw new UnauthorizedError("Not authenticated");
@@ -177,21 +149,9 @@ export class ConversationsController extends BaseController {
   @Protected()
   @ValidateParams(conversationParamsValidator)
   @ApiResponse(204, "Conversation marked as read")
-  @ApiResponse(
-    401,
-    "Not authenticated",
-    Shared.Schemas.Base.unauthorizedErrorResponseSchema
-  )
-  @ApiResponse(
-    403,
-    "Not a participant",
-    Shared.Schemas.Base.forbiddenErrorResponseSchema
-  )
-  @ApiResponse(
-    404,
-    "Conversation not found",
-    Shared.Schemas.Base.notFoundErrorResponseSchema
-  )
+  @ApiResponse(401, "Not authenticated", unauthorizedErrorResponseSchema)
+  @ApiResponse(403, "Not a participant", forbiddenErrorResponseSchema)
+  @ApiResponse(404, "Conversation not found", notFoundErrorResponseSchema)
   markAsRead = asyncHandler(async (req, res) => {
     const userId = req.user?.userId;
     if (!userId) throw new UnauthorizedError("Not authenticated");

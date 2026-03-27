@@ -1,7 +1,7 @@
 import type {
   IRefreshTokenRepository,
   RefreshTokenRecord,
-} from "./IRefreshTokenRepository.js";
+} from "./IRefreshTokenRepository";
 
 export function createMockedRefreshTokenRepository(): IRefreshTokenRepository {
   const store = new Map<string, RefreshTokenRecord>();

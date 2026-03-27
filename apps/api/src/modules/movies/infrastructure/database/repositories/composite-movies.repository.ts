@@ -2,7 +2,7 @@ import {
   BaseCompositeRepository,
   type CompositeEntity,
 } from "../../../../../shared/infrastructure/repositories/base-composite-repository";
-import type { PagePaginationQuery } from "../../../../../shared/services/pagination";
+import type { PagePaginationQuery } from "../../../../../shared/services/pagination/pagination.schemas";
 import type {
   CreateMovieProps,
   Movie,

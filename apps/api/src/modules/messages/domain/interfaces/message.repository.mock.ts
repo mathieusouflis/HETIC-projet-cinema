@@ -1,6 +1,6 @@
 import { vi } from "vitest";
-import { Message } from "../entities/message.entity.js";
-import type { IMessageRepository, MessagePage } from "./IMessageRepository.js";
+import { Message } from "../entities/message.entity";
+import type { IMessageRepository, MessagePage } from "./IMessageRepository";
 
 export const MOCK_MESSAGE_ID = "11111111-1111-1111-1111-111111111111";
 export const MOCK_CONVERSATION_ID = "22222222-2222-2222-2222-222222222222";

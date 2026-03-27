@@ -2,8 +2,8 @@ import { config } from "@packages/config";
 import { logger } from "@packages/logger";
 import FormData from "form-data";
 import Mailgun from "mailgun.js";
-import { ServerError } from "../../errors/server-error.js";
-import type { IEmailService } from "./i-email-service.js";
+import { ServerError } from "../../errors/server-error";
+import type { IEmailService } from "./i-email-service";
 
 export class MailgunEmailService implements IEmailService {
   async send(toEmail: string, subject: string, text: string): Promise<void> {

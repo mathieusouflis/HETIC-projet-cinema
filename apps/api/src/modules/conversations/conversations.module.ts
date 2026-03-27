@@ -1,14 +1,14 @@
 import type { Router } from "express";
-import { RestModule } from "../../shared/infrastructure/base/modules/rest-module.js";
-import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator.js";
-import { FriendshipsRepository } from "../friendships/infrastructure/repositories/friendships.repository.js";
-import { UserRepository } from "../users/infrastructure/database/repositories/user.repository.js";
-import { ConversationsController } from "./application/controllers/conversations.controller.js";
-import { CreateConversationUseCase } from "./application/use-cases/create-conversation.use-case.js";
-import { GetConversationUseCase } from "./application/use-cases/get-conversation.use-case.js";
-import { GetConversationsUseCase } from "./application/use-cases/get-conversations.use-case.js";
-import { MarkConversationReadUseCase } from "./application/use-cases/mark-conversation-read.use-case.js";
-import { ConversationRepository } from "./infrastructure/repositories/conversation.repository.js";
+import { RestModule } from "../../shared/infrastructure/base/modules/rest-module";
+import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator";
+import { FriendshipsRepository } from "../friendships/infrastructure/repositories/friendships.repository";
+import { UserRepository } from "../users/infrastructure/database/repositories/user.repository";
+import { ConversationsController } from "./application/controllers/conversations.controller";
+import { CreateConversationUseCase } from "./application/use-cases/create-conversation.use-case";
+import { GetConversationUseCase } from "./application/use-cases/get-conversation.use-case";
+import { GetConversationsUseCase } from "./application/use-cases/get-conversations.use-case";
+import { MarkConversationReadUseCase } from "./application/use-cases/mark-conversation-read.use-case";
+import { ConversationRepository } from "./infrastructure/repositories/conversation.repository";
 
 class ConversationsModule extends RestModule {
   private readonly conversationRepository: ConversationRepository;

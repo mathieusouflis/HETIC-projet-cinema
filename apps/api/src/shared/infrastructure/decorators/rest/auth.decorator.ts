@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import type { RequestHandler } from "express";
-import { AUTH_MIDDLEWARE_MARKER, type MiddlewareOrMarker } from "./types.js";
+import { AUTH_MIDDLEWARE_MARKER, type MiddlewareOrMarker } from "./types";
 
 const MIDDLEWARES_METADATA_KEY = Symbol("route:middlewares");
 

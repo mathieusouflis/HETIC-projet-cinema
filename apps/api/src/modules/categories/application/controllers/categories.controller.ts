@@ -1,52 +1,54 @@
 import type { Request, Response } from "express";
-import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error.js";
-import { Shared } from "../../../../shared/index.js";
-import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller.js";
-import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator.js";
-import { Protected } from "../../../../shared/infrastructure/decorators/rest/index.js";
-import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator.js";
+import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error";
+import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller";
+import { Protected } from "../../../../shared/infrastructure/decorators/rest/auth.decorator";
+import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator";
+import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator";
 import {
   Delete,
   Get,
   Patch,
   Post,
-} from "../../../../shared/infrastructure/decorators/rest/route.decorators.js";
+} from "../../../../shared/infrastructure/decorators/rest/route.decorators";
 import {
   ValidateBody,
   ValidateParams,
   ValidateQuery,
-} from "../../../../shared/infrastructure/decorators/rest/validation.decorators.js";
-import { paginationService } from "../../../../shared/services/pagination/index.js";
-import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
-import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
+} from "../../../../shared/infrastructure/decorators/rest/validation.decorators";
+import {
+  conflictErrorResponseSchema,
+  notFoundErrorResponseSchema,
+  validationErrorResponseSchema,
+} from "../../../../shared/schemas/base/error.schemas";
+import { createSuccessResponseSchema } from "../../../../shared/schemas/base/response.schemas";
+import { paginationService } from "../../../../shared/services/pagination/pagination.service";
+import { asyncHandler } from "../../../../shared/utils/asyncHandler";
+import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils";
 import {
   type CategoryIdParamsDTO,
   categoryIdParamsSchema,
-} from "../dto/requests/category-id.validator.js";
+} from "../dto/requests/category-id.validator";
 import {
   // type CreateCategoryDTO,
   createCategoryBodySchema,
-} from "../dto/requests/create-category.validator.js";
+} from "../dto/requests/create-category.validator";
 import {
   type ListCategoriesQueryDTO,
   listCategoriesQuerySchema,
-} from "../dto/requests/list-categories.validator.js";
+} from "../dto/requests/list-categories.validator";
 import {
   // type UpdateCategoryDTO,
   updateCategoryBodySchema,
   updateCategoryParamsSchema,
-} from "../dto/requests/update-category.validator.js";
+} from "../dto/requests/update-category.validator";
 import {
   type CategoriesListResponse,
   type CategoryResponse,
   categoriesListResponseSchema,
   categoryResponseSchema,
-} from "../dto/response/category.response.validator.js";
-// import type { CreateCategoryUseCase } from "../use-cases/category/create-category.use-case.js";
-// import type { DeleteCategoryUseCase } from "../use-cases/category/delete-category.use-case.js";
-import type { GetCategoryByIdUseCase } from "../use-cases/category/get-category-by-id.use-case.js";
-import type { ListCategoriesUseCase } from "../use-cases/category/list-categories.use-case.js";
-// import type { UpdateCategoryUseCase } from "../use-cases/category/update-category.use-case.js";
+} from "../dto/response/category.response.validator";
+import type { GetCategoryByIdUseCase } from "../use-cases/category/get-category-by-id.use-case";
+import type { ListCategoriesUseCase } from "../use-cases/category/list-categories.use-case";
 
 @Controller({
   tag: "Categories",
@@ -74,17 +76,13 @@ export class CategoriesController extends BaseController {
   @ApiResponse(
     201,
     "Category created successfully",
-    Shared.Schemas.Base.createSuccessResponseSchema(categoryResponseSchema)
+    createSuccessResponseSchema(categoryResponseSchema)
   )
-  @ApiResponse(
-    400,
-    "Invalid input data",
-    Shared.Schemas.Base.validationErrorResponseSchema
-  )
+  @ApiResponse(400, "Invalid input data", validationErrorResponseSchema)
   @ApiResponse(
     409,
     "Category with this name or slug already exists",
-    Shared.Schemas.Base.conflictErrorResponseSchema
+    conflictErrorResponseSchema
   )
   createCategory = asyncHandler((_req: Request, _res: Response) => {
     throw new UnauthorizedError("Route not implementes");
@@ -109,18 +107,10 @@ export class CategoriesController extends BaseController {
   @ApiResponse(
     200,
     "Category retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponseSchema(categoryResponseSchema)
+    createSuccessResponseSchema(categoryResponseSchema)
   )
-  @ApiResponse(
-    400,
-    "Invalid category ID",
-    Shared.Schemas.Base.validationErrorResponseSchema
-  )
-  @ApiResponse(
-    404,
-    "Category not found",
-    Shared.Schemas.Base.notFoundErrorResponseSchema
-  )
+  @ApiResponse(400, "Invalid category ID", validationErrorResponseSchema)
+  @ApiResponse(404, "Category not found", notFoundErrorResponseSchema)
   getCategoryById = asyncHandler(
     async (req: Request, res: Response): Promise<CategoryResponse> => {
       const { id } = req.params as CategoryIdParamsDTO;
@@ -150,7 +140,7 @@ export class CategoriesController extends BaseController {
   @ApiResponse(
     400,
     "Invalid pagination parameters",
-    Shared.Schemas.Base.validationErrorResponseSchema
+    validationErrorResponseSchema
   )
   listCategories = asyncHandler(
     async (req: Request, res: Response): Promise<CategoriesListResponse> => {
@@ -187,22 +177,14 @@ export class CategoriesController extends BaseController {
   @ApiResponse(
     200,
     "Category updated successfully",
-    Shared.Schemas.Base.createSuccessResponseSchema(categoryResponseSchema)
+    createSuccessResponseSchema(categoryResponseSchema)
   )
-  @ApiResponse(
-    400,
-    "Invalid input data",
-    Shared.Schemas.Base.validationErrorResponseSchema
-  )
-  @ApiResponse(
-    404,
-    "Category not found",
-    Shared.Schemas.Base.notFoundErrorResponseSchema
-  )
+  @ApiResponse(400, "Invalid input data", validationErrorResponseSchema)
+  @ApiResponse(404, "Category not found", notFoundErrorResponseSchema)
   @ApiResponse(
     409,
     "Category with this name or slug already exists",
-    Shared.Schemas.Base.conflictErrorResponseSchema
+    conflictErrorResponseSchema
   )
   updateCategory = asyncHandler((_req: Request, _res: Response) => {
     throw new UnauthorizedError("Access denied");
@@ -224,16 +206,8 @@ export class CategoriesController extends BaseController {
   @Protected()
   @ValidateParams(categoryIdParamsSchema)
   @ApiResponse(204, "Category deleted successfully")
-  @ApiResponse(
-    400,
-    "Invalid category ID",
-    Shared.Schemas.Base.validationErrorResponseSchema
-  )
-  @ApiResponse(
-    404,
-    "Category not found",
-    Shared.Schemas.Base.notFoundErrorResponseSchema
-  )
+  @ApiResponse(400, "Invalid category ID", validationErrorResponseSchema)
+  @ApiResponse(404, "Category not found", notFoundErrorResponseSchema)
   deleteCategory = asyncHandler(
     (_req: Request, _res: Response): Promise<void> => {
       throw new UnauthorizedError("Access denied");

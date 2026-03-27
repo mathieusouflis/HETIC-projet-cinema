@@ -1,13 +1,13 @@
 import { logger } from "@packages/logger";
 import type { Socket } from "socket.io";
-import { WebSocketAckValidationError } from "../../errors/websocket/websocket-ack-validator-error.js";
-import { WebSocketHandlerNotFoundError } from "../../errors/websocket/websocket-handler-error.js";
-import type { EventListenerMetadata } from "../decorators/web-socket/websocket.metadata.js";
-import { WebSocketMetadataStorage } from "../decorators/web-socket/websocket.metadata.js";
-import { webSocketAuthService } from "./web-socket-auth-service.js";
-import { webSocketErrorHandler } from "./web-socket-error-handler.js";
-import { webSocketMiddlewareRunner } from "./web-socket-middleware-runner.js";
-import { webSocketValidationService } from "./web-socket-validation-service.js";
+import { WebSocketAckValidationError } from "../../errors/websocket/websocket-ack-validator-error";
+import { WebSocketHandlerNotFoundError } from "../../errors/websocket/websocket-handler-error";
+import type { EventListenerMetadata } from "../decorators/web-socket/websocket.metadata";
+import { WebSocketMetadataStorage } from "../decorators/web-socket/websocket.metadata";
+import { webSocketAuthService } from "./web-socket-auth-service";
+import { webSocketErrorHandler } from "./web-socket-error-handler";
+import { webSocketMiddlewareRunner } from "./web-socket-middleware-runner";
+import { webSocketValidationService } from "./web-socket-validation-service";
 
 /**
  * Acknowledgment callback type

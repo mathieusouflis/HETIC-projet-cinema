@@ -4,8 +4,8 @@ import {
   getMiddlewaresMetadata,
   Middlewares,
   Protected,
-} from "./auth.decorator.js";
-import { AUTH_MIDDLEWARE_MARKER } from "./types.js";
+} from "./auth.decorator";
+import { AUTH_MIDDLEWARE_MARKER } from "./types";
 
 describe("Auth Decorator tests", () => {
   describe("Middlewares decorator", () => {

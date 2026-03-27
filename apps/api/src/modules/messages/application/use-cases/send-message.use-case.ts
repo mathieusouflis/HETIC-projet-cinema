@@ -1,7 +1,7 @@
-import { ForbiddenError } from "../../../../shared/errors/index.js";
-import type { IConversationRepository } from "../../../conversations/domain/interfaces/IConversationRepository.js";
-import type { Message } from "../../domain/entities/message.entity.js";
-import type { IMessageRepository } from "../../domain/interfaces/IMessageRepository.js";
+import { ForbiddenError } from "../../../../shared/errors/forbidden-error";
+import type { IConversationRepository } from "../../../conversations/domain/interfaces/IConversationRepository";
+import type { Message } from "../../domain/entities/message.entity";
+import type { IMessageRepository } from "../../domain/interfaces/IMessageRepository";
 
 export class SendMessageUseCase {
   constructor(

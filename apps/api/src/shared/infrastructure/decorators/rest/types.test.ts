@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { BaseController } from "../../base/controllers/base-controller.js";
+import { BaseController } from "../../base/controllers/base-controller";
 import {
   AUTH_MIDDLEWARE_MARKER,
   type AuthMiddlewareMarker,
   isController,
   isRouteHandler,
   type RouteHandler,
-} from "./types.js";
+} from "./types";
 
 describe("Types tests", () => {
   describe("isRouteHandler", () => {

@@ -1,6 +1,6 @@
 import type { Router } from "express";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { type IApiModule, ModuleRegistry } from "./module-registry.js";
+import { type IApiModule, ModuleRegistry } from "./module-registry";
 
 describe("ModuleRegistry tests", () => {
   let registry: ModuleRegistry;

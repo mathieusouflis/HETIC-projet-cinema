@@ -1,6 +1,6 @@
-import type { Friendship } from "../../domain/entities/friendship.entity.js";
-import type { IFriendshipsRepository } from "../../domain/interfaces/IFriendshipsRepository.js";
-import type { FriendshipStatus } from "../../infrastructure/schemas/friendships.schema.js";
+import type { Friendship } from "../../domain/entities/friendship.entity";
+import type { IFriendshipsRepository } from "../../domain/interfaces/IFriendshipsRepository";
+import type { FriendshipStatus } from "../../infrastructure/schemas/friendships.schema";
 
 export class GetMyFriendshipsUseCase {
   constructor(private readonly friendshipsRepository: IFriendshipsRepository) {}

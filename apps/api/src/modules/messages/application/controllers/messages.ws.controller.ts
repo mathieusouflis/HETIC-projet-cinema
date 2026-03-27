@@ -1,19 +1,19 @@
 import type { Socket } from "socket.io";
-import { WebSocketController } from "../../../../shared/infrastructure/base/controllers/web-socket-controller.js";
-import { BroadcastTo } from "../../../../shared/infrastructure/decorators/web-socket/broadcast-to.decorator.js";
-import { JoinRoom } from "../../../../shared/infrastructure/decorators/web-socket/join-room.decorator.js";
-import { Namespace } from "../../../../shared/infrastructure/decorators/web-socket/namespace.decorator.js";
-import { Publish } from "../../../../shared/infrastructure/decorators/web-socket/publish.decorator.js";
-import { RequireSocketAuth } from "../../../../shared/infrastructure/decorators/web-socket/socket-auth.decorator.js";
-import { Subscribe } from "../../../../shared/infrastructure/decorators/web-socket/subscribe.decorator.js";
-import { ValidateEvent } from "../../../../shared/infrastructure/decorators/web-socket/validate-event.decorator.js";
-import type { JoinConversationEvent } from "../dto/ws/join-conversation-event.validator.js";
-import { joinConversationEventValidator } from "../dto/ws/join-conversation-event.validator.js";
-import type { SendMessageEvent } from "../dto/ws/send-message-event.validator.js";
-import { sendMessageEventValidator } from "../dto/ws/send-message-event.validator.js";
-import type { TypingEvent } from "../dto/ws/typing-event.validator.js";
-import { typingEventValidator } from "../dto/ws/typing-event.validator.js";
-import type { SendMessageUseCase } from "../use-cases/send-message.use-case.js";
+import { WebSocketController } from "../../../../shared/infrastructure/base/controllers/web-socket-controller";
+import { BroadcastTo } from "../../../../shared/infrastructure/decorators/web-socket/broadcast-to.decorator";
+import { JoinRoom } from "../../../../shared/infrastructure/decorators/web-socket/join-room.decorator";
+import { Namespace } from "../../../../shared/infrastructure/decorators/web-socket/namespace.decorator";
+import { Publish } from "../../../../shared/infrastructure/decorators/web-socket/publish.decorator";
+import { RequireSocketAuth } from "../../../../shared/infrastructure/decorators/web-socket/socket-auth.decorator";
+import { Subscribe } from "../../../../shared/infrastructure/decorators/web-socket/subscribe.decorator";
+import { ValidateEvent } from "../../../../shared/infrastructure/decorators/web-socket/validate-event.decorator";
+import type { JoinConversationEvent } from "../dto/ws/join-conversation-event.validator";
+import { joinConversationEventValidator } from "../dto/ws/join-conversation-event.validator";
+import type { SendMessageEvent } from "../dto/ws/send-message-event.validator";
+import { sendMessageEventValidator } from "../dto/ws/send-message-event.validator";
+import type { TypingEvent } from "../dto/ws/typing-event.validator";
+import { typingEventValidator } from "../dto/ws/typing-event.validator";
+import type { SendMessageUseCase } from "../use-cases/send-message.use-case";
 
 @RequireSocketAuth
 @Namespace({

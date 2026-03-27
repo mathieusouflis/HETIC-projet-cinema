@@ -13,7 +13,7 @@ import {
   RequiredHeaders,
   SetCookie,
   SetHeaders,
-} from "./header.decorator.js";
+} from "./header.decorator";
 
 describe("Header Decorator tests", () => {
   describe("RequiredHeaders decorator", () => {

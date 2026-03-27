@@ -12,11 +12,11 @@ import type {
   ParameterObject,
   ReferenceObject,
 } from "openapi3-ts/oas30";
-import { authMiddleware } from "../../../middleware/auth.middleware.js";
-import { validateRequest } from "../../../middleware/validation.middleware.js";
-import type { BaseController } from "../../base/controllers/base-controller.js";
-import { getSharedRegistry } from "../../openapi/shared-registry.js";
-import { getMiddlewaresMetadata } from "./auth.decorator.js";
+import { authMiddleware } from "../../../middleware/auth.middleware";
+import { validateRequest } from "../../../middleware/validation.middleware";
+import type { BaseController } from "../../base/controllers/base-controller";
+import { getSharedRegistry } from "../../openapi/shared-registry";
+import { getMiddlewaresMetadata } from "./auth.decorator";
 import {
   createRequiredCookieMiddleware,
   createRequiredHeadersMiddleware,
@@ -25,15 +25,15 @@ import {
   getRequiredHeadersMetadata,
   getSetCookieMetadata,
   getSetHeadersMetadata,
-} from "./header.decorator.js";
+} from "./header.decorator";
 import {
   METADATA_KEYS,
   MetadataStorage,
   type ResponseMetadata,
   type RouteMetadata,
   type ValidationMetadata,
-} from "./metadata.js";
-import { AUTH_MIDDLEWARE_MARKER } from "./types.js";
+} from "./metadata";
+import { AUTH_MIDDLEWARE_MARKER } from "./types";
 
 export interface OpenAPISpec {
   openapi: string;

@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import type { IPasswordService } from "./i-password-service.js";
+import type { IPasswordService } from "./i-password-service";
 
 /**
  * Password hashing service implementation using bcrypt

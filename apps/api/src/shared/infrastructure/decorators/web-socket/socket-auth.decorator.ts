@@ -1,4 +1,4 @@
-import { socketAuthNamespaceMiddleware } from "../../../middleware";
+import { socketAuthNamespaceMiddleware } from "../../../middleware/socket-auth.middleware";
 import {
   type NamespaceMetadata,
   WebSocketMetadataStorage,

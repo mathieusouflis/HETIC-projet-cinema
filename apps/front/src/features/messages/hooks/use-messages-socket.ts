@@ -3,8 +3,8 @@ import { useRef } from "react";
 import { useAuth } from "@/features/auth/stores/auth.store";
 import { conversationKeys } from "@/lib/api/services/conversations/keys";
 import { messageKeys } from "@/lib/api/services/messages/keys";
-import type { MessageDTO } from "@/lib/socket";
-import { getSocket } from "@/lib/socket";
+import { getSocket } from "@/lib/socket/socket-client";
+import type { MessageDTO } from "@/lib/socket/types";
 import type { Conversation, Message, MessagePage } from "../types";
 import { useTyping } from "./use-typing";
 

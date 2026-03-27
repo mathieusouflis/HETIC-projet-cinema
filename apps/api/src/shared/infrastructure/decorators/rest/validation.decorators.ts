@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import type { z } from "zod";
-import { METADATA_KEYS, type ValidationMetadata } from "./metadata.js";
+import { METADATA_KEYS, type ValidationMetadata } from "./metadata";
 
 function getOrCreateValidationMetadata(
   target: object,

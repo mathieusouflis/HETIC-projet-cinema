@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { asyncAPIGenerator } from "../documentation/asyncapi-generator.js";
+import { asyncAPIGenerator } from "../documentation/asyncapi-generator";
 
 /**
  * Create router for AsyncAPI documentation endpoints

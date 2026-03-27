@@ -1,4 +1,4 @@
-import { TmdbService } from "../../../../shared/services/tmdb";
+import { TmdbService } from "../../../../shared/services/tmdb/tmdb-service";
 import type { TMDBPeople } from "../../../movies/infrastructure/database/repositories/tmdb-movies.repository";
 
 export type TMDBEpisode = {

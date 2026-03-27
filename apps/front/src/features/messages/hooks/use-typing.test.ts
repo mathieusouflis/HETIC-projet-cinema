@@ -1,5 +1,4 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { TypingPayload } from "@/lib/socket";
 
 type MockStore = {
   addTypingUser: ReturnType<typeof vi.fn>;
@@ -11,6 +10,7 @@ type MockSocket = {
   emit: ReturnType<typeof vi.fn>;
 };
 
+import type { TypingPayload } from "@/lib/socket/types";
 import { createTypingController } from "./use-typing";
 
 const CONV = "conv-123";

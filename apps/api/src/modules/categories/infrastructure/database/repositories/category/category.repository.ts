@@ -1,16 +1,16 @@
 import { count, eq, inArray } from "drizzle-orm";
-import { db } from "../../../../../../database/index.js";
+import { db } from "../../../../../../database/index";
 import {
   categories,
   contentCategories,
-} from "../../../../../../database/schema.js";
+} from "../../../../../../database/schema";
 import {
   Category,
   type CreateCategoryProps,
   type UpdateCategoryProps,
-} from "../../../../domain/entities/category.entity.js";
-import type { ICategoryRepository } from "../../../../domain/interfaces/ICategoryRepository.js";
-import type { CategoryRow } from "../../schemas/categories.schema.js";
+} from "../../../../domain/entities/category.entity";
+import type { ICategoryRepository } from "../../../../domain/interfaces/ICategoryRepository";
+import type { CategoryRow } from "../../schemas/categories.schema";
 
 export class CategoryRepository implements ICategoryRepository {
   private mapToDomain(row: CategoryRow): Category {

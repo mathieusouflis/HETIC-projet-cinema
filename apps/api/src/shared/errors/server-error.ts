@@ -1,4 +1,4 @@
-import { AppError } from "./app-error.js";
+import { AppError } from "./app-error";
 
 /**
  * Error thrown when an error occurs in the server

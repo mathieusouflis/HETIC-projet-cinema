@@ -1,17 +1,17 @@
 import { config } from "@packages/config";
-import type { IEmailService } from "../../../../shared/services/email/i-email-service.js";
-import type { IPasswordService } from "../../../../shared/services/password/i-password-service.js";
+import type { IEmailService } from "../../../../shared/services/email/i-email-service";
+import type { IPasswordService } from "../../../../shared/services/password/i-password-service";
 import {
   generateSecureToken,
   getExpiryDate,
   hashToken,
-} from "../../../../shared/utils/crypto.utils.js";
-import { EmailAlreadyExistsError } from "../../../users/domain/errors/EmailAlreadyExistsError.js";
-import { UsernameAlreadyExistsError } from "../../../users/domain/errors/UsernameAlreadyExistsError.js";
-import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";
-import { EMAIL_VERIFICATION_TOKEN_EXPIRY_MS } from "../../domain/constants.js";
-import type { IEmailVerificationTokenRepository } from "../../domain/interfaces/IEmailVerificationTokenRepository.js";
-import type { RegisterDTO } from "../dto/request/register.dto.js";
+} from "../../../../shared/utils/crypto.utils";
+import { EmailAlreadyExistsError } from "../../../users/domain/errors/EmailAlreadyExistsError";
+import { UsernameAlreadyExistsError } from "../../../users/domain/errors/UsernameAlreadyExistsError";
+import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository";
+import { EMAIL_VERIFICATION_TOKEN_EXPIRY_MS } from "../../domain/constants";
+import type { IEmailVerificationTokenRepository } from "../../domain/interfaces/IEmailVerificationTokenRepository";
+import type { RegisterDTO } from "../dto/request/register.dto";
 
 /**
  * Register Use Case

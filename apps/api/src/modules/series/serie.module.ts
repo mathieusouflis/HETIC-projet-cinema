@@ -1,11 +1,11 @@
 import type { Router } from "express";
-import { RestModule } from "../../shared/infrastructure/base/modules/rest-module.js";
-import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator.js";
-import { SeriesController } from "./application/controllers/serie.controller.js";
-import { GetSerieByIdUseCase } from "./application/use-cases/get-serie-by-id.use-case.js";
-import { QuerySerieUseCase } from "./application/use-cases/query-serie.use-case.js";
-import type { ISeriesRepository } from "./domain/interfaces/ISeriesRepository.js";
-import { CompositeSeriesRepository } from "./infrastructure/database/repositories/composite-series.repository.js";
+import { RestModule } from "../../shared/infrastructure/base/modules/rest-module";
+import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator";
+import { SeriesController } from "./application/controllers/serie.controller";
+import { GetSerieByIdUseCase } from "./application/use-cases/get-serie-by-id.use-case";
+import { QuerySerieUseCase } from "./application/use-cases/query-serie.use-case";
+import type { ISeriesRepository } from "./domain/interfaces/ISeriesRepository";
+import { CompositeSeriesRepository } from "./infrastructure/database/repositories/composite-series.repository";
 
 class SeriesModule extends RestModule {
   // ============================================

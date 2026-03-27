@@ -1,4 +1,4 @@
-import { ConflictError } from "../../../../shared/errors/index.js";
+import { ConflictError } from "../../../../shared/errors/conflict-error";
 
 export class UsernameAlreadyExistsError extends ConflictError {
   constructor(username: string) {

@@ -1,6 +1,6 @@
 import type z from "zod";
-import { createPaginatedResponseSchema } from "../../../../../shared/schemas/base/response.schemas.js";
-import { peopleValidator } from "../../validators/people.validator.js";
+import { createPaginatedResponseSchema } from "../../../../../shared/schemas/base/response.schemas";
+import { peopleValidator } from "../../validators/people.validator";
 
 export const searchPeopleResponseValidator =
   createPaginatedResponseSchema(peopleValidator);

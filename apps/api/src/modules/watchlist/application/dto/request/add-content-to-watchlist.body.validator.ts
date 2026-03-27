@@ -1,5 +1,5 @@
 import z from "zod";
-import { uuidSchema } from "../../../../../shared/schemas/fields";
+import { uuidSchema } from "../../../../../shared/schemas/fields/uuid.schema";
 import { watchlistStatusSchema } from "../../validators/watchlist.validators";
 
 export const addContentToWatchlistBodyValidator = z.object({

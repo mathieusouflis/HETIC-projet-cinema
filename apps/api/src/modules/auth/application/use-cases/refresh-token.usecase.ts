@@ -1,18 +1,18 @@
-import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error.js";
+import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error";
 import type {
   ITokenService,
   RefreshTokenPayload,
-} from "../../../../shared/services/token/i-token-service.js";
-import type { RefreshToken } from "../../../../shared/services/token/schemas/tokens.schema.js";
+} from "../../../../shared/services/token/i-token-service";
+import type { RefreshToken } from "../../../../shared/services/token/schemas/tokens.schema";
 import {
   getExpiryDate,
   hashToken,
-} from "../../../../shared/utils/crypto.utils.js";
-import { UserNotFoundError } from "../../../users/domain/errors/UserNotFoundError.js";
-import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";
-import type { IRefreshTokenRepository } from "../../domain/interfaces/IRefreshTokenRepository.js";
-import type { RefreshTokenDTO } from "../dto/request/refresh-token.dto.js";
-import type { RefreshTokenResponse } from "../dto/response/refresh-token.response.validator.js";
+} from "../../../../shared/utils/crypto.utils";
+import { UserNotFoundError } from "../../../users/domain/errors/UserNotFoundError";
+import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository";
+import type { IRefreshTokenRepository } from "../../domain/interfaces/IRefreshTokenRepository";
+import type { RefreshTokenDTO } from "../dto/request/refresh-token.dto";
+import type { RefreshTokenResponse } from "../dto/response/refresh-token.response.validator";
 
 const REFRESH_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 

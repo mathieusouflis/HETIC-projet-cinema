@@ -1,18 +1,18 @@
-import { ForbiddenError } from "../../../../shared/errors/forbidden-error.js";
-import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error.js";
-import type { IPasswordService } from "../../../../shared/services/password/i-password-service.js";
-import type { ITokenService } from "../../../../shared/services/token/i-token-service.js";
-import type { RefreshToken } from "../../../../shared/services/token/schemas/tokens.schema.js";
+import { ForbiddenError } from "../../../../shared/errors/forbidden-error";
+import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error";
+import type { IPasswordService } from "../../../../shared/services/password/i-password-service";
+import type { ITokenService } from "../../../../shared/services/token/i-token-service";
+import type { RefreshToken } from "../../../../shared/services/token/schemas/tokens.schema";
 import {
   getExpiryDate,
   hashToken,
-} from "../../../../shared/utils/crypto.utils.js";
-import { toUserResponseDTO } from "../../../users/application/dto/utils/to-user-response.js";
-import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";
-import type { IRefreshTokenRepository } from "../../domain/interfaces/IRefreshTokenRepository.js";
-import type { LoginDTO } from "../dto/request/login.dto.js";
-import type { AuthResponse } from "../dto/response/auth-response.response.validator.js";
-import { toAuthResponseDTO } from "../dto/utils/to-auth-response-dto.js";
+} from "../../../../shared/utils/crypto.utils";
+import { toUserResponseDTO } from "../../../users/application/dto/utils/to-user-response";
+import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository";
+import type { IRefreshTokenRepository } from "../../domain/interfaces/IRefreshTokenRepository";
+import type { LoginDTO } from "../dto/request/login.dto";
+import type { AuthResponse } from "../dto/response/auth-response.response.validator";
+import { toAuthResponseDTO } from "../dto/utils/to-auth-response-dto";
 
 const REFRESH_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 

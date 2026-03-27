@@ -1,21 +1,19 @@
 import { describe, expect, it, vi } from "vitest";
-import {
-  ForbiddenError,
-  NotFoundError,
-} from "../../../../shared/errors/index.js";
+import { ForbiddenError } from "../../../../shared/errors/forbidden-error";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
 import {
   createMockedFriendshipsRepository,
   mockAcceptedFriendship,
-} from "../../../friendships/domain/interfaces/friendships.repository.mock.js";
-import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock..js";
+} from "../../../friendships/domain/interfaces/friendships.repository.mock";
+import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock.";
 import {
   createMockedConversationRepository,
   MOCK_CONV_USER_A_ID,
   MOCK_CONV_USER_B_ID,
   MOCK_CONVERSATION_ID,
   mockConversation,
-} from "../../domain/interfaces/conversation.repository.mock.js";
-import { CreateConversationUseCase } from "./create-conversation.use-case.js";
+} from "../../domain/interfaces/conversation.repository.mock";
+import { CreateConversationUseCase } from "./create-conversation.use-case";
 
 describe("CreateConversationUseCase", () => {
   it("creates a new direct conversation when friendship is accepted", async () => {

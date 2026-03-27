@@ -26,7 +26,13 @@ export type GETSeriesParams = {
   withCast?: GETSeriesWithCast;
   withSeasons?: GETSeriesWithSeasons;
   withEpisodes?: GETSeriesWithEpisodes;
+  /**
+   * @minLength 1
+   */
   seasonNumber?: string;
+  /**
+   * @minLength 1
+   */
   episodeNumber?: string;
   /**
    * @minimum 1

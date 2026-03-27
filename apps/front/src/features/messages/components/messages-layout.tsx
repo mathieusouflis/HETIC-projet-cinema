@@ -5,8 +5,8 @@ import { useEffect, useRef } from "react";
 import { useAuth } from "@/features/auth/stores/auth.store";
 import { queryConversationService } from "@/lib/api/services/conversations";
 import { conversationKeys } from "@/lib/api/services/conversations/keys";
-import type { MessageDTO } from "@/lib/socket";
-import { getSocket } from "@/lib/socket";
+import { getSocket } from "@/lib/socket/socket-client";
+import type { MessageDTO } from "@/lib/socket/types";
 import type { Conversation } from "../types";
 import { ConversationList } from "./conversation-list";
 

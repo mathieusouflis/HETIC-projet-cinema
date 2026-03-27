@@ -1,10 +1,8 @@
-import {
-  ForbiddenError,
-  NotFoundError,
-} from "../../../../shared/errors/index.js";
-import type { Friendship } from "../../domain/entities/friendship.entity.js";
-import type { IFriendshipsRepository } from "../../domain/interfaces/IFriendshipsRepository.js";
-import type { FriendshipStatus } from "../../infrastructure/schemas/friendships.schema.js";
+import { ForbiddenError } from "../../../../shared/errors/forbidden-error";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
+import type { Friendship } from "../../domain/entities/friendship.entity";
+import type { IFriendshipsRepository } from "../../domain/interfaces/IFriendshipsRepository";
+import type { FriendshipStatus } from "../../infrastructure/schemas/friendships.schema";
 
 export class RespondToFriendRequestUseCase {
   constructor(private readonly friendshipsRepository: IFriendshipsRepository) {}

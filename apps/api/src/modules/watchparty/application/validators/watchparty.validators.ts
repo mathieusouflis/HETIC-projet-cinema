@@ -1,5 +1,8 @@
 import z from "zod";
-import { uuidSchema } from "../../../../shared/schemas/fields/index.js";
+import {
+  uuidSchema,
+  uuidSchemaNullable,
+} from "../../../../shared/schemas/fields/uuid.schema";
 
 export const watchpartyStatusSchema = z.enum([
   "scheduled",
@@ -12,13 +15,13 @@ export const watchpartySchema = z.object({
   id: uuidSchema,
   createdBy: uuidSchema,
   contentId: uuidSchema,
-  seasonId: uuidSchema.nullable(),
-  episodeId: uuidSchema.nullable(),
+  seasonId: uuidSchemaNullable,
+  episodeId: uuidSchemaNullable,
   name: z.string().min(1).max(255),
   description: z.string().nullable(),
   isPublic: z.boolean(),
   maxParticipants: z.number().int().positive().nullable(),
-  platformId: uuidSchema.nullable(),
+  platformId: uuidSchemaNullable,
   platformUrl: z.url().nullable(),
   scheduledAt: z.date().nullable(),
   startedAt: z.date().nullable(),
@@ -26,7 +29,7 @@ export const watchpartySchema = z.object({
   status: watchpartyStatusSchema,
   currentPositionTimestamp: z.number().int().nonnegative().nullable(),
   isPlaying: z.boolean(),
-  leaderUserId: uuidSchema.nullable(),
+  leaderUserId: uuidSchemaNullable,
   createdAt: z.date(),
   updatedAt: z.date(),
 });

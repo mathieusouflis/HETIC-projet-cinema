@@ -1,13 +1,13 @@
 import { and, eq, lt } from "drizzle-orm";
-import { db } from "../../../../database/index.js";
-import { messages } from "../../../../database/schema.js";
-import { NotFoundError } from "../../../../shared/errors/index.js";
-import { ServerError } from "../../../../shared/errors/server-error.js";
-import { Message } from "../../domain/entities/message.entity.js";
+import { db } from "../../../../database/index";
+import { messages } from "../../../../database/schema";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
+import { ServerError } from "../../../../shared/errors/server-error";
+import { Message } from "../../domain/entities/message.entity";
 import type {
   IMessageRepository,
   MessagePage,
-} from "../../domain/interfaces/IMessageRepository.js";
+} from "../../domain/interfaces/IMessageRepository";
 
 const DEFAULT_LIMIT = 30;
 

@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { Shared } from "../../../../../shared";
+import { tokenSchema } from "../../../../../shared/services/token/schemas/tokens.schema";
 import { publicUserValidator } from "../../../../users/application/validators/user.validator";
 
 export const authResponseDataValidator = z.object({
   user: publicUserValidator,
-  accessToken: Shared.Services.Token.Schemas.tokenSchema,
+  accessToken: tokenSchema,
 });
 
 export const authResponseBodyValidator = authResponseDataValidator.omit({

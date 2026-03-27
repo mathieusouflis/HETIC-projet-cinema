@@ -1,35 +1,35 @@
-import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller.js";
-import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator.js";
-import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator.js";
-import { Get } from "../../../../shared/infrastructure/decorators/rest/route.decorators.js";
+import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller";
+import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator";
+import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator";
+import { Get } from "../../../../shared/infrastructure/decorators/rest/route.decorators";
 import {
   ValidateParams,
   ValidateQuery,
-} from "../../../../shared/infrastructure/decorators/rest/validation.decorators.js";
-import { notFoundErrorResponseSchema } from "../../../../shared/schemas/base/error.schemas.js";
-import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
+} from "../../../../shared/infrastructure/decorators/rest/validation.decorators";
+import { notFoundErrorResponseSchema } from "../../../../shared/schemas/base/error.schemas";
+import { asyncHandler } from "../../../../shared/utils/asyncHandler";
 import {
   type GetSerieByIdValidatorParams,
   getSerieByIdValidatorParams,
-} from "../dto/requests/get-serie-by-id-params.validator.js";
+} from "../dto/requests/get-serie-by-id-params.validator";
 import {
   type GetSerieByIdValidatorQuery,
   getSerieByIdValidatorQuery,
-} from "../dto/requests/get-serie-by-id-query.validator.js";
+} from "../dto/requests/get-serie-by-id-query.validator";
 import {
   type QuerySerieRequest,
   querySerieRequestSchema,
-} from "../dto/requests/query-serie.validator.js";
+} from "../dto/requests/query-serie.validator";
 import {
   type GetSerieByIdResponse,
   getSerieByIdResponseSchema,
-} from "../dto/response/get-serie-by-id-response.validator.js";
+} from "../dto/response/get-serie-by-id-response.validator";
 import {
   type QuerySerieResponse,
   querySerieResponseSchema,
-} from "../dto/response/query-serie.validator.js";
-import type { GetSerieByIdUseCase } from "../use-cases/get-serie-by-id.use-case.js";
-import type { QuerySerieUseCase } from "../use-cases/query-serie.use-case.js";
+} from "../dto/response/query-serie.validator";
+import type { GetSerieByIdUseCase } from "../use-cases/get-serie-by-id.use-case";
+import type { QuerySerieUseCase } from "../use-cases/query-serie.use-case";
 
 @Controller({
   tag: "Series",

@@ -1,5 +1,5 @@
 import { describe, it } from "vitest";
-import { JWTService } from "../../../../shared/services/token";
+import { JWTService } from "../../../../shared/services/token/jwt-service";
 import { hashToken } from "../../../../shared/utils/crypto.utils";
 import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock.";
 import { createMockedRefreshTokenRepository } from "../../domain/interfaces/refresh-token.repository.mock.";

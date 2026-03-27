@@ -1,49 +1,55 @@
-import { UnauthorizedError } from "../../../../shared/errors/index.js";
-import { Shared } from "../../../../shared/index.js";
-import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller.js";
-import { Protected } from "../../../../shared/infrastructure/decorators/rest/auth.decorator.js";
-import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator.js";
-import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator.js";
+import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error";
+import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller";
+import { Protected } from "../../../../shared/infrastructure/decorators/rest/auth.decorator";
+import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator";
+import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator";
 import {
   Delete,
   Get,
   Patch,
   Post,
-} from "../../../../shared/infrastructure/decorators/rest/route.decorators.js";
+} from "../../../../shared/infrastructure/decorators/rest/route.decorators";
 import {
   ValidateBody,
   ValidateParams,
   ValidateQuery,
-} from "../../../../shared/infrastructure/decorators/rest/validation.decorators.js";
-import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
+} from "../../../../shared/infrastructure/decorators/rest/validation.decorators";
+import {
+  forbiddenErrorResponseSchema,
+  notFoundErrorResponseSchema,
+  unauthorizedErrorResponseSchema,
+  validationErrorResponseSchema,
+} from "../../../../shared/schemas/base/error.schemas";
+import { createSuccessResponseSchema } from "../../../../shared/schemas/base/response.schemas";
+import { asyncHandler } from "../../../../shared/utils/asyncHandler";
 import {
   type ConversationIdParams,
   conversationIdParamsValidator,
-} from "../dto/rest/request/conversation-id-params.validator.js";
+} from "../dto/rest/request/conversation-id-params.validator";
 import {
   type EditMessageBody,
   editMessageBodyValidator,
-} from "../dto/rest/request/edit-message-body.validator.js";
+} from "../dto/rest/request/edit-message-body.validator";
 import {
   type GetMessagesQuery,
   getMessagesQueryValidator,
-} from "../dto/rest/request/get-messages-query.validator.js";
+} from "../dto/rest/request/get-messages-query.validator";
 import {
   type MessageIdParams,
   messageIdParamsValidator,
-} from "../dto/rest/request/message-id-params.validator.js";
+} from "../dto/rest/request/message-id-params.validator";
 import {
   type SendMessageBody,
   sendMessageBodyValidator,
-} from "../dto/rest/request/send-message-body.validator.js";
+} from "../dto/rest/request/send-message-body.validator";
 import {
   messagePageResponseSchema,
   messageResponseSchema,
-} from "../dto/rest/response/message.response.validator.js";
-import type { DeleteMessageUseCase } from "../use-cases/delete-message.use-case.js";
-import type { EditMessageUseCase } from "../use-cases/edit-message.use-case.js";
-import type { GetMessagesUseCase } from "../use-cases/get-messages.use-case.js";
-import type { SendMessageUseCase } from "../use-cases/send-message.use-case.js";
+} from "../dto/rest/response/message.response.validator";
+import type { DeleteMessageUseCase } from "../use-cases/delete-message.use-case";
+import type { EditMessageUseCase } from "../use-cases/edit-message.use-case";
+import type { GetMessagesUseCase } from "../use-cases/get-messages.use-case";
+import type { SendMessageUseCase } from "../use-cases/send-message.use-case";
 
 @Controller({
   tag: "Messages",
@@ -72,18 +78,10 @@ export class MessagesRestController extends BaseController {
   @ApiResponse(
     200,
     "Messages retrieved successfully",
-    Shared.Schemas.Base.createSuccessResponseSchema(messagePageResponseSchema)
+    createSuccessResponseSchema(messagePageResponseSchema)
   )
-  @ApiResponse(
-    401,
-    "Not authenticated",
-    Shared.Schemas.Base.unauthorizedErrorResponseSchema
-  )
-  @ApiResponse(
-    403,
-    "Not a participant",
-    Shared.Schemas.Base.forbiddenErrorResponseSchema
-  )
+  @ApiResponse(401, "Not authenticated", unauthorizedErrorResponseSchema)
+  @ApiResponse(403, "Not a participant", forbiddenErrorResponseSchema)
   getMessages = asyncHandler(async (req, res) => {
     const userId = req.user?.userId;
     if (!userId) throw new UnauthorizedError("Not authenticated");
@@ -119,23 +117,11 @@ export class MessagesRestController extends BaseController {
   @ApiResponse(
     201,
     "Message sent",
-    Shared.Schemas.Base.createSuccessResponseSchema(messageResponseSchema)
+    createSuccessResponseSchema(messageResponseSchema)
   )
-  @ApiResponse(
-    400,
-    "Invalid input",
-    Shared.Schemas.Base.validationErrorResponseSchema
-  )
-  @ApiResponse(
-    401,
-    "Not authenticated",
-    Shared.Schemas.Base.unauthorizedErrorResponseSchema
-  )
-  @ApiResponse(
-    403,
-    "Not a participant",
-    Shared.Schemas.Base.forbiddenErrorResponseSchema
-  )
+  @ApiResponse(400, "Invalid input", validationErrorResponseSchema)
+  @ApiResponse(401, "Not authenticated", unauthorizedErrorResponseSchema)
+  @ApiResponse(403, "Not a participant", forbiddenErrorResponseSchema)
   sendMessage = asyncHandler(async (req, res) => {
     const userId = req.user?.userId;
     if (!userId) throw new UnauthorizedError("Not authenticated");
@@ -166,28 +152,16 @@ export class MessagesRestController extends BaseController {
   @ApiResponse(
     200,
     "Message updated",
-    Shared.Schemas.Base.createSuccessResponseSchema(messageResponseSchema)
+    createSuccessResponseSchema(messageResponseSchema)
   )
-  @ApiResponse(
-    400,
-    "Invalid input",
-    Shared.Schemas.Base.validationErrorResponseSchema
-  )
-  @ApiResponse(
-    401,
-    "Not authenticated",
-    Shared.Schemas.Base.unauthorizedErrorResponseSchema
-  )
+  @ApiResponse(400, "Invalid input", validationErrorResponseSchema)
+  @ApiResponse(401, "Not authenticated", unauthorizedErrorResponseSchema)
   @ApiResponse(
     403,
     "Not the author or message deleted",
-    Shared.Schemas.Base.forbiddenErrorResponseSchema
+    forbiddenErrorResponseSchema
   )
-  @ApiResponse(
-    404,
-    "Message not found",
-    Shared.Schemas.Base.notFoundErrorResponseSchema
-  )
+  @ApiResponse(404, "Message not found", notFoundErrorResponseSchema)
   editMessage = asyncHandler(async (req, res) => {
     const userId = req.user?.userId;
     if (!userId) throw new UnauthorizedError("Not authenticated");
@@ -218,23 +192,11 @@ export class MessagesRestController extends BaseController {
   @ApiResponse(
     200,
     "Message deleted (tombstone returned)",
-    Shared.Schemas.Base.createSuccessResponseSchema(messageResponseSchema)
+    createSuccessResponseSchema(messageResponseSchema)
   )
-  @ApiResponse(
-    401,
-    "Not authenticated",
-    Shared.Schemas.Base.unauthorizedErrorResponseSchema
-  )
-  @ApiResponse(
-    403,
-    "Not the author",
-    Shared.Schemas.Base.forbiddenErrorResponseSchema
-  )
-  @ApiResponse(
-    404,
-    "Message not found",
-    Shared.Schemas.Base.notFoundErrorResponseSchema
-  )
+  @ApiResponse(401, "Not authenticated", unauthorizedErrorResponseSchema)
+  @ApiResponse(403, "Not the author", forbiddenErrorResponseSchema)
+  @ApiResponse(404, "Message not found", notFoundErrorResponseSchema)
   deleteMessage = asyncHandler(async (req, res) => {
     const userId = req.user?.userId;
     if (!userId) throw new UnauthorizedError("Not authenticated");

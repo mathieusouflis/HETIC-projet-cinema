@@ -1,35 +1,35 @@
-import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller.js";
-import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator.js";
-import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator.js";
-import { Get } from "../../../../shared/infrastructure/decorators/rest/route.decorators.js";
+import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller";
+import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator";
+import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator";
+import { Get } from "../../../../shared/infrastructure/decorators/rest/route.decorators";
 import {
   ValidateParams,
   ValidateQuery,
-} from "../../../../shared/infrastructure/decorators/rest/validation.decorators.js";
-import { notFoundErrorResponseSchema } from "../../../../shared/schemas/base/error.schemas.js";
-import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
+} from "../../../../shared/infrastructure/decorators/rest/validation.decorators";
+import { notFoundErrorResponseSchema } from "../../../../shared/schemas/base/error.schemas";
+import { asyncHandler } from "../../../../shared/utils/asyncHandler";
 import {
   type GetMovieByIdValidatorParams,
   getMovieByIdValidatorParams,
-} from "../dto/requests/get-movie-by-id-params.validator.js";
+} from "../dto/requests/get-movie-by-id-params.validator";
 import {
   type GetMovieByIdValidatorQuery,
   getMovieByIdValidatorQuery,
-} from "../dto/requests/get-movie-by-id-query.validator.js";
+} from "../dto/requests/get-movie-by-id-query.validator";
 import {
   type QueryMovieRequest,
   queryMovieRequestSchema,
-} from "../dto/requests/query-movies.validator.js";
+} from "../dto/requests/query-movies.validator";
 import {
   type GetMovieByIdResponse,
   getMovieByIdResponseSchema,
-} from "../dto/response/get-movie-by-id-response.validator.js";
+} from "../dto/response/get-movie-by-id-response.validator";
 import {
   type QueryMovieResponse,
   queryMovieResponseSchema,
-} from "../dto/response/query-movie.validator.js";
-import type { GetMovieByIdUseCase } from "../use-cases/get-movie-by-id.use-case.js";
-import type { QueryMovieUseCase } from "../use-cases/query-movie.use-case.js";
+} from "../dto/response/query-movie.validator";
+import type { GetMovieByIdUseCase } from "../use-cases/get-movie-by-id.use-case";
+import type { QueryMovieUseCase } from "../use-cases/query-movie.use-case";
 
 @Controller({
   tag: "Movies",

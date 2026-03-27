@@ -1,4 +1,4 @@
-import type { PagePaginationQuery } from "../../../../shared/services/pagination";
+import type { PagePaginationQuery } from "../../../../shared/services/pagination/pagination.schemas";
 import type { Movie } from "../entities/movie.entity";
 
 export interface IMoviesRepository {

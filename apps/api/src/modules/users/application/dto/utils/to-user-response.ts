@@ -1,4 +1,4 @@
-import type { User } from "../../../domain/entities";
+import type { User } from "../../../domain/entities/user.entity";
 import type { GetIdResponse } from "../response/get-id.response.validator";
 
 /**

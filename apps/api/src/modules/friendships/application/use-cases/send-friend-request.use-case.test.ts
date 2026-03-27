@@ -1,17 +1,15 @@
 import { describe, expect, it, vi } from "vitest";
-import {
-  ConflictError,
-  ForbiddenError,
-  NotFoundError,
-} from "../../../../shared/errors/index.js";
-import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock..js";
+import { ConflictError } from "../../../../shared/errors/conflict-error";
+import { ForbiddenError } from "../../../../shared/errors/forbidden-error";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
+import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock.";
 import {
   createMockedFriendshipsRepository,
   MOCK_USER_A_ID,
   MOCK_USER_B_ID,
   mockPendingFriendship,
-} from "../../domain/interfaces/friendships.repository.mock.js";
-import { SendFriendRequestUseCase } from "./send-friend-request.use-case.js";
+} from "../../domain/interfaces/friendships.repository.mock";
+import { SendFriendRequestUseCase } from "./send-friend-request.use-case";
 
 describe("SendFriendRequestUseCase", () => {
   it("creates a pending friendship when target user exists", async () => {

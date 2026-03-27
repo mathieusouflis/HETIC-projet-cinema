@@ -1,15 +1,15 @@
 import type { Router } from "express";
 import type { Server } from "socket.io";
-import { HybridModule } from "../../shared/infrastructure/base/modules/index.js";
-import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator.js";
-import { ConversationRepository } from "../conversations/infrastructure/repositories/conversation.repository.js";
-import { MessagesRestController } from "./application/controllers/messages.rest.controller.js";
-import { MessageWSController } from "./application/controllers/messages.ws.controller.js";
-import { DeleteMessageUseCase } from "./application/use-cases/delete-message.use-case.js";
-import { EditMessageUseCase } from "./application/use-cases/edit-message.use-case.js";
-import { GetMessagesUseCase } from "./application/use-cases/get-messages.use-case.js";
-import { SendMessageUseCase } from "./application/use-cases/send-message.use-case.js";
-import { MessageRepository } from "./infrastructure/repositories/message.repository.js";
+import { HybridModule } from "../../shared/infrastructure/base/modules/hybrid-module";
+import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator";
+import { ConversationRepository } from "../conversations/infrastructure/repositories/conversation.repository";
+import { MessagesRestController } from "./application/controllers/messages.rest.controller";
+import { MessageWSController } from "./application/controllers/messages.ws.controller";
+import { DeleteMessageUseCase } from "./application/use-cases/delete-message.use-case";
+import { EditMessageUseCase } from "./application/use-cases/edit-message.use-case";
+import { GetMessagesUseCase } from "./application/use-cases/get-messages.use-case";
+import { SendMessageUseCase } from "./application/use-cases/send-message.use-case";
+import { MessageRepository } from "./infrastructure/repositories/message.repository";
 
 class MessageModule extends HybridModule {
   private readonly messageRepository: MessageRepository;

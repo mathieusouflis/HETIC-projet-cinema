@@ -1,6 +1,6 @@
 import { Entity } from "../../../shared/domain/entity";
 import type { Season } from "../../seasons/domain/seasons.entity";
-import type { Watchparty } from "../../watchparty";
+import type { Watchparty } from "../../watchparty/domain/entities/watchparty.entity";
 import type {
   EpisodeRow,
   episodesRelationsSchema,
