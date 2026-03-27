@@ -9,10 +9,6 @@ import { contentService } from "@/lib/api/services/contents";
 import { contentsKeys } from "@/lib/api/services/contents/keys";
 import { baseRoutes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
-import {
-  profileInsetPanelClassName,
-  profileSectionCardClassName,
-} from "./profile.styles";
 
 type CompletedContent = Awaited<ReturnType<typeof contentService.get>>;
 
@@ -160,7 +156,11 @@ function FeaturedShelf({
           </div>
         </Link>
 
-        <div className={cn("min-w-0 p-4", profileInsetPanelClassName)}>
+        <div
+          className={cn(
+            "surface-inset min-w-0 rounded-[24px] border-white/70 p-4"
+          )}
+        >
           <p className="mb-3 text-sm font-medium text-muted-foreground">
             Continue browsing completed titles
           </p>
@@ -214,7 +214,7 @@ export function CompletedContentSection() {
   );
 
   return (
-    <Card className={profileSectionCardClassName}>
+    <Card className="surface-section overflow-hidden rounded-[32px] border-neutral-200/80">
       <CardHeader className="gap-4">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-2">

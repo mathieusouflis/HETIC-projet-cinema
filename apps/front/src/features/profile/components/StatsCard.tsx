@@ -1,10 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { ProfileStats } from "../domain/ProfileStats";
-import {
-  profileInsetPanelClassName,
-  profileMetricCardClassName,
-} from "./profile.styles";
 
 type Props = {
   stats: ProfileStats;
@@ -41,7 +37,12 @@ function StatsShowcaseCard({
   accentClassName: string;
 }) {
   return (
-    <Card className={cn(profileMetricCardClassName, accentClassName)}>
+    <Card
+      className={cn(
+        "surface-section overflow-hidden rounded-[28px] border-neutral-200/80",
+        accentClassName
+      )}
+    >
       <CardContent className="flex h-full flex-col gap-6 p-6">
         <div className="space-y-4">
           <div>
@@ -56,8 +57,7 @@ function StatsShowcaseCard({
 
         <div
           className={cn(
-            "mt-auto px-4 py-3 text-sm text-muted-foreground",
-            profileInsetPanelClassName
+            "surface-inset mt-auto rounded-[24px] border-white/70 px-4 py-3 text-sm text-muted-foreground"
           )}
         >
           {detail}
