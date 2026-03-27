@@ -20,21 +20,25 @@ export function ProfileTabs({ stats }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-between border-b border-neutral-200">
-        {["dashboard", "comments", "watchpartys", "lists"].map((tab) => (
-          <button
-            type="button"
-            key={tab}
-            disabled={DISABLED_TABS.includes(tab as Tab)}
-            onClick={() => setActiveTab(tab as Tab)}
-            className={cn(profileTabClassName, {
-              "border-b-primary text-foreground font-medium": activeTab === tab,
-              "border-b-transparent text-muted-foreground": activeTab !== tab,
-            })}
-          >
-            {tab}
-          </button>
-        ))}
+      <div className="-mx-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="surface-inset inline-flex min-w-full gap-2 rounded-[28px] p-2 sm:flex sm:min-w-0 sm:flex-wrap">
+          {["dashboard", "comments", "watchpartys", "lists"].map((tab) => (
+            <button
+              type="button"
+              key={tab}
+              disabled={DISABLED_TABS.includes(tab as Tab)}
+              onClick={() => setActiveTab(tab as Tab)}
+              className={cn(profileTabClassName, "shrink-0 whitespace-nowrap", {
+                "bg-foreground text-background shadow-sm dark:bg-white dark:text-neutral-950":
+                  activeTab === tab,
+                "text-muted-foreground hover:bg-background/70 hover:text-foreground dark:hover:bg-white/8":
+                  activeTab !== tab,
+              })}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
       </div>
 
       {activeTab === "dashboard" && <DashboardTab stats={stats} />}

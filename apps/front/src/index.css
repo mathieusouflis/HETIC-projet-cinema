@@ -227,6 +227,20 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer utilities {
+  .surface-section {
+    @apply rounded-[28px] border border-neutral-200/80 bg-gradient-to-br from-white via-neutral-50 to-neutral-100/70 shadow-sm dark:border-white/10 dark:bg-gradient-to-br dark:from-white/8 dark:via-white/4 dark:to-transparent dark:shadow-black/20;
+  }
+
+  .surface-inset {
+    @apply rounded-[22px] border border-white/70 bg-white/72 shadow-sm dark:border-white/10 dark:bg-white/6 dark:shadow-none;
+  }
+
+  .text-display {
+    letter-spacing: -0.02em;
   }
 }

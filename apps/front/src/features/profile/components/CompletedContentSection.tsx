@@ -234,7 +234,7 @@ export function CompletedContentSection() {
             <SectionSkeleton />
           </div>
         ) : completedEntries.length === 0 ? (
-          <div className="rounded-[24px] border border-dashed bg-white/70 px-6 py-12 text-center text-sm text-muted-foreground">
+          <div className="rounded-[24px] border border-dashed bg-white/70 px-6 py-12 text-center text-sm text-muted-foreground dark:border-white/10 dark:bg-white/5">
             No completed titles yet. Finish a movie or a series and it will show
             up here.
           </div>
@@ -244,13 +244,13 @@ export function CompletedContentSection() {
               label="Movies"
               featuredTitle="Last film seen"
               items={completedMovies}
-              accentClassName="border-amber-200/80 bg-amber-50/50"
+              accentClassName="border-amber-200/80 bg-amber-50/50 dark:border-amber-400/20 dark:bg-amber-500/8"
             />
             <FeaturedShelf
               label="Series"
               featuredTitle="Last series seen"
               items={completedSeries}
-              accentClassName="border-sky-200/80 bg-sky-50/50"
+              accentClassName="border-sky-200/80 bg-sky-50/50 dark:border-sky-400/20 dark:bg-sky-500/8"
             />
           </div>
         )}

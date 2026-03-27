@@ -17,13 +17,13 @@ export function StatsCards({ stats }: Props) {
         title="Series"
         headline={`${stats.totalSeriesHours}h watched`}
         detail={`${stats.totalEpisodes} episodes tracked`}
-        accentClassName="border-sky-200/80 bg-gradient-to-br from-sky-50 via-white to-sky-100/70"
+        accentClassName="border-sky-200/80 bg-gradient-to-br from-sky-50 via-white to-sky-100/70 dark:border-sky-400/20 dark:from-sky-500/12 dark:via-white/4 dark:to-transparent"
       />
       <StatsShowcaseCard
         title="Movies"
         headline={`${stats.totalMovieHours}h watched`}
         detail={`${stats.totalMovies} movies completed`}
-        accentClassName="border-amber-200/80 bg-gradient-to-br from-amber-50 via-white to-amber-100/70"
+        accentClassName="border-amber-200/80 bg-gradient-to-br from-amber-50 via-white to-amber-100/70 dark:border-amber-400/20 dark:from-amber-500/12 dark:via-white/4 dark:to-transparent"
       />
     </div>
   );
