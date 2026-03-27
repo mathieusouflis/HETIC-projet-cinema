@@ -28,8 +28,3 @@ export function Publish(options: {
     return descriptor;
   };
 }
-
-/**
- * Alias for Publish decorator
- */
-export const EmitEvent = Publish;

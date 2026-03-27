@@ -44,8 +44,3 @@ export function Subscribe(
     return descriptor;
   };
 }
-
-/**
- * Alias for Subscribe decorator
- */
-export const OnEvent = Subscribe;
