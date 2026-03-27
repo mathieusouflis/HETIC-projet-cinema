@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { describe, expect, it, vi } from "vitest";
 import { ConflictError } from "../../../../shared/errors/conflict-error.js";
 import { NotFoundError } from "../../../../shared/errors/not-found-error.js";

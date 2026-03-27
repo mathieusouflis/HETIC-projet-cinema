@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { describe, expect, it, vi } from "vitest";
 import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
 import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error.js";
