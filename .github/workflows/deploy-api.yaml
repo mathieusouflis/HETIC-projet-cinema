@@ -1,10 +1,11 @@
-name: "deploy"
+name: "api-deploy"
 run-name: ${{ github.actor }} is deploying API  to production
 
 on:
   push:
     branches: [main]
     paths-ignore:
+      - "./**/*.md"
       - "./apps/front/**"
       - "./apps/docs/**"
       - "./apps/package/api-sdk/**"

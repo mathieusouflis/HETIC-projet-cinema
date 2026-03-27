@@ -1,10 +1,11 @@
-name: "deploy"
+name: "front-deploy"
 run-name: ${{ github.actor }} is deploying FRONTEND  to production
 
 on:
   push:
     branches: [main]
     paths-ignore:
+      - "./**/*.md"
       - "./apps/api/**"
       - "./apps/docs/**"
 
