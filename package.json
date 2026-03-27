@@ -20,13 +20,17 @@
     "test": "turbo run test -- --coverage",
     "setup-project": "pnpm install && phase auth && phase init && husky",
     "prepare": "husky",
-    "deploy-prod": "phase secrets export --app hetic-cinema --env production > /tmp/.cinema-prod.env && docker compose --env-file /tmp/.cinema-prod.env -f docker-compose.prod.yaml up --build -d; rm -f /tmp/.cinema-prod.env"
+    "deploy-prod": "phase secrets export --app hetic-cinema --env production > /tmp/.cinema-prod.env && docker compose --env-file /tmp/.cinema-prod.env -f docker-compose.prod.yaml up --build -d; rm -f /tmp/.cinema-prod.env",
+    "knip": "knip"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.8",
+    "@types/node": "^25.5.0",
     "dotenv-cli": "^8.0.0",
     "husky": "^9.1.7",
-    "turbo": "^2.8.20"
+    "knip": "^6.0.6",
+    "turbo": "^2.8.20",
+    "typescript": "^6.0.2"
   },
   "packageManager": "pnpm@10.28.2",
   "engines": {
