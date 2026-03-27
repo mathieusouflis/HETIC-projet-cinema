@@ -5,7 +5,7 @@ import type {
   ITokenService,
   RefreshTokenPayload,
   TokenPair,
-} from "./i-token-service.js";
+} from "./i-token-service";
 
 export class JWTService implements ITokenService {
   private readonly accessTokenSecret: string;

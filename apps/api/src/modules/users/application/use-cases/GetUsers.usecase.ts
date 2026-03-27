@@ -1,8 +1,8 @@
-import { paginationService } from "../../../../shared/services/pagination/index.js";
-import type { IUserRepository } from "../../domain/interfaces/IUserRepository.js";
-import type { GetQueryDTO } from "../dto/requests/get.validator.js";
-import type { GetAllUsersResponse } from "../dto/response/get.response.validator.js";
-import { toUserResponseDTO } from "../dto/utils/to-user-response.js";
+import { paginationService } from "../../../../shared/services/pagination/pagination.service";
+import type { IUserRepository } from "../../domain/interfaces/IUserRepository";
+import type { GetQueryDTO } from "../dto/requests/get.validator";
+import type { GetAllUsersResponse } from "../dto/response/get.response.validator";
+import { toUserResponseDTO } from "../dto/utils/to-user-response";
 
 export class GetUsersUseCase {
   constructor(private readonly userRepository: IUserRepository) {}

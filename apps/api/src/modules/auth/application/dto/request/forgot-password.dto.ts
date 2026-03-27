@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { Shared } from "../../../../../shared/index.js";
+import { emailSchema } from "../../../../../shared/schemas/fields/email.schema";
 
 export const forgotPasswordValidator = z.object({
-  email: Shared.Schemas.Fields.emailSchema,
+  email: emailSchema,
 });
 
 export type ForgotPasswordDTO = z.infer<typeof forgotPasswordValidator>;

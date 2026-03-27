@@ -1,5 +1,8 @@
 import z from "zod";
-import { uuidSchema } from "../../../../../shared/schemas/fields/index.js";
+import {
+  uuidSchema,
+  uuidSchemaNullable,
+} from "../../../../../shared/schemas/fields/uuid.schema";
 
 export const participantInfoSchema = z.object({
   id: uuidSchema,
@@ -20,7 +23,7 @@ export const conversationResponseSchema = z.object({
   type: z.literal("direct"),
   name: z.string().nullable(),
   avatarUrl: z.string().nullable(),
-  createdBy: uuidSchema.nullable(),
+  createdBy: uuidSchemaNullable,
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
   otherParticipant: participantInfoSchema,
@@ -33,7 +36,7 @@ export const conversationBasicSchema = z.object({
   type: z.literal("direct"),
   name: z.string().nullable(),
   avatarUrl: z.string().nullable(),
-  createdBy: uuidSchema.nullable(),
+  createdBy: uuidSchemaNullable,
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });

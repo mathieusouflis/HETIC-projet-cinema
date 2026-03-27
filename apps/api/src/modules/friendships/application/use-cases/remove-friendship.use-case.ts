@@ -1,8 +1,6 @@
-import {
-  ForbiddenError,
-  NotFoundError,
-} from "../../../../shared/errors/index.js";
-import type { IFriendshipsRepository } from "../../domain/interfaces/IFriendshipsRepository.js";
+import { ForbiddenError } from "../../../../shared/errors/forbidden-error";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
+import type { IFriendshipsRepository } from "../../domain/interfaces/IFriendshipsRepository";
 
 export class RemoveFriendshipUseCase {
   constructor(private readonly friendshipsRepository: IFriendshipsRepository) {}

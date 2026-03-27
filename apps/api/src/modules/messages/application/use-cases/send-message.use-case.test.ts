@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { ForbiddenError } from "../../../../shared/errors/index.js";
-import { createMockedConversationRepository } from "../../../conversations/domain/interfaces/conversation.repository.mock.js";
+import { ForbiddenError } from "../../../../shared/errors/forbidden-error";
+import { createMockedConversationRepository } from "../../../conversations/domain/interfaces/conversation.repository.mock";
 import {
   createMockedMessageRepository,
   MOCK_AUTHOR_ID,
   MOCK_CONVERSATION_ID,
   MOCK_OTHER_USER_ID,
   mockMessage,
-} from "../../domain/interfaces/message.repository.mock.js";
-import { SendMessageUseCase } from "./send-message.use-case.js";
+} from "../../domain/interfaces/message.repository.mock";
+import { SendMessageUseCase } from "./send-message.use-case";
 
 describe("SendMessageUseCase", () => {
   it("sends a message when the caller is a participant", async () => {

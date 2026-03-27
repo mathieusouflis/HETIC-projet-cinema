@@ -1,15 +1,15 @@
 import { and, count, eq, or, type SQL } from "drizzle-orm";
-import { db } from "../../../../database/index.js";
-import { watchparties } from "../../../../database/schema.js";
-import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
-import { ServerError } from "../../../../shared/errors/server-error.js";
+import { db } from "../../../../database/index";
+import { watchparties } from "../../../../database/schema";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
+import { ServerError } from "../../../../shared/errors/server-error";
 import {
   type CreateWatchpartyProps,
   type UpdateWatchpartyProps,
   Watchparty,
   type WatchpartyStatus,
-} from "../../domain/entities/watchparty.entity.js";
-import type { IWatchpartyRepository } from "../../domain/interfaces/IWatchpartyRepository.js";
+} from "../../domain/entities/watchparty.entity";
+import type { IWatchpartyRepository } from "../../domain/interfaces/IWatchpartyRepository";
 
 export class WatchpartyRepository implements IWatchpartyRepository {
   async create(watchpartyData: CreateWatchpartyProps): Promise<Watchparty> {

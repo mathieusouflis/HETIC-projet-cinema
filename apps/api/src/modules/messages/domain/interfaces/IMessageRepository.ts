@@ -1,4 +1,4 @@
-import type { Message } from "../entities/message.entity.js";
+import type { Message } from "../entities/message.entity";
 
 export interface MessagePage {
   items: Message[];

@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { Shared } from "../../../../../shared";
+import { refreshTokenSchema } from "../../../../../shared/services/token/schemas/tokens.schema";
 
 export const refreshTokenRequestValidator = z.object({
-  refreshToken: Shared.Services.Token.Schemas.refreshTokenSchema,
+  refreshToken: refreshTokenSchema,
 });
 
 export type RefreshTokenDTO = z.infer<typeof refreshTokenRequestValidator>;

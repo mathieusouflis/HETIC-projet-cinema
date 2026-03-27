@@ -1,10 +1,10 @@
-import { Entity } from "../../../../shared/domain/entity.js";
-import type { Content } from "../../../contents/domain/entities/content.entity.js";
+import { Entity } from "../../../../shared/domain/entity";
+import type { Content } from "../../../contents/domain/entities/content.entity";
 import type {
   CategoryRow,
   categoriesRelationsSchema,
   NewCategoryRow,
-} from "../../infrastructure/database/schemas/categories.schema.js";
+} from "../../infrastructure/database/schemas/categories.schema";
 
 /**
  * JSON representation of a Category entity

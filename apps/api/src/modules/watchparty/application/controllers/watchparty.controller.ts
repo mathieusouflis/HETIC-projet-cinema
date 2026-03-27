@@ -1,71 +1,71 @@
-import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
-import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error.js";
-import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller.js";
-import { Protected } from "../../../../shared/infrastructure/decorators/rest/auth.decorator.js";
-import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator.js";
-import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator.js";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
+import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error";
+import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller";
+import { Protected } from "../../../../shared/infrastructure/decorators/rest/auth.decorator";
+import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator";
+import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator";
 import {
   Delete,
   Get,
   Patch,
   Post,
-} from "../../../../shared/infrastructure/decorators/rest/route.decorators.js";
+} from "../../../../shared/infrastructure/decorators/rest/route.decorators";
 import {
   ValidateBody,
   ValidateParams,
   ValidateQuery,
-} from "../../../../shared/infrastructure/decorators/rest/validation.decorators.js";
+} from "../../../../shared/infrastructure/decorators/rest/validation.decorators";
 import {
   commonErrorResponses,
   notFoundErrorResponseSchema,
   unauthorizedErrorResponseSchema,
-} from "../../../../shared/schemas/base/error.schemas.js";
+} from "../../../../shared/schemas/base/error.schemas";
 import {
   createSuccessResponseSchema,
   emptySuccessResponseSchema,
-} from "../../../../shared/schemas/base/response.schemas.js";
-import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
+} from "../../../../shared/schemas/base/response.schemas";
+import { asyncHandler } from "../../../../shared/utils/asyncHandler";
 import {
   type CreateWatchpartyBody,
   createWatchpartyBodyValidator,
-} from "../dto/request/create-watchparty.body.validator.js";
+} from "../dto/request/create-watchparty.body.validator";
 import {
   type DeleteWatchpartyParams,
   deleteWatchpartyParamsValidator,
-} from "../dto/request/delete-watchparty.params.validator.js";
+} from "../dto/request/delete-watchparty.params.validator";
 import {
   type GetWatchpartyParams,
   getWatchpartyParamsValidator,
-} from "../dto/request/get-watchparty.params.validator.js";
+} from "../dto/request/get-watchparty.params.validator";
 import {
   type QueryWatchpartiesRequest,
   queryWatchpartiesValidator,
-} from "../dto/request/query-watchparties.query.validator.js";
+} from "../dto/request/query-watchparties.query.validator";
 import {
   type UpdateWatchpartyBody,
   updateWatchpartyBodyValidator,
-} from "../dto/request/update-watchparty.body.validator.js";
+} from "../dto/request/update-watchparty.body.validator";
 import {
   type CreateWatchpartyResponse,
   createWatchpartyResponseValidator,
-} from "../dto/response/create-watchparty.response.validator.js";
+} from "../dto/response/create-watchparty.response.validator";
 import {
   type GetWatchpartyResponse,
   getWatchpartyResponseValidator,
-} from "../dto/response/get-watchparty.response.validator.js";
+} from "../dto/response/get-watchparty.response.validator";
 import {
   type QueryWatchpartiesResponse,
   queryWatchpartiesResponseValidator,
-} from "../dto/response/query-watchparties.response.validator.js";
+} from "../dto/response/query-watchparties.response.validator";
 import {
   type UpdateWatchpartyResponse,
   updateWatchpartyResponseValidator,
-} from "../dto/response/update-watchparty.response.validator.js";
-import type { CreateWatchpartyUseCase } from "../use-cases/create-watchparty.use-case.js";
-import type { DeleteWatchpartyUseCase } from "../use-cases/delete-watchparty.use-case.js";
-import type { GetWatchpartyUseCase } from "../use-cases/get-watchparty.use-case.js";
-import type { ListWatchpartiesUseCase } from "../use-cases/list-watchparties.use-case.js";
-import type { UpdateWatchpartyUseCase } from "../use-cases/update-watchparty.use-case.js";
+} from "../dto/response/update-watchparty.response.validator";
+import type { CreateWatchpartyUseCase } from "../use-cases/create-watchparty.use-case";
+import type { DeleteWatchpartyUseCase } from "../use-cases/delete-watchparty.use-case";
+import type { GetWatchpartyUseCase } from "../use-cases/get-watchparty.use-case";
+import type { ListWatchpartiesUseCase } from "../use-cases/list-watchparties.use-case";
+import type { UpdateWatchpartyUseCase } from "../use-cases/update-watchparty.use-case";
 
 @Controller({
   tag: "Watchparty",

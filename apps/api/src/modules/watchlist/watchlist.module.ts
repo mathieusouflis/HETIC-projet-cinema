@@ -1,21 +1,21 @@
 import type { Router } from "express";
-import { RestModule } from "../../shared/infrastructure/base/modules/rest-module.js";
-import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator.js";
-import type { IContentRepository } from "../contents/domain/interfaces/IContentRepository.js";
-import { ContentsRepository } from "../contents/infrastructure/database/repositories/contents.repository.js";
-import type { IRatingRepository } from "../ratings/domain/interfaces/IRatingRepository.js";
-import { RatingRepository } from "../ratings/infrastructure/repositories/rating.repository.js";
-import { WatchlistController } from "./application/controllers/watchlist.controller.js";
-import { AddWatchlistContentUseCase } from "./application/use-cases/add-watchlist-content.use-case.js";
-import { DeleteWatchlistByIdUseCase } from "./application/use-cases/delete-watchlist.use-case.js";
-import { DeleteWatchlistByContentIdUseCase } from "./application/use-cases/delete-watchlist-by-content.use-case.js";
-import { GetWatchlistByIdUseCase } from "./application/use-cases/get-watchlist.use-case.js";
-import { GetWatchlistByContentIdUseCase } from "./application/use-cases/get-watchlist-content.use-case.js";
-import { ListWatchlistUseCase } from "./application/use-cases/list-watchlist.use-case.js";
-import { PatchWatchlistByIdUseCase } from "./application/use-cases/patch-watchlist.use-case.js";
-import { PutWatchlistByContentIdUseCase } from "./application/use-cases/put-watchlist-by-content.use-case.js";
-import type { IWatchlistRepository } from "./domain/interfaces/IWatchlistRepository.js";
-import { WatchlistRepository } from "./infrastructure/repositories/watchlist.repository.js";
+import { RestModule } from "../../shared/infrastructure/base/modules/rest-module";
+import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator";
+import type { IContentRepository } from "../contents/domain/interfaces/IContentRepository";
+import { ContentsRepository } from "../contents/infrastructure/database/repositories/contents.repository";
+import type { IRatingRepository } from "../ratings/domain/interfaces/IRatingRepository";
+import { RatingRepository } from "../ratings/infrastructure/repositories/rating.repository";
+import { WatchlistController } from "./application/controllers/watchlist.controller";
+import { AddWatchlistContentUseCase } from "./application/use-cases/add-watchlist-content.use-case";
+import { DeleteWatchlistByIdUseCase } from "./application/use-cases/delete-watchlist.use-case";
+import { DeleteWatchlistByContentIdUseCase } from "./application/use-cases/delete-watchlist-by-content.use-case";
+import { GetWatchlistByIdUseCase } from "./application/use-cases/get-watchlist.use-case";
+import { GetWatchlistByContentIdUseCase } from "./application/use-cases/get-watchlist-content.use-case";
+import { ListWatchlistUseCase } from "./application/use-cases/list-watchlist.use-case";
+import { PatchWatchlistByIdUseCase } from "./application/use-cases/patch-watchlist.use-case";
+import { PutWatchlistByContentIdUseCase } from "./application/use-cases/put-watchlist-by-content.use-case";
+import type { IWatchlistRepository } from "./domain/interfaces/IWatchlistRepository";
+import { WatchlistRepository } from "./infrastructure/repositories/watchlist.repository";
 
 class WatchlistModule extends RestModule {
   // ============================================

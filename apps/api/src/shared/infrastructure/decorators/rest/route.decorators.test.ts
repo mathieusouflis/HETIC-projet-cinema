@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { MetadataStorage } from "./metadata.js";
+import { MetadataStorage } from "./metadata";
 import {
   Delete,
   Description,
@@ -8,7 +8,7 @@ import {
   Post,
   Put,
   Summary,
-} from "./route.decorators.js";
+} from "./route.decorators";
 
 describe("Route Decorators tests", () => {
   beforeEach(() => {

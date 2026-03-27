@@ -1,5 +1,5 @@
 import { logger } from "@packages/logger";
-import { TmdbService } from "../../../../shared/services/tmdb";
+import { TmdbService } from "../../../../shared/services/tmdb/tmdb-service";
 import { MetadataNotFoundError } from "../../../contents/infrastructure/database/repositories/tmdb-fetch-status/errors/metadata-not-found";
 import { TMDBFetchStatusRepository } from "../../../contents/infrastructure/database/repositories/tmdb-fetch-status/tmdb-fetch-status.repository";
 

@@ -1,4 +1,4 @@
-import type { EmailVerificationToken } from "../entities/email-verification-token.entity.js";
+import type { EmailVerificationToken } from "../entities/email-verification-token.entity";
 
 export interface IEmailVerificationTokenRepository {
   create(

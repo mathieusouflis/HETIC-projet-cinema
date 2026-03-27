@@ -1,11 +1,9 @@
-import {
-  ForbiddenError,
-  NotFoundError,
-} from "../../../../shared/errors/index.js";
+import { ForbiddenError } from "../../../../shared/errors/forbidden-error";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
 import type {
   ConversationWithMeta,
   IConversationRepository,
-} from "../../domain/interfaces/IConversationRepository.js";
+} from "../../domain/interfaces/IConversationRepository";
 
 export class GetConversationUseCase {
   constructor(

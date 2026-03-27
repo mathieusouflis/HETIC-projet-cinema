@@ -1,4 +1,4 @@
-import type { PasswordResetToken } from "../entities/password-reset-token.entity.js";
+import type { PasswordResetToken } from "../entities/password-reset-token.entity";
 
 export interface IPasswordResetTokenRepository {
   create(

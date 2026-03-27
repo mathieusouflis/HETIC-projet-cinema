@@ -1,6 +1,6 @@
-import type { User } from "../../../users/domain/entities/user.entity.js";
-import type { FriendshipStatus } from "../../infrastructure/schemas/friendships.schema.js";
-import type { Friendship } from "../entities/friendship.entity.js";
+import type { User } from "../../../users/domain/entities/user.entity";
+import type { FriendshipStatus } from "../../infrastructure/schemas/friendships.schema";
+import type { Friendship } from "../entities/friendship.entity";
 
 export interface IFriendshipsRepository {
   create(userId: string, friendId: string): Promise<Friendship>;

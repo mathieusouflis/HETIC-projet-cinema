@@ -1,50 +1,50 @@
 import { config } from "@packages/config";
 import type { CookieOptions, Request, Response } from "express";
 import { z } from "zod";
-import { UnauthorizedError } from "../../../../shared/errors/index.js";
-import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller.js";
-import { Protected } from "../../../../shared/infrastructure/decorators/rest/auth.decorator.js";
-import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator.js";
+import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error";
+import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller";
+import { Protected } from "../../../../shared/infrastructure/decorators/rest/auth.decorator";
+import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator";
 import {
   RefreshTokenCookie,
   SetCookie,
-} from "../../../../shared/infrastructure/decorators/rest/header.decorator.js";
-import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator.js";
+} from "../../../../shared/infrastructure/decorators/rest/header.decorator";
+import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator";
 import {
   Get,
   Post,
-} from "../../../../shared/infrastructure/decorators/rest/route.decorators.js";
-import { ValidateBody } from "../../../../shared/infrastructure/decorators/rest/validation.decorators.js";
+} from "../../../../shared/infrastructure/decorators/rest/route.decorators";
+import { ValidateBody } from "../../../../shared/infrastructure/decorators/rest/validation.decorators";
 import {
   conflictErrorResponseSchema,
   forbiddenErrorResponseSchema,
   unauthorizedErrorResponseSchema,
   validationErrorResponseSchema,
-} from "../../../../shared/schemas/base/error.schemas.js";
+} from "../../../../shared/schemas/base/error.schemas";
 import {
   createSuccessResponseSchema,
   successResponseSchema,
-} from "../../../../shared/schemas/base/response.schemas.js";
-import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
+} from "../../../../shared/schemas/base/response.schemas";
+import { asyncHandler } from "../../../../shared/utils/asyncHandler";
 import {
   type UserProfile,
   userProfileValidator,
-} from "../../../users/application/validators/user.validator.js";
-import { forgotPasswordValidator } from "../dto/request/forgot-password.dto.js";
-import { loginValidator } from "../dto/request/login.dto.js";
-import { registerValidator } from "../dto/request/register.dto.js";
-import { resetPasswordValidator } from "../dto/request/reset-password.dto.js";
-import { authResponseBodyValidator } from "../dto/response/auth-response.response.validator.js";
-import type { RefreshTokenResponse } from "../dto/response/refresh-token.response.validator.js";
-import { refreshTokenResponseBodyValidator } from "../dto/response/refresh-token.response.validator.js";
-import type { ForgotPasswordUseCase } from "../use-cases/forgot-password.usecase.js";
-import type { LoginUseCase } from "../use-cases/login.usecase.js";
-import type { LogoutUseCase } from "../use-cases/logout.usecase.js";
-import type { RefreshTokenUseCase } from "../use-cases/refresh-token.usecase.js";
-import type { RegisterUseCase } from "../use-cases/register.usecase.js";
-import type { ResendVerificationUseCase } from "../use-cases/resend-verification.usecase.js";
-import type { ResetPasswordUseCase } from "../use-cases/reset-password.usecase.js";
-import type { VerifyEmailUseCase } from "../use-cases/verify-email.usecase.js";
+} from "../../../users/application/validators/user.validator";
+import { forgotPasswordValidator } from "../dto/request/forgot-password.dto";
+import { loginValidator } from "../dto/request/login.dto";
+import { registerValidator } from "../dto/request/register.dto";
+import { resetPasswordValidator } from "../dto/request/reset-password.dto";
+import { authResponseBodyValidator } from "../dto/response/auth-response.response.validator";
+import type { RefreshTokenResponse } from "../dto/response/refresh-token.response.validator";
+import { refreshTokenResponseBodyValidator } from "../dto/response/refresh-token.response.validator";
+import type { ForgotPasswordUseCase } from "../use-cases/forgot-password.usecase";
+import type { LoginUseCase } from "../use-cases/login.usecase";
+import type { LogoutUseCase } from "../use-cases/logout.usecase";
+import type { RefreshTokenUseCase } from "../use-cases/refresh-token.usecase";
+import type { RegisterUseCase } from "../use-cases/register.usecase";
+import type { ResendVerificationUseCase } from "../use-cases/resend-verification.usecase";
+import type { ResetPasswordUseCase } from "../use-cases/reset-password.usecase";
+import type { VerifyEmailUseCase } from "../use-cases/verify-email.usecase";
 
 const REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
 const REFRESH_TOKEN_COOKIE_OPTIONS: CookieOptions = {

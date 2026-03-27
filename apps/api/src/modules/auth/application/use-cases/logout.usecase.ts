@@ -1,5 +1,5 @@
-import { hashToken } from "../../../../shared/utils/crypto.utils.js";
-import type { IRefreshTokenRepository } from "../../domain/interfaces/IRefreshTokenRepository.js";
+import { hashToken } from "../../../../shared/utils/crypto.utils";
+import type { IRefreshTokenRepository } from "../../domain/interfaces/IRefreshTokenRepository";
 
 export class LogoutUseCase {
   constructor(

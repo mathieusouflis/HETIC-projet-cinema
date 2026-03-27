@@ -1,6 +1,6 @@
 import "reflect-metadata";
-import { type ControllerMetadata, METADATA_KEYS } from "./metadata.js";
-import type { ControllerConstructor } from "./types.js";
+import { type ControllerMetadata, METADATA_KEYS } from "./metadata";
+import type { ControllerConstructor } from "./types";
 
 interface ControllerOptions {
   tag: string;

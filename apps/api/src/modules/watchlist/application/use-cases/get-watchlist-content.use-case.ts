@@ -1,4 +1,4 @@
-import { NotFoundError } from "../../../../shared/errors";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
 import type { Watchlist } from "../../domain/entities/watchlist.entity";
 import type { IWatchlistRepository } from "../../domain/interfaces/IWatchlistRepository";
 

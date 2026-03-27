@@ -1,6 +1,6 @@
 import { vi } from "vitest";
-import { Friendship } from "../entities/friendship.entity.js";
-import type { IFriendshipsRepository } from "./IFriendshipsRepository.js";
+import { Friendship } from "../entities/friendship.entity";
+import type { IFriendshipsRepository } from "./IFriendshipsRepository";
 
 export const MOCK_USER_A_ID = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
 export const MOCK_USER_B_ID = "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb";

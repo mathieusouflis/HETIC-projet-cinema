@@ -1,8 +1,8 @@
-import { paginationService } from "../../../../shared/services/pagination/index.js";
-import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
-import type { ISeriesRepository } from "../../domain/interfaces/ISeriesRepository.js";
-import type { QuerySerieRequest } from "../dto/requests/query-serie.validator.js";
-import type { QuerySerieResponse } from "../dto/response/query-serie.validator.js";
+import { paginationService } from "../../../../shared/services/pagination/pagination.service";
+import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils";
+import type { ISeriesRepository } from "../../domain/interfaces/ISeriesRepository";
+import type { QuerySerieRequest } from "../dto/requests/query-serie.validator";
+import type { QuerySerieResponse } from "../dto/response/query-serie.validator";
 
 export class QuerySerieUseCase {
   constructor(private readonly serieRepository: ISeriesRepository) {}

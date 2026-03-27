@@ -4,7 +4,7 @@ import { db } from "../../../../../database";
 import type {
   PagePaginationQuery,
   PaginationQuery,
-} from "../../../../../shared/services/pagination";
+} from "../../../../../shared/services/pagination/pagination.schemas";
 import { Category } from "../../../../categories/domain/entities/category.entity";
 import { Episode } from "../../../../episodes/domain/episode.entity";
 import type { IMoviesRepository } from "../../../../movies/domain/interfaces/IMoviesRepository";

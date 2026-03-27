@@ -1,4 +1,4 @@
-import { AppError } from "./app-error.js";
+import { AppError } from "./app-error";
 
 /**
  * Error thrown when a resource conflict occurs (e.g., duplicate entry)

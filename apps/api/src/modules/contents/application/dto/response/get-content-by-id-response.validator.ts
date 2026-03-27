@@ -1,6 +1,6 @@
 import type z from "zod";
-import { createSuccessResponseSchema } from "../../../../../shared/schemas/base";
-import { categoryResponseSchema } from "../../../../categories/application/dto/response";
+import { createSuccessResponseSchema } from "../../../../../shared/schemas/base/response.schemas";
+import { categoryResponseSchema } from "../../../../categories/application/dto/response/category.response.validator";
 import { episodeValidator } from "../../../../episodes/domain/validator/episode.validator";
 import { peopleValidator } from "../../../../peoples/application/validators/people.validator";
 import { platformValidator } from "../../../../platforms/application/validators/platforms.validator";

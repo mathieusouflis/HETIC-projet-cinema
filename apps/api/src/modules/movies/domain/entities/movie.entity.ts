@@ -1,9 +1,9 @@
-import type { RelationsToJSON } from "../../../../shared/domain/entity.js";
+import type { RelationsToJSON } from "../../../../shared/domain/entity";
 import {
   Content,
   type ContentJSON,
   type ContentRelations,
-} from "../../../contents/domain/entities/content.entity.js";
+} from "../../../contents/domain/entities/content.entity";
 import type {
   ContentRow,
   NewContentRow,

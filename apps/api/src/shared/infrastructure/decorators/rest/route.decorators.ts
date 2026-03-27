@@ -3,7 +3,7 @@ import {
   type HttpMethod,
   MetadataStorage,
   type RouteMetadata,
-} from "./metadata.js";
+} from "./metadata";
 
 interface RouteOptions {
   path?: string;

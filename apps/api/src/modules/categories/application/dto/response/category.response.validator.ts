@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { createPaginatedResponseSchema } from "../../../../../shared/schemas/base/response.schemas.js";
-import { uuidSchema } from "../../../../../shared/schemas/fields/uuid.schema.js";
-import { contentPlatformsValidator } from "../../../../content-platforms/application/validators/content-platforms.validator.js";
-import { contentSchema } from "../../../../contents/application/schema/contents.schema.js";
+import { createPaginatedResponseSchema } from "../../../../../shared/schemas/base/response.schemas";
+import { uuidSchema } from "../../../../../shared/schemas/fields/uuid.schema";
+import { contentPlatformsValidator } from "../../../../content-platforms/application/validators/content-platforms.validator";
+import { contentSchema } from "../../../../contents/application/schema/contents.schema";
 
 export const categoryResponseSchema = z.object({
   id: uuidSchema,

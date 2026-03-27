@@ -1,13 +1,13 @@
 import { config } from "@packages/config";
-import type { IEmailService } from "../../../../shared/services/email/i-email-service.js";
+import type { IEmailService } from "../../../../shared/services/email/i-email-service";
 import {
   generateSecureToken,
   getExpiryDate,
   hashToken,
-} from "../../../../shared/utils/crypto.utils.js";
-import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";
-import { EMAIL_VERIFICATION_TOKEN_EXPIRY_MS } from "../../domain/constants.js";
-import type { IEmailVerificationTokenRepository } from "../../domain/interfaces/IEmailVerificationTokenRepository.js";
+} from "../../../../shared/utils/crypto.utils";
+import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository";
+import { EMAIL_VERIFICATION_TOKEN_EXPIRY_MS } from "../../domain/constants";
+import type { IEmailVerificationTokenRepository } from "../../domain/interfaces/IEmailVerificationTokenRepository";
 
 /**
  * Resend Verification Email Use Case

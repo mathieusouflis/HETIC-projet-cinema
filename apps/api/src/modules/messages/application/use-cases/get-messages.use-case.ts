@@ -1,9 +1,9 @@
-import { ForbiddenError } from "../../../../shared/errors/index.js";
-import type { IConversationRepository } from "../../../conversations/domain/interfaces/IConversationRepository.js";
+import { ForbiddenError } from "../../../../shared/errors/forbidden-error";
+import type { IConversationRepository } from "../../../conversations/domain/interfaces/IConversationRepository";
 import type {
   IMessageRepository,
   MessagePage,
-} from "../../domain/interfaces/IMessageRepository.js";
+} from "../../domain/interfaces/IMessageRepository";
 
 export class GetMessagesUseCase {
   constructor(

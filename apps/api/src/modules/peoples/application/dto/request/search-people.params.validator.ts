@@ -2,7 +2,7 @@ import z from "zod";
 import {
   limitSchema,
   pageSchema,
-} from "../../../../../shared/services/pagination";
+} from "../../../../../shared/services/pagination/pagination.schemas";
 
 export const searchPeopleParamsValidator = z.object({
   query: z.string().min(1, "Query must not be empty"),

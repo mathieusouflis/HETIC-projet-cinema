@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef } from "react";
-import type { TypedSocket, TypingPayload } from "@/lib/socket";
-import { getSocket } from "@/lib/socket";
+import { getSocket } from "@/lib/socket/socket-client";
+import type { TypedSocket, TypingPayload } from "@/lib/socket/types";
 import { useTypingStore } from "../stores/typing.store";
 
 const EMPTY_TYPING_USERS: string[] = [];

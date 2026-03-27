@@ -1,11 +1,11 @@
 import type { Router } from "express";
-import { RestModule } from "../../shared/infrastructure/base/modules/rest-module.js";
-import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator.js";
-import { MoviesController } from "./application/controllers/movie.controller.js";
-import { GetMovieByIdUseCase } from "./application/use-cases/get-movie-by-id.use-case.js";
-import { QueryMovieUseCase } from "./application/use-cases/query-movie.use-case.js";
-import type { IMoviesRepository } from "./domain/interfaces/IMoviesRepository.js";
-import { CompositeMoviesRepository } from "./infrastructure/database/repositories/composite-movies.repository.js";
+import { RestModule } from "../../shared/infrastructure/base/modules/rest-module";
+import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator";
+import { MoviesController } from "./application/controllers/movie.controller";
+import { GetMovieByIdUseCase } from "./application/use-cases/get-movie-by-id.use-case";
+import { QueryMovieUseCase } from "./application/use-cases/query-movie.use-case";
+import type { IMoviesRepository } from "./domain/interfaces/IMoviesRepository";
+import { CompositeMoviesRepository } from "./infrastructure/database/repositories/composite-movies.repository";
 
 class MoviesModule extends RestModule {
   // ============================================

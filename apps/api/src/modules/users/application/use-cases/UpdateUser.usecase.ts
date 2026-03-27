@@ -1,12 +1,12 @@
-import { ValidationError } from "../../../../shared/errors/validation-error.js";
-import { PasswordService } from "../../../../shared/services/password/password-service.js";
-import { EmailAlreadyExistsError } from "../../domain/errors/EmailAlreadyExistsError.js";
-import { UserNotFoundError } from "../../domain/errors/UserNotFoundError.js";
-import { UsernameAlreadyExistsError } from "../../domain/errors/UsernameAlreadyExistsError.js";
-import type { IUserRepository } from "../../domain/interfaces/IUserRepository.js";
-import type { PatchIdRequestDTO } from "../dto/requests/patch-id.validator.js";
-import type { PatchIdResponse } from "../dto/response/patch-id.response.validator.js";
-import { toUserResponseDTO } from "../dto/utils/to-user-response.js";
+import { ValidationError } from "../../../../shared/errors/validation-error";
+import { PasswordService } from "../../../../shared/services/password/password-service";
+import { EmailAlreadyExistsError } from "../../domain/errors/EmailAlreadyExistsError";
+import { UserNotFoundError } from "../../domain/errors/UserNotFoundError";
+import { UsernameAlreadyExistsError } from "../../domain/errors/UsernameAlreadyExistsError";
+import type { IUserRepository } from "../../domain/interfaces/IUserRepository";
+import type { PatchIdRequestDTO } from "../dto/requests/patch-id.validator";
+import type { PatchIdResponse } from "../dto/response/patch-id.response.validator";
+import { toUserResponseDTO } from "../dto/utils/to-user-response";
 
 export class UpdateUserUseCase {
   private readonly passwordService: PasswordService;

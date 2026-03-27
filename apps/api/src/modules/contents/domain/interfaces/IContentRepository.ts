@@ -1,4 +1,4 @@
-import type { PaginationQuery } from "../../../../shared/services/pagination";
+import type { PaginationQuery } from "../../../../shared/services/pagination/pagination.schemas";
 import type { Content } from "../entities/content.entity";
 
 export interface IContentRepository {

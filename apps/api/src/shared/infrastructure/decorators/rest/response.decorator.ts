@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import type { z } from "zod";
-import { METADATA_KEYS, type ResponseMetadata } from "./metadata.js";
+import { METADATA_KEYS, type ResponseMetadata } from "./metadata";
 
 /**
  * Define an OpenAPI response for a route

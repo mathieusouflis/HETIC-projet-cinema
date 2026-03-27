@@ -1,6 +1,6 @@
-import { NotFoundError } from "../../../../../shared/errors/index.js";
-import type { Category } from "../../../../categories/domain/entities/category.entity.js";
-import type { ICategoryRepository } from "../../../../categories/domain/interfaces/ICategoryRepository.js";
+import { NotFoundError } from "../../../../../shared/errors/not-found-error";
+import type { Category } from "../../../../categories/domain/entities/category.entity";
+import type { ICategoryRepository } from "../../../../categories/domain/interfaces/ICategoryRepository";
 
 export class GetCategoryByIdUseCase {
   constructor(private readonly categoryRepository: ICategoryRepository) {}

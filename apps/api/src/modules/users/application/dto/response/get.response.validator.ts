@@ -1,5 +1,5 @@
 import z from "zod";
-import { returnedPaginationSchema } from "../../../../../shared/services/pagination";
+import { returnedPaginationSchema } from "../../../../../shared/services/pagination/pagination.schemas";
 import { publicUserValidator } from "../../validators/user.validator";
 export const getResponseSchema = z.object({
   users: z.array(publicUserValidator),

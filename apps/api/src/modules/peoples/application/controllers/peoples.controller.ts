@@ -1,23 +1,25 @@
-import { UnauthorizedError } from "../../../../shared/errors";
-import { BaseController } from "../../../../shared/infrastructure/base/controllers";
+import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error";
+import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller";
+import { Protected } from "../../../../shared/infrastructure/decorators/rest/auth.decorator";
+import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator";
+import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator";
 import {
-  ApiResponse,
-  Controller,
   Delete,
   Get,
   Patch,
   Post,
-  Protected,
+} from "../../../../shared/infrastructure/decorators/rest/route.decorators";
+import {
   ValidateBody,
   ValidateParams,
   ValidateQuery,
-} from "../../../../shared/infrastructure/decorators/rest";
+} from "../../../../shared/infrastructure/decorators/rest/validation.decorators";
 import {
   notFoundErrorResponseSchema,
   unauthorizedErrorResponseSchema,
 } from "../../../../shared/schemas/base/error.schemas";
 import { createSuccessResponseSchema } from "../../../../shared/schemas/base/response.schemas";
-import { asyncHandler } from "../../../../shared/utils";
+import { asyncHandler } from "../../../../shared/utils/asyncHandler";
 import {
   type CreatePeopleBody,
   createPeopleBodyValidator,

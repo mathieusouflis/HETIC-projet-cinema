@@ -1,16 +1,16 @@
 import type { Router } from "express";
-import { RestModule } from "../../shared/infrastructure/base/modules/rest-module.js";
-import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator.js";
-import type { IContentRepository } from "../contents/domain/interfaces/IContentRepository.js";
-import { ContentsRepository } from "../contents/infrastructure/database/repositories/contents.repository.js";
-import { WatchpartyController } from "./application/controllers/watchparty.controller.js";
-import { CreateWatchpartyUseCase } from "./application/use-cases/create-watchparty.use-case.js";
-import { DeleteWatchpartyUseCase } from "./application/use-cases/delete-watchparty.use-case.js";
-import { GetWatchpartyUseCase } from "./application/use-cases/get-watchparty.use-case.js";
-import { ListWatchpartiesUseCase } from "./application/use-cases/list-watchparties.use-case.js";
-import { UpdateWatchpartyUseCase } from "./application/use-cases/update-watchparty.use-case.js";
-import type { IWatchpartyRepository } from "./domain/interfaces/IWatchpartyRepository.js";
-import { WatchpartyRepository } from "./infrastructure/repositories/watchparty.repository.js";
+import { RestModule } from "../../shared/infrastructure/base/modules/rest-module";
+import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator";
+import type { IContentRepository } from "../contents/domain/interfaces/IContentRepository";
+import { ContentsRepository } from "../contents/infrastructure/database/repositories/contents.repository";
+import { WatchpartyController } from "./application/controllers/watchparty.controller";
+import { CreateWatchpartyUseCase } from "./application/use-cases/create-watchparty.use-case";
+import { DeleteWatchpartyUseCase } from "./application/use-cases/delete-watchparty.use-case";
+import { GetWatchpartyUseCase } from "./application/use-cases/get-watchparty.use-case";
+import { ListWatchpartiesUseCase } from "./application/use-cases/list-watchparties.use-case";
+import { UpdateWatchpartyUseCase } from "./application/use-cases/update-watchparty.use-case";
+import type { IWatchpartyRepository } from "./domain/interfaces/IWatchpartyRepository";
+import { WatchpartyRepository } from "./infrastructure/repositories/watchparty.repository";
 
 class WatchpartyModule extends RestModule {
   // ============================================

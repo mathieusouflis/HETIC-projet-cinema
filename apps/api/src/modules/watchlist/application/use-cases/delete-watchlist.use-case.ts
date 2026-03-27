@@ -1,4 +1,5 @@
-import { NotFoundError, UnauthorizedError } from "../../../../shared/errors";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
+import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error";
 import type { IWatchlistRepository } from "../../domain/interfaces/IWatchlistRepository";
 
 export class DeleteWatchlistByIdUseCase {

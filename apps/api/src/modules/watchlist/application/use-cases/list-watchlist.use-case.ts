@@ -1,8 +1,8 @@
-import { paginationService } from "../../../../shared/services/pagination/index.js";
-import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
-import type { IWatchlistRepository } from "../../domain/interfaces/IWatchlistRepository.js";
-import type { QueryWatchlistRequest } from "../dto/request/query-watchlist.query.validator.js";
-import type { QueryWatchlistResponse } from "../dto/response/query-watchlist.response.validator.js";
+import { paginationService } from "../../../../shared/services/pagination/pagination.service";
+import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils";
+import type { IWatchlistRepository } from "../../domain/interfaces/IWatchlistRepository";
+import type { QueryWatchlistRequest } from "../dto/request/query-watchlist.query.validator";
+import type { QueryWatchlistResponse } from "../dto/response/query-watchlist.response.validator";
 
 export class ListWatchlistUseCase {
   private repository: IWatchlistRepository;

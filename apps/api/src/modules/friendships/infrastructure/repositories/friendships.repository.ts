@@ -1,12 +1,12 @@
 import { and, eq, or } from "drizzle-orm";
-import { db } from "../../../../database/index.js";
-import { friendships } from "../../../../database/schema.js";
-import { NotFoundError } from "../../../../shared/errors/index.js";
-import { ServerError } from "../../../../shared/errors/server-error.js";
-import { User } from "../../../users/domain/entities/user.entity.js";
-import { Friendship } from "../../domain/entities/friendship.entity.js";
-import type { IFriendshipsRepository } from "../../domain/interfaces/IFriendshipsRepository.js";
-import type { FriendshipStatus } from "../schemas/friendships.schema.js";
+import { db } from "../../../../database/index";
+import { friendships } from "../../../../database/schema";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
+import { ServerError } from "../../../../shared/errors/server-error";
+import { User } from "../../../users/domain/entities/user.entity";
+import { Friendship } from "../../domain/entities/friendship.entity";
+import type { IFriendshipsRepository } from "../../domain/interfaces/IFriendshipsRepository";
+import type { FriendshipStatus } from "../schemas/friendships.schema";
 
 export class FriendshipsRepository implements IFriendshipsRepository {
   async create(userId: string, friendId: string): Promise<Friendship> {

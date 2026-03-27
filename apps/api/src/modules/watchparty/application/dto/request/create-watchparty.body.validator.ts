@@ -1,11 +1,14 @@
 import z from "zod";
-import { uuidSchema } from "../../../../../shared/schemas/fields/index.js";
-import { watchpartyStatusSchema } from "../../validators/watchparty.validators.js";
+import {
+  uuidSchema,
+  uuidSchemaOptional,
+} from "../../../../../shared/schemas/fields/uuid.schema";
+import { watchpartyStatusSchema } from "../../validators/watchparty.validators";
 
 export const createWatchpartyBodyValidator = z.object({
   contentId: uuidSchema,
-  seasonId: uuidSchema.optional(),
-  episodeId: uuidSchema.optional(),
+  seasonId: uuidSchemaOptional,
+  episodeId: uuidSchemaOptional,
   name: z.string().min(1).max(255),
   description: z.string().optional(),
   isPublic: z.boolean().default(false),

@@ -1,13 +1,13 @@
 import { config } from "@packages/config";
-import type { IEmailService } from "../../../../shared/services/email/i-email-service.js";
+import type { IEmailService } from "../../../../shared/services/email/i-email-service";
 import {
   generateSecureToken,
   getExpiryDate,
   hashToken,
-} from "../../../../shared/utils/crypto.utils.js";
-import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository.js";
-import type { IPasswordResetTokenRepository } from "../../domain/interfaces/IPasswordResetTokenRepository.js";
-import type { ForgotPasswordDTO } from "../dto/request/forgot-password.dto.js";
+} from "../../../../shared/utils/crypto.utils";
+import type { IUserRepository } from "../../../users/domain/interfaces/IUserRepository";
+import type { IPasswordResetTokenRepository } from "../../domain/interfaces/IPasswordResetTokenRepository";
+import type { ForgotPasswordDTO } from "../dto/request/forgot-password.dto";
 
 const TOKEN_EXPIRY_MS = 60 * 60 * 1000; // 1 hour
 

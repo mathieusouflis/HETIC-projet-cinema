@@ -3,7 +3,7 @@ import {
   type EventEmitterMetadata,
   type EventListenerMetadata,
   WebSocketMetadataStorage,
-} from "../decorators/web-socket/websocket.metadata.js";
+} from "../decorators/web-socket/websocket.metadata";
 
 export interface AsyncAPIv3Channel {
   address?: string;

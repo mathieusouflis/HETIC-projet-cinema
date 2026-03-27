@@ -1,13 +1,13 @@
 import type { Router } from "express";
-import { RestModule } from "../../shared/infrastructure/base/modules/rest-module.js";
-import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator.js";
-import { UsersController } from "./application/controllers/users.controller.js";
-import { DeleteUserUseCase } from "./application/use-cases/DeleteUser.usecase.js";
-import { GetMeUseCase } from "./application/use-cases/GetMe.usecase.js";
-import { GetUserByIdUseCase } from "./application/use-cases/GetUserById.usecase.js";
-import { GetUsersUseCase } from "./application/use-cases/GetUsers.usecase.js";
-import { UpdateUserUseCase } from "./application/use-cases/UpdateUser.usecase.js";
-import { UserRepository } from "./infrastructure/database/repositories/user.repository.js";
+import { RestModule } from "../../shared/infrastructure/base/modules/rest-module";
+import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator";
+import { UsersController } from "./application/controllers/users.controller";
+import { DeleteUserUseCase } from "./application/use-cases/DeleteUser.usecase";
+import { GetMeUseCase } from "./application/use-cases/GetMe.usecase";
+import { GetUserByIdUseCase } from "./application/use-cases/GetUserById.usecase";
+import { GetUsersUseCase } from "./application/use-cases/GetUsers.usecase";
+import { UpdateUserUseCase } from "./application/use-cases/UpdateUser.usecase";
+import { UserRepository } from "./infrastructure/database/repositories/user.repository";
 
 class UsersModule extends RestModule {
   private readonly userRepository: UserRepository;

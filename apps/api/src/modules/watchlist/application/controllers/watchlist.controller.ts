@@ -1,90 +1,90 @@
-import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
-import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error.js";
-import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller.js";
-import { Protected } from "../../../../shared/infrastructure/decorators/rest/auth.decorator.js";
-import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator.js";
-import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator.js";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
+import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error";
+import { BaseController } from "../../../../shared/infrastructure/base/controllers/base-controller";
+import { Protected } from "../../../../shared/infrastructure/decorators/rest/auth.decorator";
+import { Controller } from "../../../../shared/infrastructure/decorators/rest/controller.decorator";
+import { ApiResponse } from "../../../../shared/infrastructure/decorators/rest/response.decorator";
 import {
   Delete,
   Get,
   Post,
   Put,
-} from "../../../../shared/infrastructure/decorators/rest/route.decorators.js";
+} from "../../../../shared/infrastructure/decorators/rest/route.decorators";
 import {
   ValidateBody,
   ValidateParams,
   ValidateQuery,
-} from "../../../../shared/infrastructure/decorators/rest/validation.decorators.js";
+} from "../../../../shared/infrastructure/decorators/rest/validation.decorators";
 import {
   commonErrorResponses,
   notFoundErrorResponseSchema,
   unauthorizedErrorResponseSchema,
-} from "../../../../shared/schemas/base/error.schemas.js";
+} from "../../../../shared/schemas/base/error.schemas";
 import {
   createSuccessResponseSchema,
   emptySuccessResponseSchema,
-} from "../../../../shared/schemas/base/response.schemas.js";
-import { asyncHandler } from "../../../../shared/utils/asyncHandler.js";
+} from "../../../../shared/schemas/base/response.schemas";
+import { asyncHandler } from "../../../../shared/utils/asyncHandler";
 import {
   type AddContentToWatchlistBody,
   addContentToWatchlistBodyValidator,
-} from "../dto/request/add-content-to-watchlist.body.validator.js";
+} from "../dto/request/add-content-to-watchlist.body.validator";
 import {
   type DeleteWatchlistParams,
   deleteWatchlistParamsValidator,
-} from "../dto/request/delete-watchlist.params.validator.js";
+} from "../dto/request/delete-watchlist.params.validator";
 import {
   type GetWatchlistByIdParams,
   getWatchlistByIdParamsValidator,
-} from "../dto/request/get-watchlist.params.validator.js";
+} from "../dto/request/get-watchlist.params.validator";
 import {
   type GetWatchlistByContentIdParams,
   getWatchlistByContentIdParamsValidator,
-} from "../dto/request/get-watchlist-content-id.params.validator.js";
+} from "../dto/request/get-watchlist-content-id.params.validator";
 import {
   type PatchWatchlistBody,
   patchWatchlistBodyValidator,
-} from "../dto/request/patch-watchlist.body.validator.js";
+} from "../dto/request/patch-watchlist.body.validator";
 import {
   type PatchWatchlistParams,
   patchWatchlistParamsValidator,
-} from "../dto/request/patch-watchlist.params.validator.js";
+} from "../dto/request/patch-watchlist.params.validator";
 import {
   type PatchWatchlistByContentIdParams,
   patchWatchlistByContentIdParamsValidator,
-} from "../dto/request/patch-watchlist-by-content-id.params.validator.js";
+} from "../dto/request/patch-watchlist-by-content-id.params.validator";
 import {
   type QueryWatchlistRequest,
   queryWatchlistValidator,
-} from "../dto/request/query-watchlist.query.validator.js";
+} from "../dto/request/query-watchlist.query.validator";
 import {
   type AddWatchlistContentResponse,
   addWatchlistContentResponseValidator,
-} from "../dto/response/add-watchlist-content.response.validator.js";
+} from "../dto/response/add-watchlist-content.response.validator";
 import {
   type GetWatchlistByIdResponse,
   getWatchlistByIdResponseValidator,
-} from "../dto/response/get-watchlist.response.validator.js";
+} from "../dto/response/get-watchlist.response.validator";
 import {
   type GetWatchlistByContentIdResponse,
   getWatchlistByContentIdResponseValidator,
-} from "../dto/response/get-watchlist-content.response.validator.js";
+} from "../dto/response/get-watchlist-content.response.validator";
 import {
   type PatchWatchlistResponse,
   patchWatchlistResponseValidator,
-} from "../dto/response/patch-watchlist.response.validator.js";
+} from "../dto/response/patch-watchlist.response.validator";
 import {
   type QueryWatchlistResponse,
   queryWatchlistResponseValidator,
-} from "../dto/response/query-watchlist.response.validator.js";
-import type { AddWatchlistContentUseCase } from "../use-cases/add-watchlist-content.use-case.js";
-import type { DeleteWatchlistByIdUseCase } from "../use-cases/delete-watchlist.use-case.js";
-import type { DeleteWatchlistByContentIdUseCase } from "../use-cases/delete-watchlist-by-content.use-case.js";
-import type { GetWatchlistByIdUseCase } from "../use-cases/get-watchlist.use-case.js";
-import type { GetWatchlistByContentIdUseCase } from "../use-cases/get-watchlist-content.use-case.js";
-import type { ListWatchlistUseCase } from "../use-cases/list-watchlist.use-case.js";
-import type { PatchWatchlistByIdUseCase } from "../use-cases/patch-watchlist.use-case.js";
-import type { PutWatchlistByContentIdUseCase } from "../use-cases/put-watchlist-by-content.use-case.js";
+} from "../dto/response/query-watchlist.response.validator";
+import type { AddWatchlistContentUseCase } from "../use-cases/add-watchlist-content.use-case";
+import type { DeleteWatchlistByIdUseCase } from "../use-cases/delete-watchlist.use-case";
+import type { DeleteWatchlistByContentIdUseCase } from "../use-cases/delete-watchlist-by-content.use-case";
+import type { GetWatchlistByIdUseCase } from "../use-cases/get-watchlist.use-case";
+import type { GetWatchlistByContentIdUseCase } from "../use-cases/get-watchlist-content.use-case";
+import type { ListWatchlistUseCase } from "../use-cases/list-watchlist.use-case";
+import type { PatchWatchlistByIdUseCase } from "../use-cases/patch-watchlist.use-case";
+import type { PutWatchlistByContentIdUseCase } from "../use-cases/put-watchlist-by-content.use-case";
 
 @Controller({
   tag: "Watchlist",

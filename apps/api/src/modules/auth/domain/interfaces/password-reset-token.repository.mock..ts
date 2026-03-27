@@ -1,6 +1,6 @@
 import { vi } from "vitest";
-import { PasswordResetToken } from "../entities/password-reset-token.entity.js";
-import type { IPasswordResetTokenRepository } from "./IPasswordResetTokenRepository.js";
+import { PasswordResetToken } from "../entities/password-reset-token.entity";
+import type { IPasswordResetTokenRepository } from "./IPasswordResetTokenRepository";
 
 const ONE_HOUR = 60 * 60 * 1000;
 

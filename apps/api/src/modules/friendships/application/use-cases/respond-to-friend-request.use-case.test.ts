@@ -1,17 +1,15 @@
 import { describe, expect, it } from "vitest";
-import {
-  ForbiddenError,
-  NotFoundError,
-} from "../../../../shared/errors/index.js";
-import { Friendship } from "../../domain/entities/friendship.entity.js";
+import { ForbiddenError } from "../../../../shared/errors/forbidden-error";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
+import { Friendship } from "../../domain/entities/friendship.entity";
 import {
   createMockedFriendshipsRepository,
   MOCK_FRIENDSHIP_ID,
   MOCK_USER_A_ID,
   MOCK_USER_B_ID,
   mockPendingFriendship,
-} from "../../domain/interfaces/friendships.repository.mock.js";
-import { RespondToFriendRequestUseCase } from "./respond-to-friend-request.use-case.js";
+} from "../../domain/interfaces/friendships.repository.mock";
+import { RespondToFriendRequestUseCase } from "./respond-to-friend-request.use-case";
 
 describe("RespondToFriendRequestUseCase", () => {
   it("accepts a pending friend request when called by the recipient", async () => {

@@ -1,6 +1,6 @@
 import { describe, it } from "vitest";
-import { PasswordService } from "../../../../shared/services/password";
-import { JWTService } from "../../../../shared/services/token";
+import { PasswordService } from "../../../../shared/services/password/password-service";
+import { JWTService } from "../../../../shared/services/token/jwt-service";
 import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock.";
 import { createMockedRefreshTokenRepository } from "../../domain/interfaces/refresh-token.repository.mock.";
 import { LoginUseCase } from "./login.usecase";

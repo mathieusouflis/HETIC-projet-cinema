@@ -1,17 +1,15 @@
 import { describe, expect, it } from "vitest";
-import {
-  ForbiddenError,
-  NotFoundError,
-} from "../../../../shared/errors/index.js";
-import { Message } from "../../domain/entities/message.entity.js";
+import { ForbiddenError } from "../../../../shared/errors/forbidden-error";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
+import { Message } from "../../domain/entities/message.entity";
 import {
   createMockedMessageRepository,
   MOCK_AUTHOR_ID,
   MOCK_MESSAGE_ID,
   MOCK_OTHER_USER_ID,
   mockMessage,
-} from "../../domain/interfaces/message.repository.mock.js";
-import { EditMessageUseCase } from "./edit-message.use-case.js";
+} from "../../domain/interfaces/message.repository.mock";
+import { EditMessageUseCase } from "./edit-message.use-case";
 
 describe("EditMessageUseCase", () => {
   it("edits a message when the caller is the author", async () => {

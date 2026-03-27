@@ -1,11 +1,11 @@
 import { eq } from "drizzle-orm";
-import { db } from "../../../../database/index.js";
-import { emailVerificationTokens } from "../../../../database/schema.js";
+import { db } from "../../../../database/index";
+import { emailVerificationTokens } from "../../../../database/schema";
 import {
   EmailVerificationToken,
   type EmailVerificationTokenRow,
-} from "../../domain/entities/email-verification-token.entity.js";
-import type { IEmailVerificationTokenRepository } from "../../domain/interfaces/IEmailVerificationTokenRepository.js";
+} from "../../domain/entities/email-verification-token.entity";
+import type { IEmailVerificationTokenRepository } from "../../domain/interfaces/IEmailVerificationTokenRepository";
 
 export class EmailVerificationTokenRepository
   implements IEmailVerificationTokenRepository

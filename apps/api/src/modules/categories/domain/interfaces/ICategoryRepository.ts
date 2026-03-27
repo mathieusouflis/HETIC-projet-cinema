@@ -2,7 +2,7 @@ import type {
   Category,
   CreateCategoryProps,
   UpdateCategoryProps,
-} from "../entities/category.entity.js";
+} from "../entities/category.entity";
 
 export interface ICategoryRepository {
   /**

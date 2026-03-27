@@ -1,5 +1,6 @@
 import z from "zod";
-import { optionalFlexiblePaginationQuerySchema } from "../../../../../shared/services/pagination";
+import { uuidSchemaOptional } from "../../../../../shared/schemas/fields/uuid.schema";
+import { optionalFlexiblePaginationQuerySchema } from "../../../../../shared/services/pagination/pagination.schemas";
 
 export const querySerieRequestSchema = z.object({
   title: z.string().optional(),
@@ -12,8 +13,8 @@ export const querySerieRequestSchema = z.object({
   withCast: z.enum(["true", "false"]).optional(),
   withSeasons: z.enum(["true", "false"]).optional(),
   withEpisodes: z.enum(["true", "false"]).optional(),
-  seasonNumber: z.string().uuid().optional(),
-  episodeNumber: z.string().uuid().optional(),
+  seasonNumber: uuidSchemaOptional,
+  episodeNumber: uuidSchemaOptional,
   ...optionalFlexiblePaginationQuerySchema.shape,
 });
 

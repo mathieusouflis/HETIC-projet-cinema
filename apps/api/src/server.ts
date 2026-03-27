@@ -6,15 +6,18 @@ import cors from "cors";
 import express, { type Express } from "express";
 import morgan from "morgan";
 import { Server as SocketIOServer } from "socket.io";
-import "./shared/infrastructure/openapi/zod-openapi.js";
+import "./shared/infrastructure/openapi/zod-openapi";
 import { config } from "@packages/config";
 import { logger } from "@packages/logger";
 import * as Sentry from "@sentry/node";
 import cookieParser from "cookie-parser";
 import { rateLimitConfig } from "./config/rate-limiter";
 import { apiVersion1Router } from "./modules";
-import { createAsyncAPIRouter } from "./shared/infrastructure/routes/asyncapi.routes.js";
-import { errorMiddleware, notFoundMiddleware } from "./shared/middleware";
+import { createAsyncAPIRouter } from "./shared/infrastructure/routes/asyncapi.routes";
+import {
+  errorMiddleware,
+  notFoundMiddleware,
+} from "./shared/middleware/error.middleware";
 
 const { json, urlencoded } = bodyParser;
 

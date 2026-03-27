@@ -1,10 +1,10 @@
 import type { Router } from "express";
-import { RestModule } from "../../shared/infrastructure/base/modules/rest-module.js";
-import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator.js";
-import { ContentsController } from "./application/controllers/contents.controller.js";
-import { GetContentByIdUseCase } from "./application/use-cases/get-content-by-id.use-case.js";
-import { QueryContentUseCase } from "./application/use-cases/query-content.use-case.js";
-import { ContentsRepository } from "./infrastructure/database/repositories/contents.repository.js";
+import { RestModule } from "../../shared/infrastructure/base/modules/rest-module";
+import { DecoratorRouter } from "../../shared/infrastructure/decorators/rest/router-generator";
+import { ContentsController } from "./application/controllers/contents.controller";
+import { GetContentByIdUseCase } from "./application/use-cases/get-content-by-id.use-case";
+import { QueryContentUseCase } from "./application/use-cases/query-content.use-case";
+import { ContentsRepository } from "./infrastructure/database/repositories/contents.repository";
 
 class ContentsModule extends RestModule {
   private readonly repository: ContentsRepository;

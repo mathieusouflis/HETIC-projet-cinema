@@ -1,9 +1,7 @@
-import {
-  ForbiddenError,
-  NotFoundError,
-} from "../../../../shared/errors/index.js";
-import type { Message } from "../../domain/entities/message.entity.js";
-import type { IMessageRepository } from "../../domain/interfaces/IMessageRepository.js";
+import { ForbiddenError } from "../../../../shared/errors/forbidden-error";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
+import type { Message } from "../../domain/entities/message.entity";
+import type { IMessageRepository } from "../../domain/interfaces/IMessageRepository";
 
 export class DeleteMessageUseCase {
   constructor(private readonly messageRepository: IMessageRepository) {}

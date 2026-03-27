@@ -1,5 +1,5 @@
 import { logger } from "@packages/logger";
-import { TmdbService } from "../../../../shared/services/tmdb";
+import { TmdbService } from "../../../../shared/services/tmdb/tmdb-service";
 import type { TMDBEpisode } from "../../../episodes/infrastructure/tmdb/episodes.tmdb.repository";
 import type { TMDBMovieProviders } from "../../../movies/infrastructure/database/repositories/tmdb-movies.repository";
 

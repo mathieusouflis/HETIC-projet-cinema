@@ -3,12 +3,10 @@ import { logger } from "@packages/logger";
 import type { Socket } from "socket.io";
 
 import { ZodError } from "zod";
-import {
-  WebSocketAuthError,
-  WebSocketError,
-  WebSocketInternalError,
-  WebSocketValidationError,
-} from "../../errors/websocket";
+import { WebSocketAuthError } from "../../errors/websocket/websocket-auth-error";
+import { WebSocketError } from "../../errors/websocket/websocket-base-error";
+import { WebSocketInternalError } from "../../errors/websocket/websocket-internal-error";
+import { WebSocketValidationError } from "../../errors/websocket/websocket-validation-error";
 
 /**
  * Centralized WebSocket error handler

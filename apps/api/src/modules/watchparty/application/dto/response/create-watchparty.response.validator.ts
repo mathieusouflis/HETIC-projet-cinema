@@ -1,5 +1,5 @@
 import type z from "zod";
-import { watchpartySchema } from "../../validators/watchparty.validators.js";
+import { watchpartySchema } from "../../validators/watchparty.validators";
 
 export const createWatchpartyResponseValidator = watchpartySchema;
 export type CreateWatchpartyResponse = z.infer<

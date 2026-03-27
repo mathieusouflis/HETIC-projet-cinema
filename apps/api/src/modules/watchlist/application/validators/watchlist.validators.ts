@@ -1,5 +1,5 @@
 import z from "zod";
-import { uuidSchema } from "../../../../shared/schemas/fields";
+import { uuidSchema } from "../../../../shared/schemas/fields/uuid.schema";
 import type { WatchStatus } from "../../domain/entities/watchlist.entity";
 
 export const watchlistStatusSchema = z.enum<WatchStatus[]>([

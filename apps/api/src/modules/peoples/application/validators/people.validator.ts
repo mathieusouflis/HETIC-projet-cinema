@@ -1,6 +1,6 @@
 import z from "zod";
-import { uuidSchema } from "../../../../shared/schemas/fields";
-import { contentCreditsValidator } from "../../../content-credits/application/validators/content-credits.validator.js";
+import { uuidSchema } from "../../../../shared/schemas/fields/uuid.schema";
+import { contentCreditsValidator } from "../../../content-credits/application/validators/content-credits.validator";
 
 export const peopleValidator = z.object({
   id: uuidSchema,

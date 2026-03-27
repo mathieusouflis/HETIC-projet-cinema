@@ -1,8 +1,8 @@
-import { paginationService } from "../../../../shared/services/pagination/index.js";
-import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
-import type { IContentRepository } from "../../domain/interfaces/IContentRepository.js";
-import type { QueryContentRequest } from "../dto/requests/query-contents.validator.js";
-import type { QueryContentResponse } from "../dto/response/query-content.validator.js";
+import { paginationService } from "../../../../shared/services/pagination/pagination.service";
+import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils";
+import type { IContentRepository } from "../../domain/interfaces/IContentRepository";
+import type { QueryContentRequest } from "../dto/requests/query-contents.validator";
+import type { QueryContentResponse } from "../dto/response/query-content.validator";
 
 export class QueryContentUseCase {
   constructor(private readonly contentRepository: IContentRepository) {}

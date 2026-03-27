@@ -1,13 +1,13 @@
-import { Entity } from "../../../../shared/domain/entity.js";
-import type { Category } from "../../../categories/domain/entities/category.entity.js";
-import type { People } from "../../../peoples/domain/entities/people.entity.js";
-import type { Platform } from "../../../platforms/domain/entities/platforms.entity.js";
-import type { Season } from "../../../seasons/domain/seasons.entity.js";
+import { Entity } from "../../../../shared/domain/entity";
+import type { Category } from "../../../categories/domain/entities/category.entity";
+import type { People } from "../../../peoples/domain/entities/people.entity";
+import type { Platform } from "../../../platforms/domain/entities/platforms.entity";
+import type { Season } from "../../../seasons/domain/seasons.entity";
 import type {
   ContentRow,
   contentRelationsSchema,
   NewContentRow,
-} from "../../infrastructure/database/schemas/contents.schema.js";
+} from "../../infrastructure/database/schemas/contents.schema";
 
 export type ContentType = "movie" | "serie";
 

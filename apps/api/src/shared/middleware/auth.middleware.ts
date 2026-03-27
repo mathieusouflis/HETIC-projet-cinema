@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
-import { UnauthorizedError } from "../errors/index.js";
-import type { AccessTokenPayload } from "../services/token/i-token-service.js";
-import { JWTService } from "../services/token/jwt-service.js";
+import { UnauthorizedError } from "../errors/unauthorized-error";
+import type { AccessTokenPayload } from "../services/token/i-token-service";
+import { JWTService } from "../services/token/jwt-service";
 
 declare global {
   namespace Express {

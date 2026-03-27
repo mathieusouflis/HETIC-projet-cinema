@@ -1,8 +1,8 @@
-import { paginationService } from "../../../../shared/services/pagination/index.js";
-import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
-import type { IMoviesRepository } from "../../domain/interfaces/IMoviesRepository.js";
-import type { QueryMovieRequest } from "../dto/requests/query-movies.validator.js";
-import type { QueryMovieResponse } from "../dto/response/query-movie.validator.js";
+import { paginationService } from "../../../../shared/services/pagination/pagination.service";
+import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils";
+import type { IMoviesRepository } from "../../domain/interfaces/IMoviesRepository";
+import type { QueryMovieRequest } from "../dto/requests/query-movies.validator";
+import type { QueryMovieResponse } from "../dto/response/query-movie.validator";
 
 export class QueryMovieUseCase {
   constructor(private readonly movieRepository: IMoviesRepository) {}

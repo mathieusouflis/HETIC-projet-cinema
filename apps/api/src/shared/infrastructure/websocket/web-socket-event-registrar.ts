@@ -1,7 +1,7 @@
 import { logger } from "@packages/logger";
 import type { Socket } from "socket.io";
-import type { EventListenerMetadata } from "../decorators/web-socket/websocket.metadata.js";
-import { webSocketEventHandler } from "./web-socket-event-handler.js";
+import type { EventListenerMetadata } from "../decorators/web-socket/websocket.metadata";
+import { webSocketEventHandler } from "./web-socket-event-handler";
 
 /**
  * Service responsible for registering WebSocket events

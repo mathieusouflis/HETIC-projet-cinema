@@ -1,6 +1,6 @@
-import { paginationService } from "../../../../shared/services/pagination/index.js";
-import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils.js";
-import type { IPeoplesRepository } from "../../domain/interfaces/IPeoplesRepository.js";
+import { paginationService } from "../../../../shared/services/pagination/pagination.service";
+import { buildPaginatedResponseFromResult } from "../../../../shared/utils/response.utils";
+import type { IPeoplesRepository } from "../../domain/interfaces/IPeoplesRepository";
 
 export type SearchPeopleParams = {
   query: string;

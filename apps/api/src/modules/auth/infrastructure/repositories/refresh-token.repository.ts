@@ -1,10 +1,10 @@
 import { and, eq, isNull } from "drizzle-orm";
-import { db } from "../../../../database/index.js";
-import { refreshTokens } from "../../../../database/schema.js";
+import { db } from "../../../../database/index";
+import { refreshTokens } from "../../../../database/schema";
 import type {
   IRefreshTokenRepository,
   RefreshTokenRecord,
-} from "../../domain/interfaces/IRefreshTokenRepository.js";
+} from "../../domain/interfaces/IRefreshTokenRepository";
 
 export class RefreshTokenRepository implements IRefreshTokenRepository {
   async create(

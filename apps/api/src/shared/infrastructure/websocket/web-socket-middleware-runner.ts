@@ -1,6 +1,6 @@
 import { logger } from "@packages/logger";
 import type { Socket } from "socket.io";
-import { WebSocketMiddlewareError } from "../../errors/websocket";
+import { WebSocketMiddlewareError } from "../../errors/websocket/websocket-middleware-error";
 
 /**
  * Type definition for WebSocket event middleware

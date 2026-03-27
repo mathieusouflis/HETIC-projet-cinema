@@ -1,11 +1,11 @@
 import { z } from "zod";
-import { Shared } from "../../../../../shared";
-import { passwordSchema } from "../../../../../shared/schemas/fields";
 import { emailSchemaOptional } from "../../../../../shared/schemas/fields/email.schema";
+import { passwordSchema } from "../../../../../shared/schemas/fields/password.schema";
 import { avatarUrlSchemaOptionalNullable } from "../../../../../shared/schemas/fields/url.schema";
+import { usernameSchemaOptional } from "../../../../../shared/schemas/fields/username.schema";
 
 export const patchMeBodySchema = z.object({
-  username: Shared.Schemas.Fields.usernameSchemaOptional,
+  username: usernameSchemaOptional,
   email: emailSchemaOptional,
   avatarUrl: avatarUrlSchemaOptionalNullable,
   password: passwordSchema.optional(),

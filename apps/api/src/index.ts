@@ -1,11 +1,11 @@
 import "reflect-metadata";
-import "./shared/infrastructure/openapi/zod-openapi.js";
+import "./shared/infrastructure/openapi/zod-openapi";
 import { config } from "@packages/config";
 import { logger } from "@packages/logger";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
-import { db } from "./database/index.js";
-import { registerAllWebSocketEvents } from "./modules/index.js";
-import { createServer } from "./server.js";
+import { db } from "./database/index";
+import { registerAllWebSocketEvents } from "./modules/index";
+import { createServer } from "./server";
 
 logger.info("Migration starting...");
 try {

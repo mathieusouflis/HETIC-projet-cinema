@@ -1,6 +1,6 @@
 import type { z } from "zod";
 import { ZodError } from "zod";
-import { WebSocketValidationError } from "../../errors/websocket";
+import { WebSocketValidationError } from "../../errors/websocket/websocket-validation-error";
 
 /**
  * Service for handling WebSocket event validation

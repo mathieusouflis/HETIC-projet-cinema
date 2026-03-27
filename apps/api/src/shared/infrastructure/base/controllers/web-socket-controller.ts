@@ -1,13 +1,13 @@
 import "reflect-metadata";
 import { logger } from "@packages/logger";
 import type { Namespace, Socket, Server as SocketIOServer } from "socket.io";
-import { Shared } from "../../../index.js";
+import { WebSocketMetadataStorage } from "../../decorators/web-socket/websocket.metadata";
 import {
   getSocketUser,
   requireSocketAuth,
-  webSocketErrorHandler,
-  webSocketEventRegistrar,
-} from "../../websocket/index.js";
+} from "../../websocket/web-socket-auth-service";
+import { webSocketErrorHandler } from "../../websocket/web-socket-error-handler";
+import { webSocketEventRegistrar } from "../../websocket/web-socket-event-registrar";
 
 /**
  * Base controller for WebSocket event handlers
@@ -38,14 +38,8 @@ export abstract class WebSocketController {
   public registerEvents(io: SocketIOServer): void {
     this.io = io;
 
-    const namespaceMetadata =
-      Shared.Infrastructure.Decorators.WebSockets.Metadata.WebSocketMetadataStorage.getNamespace(
-        this
-      );
-    const events =
-      Shared.Infrastructure.Decorators.WebSockets.Metadata.WebSocketMetadataStorage.getEvents(
-        this
-      );
+    const namespaceMetadata = WebSocketMetadataStorage.getNamespace(this);
+    const events = WebSocketMetadataStorage.getEvents(this);
 
     if (!namespaceMetadata) {
       logger.warn(`No @Namespace decorator found on ${this.constructor.name}`);
@@ -87,10 +81,7 @@ export abstract class WebSocketController {
   private handleConnection(socket: Socket, events: any[]): void {
     try {
       // Check if namespace requires authentication
-      const namespaceMetadata =
-        Shared.Infrastructure.Decorators.WebSockets.Metadata.WebSocketMetadataStorage.getNamespace(
-          this
-        );
+      const namespaceMetadata = WebSocketMetadataStorage.getNamespace(this);
       const requireAuth = namespaceMetadata?.requireAuth ?? false;
 
       logger.info(
@@ -339,22 +330,10 @@ export abstract class WebSocketController {
     emits: any[];
     rooms: any[];
   } {
-    const namespace =
-      Shared.Infrastructure.Decorators.WebSockets.Metadata.WebSocketMetadataStorage.getNamespace(
-        this
-      );
-    const events =
-      Shared.Infrastructure.Decorators.WebSockets.Metadata.WebSocketMetadataStorage.getEvents(
-        this
-      );
-    const emits =
-      Shared.Infrastructure.Decorators.WebSockets.Metadata.WebSocketMetadataStorage.getEmits(
-        this
-      );
-    const rooms =
-      Shared.Infrastructure.Decorators.WebSockets.Metadata.WebSocketMetadataStorage.getRooms(
-        this
-      );
+    const namespace = WebSocketMetadataStorage.getNamespace(this);
+    const events = WebSocketMetadataStorage.getEvents(this);
+    const emits = WebSocketMetadataStorage.getEmits(this);
+    const rooms = WebSocketMetadataStorage.getRooms(this);
 
     return {
       namespace: namespace?.path,
@@ -364,11 +343,7 @@ export abstract class WebSocketController {
         description: e.description,
         acknowledgment: e.acknowledgment,
         deprecated: e.deprecated,
-        validation:
-          Shared.Infrastructure.Decorators.WebSockets.Metadata.WebSocketMetadataStorage.getValidation(
-            this,
-            e.methodName
-          ),
+        validation: WebSocketMetadataStorage.getValidation(this, e.methodName),
       })),
       emits: emits,
       rooms: rooms,

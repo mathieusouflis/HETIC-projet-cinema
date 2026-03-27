@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
-import { ValidationError } from "../errors/validation-error.js";
-import { validateMultiple, validateRequest } from "./validation.middleware.js";
+import { ValidationError } from "../errors/validation-error";
+import { validateMultiple, validateRequest } from "./validation.middleware";
 
 describe("validateRequest", () => {
   let req: Partial<Request>;

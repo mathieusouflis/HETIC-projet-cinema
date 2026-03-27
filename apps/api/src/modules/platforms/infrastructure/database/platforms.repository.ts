@@ -1,7 +1,7 @@
 import { eq, inArray } from "drizzle-orm";
 import { db } from "../../../../database";
 import { streamingPlatforms } from "../../../../database/schema";
-import { ServerError } from "../../../../shared/errors";
+import { ServerError } from "../../../../shared/errors/server-error";
 import { Content } from "../../../contents/domain/entities/content.entity";
 import {
   Platform,

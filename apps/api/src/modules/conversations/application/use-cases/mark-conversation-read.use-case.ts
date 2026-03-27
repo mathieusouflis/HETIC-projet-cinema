@@ -1,5 +1,5 @@
-import { ForbiddenError } from "../../../../shared/errors/index.js";
-import type { IConversationRepository } from "../../domain/interfaces/IConversationRepository.js";
+import { ForbiddenError } from "../../../../shared/errors/forbidden-error";
+import type { IConversationRepository } from "../../domain/interfaces/IConversationRepository";
 
 export class MarkConversationReadUseCase {
   constructor(

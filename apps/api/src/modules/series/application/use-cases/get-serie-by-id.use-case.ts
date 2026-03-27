@@ -1,6 +1,6 @@
-import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
-import type { ISeriesRepository } from "../../domain/interfaces/ISeriesRepository.js";
-import type { GetSerieByIdResponse } from "../dto/response/get-serie-by-id-response.validator.js";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
+import type { ISeriesRepository } from "../../domain/interfaces/ISeriesRepository";
+import type { GetSerieByIdResponse } from "../dto/response/get-serie-by-id-response.validator";
 
 export class GetSerieByIdUseCase {
   constructor(private readonly serieRepository: ISeriesRepository) {}

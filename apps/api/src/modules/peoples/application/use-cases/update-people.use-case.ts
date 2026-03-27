@@ -1,4 +1,4 @@
-import { NotFoundError } from "../../../../shared/errors";
+import { NotFoundError } from "../../../../shared/errors/not-found-error";
 import type {
   People,
   UpdatePeopleProps,

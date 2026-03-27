@@ -1,16 +1,16 @@
 import { and, count, eq, gt, isNull, ne, or, sql } from "drizzle-orm";
-import { db } from "../../../../database/index.js";
+import { db } from "../../../../database/index";
 import {
   conversationParticipants,
   conversations,
   messages,
-} from "../../../../database/schema.js";
-import { ServerError } from "../../../../shared/errors/server-error.js";
-import { Conversation } from "../../domain/entities/conversation.entity.js";
+} from "../../../../database/schema";
+import { ServerError } from "../../../../shared/errors/server-error";
+import { Conversation } from "../../domain/entities/conversation.entity";
 import type {
   ConversationWithMeta,
   IConversationRepository,
-} from "../../domain/interfaces/IConversationRepository.js";
+} from "../../domain/interfaces/IConversationRepository";
 
 export class ConversationRepository implements IConversationRepository {
   async findAllForUser(userId: string): Promise<ConversationWithMeta[]> {
