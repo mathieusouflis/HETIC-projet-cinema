@@ -66,6 +66,68 @@ export abstract class BaseCompositeRepository<
     this.episodesRepository = new EpisodesDatabaseRepository();
   }
 
+  protected async baseCreate(content: TCreateProps): Promise<TEntity> {
+    try {
+      const entity = await this.drizzleRepository.create(content);
+      logger.info(`Created ${this.entityType} ${entity.id}`);
+      return entity;
+    } catch (error) {
+      logger.error(`Error creating ${this.entityType}: ${error}`);
+      throw error;
+    }
+  }
+
+  protected async baseGetById(
+    id: string,
+    options?: { withCategories?: boolean; withPlatforms?: boolean }
+  ): Promise<TEntity | null> {
+    try {
+      const entity = await this.drizzleRepository.getById(id, options);
+      if (entity) return entity;
+      return null;
+    } catch (error) {
+      logger.error(`Error getting ${this.entityType} by ID ${id}: ${error}`);
+      throw error;
+    }
+  }
+
+  protected async baseUpdate(
+    id: string,
+    props: Partial<Omit<TCreateProps, "genres" | "providers">>
+  ): Promise<TEntity> {
+    try {
+      const entity = await this.drizzleRepository.update(id, props);
+      logger.info(`Updated ${this.entityType} ${id}`);
+      return entity;
+    } catch (error) {
+      logger.error(`Error updating ${this.entityType} ${id}: ${error}`);
+      throw error;
+    }
+  }
+
+  protected async baseDelete(id: string): Promise<void> {
+    try {
+      await this.drizzleRepository.delete(id);
+      logger.info(`Deleted ${this.entityType} ${id}`);
+    } catch (error) {
+      logger.error(`Error deleting ${this.entityType} ${id}: ${error}`);
+      throw error;
+    }
+  }
+
+  protected async baseGetCount(
+    title?: string,
+    country?: string,
+    categories?: string[]
+  ): Promise<number> {
+    try {
+      return await this.drizzleRepository.getCount(title, country, categories);
+    } catch (error) {
+      logger.error(`Error getting ${this.entityType} count: ${error}`);
+      throw error;
+    }
+  }
+
   protected async baseSearch(
     query: string,
     options?: PagePaginationQuery & {
