@@ -18,13 +18,84 @@ This page walks you through installing every tool you need on a fresh machine be
 
 ## macOS
 
-### 1. Install Homebrew (if you don't have it)
+Two setup paths exist. Path A (Devenv) is recommended for team members — it gives you the exact same tool versions as CI and other team members, with zero manual version management.
+
+### Path A — Nix + Devenv + Direnv (recommended)
+
+#### 1. Install Nix
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+```
+
+Close and reopen your terminal after installation. Verify:
+
+```bash
+nix --version
+```
+
+#### 2. Install Devenv
+
+```bash
+nix profile add nixpkgs#devenv
+```
+
+[Devenv](https://devenv.sh) reads `devenv.nix` at the repo root and provides the exact Node.js, pnpm, Docker, and `phase-cli` versions declared there — no manual version management needed.
+
+#### 3. Install Direnv
+
+```bash
+nix-env -iA nixpkgs.direnv
+```
+
+Then hook it into your shell. macOS uses **zsh** by default:
+
+```bash
+echo 'eval "$(direnv hook zsh)"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+If you use bash instead:
+
+```bash
+echo 'eval "$(direnv hook bash)"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+For other shells, see [direnv docs → hook](https://direnv.net/docs/hook.html).
+
+#### 4. Allow Direnv in the project
+
+```bash
+cd HETIC-projet-cinema
+direnv allow
+```
+
+Direnv reads `.envrc` and activates the Devenv environment automatically whenever you enter the directory. All tools (Node, pnpm, phase-cli) are now available in your shell without any further installation.
+
+#### 5. Install Docker Desktop
+
+Even with Devenv, you still need [Docker Desktop for Mac](https://www.docker.com/products/docker-desktop/) to run the PostgreSQL container.
+
+Open it at least once so the daemon starts. Verify:
+
+```bash
+docker ps
+```
+
+---
+
+### Path B — Homebrew (manual)
+
+Use this path if you prefer not to use Nix, or for quick one-off contributions.
+
+#### 1. Install Homebrew
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-### 2. Install Node.js and Docker
+#### 2. Install Node.js and Docker
 
 ```bash
 brew install node
@@ -33,7 +104,7 @@ brew install --cask docker
 
 Open Docker Desktop at least once so the daemon starts.
 
-### 3. Install pnpm via Corepack
+#### 3. Install pnpm via Corepack
 
 ```bash
 corepack enable
@@ -93,19 +164,26 @@ nix-env -iA nixpkgs.devenv
 ### 4. Install and hook Direnv
 
 ```bash
-# Install
-curl -sfL https://direnv.net/install.sh | bash
+# Install via Nix
+nix-env -iA nixpkgs.direnv
 
-# Hook into your shell (bash example)
+# Hook into your shell (bash — WSL Ubuntu default)
 echo 'eval "$(direnv hook bash)"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-If you use zsh, fish, or another shell, see [direnv docs → hook](https://direnv.net/docs/hook.html) for the correct line.
+If you use zsh inside WSL, replace `bash` with `zsh` and target `~/.zshrc`. For other shells, see [direnv docs → hook](https://direnv.net/docs/hook.html).
 
-Once both are installed, entering the project directory triggers `direnv allow` and the full Nix environment activates automatically.
+#### 5. Allow Direnv in the project
 
-### 5. Install the VS Code WSL extension
+```bash
+cd HETIC-projet-cinema
+direnv allow
+```
+
+Once both Devenv and Direnv are active, entering the project directory automatically provisions all tools declared in `devenv.nix`.
+
+### 6. Install the VS Code WSL extension
 
 Install the **WSL** extension (`ms-vscode-remote.remote-wsl`) in VS Code. This lets VS Code run inside the WSL filesystem with full Linux tooling.
 
@@ -117,7 +195,7 @@ To connect:
 
 > Always open the project from within WSL, not from the Windows filesystem (`/mnt/c/...`). File I/O and file watchers are significantly slower from the Windows mount.
 
-### 6. Install Node.js and pnpm (if not using Devenv)
+### 7. Install Node.js and pnpm (if not using Devenv)
 
 If you prefer not to use Devenv, install manually inside WSL:
 
@@ -133,7 +211,7 @@ corepack enable
 corepack prepare pnpm@10.28.2 --activate
 ```
 
-### 7. Install Docker
+### 8. Install Docker
 
 Install [Docker Desktop for Windows](https://docs.docker.com/desktop/setup/install/windows-install/). In Docker Desktop settings, enable **"Use the WSL 2 based engine"** and check the box for your WSL distro under **Resources → WSL Integration**.
 
