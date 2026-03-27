@@ -41,7 +41,10 @@ export class ApiClient {
           _retry?: boolean;
         };
 
-        if (originalRequest?.url?.includes("/auth")) {
+        if (
+          originalRequest?.url?.includes("/auth") &&
+          !originalRequest?.url?.includes("/auth/me")
+        ) {
           return Promise.reject(error);
         }
 
