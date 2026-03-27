@@ -20,7 +20,9 @@
     "test": "turbo run test -- --coverage",
     "setup-project": "pnpm install && phase auth && phase init && husky",
     "prepare": "husky",
-    "deploy-prod": "phase secrets export --app hetic-cinema --env production > /tmp/.cinema-prod.env && docker compose --env-file /tmp/.cinema-prod.env -f docker-compose.prod.yaml up --build -d; rm -f /tmp/.cinema-prod.env",
+    "deploy:env:prod": "phase secrets export --app hetic-cinema --env production > /tmp/.cinema-prod.env && docker compose --env-file /tmp/.cinema-prod.env -f docker-compose.prod.yaml up --build -d; rm -f /tmp/.cinema-prod.env",
+    "deploy:env:dev": "phase secrets export --app hetic-cinema --env development > /tmp/.cinema-dev.env && docker compose --env-file /tmp/.cinema-dev.env -f docker-compose.prod.yaml up --build -d; rm -f /tmp/.cinema-dev.env",
+    "deploy:env:local": "docker compose -f docker-compose.prod.yaml up --build -d --wait && dotenv -- turbo run dev",
     "knip": "knip"
   },
   "devDependencies": {

@@ -13,7 +13,8 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    }
+    },
+    "./env": "./dist/env.js"
   },
   "scripts": {
     "build": "tsc",
