@@ -1,4 +1,3 @@
-import { logger } from "@packages/logger";
 import {
   BaseCompositeRepository,
   type CompositeEntity,
@@ -55,18 +54,9 @@ export class CompositeMoviesRepository
 
   async getMovieById(
     id: string,
-    options?: { withCategories?: boolean; withPlatform?: boolean }
+    options?: { withCategories?: boolean; withPlatforms?: boolean }
   ): Promise<Movie | null> {
-    try {
-      const movie = await this.drizzleRepository.getById(id, options);
-      if (movie) {
-        return movie;
-      }
-      return null;
-    } catch (error) {
-      logger.error(`Error getting movie by ID ${id}: ${error}`);
-      throw error;
-    }
+    return this.baseGetById(id, options);
   }
 
   async searchMovies(
@@ -77,42 +67,22 @@ export class CompositeMoviesRepository
       withCast?: boolean;
     }
   ): Promise<Movie[]> {
-    return await this.baseSearch(query, options);
+    return this.baseSearch(query, options);
   }
 
   async createMovie(content: CreateMovieProps): Promise<Movie> {
-    try {
-      const movie = await this.drizzleRepository.create(content);
-      logger.info(`Created movie ${movie.id}`);
-      return movie;
-    } catch (error) {
-      logger.error(`Error creating movie: ${error}`);
-      throw error;
-    }
+    return this.baseCreate(content);
   }
 
   async updateMovie(
     id: string,
     props: Partial<CreateMovieProps>
   ): Promise<Movie> {
-    try {
-      const movie = await this.drizzleRepository.update(id, props);
-      logger.info(`Updated movie ${id}`);
-      return movie;
-    } catch (error) {
-      logger.error(`Error updating movie ${id}: ${error}`);
-      throw error;
-    }
+    return this.baseUpdate(id, props);
   }
 
   async deleteMovie(id: string): Promise<void> {
-    try {
-      await this.drizzleRepository.delete(id);
-      logger.info(`Deleted movie ${id}`);
-    } catch (error) {
-      logger.error(`Error deleting movie ${id}: ${error}`);
-      throw error;
-    }
+    return this.baseDelete(id);
   }
 
   async getMovieCount(
@@ -120,11 +90,6 @@ export class CompositeMoviesRepository
     country?: string,
     categories?: string[]
   ): Promise<number> {
-    try {
-      return await this.drizzleRepository.getCount(title, country, categories);
-    } catch (error) {
-      logger.error(`Error getting movie count: ${error}`);
-      throw error;
-    }
+    return this.baseGetCount(title, country, categories);
   }
 }
