@@ -17,7 +17,7 @@ export class ResetPasswordUseCase {
 
     const token = await this.tokenRepository.findByTokenHash(tokenHash);
 
-    if (!token || !token.isValid()) {
+    if (!token?.isValid()) {
       throw new UnauthorizedError("Invalid or expired password reset token");
     }
 
