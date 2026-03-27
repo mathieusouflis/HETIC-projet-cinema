@@ -29,7 +29,7 @@ Monorepo **pnpm workspaces + Turborepo**, fully in TypeScript 5.9.
 | Layer | Technologies |
 |-------|-------------|
 | Backend | Express 5, Socket.IO, Drizzle ORM, PostgreSQL 18, Zod |
-| Frontend | React 19, Vite 7, TanStack Router, TanStack Query, Zustand, TailwindCSS 4, Radix UI |
+| Frontend | React 19, Vite 7, TanStack Router, TanStack Query, Zustand, TailwindCSS 4, Radix UI (Shadcn) |
 | Shared packages | Generated Axios SDK (Orval), isomorphic config, logger |
 | Tooling | Biome (lint/format), Vitest 4, Docker Compose, Phase (secrets), Husky + lint-staged |
 
