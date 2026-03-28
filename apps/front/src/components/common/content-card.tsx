@@ -4,6 +4,12 @@ import { Pen, Plus, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import AddContentToWatchlistDialog from "@/features/watchlist/components/dialog";
 import { useApi } from "@/lib/api/services";
 import { baseRoutes } from "@/lib/routes";
@@ -198,9 +204,11 @@ function ResultCard({
       ? new Date(content.releaseDate).getFullYear()
       : null);
 
-  const category = content.contentCategories?.[0]?.name;
   const actors = content.contentCredits?.slice(0, 2) ?? [];
   const country = content.contentCredits?.[0]?.nationality;
+  const categories = content.contentCategories ?? [];
+  const visibleCategories = categories.slice(0, 3);
+  const extraCategories = categories.slice(3);
 
   return (
     <div className={cn("flex items-start gap-4 py-5", className)}>
@@ -224,8 +232,36 @@ function ResultCard({
         </Link>
 
         <p className="text-sm text-muted-foreground">
-          {[year, category, country].filter(Boolean).join(" - ")}
+          {[year, country].filter(Boolean).join(" - ")}
         </p>
+
+        {visibleCategories.length > 0 && (
+          <div className="flex flex-wrap gap-1 mt-0.5">
+            {visibleCategories.map((category) => (
+              <Badge key={category.id} variant="secondary" size="sm">
+                {category.name}
+              </Badge>
+            ))}
+            {extraCategories.length > 0 && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge
+                      variant="outline"
+                      size="sm"
+                      className="cursor-default"
+                    >
+                      +{extraCategories.length}
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <span>{extraCategories.map((c) => c.name).join(", ")}</span>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </div>
+        )}
 
         {(content.totalRatings ?? 0) > 0 && (
           <span className="flex items-center gap-1 text-sm text-amber-500 font-medium">
