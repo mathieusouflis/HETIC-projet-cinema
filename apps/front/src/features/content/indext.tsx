@@ -144,7 +144,7 @@ export function ContentPage() {
         <div className="flex flex-col gap-2">
           <h2 className="text-xl font-bold">Credits</h2>
           <ScrollArea>
-            <div className="flex flex-row w-full">
+            <div className="flex flex-row w-full gap-1.5">
               {data.contentCredits.map((cc) => (
                 <ContentCredit
                   key={cc.id}
@@ -163,15 +163,22 @@ export function ContentPage() {
 
 function ContentCredit(props: { avatarUrl: string | null; name: string }) {
   return (
-    <div className="flex flex-col gap-1 h-40">
+    <div className="flex flex-col gap-1 w-32">
       {props.avatarUrl ? (
         <img
           src={props.avatarUrl}
           alt={`${props.name} avatar`}
-          className="aspect-square h-full w-fit object-cover rounded-2xl"
+          className="aspect-square w-full object-cover rounded-2xl"
         />
       ) : (
-        <span className="aspect-square h-full w-fit rounded-2xl bg-muted" />
+        <span className="aspect-square w-full rounded-2xl bg-muted flex items-center justify-center text-sm font-medium text-muted-foreground">
+          {props.name
+            .split(" ")
+            .slice(0, 2)
+            .map((w) => w[0])
+            .join("")
+            .toUpperCase()}
+        </span>
       )}
       {props.name}
     </div>

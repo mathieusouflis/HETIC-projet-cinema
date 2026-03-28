@@ -21,6 +21,8 @@ import {
   type TMDBRelations,
 } from "./composite-repository-types";
 
+const TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original";
+
 const categoryCache = new Map<number, string>();
 const providerCache = new Map<number, string>();
 const castCache = new Map<number, string>();
@@ -639,6 +641,14 @@ export abstract class BaseCompositeRepository<
       const jsonCast = cast.toJSON();
       if (jsonCast.tmdbId !== null) {
         castCache.set(jsonCast.tmdbId, jsonCast.id);
+        if (!jsonCast.photoUrl) {
+          const tmdbCast = uncachedCasts.find((c) => c.id === jsonCast.tmdbId);
+          if (tmdbCast?.profile_path) {
+            await this.peoplesRepository.update(jsonCast.id, {
+              photoUrl: `${TMDB_IMAGE_BASE_URL}${tmdbCast.profile_path}`,
+            });
+          }
+        }
       }
     }
 
@@ -670,6 +680,9 @@ export abstract class BaseCompositeRepository<
         const newCast = await this.peoplesRepository.create({
           name: cast.original_name,
           tmdbId: cast.id,
+          photoUrl: cast.profile_path
+            ? `${TMDB_IMAGE_BASE_URL}${cast.profile_path}`
+            : null,
         });
 
         castCache.set(cast.id, newCast.toJSON().id);

@@ -110,6 +110,7 @@ export type TMDBPeople = {
   original_name: string;
   cast_id: number;
   character: string;
+  profile_path: string;
   order: number;
 };
 
