@@ -12,7 +12,8 @@ export interface IContentRepository {
     withCast?: boolean,
     withSeason?: boolean,
     withEpisode?: boolean,
-    options?: PaginationQuery
+    options?: PaginationQuery,
+    minRating?: number
   ) => Promise<{ data: Content[]; total: number }>;
   searchContents: (
     query: string,

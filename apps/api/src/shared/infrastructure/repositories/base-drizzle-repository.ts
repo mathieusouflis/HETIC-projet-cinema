@@ -109,44 +109,52 @@ export abstract class BaseDrizzleRepository<
         },
       });
 
-      return result.map((row) => {
-        const entity = this.createEntity(row as TProps);
-        if (row.contentCategories && options?.withCategories !== false) {
-          entity.setRelations(
-            "contentCategories",
-            row.contentCategories.map((cc) => new Category(cc.category))
-          );
-        }
+      const tmdbIndexMap = new Map(tmdbIds.map((id, i) => [id, i]));
 
-        if (row.contentPlatforms && options?.withPlatforms) {
-          entity.setRelations(
-            "contentPlatforms",
-            row.contentPlatforms.map((cp) => new Platform(cp.platform))
-          );
-        }
+      return result
+        .map((row) => {
+          const entity = this.createEntity(row as TProps);
+          if (row.contentCategories && options?.withCategories !== false) {
+            entity.setRelations(
+              "contentCategories",
+              row.contentCategories.map((cc) => new Category(cc.category))
+            );
+          }
 
-        if (row.contentCredits && options?.withCast) {
-          entity.setRelations(
-            "contentCredits",
-            row.contentCredits.map((cc) => new People(cc.person))
-          );
-        }
+          if (row.contentPlatforms && options?.withPlatforms) {
+            entity.setRelations(
+              "contentPlatforms",
+              row.contentPlatforms.map((cp) => new Platform(cp.platform))
+            );
+          }
 
-        if (row.seasons && options?.withSeasons) {
-          entity.setRelations(
-            "seasons",
-            row.seasons.map((s) => {
-              const episodes = s.episodes.map((e) => new Episode(e));
-              const season = new Season(s);
+          if (row.contentCredits && options?.withCast) {
+            entity.setRelations(
+              "contentCredits",
+              row.contentCredits.map((cc) => new People(cc.person))
+            );
+          }
 
-              season.setRelations("episodes", episodes);
-              return season;
-            })
-          );
-        }
+          if (row.seasons && options?.withSeasons) {
+            entity.setRelations(
+              "seasons",
+              row.seasons.map((s) => {
+                const episodes = s.episodes.map((e) => new Episode(e));
+                const season = new Season(s);
 
-        return entity;
-      });
+                season.setRelations("episodes", episodes);
+                return season;
+              })
+            );
+          }
+
+          return entity;
+        })
+        .sort(
+          (a, b) =>
+            (tmdbIndexMap.get(a.tmdbId ?? -1) ?? 0) -
+            (tmdbIndexMap.get(b.tmdbId ?? -1) ?? 0)
+        );
     } catch (error) {
       throw new ServerError(
         `Failed to get ${this.entityName} by TMDB IDs: ${error instanceof Error ? error.message : error}`

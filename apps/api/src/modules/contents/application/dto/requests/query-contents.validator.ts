@@ -7,7 +7,7 @@ export const queryContentRequestSchema = z.object({
   synopsis: z.string().optional(),
   releaseDate: z.date().optional(),
   year: z.number().optional(),
-  averageRating: z.number().min(0).max(10).optional(),
+  averageRating: z.coerce.number().min(0).max(5).optional(),
   categories: z
     .preprocess((val) => {
       if (typeof val === "string" && val.startsWith("[") && val.endsWith("]")) {
