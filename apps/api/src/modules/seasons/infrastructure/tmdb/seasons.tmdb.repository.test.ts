@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { TmdbService } from "../../../../shared/services/tmdb";
+import { TmdbService } from "../../../../shared/services/tmdb/tmdb-service";
 import { SeasonTmdbRepository } from "./seasons.tmdb.repository";
 
 describe("SeasonTmdbRepository", () => {

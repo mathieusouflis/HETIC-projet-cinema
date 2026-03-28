@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { describe, expect, it, vi } from "vitest";
-import { UnauthorizedError } from "../../../../shared/errors/index.js";
+import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error.js";
 import { UsersController } from "./users.controller.js";
 
 type ExecuteMock = { execute: ReturnType<typeof vi.fn> };

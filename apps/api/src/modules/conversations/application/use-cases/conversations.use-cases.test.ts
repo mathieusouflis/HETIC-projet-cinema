@@ -1,9 +1,8 @@
 // @ts-nocheck
 import { describe, expect, it, vi } from "vitest";
-import {
-  ForbiddenError,
-  NotFoundError,
-} from "../../../../shared/errors/index.js";
+import { ForbiddenError } from "../../../../shared/errors/forbidden-error.js";
+import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
+
 import { GetConversationUseCase } from "./get-conversation.use-case.js";
 import { GetConversationsUseCase } from "./get-conversations.use-case.js";
 import { MarkConversationReadUseCase } from "./mark-conversation-read.use-case.js";

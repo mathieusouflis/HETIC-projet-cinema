@@ -64,7 +64,7 @@ describe("WebSocketAuthService", () => {
     );
     expect(isSocketAuthenticated(noUserSocket as never)).toBe(false);
     expect(getSocketUser(noUserSocket as never)).toBeUndefined();
-    expect(
+    await expect(
       globalAuthEventMiddleware(noUserSocket as never, {})
     ).rejects.toThrow(WebSocketAuthError);
     expect(() => requireSocketAuth(noUserSocket as never)).toThrow(

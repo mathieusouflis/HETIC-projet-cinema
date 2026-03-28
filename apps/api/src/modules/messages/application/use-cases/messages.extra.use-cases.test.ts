@@ -1,9 +1,7 @@
 // @ts-nocheck
 import { describe, expect, it, vi } from "vitest";
-import {
-  ForbiddenError,
-  NotFoundError,
-} from "../../../../shared/errors/index.js";
+import { ForbiddenError } from "../../../../shared/errors/forbidden-error.js";
+import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
 import { DeleteMessageUseCase } from "./delete-message.use-case.js";
 import { GetMessagesUseCase } from "./get-messages.use-case.js";
 
