@@ -27,7 +27,7 @@ vi.mock("@tanstack/react-query", () => ({
 }));
 
 const emitWithAckMock = vi.fn().mockResolvedValue(undefined);
-vi.mock("@/lib/socket", () => ({
+vi.mock("@/lib/socket/socket-client", () => ({
   getSocket: () => ({ emitWithAck: emitWithAckMock }),
 }));
 

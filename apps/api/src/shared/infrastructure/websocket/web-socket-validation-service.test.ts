@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
-import { WebSocketValidationError } from "../../errors/websocket";
+import { WebSocketValidationError } from "../../errors/websocket/websocket-validation-error";
 import {
   WebSocketValidationService,
   webSocketValidationService,

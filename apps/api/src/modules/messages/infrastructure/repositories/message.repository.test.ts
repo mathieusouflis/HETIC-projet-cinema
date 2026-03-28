@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { NotFoundError } from "../../../../shared/errors/index.js";
+import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
 import { MessageRepository } from "./message.repository.js";
 
 const {

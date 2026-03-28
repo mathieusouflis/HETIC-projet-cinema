@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { describe, expect, it, vi } from "vitest";
-import { NotFoundError } from "../../../../../shared/errors/index.js";
+import { NotFoundError } from "../../../../../shared/errors/not-found-error.js";
 import { GetCategoryByIdUseCase } from "./get-category-by-id.use-case.js";
 import { ListCategoriesUseCase } from "./list-categories.use-case.js";
 

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { describe, expect, it, vi } from "vitest";
-import { NotFoundError } from "../../../../shared/errors";
+import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
 import { CreatePeopleUseCase } from "./create-people.use-case";
 import { DeletePeopleUseCase } from "./delete-people.use-case";
 import { GetPeopleUseCase } from "./get-people.use-case";
