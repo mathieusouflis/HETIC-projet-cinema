@@ -1,11 +1,9 @@
 // @ts-nocheck
 import { describe, expect, it, vi } from "vitest";
-import {
-  ConflictError,
-  NotFoundError,
-  ServerError,
-  UnauthorizedError,
-} from "../../../../shared/errors";
+import { ConflictError } from "../../../../shared/errors/conflict-error.js";
+import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
+import { ServerError } from "../../../../shared/errors/server-error.js";
+import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error.js";
 import { AddWatchlistContentUseCase } from "./add-watchlist-content.use-case";
 import { DeleteWatchlistByIdUseCase } from "./delete-watchlist.use-case";
 import { DeleteWatchlistByContentIdUseCase } from "./delete-watchlist-by-content.use-case";

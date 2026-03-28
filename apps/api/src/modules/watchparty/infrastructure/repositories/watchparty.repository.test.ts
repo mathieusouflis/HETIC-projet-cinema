@@ -99,7 +99,7 @@ describe("WatchpartyRepository", () => {
   it("update/delete et not found branches", async () => {
     const repo = new WatchpartyRepository();
     updateReturning.mockResolvedValueOnce([row]);
-    const updated = await repo.update("w1", { title: "x" });
+    const updated = await repo.update("w1", { name: "x" });
     expect(updated.id).toBe("w1");
 
     deleteReturning.mockResolvedValueOnce([row]);

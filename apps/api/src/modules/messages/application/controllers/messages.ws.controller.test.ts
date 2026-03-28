@@ -1,3 +1,4 @@
+import type { Socket } from "socket.io";
 import { describe, expect, it, vi } from "vitest";
 import { MessageWSController } from "./messages.ws.controller.js";
 
@@ -5,7 +6,7 @@ describe("MessageWSController", () => {
   it("handleJoinConversation emits joined event", async () => {
     const sendMessageUseCase = { execute: vi.fn() };
     const controller = new MessageWSController(sendMessageUseCase as never);
-    const socket = { emit: vi.fn(), join: vi.fn() } as never;
+    const socket = { emit: vi.fn(), join: vi.fn() } as unknown as Socket;
 
     await controller.handleJoinConversation(socket, { conversationId: "c1" });
 
@@ -49,7 +50,7 @@ describe("MessageWSController", () => {
     const emit = vi.fn();
     const socket = {
       to: vi.fn(() => ({ emit })),
-    } as never;
+    } as unknown as Socket;
     vi.spyOn(controller as any, "getSocketUser").mockReturnValue({
       userId: "u1",
       email: "john@doe.com",
