@@ -5,6 +5,7 @@ export default defineConfig({
     globals: true,
     environment: "node",
     include: ["**/*.{test,spec}.{ts,tsx,js,jsx}"],
+    exclude: ["**/node_modules/**", "**/dist/**", "**/test/__fixtures__/**"],
     coverage: {
       provider: "v8",
       reporter: ["text"],
@@ -12,6 +13,8 @@ export default defineConfig({
       include: ["src/**/*.ts"],
       exclude: [
         "**/node_modules/**",
+        "**/dist/**",
+        "**/test/__fixtures__/**",
         "**/*.test.ts",
         "**/*.spec.ts",
         "**/*.mock.ts",
@@ -39,6 +42,8 @@ export default defineConfig({
         "src/shared/infrastructure/base/modules/hybrid-module.ts",
         "src/shared/infrastructure/base/modules/rest-module.ts",
         "src/shared/infrastructure/base/modules/web-socket-module.ts",
+        "src/shared/infrastructure/documentation/**",
+        "src/shared/infrastructure/routes/asyncapi.routes.ts",
       ],
     },
   },
