@@ -436,7 +436,7 @@ export abstract class BaseCompositeRepository<
             dbId: string;
           })[] = cast
             .map((credit) => {
-              const dbId = castCache.get(credit.cast_id);
+              const dbId = castCache.get(credit.id);
               if (!dbId) {
                 return undefined;
               }
@@ -626,13 +626,13 @@ export abstract class BaseCompositeRepository<
   }
 
   private async ensureCastsExist(casts: TMDBPeople[]): Promise<void> {
-    const uncachedCasts = casts.filter((cast) => !castCache.has(cast.cast_id));
+    const uncachedCasts = casts.filter((cast) => !castCache.has(cast.id));
 
     if (uncachedCasts.length === 0) {
       return;
     }
 
-    const castsId = uncachedCasts.map((cast) => cast.cast_id);
+    const castsId = uncachedCasts.map((cast) => cast.id);
     const existingCasts = await this.peoplesRepository.getByTMDBIds(castsId);
 
     for (const cast of existingCasts) {
@@ -649,7 +649,7 @@ export abstract class BaseCompositeRepository<
     );
 
     const missingCasts = uncachedCasts.filter(
-      (cast) => !existingTmdbIds.has(cast.cast_id)
+      (cast) => !existingTmdbIds.has(cast.id)
     );
 
     if (missingCasts.length === 0) {
@@ -660,19 +660,19 @@ export abstract class BaseCompositeRepository<
     let createdCasts = 0;
 
     for (const cast of missingCasts) {
-      if (castCache.has(cast.cast_id)) {
+      if (castCache.has(cast.id)) {
         continue;
       }
 
       try {
-        // const slug = CacheManager.generateSlug(cast.cast_id);
+        // const slug = CacheManager.generateSlug(cast.id);
 
         const newCast = await this.peoplesRepository.create({
           name: cast.original_name,
-          tmdbId: cast.cast_id,
+          tmdbId: cast.id,
         });
 
-        castCache.set(cast.cast_id, newCast.toJSON().id);
+        castCache.set(cast.id, newCast.toJSON().id);
         createdCasts++;
       } catch (error) {
         logger.error(
