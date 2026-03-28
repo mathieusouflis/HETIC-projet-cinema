@@ -204,7 +204,9 @@ function ResultCard({
       ? new Date(content.releaseDate).getFullYear()
       : null);
 
-  const actors = content.contentCredits?.slice(0, 2) ?? [];
+  const allActors = content.contentCredits ?? [];
+  const visibleActors = allActors.slice(0, 3);
+  const extraActors = allActors.slice(3);
   const country = content.contentCredits?.[0]?.nationality;
   const categories = content.contentCategories ?? [];
   const visibleCategories = categories.slice(0, 3);
@@ -273,11 +275,11 @@ function ResultCard({
           </span>
         )}
 
-        {actors.length > 0 && (
+        {visibleActors.length > 0 && (
           <div className="hidden lg:flex flex-col gap-1 mt-1">
             <p className="text-xs font-medium text-muted-foreground">Actors</p>
-            <div className="flex gap-3 flex-wrap">
-              {actors.map((actor) => (
+            <div className="flex gap-3 flex-wrap items-center">
+              {visibleActors.map((actor) => (
                 <span
                   key={actor.id}
                   className="flex items-center gap-1.5 text-sm text-muted-foreground"
@@ -294,6 +296,28 @@ function ResultCard({
                   {actor.name} ↘
                 </span>
               ))}
+              {extraActors.length > 0 && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Badge
+                        variant="outline"
+                        size="sm"
+                        className="cursor-default"
+                      >
+                        +{extraActors.length}
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <div className="flex flex-col gap-0.5">
+                        {extraActors.map((a) => (
+                          <span key={a.id}>{a.name}</span>
+                        ))}
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
             </div>
           </div>
         )}
