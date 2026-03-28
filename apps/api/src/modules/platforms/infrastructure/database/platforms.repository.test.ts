@@ -91,7 +91,7 @@ describe("PlatformsRepository", () => {
       name: "Netflix",
       slug: "netflix",
     } as never);
-    expect(p.id).toBe("pl1");
+    expect(p.toJSON().id).toBe("pl1");
   });
 
   it("create leve ServerError si insert vide", async () => {
@@ -107,7 +107,7 @@ describe("PlatformsRepository", () => {
     const repo = new PlatformsRepository();
     const list = await repo.list();
     expect(list).toHaveLength(1);
-    expect(list[0]?.name).toBe("Netflix");
+    expect(list[0]?.toJSON().name).toBe("Netflix");
   });
 
   it("list avec withContent attache les contenus", async () => {
@@ -130,7 +130,7 @@ describe("PlatformsRepository", () => {
     });
     const repo = new PlatformsRepository();
     const p = await repo.getById("pl1");
-    expect(p.id).toBe("pl1");
+    expect(p.toJSON().id).toBe("pl1");
   });
 
   it("getById leve si introuvable", async () => {
@@ -147,7 +147,7 @@ describe("PlatformsRepository", () => {
     updateReturning.mockResolvedValueOnce([{ ...platformRow, name: "NF" }]);
     const repo = new PlatformsRepository();
     const p = await repo.update("pl1", { name: "NF" });
-    expect(p.name).toBe("NF");
+    expect(p.toJSON().name).toBe("NF");
   });
 
   it("update leve si aucune ligne", async () => {
@@ -171,6 +171,6 @@ describe("PlatformsRepository", () => {
     const repo = new PlatformsRepository();
     const list = await repo.findByTmdbIds([8]);
     expect(list).toHaveLength(1);
-    expect(list[0]?.tmdbId).toBe(8);
+    expect(list[0]?.toJSON().tmdbId).toBe(8);
   });
 });
