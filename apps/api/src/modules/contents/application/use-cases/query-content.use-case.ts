@@ -32,7 +32,8 @@ export class QueryContentUseCase {
       {
         page,
         limit,
-      }
+      },
+      query.averageRating
     );
 
     const total = contents.total;

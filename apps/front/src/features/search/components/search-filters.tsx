@@ -155,7 +155,7 @@ export function SearchFilters({ values, onApply }: SearchFiltersProps) {
                 Min rating
               </span>
               <div className="flex gap-1 flex-wrap">
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((r) => {
+                {[1, 2, 3, 4, 5].map((r) => {
                   const active =
                     draft.minRating !== undefined && r <= draft.minRating;
                   return (

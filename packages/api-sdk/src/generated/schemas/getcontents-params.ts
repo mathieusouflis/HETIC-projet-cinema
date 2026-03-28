@@ -20,9 +20,10 @@ export type GETContentsParams = {
   year?: number;
   /**
    * @minimum 0
-   * @maximum 10
+   * @maximum 5
+   * @nullable
    */
-  averageRating?: number;
+  averageRating?: number | null;
   categories?: string[];
   withCategory?: GETContentsWithCategory;
   withPlatform?: GETContentsWithPlatform;

@@ -43,6 +43,7 @@ export default function SearchPage() {
     page,
     year,
     categories,
+    averageRating: minRating,
   });
 
   const { data: actorsData, isLoading: isActorsLoading } =

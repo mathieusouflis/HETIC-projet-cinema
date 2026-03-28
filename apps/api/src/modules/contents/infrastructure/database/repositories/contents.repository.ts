@@ -132,7 +132,8 @@ export class ContentsRepository implements IContentRepository {
     withCast?: boolean,
     withSeason?: boolean,
     withEpisode?: boolean,
-    options?: PagePaginationQuery
+    options?: PagePaginationQuery,
+    minRating?: number
   ): Promise<{ data: Content[]; total: number }> {
     try {
       // If type is specified, delegate to the appropriate repository
@@ -147,6 +148,12 @@ export class ContentsRepository implements IContentRepository {
           withCast,
           options
         );
+        if (minRating !== undefined) {
+          return {
+            data: result.data.filter((c) => c.averageRating >= minRating),
+            total: result.total,
+          };
+        }
         return result;
       }
 
@@ -162,6 +169,12 @@ export class ContentsRepository implements IContentRepository {
           withEpisode,
           options
         );
+        if (minRating !== undefined) {
+          return {
+            data: result.data.filter((c) => c.averageRating >= minRating),
+            total: result.total,
+          };
+        }
         return result;
       }
 
@@ -189,8 +202,13 @@ export class ContentsRepository implements IContentRepository {
 
       // When no type filter, query database directly for proper pagination
       // This gives us all movies AND series combined from the local database
+      const combined = [...movies.data, ...series.data];
+      const filtered =
+        minRating === undefined
+          ? combined
+          : combined.filter((c) => c.averageRating >= minRating);
       return {
-        data: [...movies.data, ...series.data],
+        data: filtered,
         total: movies.total + series.total,
       };
     } catch (error) {
