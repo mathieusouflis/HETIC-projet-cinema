@@ -60,7 +60,9 @@ describe("BaseTMDBRepository", () => {
   });
 
   it("getTrailerUrl retourne null si pas de bande annonce", async () => {
-    requestMock.mockResolvedValueOnce({ results: [] } as GetTrailersResult);
+    requestMock.mockResolvedValueOnce({
+      results: [],
+    } as unknown as GetTrailersResult);
     const repo = new TestTMDBRepository();
     await expect(
       (
