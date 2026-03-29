@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createMockedUserRepository } from "./user.repository.mock.";
+import { createMockedUserRepository } from "./user.repository.mock";
 
 describe("createMockedUserRepository", () => {
   it("returns default mocked behaviors", async () => {

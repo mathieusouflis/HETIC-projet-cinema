@@ -14,7 +14,10 @@ vi.mock("@packages/api-sdk", () => ({
 }));
 
 vi.mock("@tanstack/react-query", () => ({
-  useQuery: vi.fn((config) => config),
+  useQuery: vi.fn((config) => ({
+    ...config,
+    isEnabled: config.enabled ?? true,
+  })),
 }));
 
 const setUserMock = vi.fn();
@@ -82,7 +85,7 @@ describe("authService", () => {
 
     const config = queryAuthService.verifyEmail("tok", onSuccess);
 
-    expect(config.enabled).toBe(true);
+    expect(config.isEnabled).toBe(true);
     const result = await config.queryFn();
     expect(result).toEqual({ data: { user: { id: "u2" } } });
     expect(setUserMock).toHaveBeenCalledWith({ id: "u2" });

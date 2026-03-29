@@ -1,9 +1,9 @@
 import crypto from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { PasswordService } from "../../../../shared/services/password/password-service";
-import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock.";
+import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock";
 import { PasswordResetToken } from "../../domain/entities/password-reset-token.entity";
-import { createMockedPasswordResetTokenRepository } from "../../domain/interfaces/password-reset-token.repository.mock.";
+import { createMockedPasswordResetTokenRepository } from "../../domain/interfaces/password-reset-token.repository.mock";
 import { ResetPasswordUseCase } from "./reset-password.usecase";
 
 function hashToken(raw: string): string {

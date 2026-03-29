@@ -5,7 +5,7 @@ import {
   createMockedFriendshipsRepository,
   mockAcceptedFriendship,
 } from "../../../friendships/domain/interfaces/friendships.repository.mock";
-import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock.";
+import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock";
 import {
   createMockedConversationRepository,
   MOCK_CONV_USER_A_ID,

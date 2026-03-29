@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { IEmailService } from "../../../../shared/services/email/i-email-service";
 import { PasswordService } from "../../../../shared/services/password/password-service";
-import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock.";
+import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock";
 import type { IEmailVerificationTokenRepository } from "../../domain/interfaces/IEmailVerificationTokenRepository";
 import { RegisterUseCase } from "./register.usecase";
 

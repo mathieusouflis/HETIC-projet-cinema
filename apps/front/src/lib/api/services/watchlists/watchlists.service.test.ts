@@ -1,5 +1,37 @@
 // @ts-nocheck
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { vi } from "vitest";
+
+const { invalidateQueriesMock, useQueryMock, useMutationMock } = vi.hoisted(
+  () => {
+    const invalidateQueriesMock = vi.fn();
+
+    const useQueryMock = vi.fn((config: any) => ({
+      ...config,
+      isEnabled: config.enabled ?? true,
+    }));
+
+    const useMutationMock = vi.fn((config: any) => {
+      const mutate = vi.fn(async (variables?: unknown) => {
+        const result = await config.mutationFn(variables as never);
+        await config.onSuccess?.(
+          result,
+          variables as never,
+          undefined as never
+        );
+        return result;
+      });
+
+      return {
+        ...config,
+        mutate,
+        mutateAsync: mutate,
+        onSuccess: config.onSuccess,
+      };
+    });
+
+    return { invalidateQueriesMock, useQueryMock, useMutationMock };
+  }
+);
 
 vi.mock("@packages/api-sdk", () => ({
   pOSTWatchlist: vi.fn(),
@@ -10,28 +42,6 @@ vi.mock("@packages/api-sdk", () => ({
   dELETEWatchlistContentId: vi.fn(),
   dELETEWatchlistId: vi.fn(),
 }));
-
-const invalidateQueriesMock = vi.fn();
-
-const useQueryMock = vi.fn((config: any) => ({
-  ...config,
-  isEnabled: config.enabled ?? true,
-}));
-
-const useMutationMock = vi.fn((config: any) => {
-  const mutate = vi.fn(async (variables?: unknown) => {
-    const result = await config.mutationFn(variables as never);
-    await config.onSuccess?.(result, variables as never, undefined as never);
-    return result;
-  });
-
-  return {
-    ...config,
-    mutate,
-    mutateAsync: mutate,
-    onSuccess: config.onSuccess,
-  };
-});
 
 vi.mock("@tanstack/react-query", () => ({
   useQuery: useQueryMock,
