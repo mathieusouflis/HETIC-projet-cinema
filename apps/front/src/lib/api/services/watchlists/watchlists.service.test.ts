@@ -12,9 +12,30 @@ vi.mock("@packages/api-sdk", () => ({
 }));
 
 const invalidateQueriesMock = vi.fn();
+
+const useQueryMock = vi.fn((config: any) => ({
+  ...config,
+  isEnabled: config.enabled ?? true,
+}));
+
+const useMutationMock = vi.fn((config: any) => {
+  const mutate = vi.fn(async (variables?: unknown) => {
+    const result = await config.mutationFn(variables as never);
+    await config.onSuccess?.(result, variables as never, undefined as never);
+    return result;
+  });
+
+  return {
+    ...config,
+    mutate,
+    mutateAsync: mutate,
+    onSuccess: config.onSuccess,
+  };
+});
+
 vi.mock("@tanstack/react-query", () => ({
-  useQuery: vi.fn((config) => config),
-  useMutation: vi.fn((config) => config),
+  useQuery: useQueryMock,
+  useMutation: useMutationMock,
   useQueryClient: vi.fn(() => ({
     invalidateQueries: invalidateQueriesMock,
   })),
@@ -81,13 +102,13 @@ describe("watchlistService", () => {
     const deleteContentMutation = queryWatchlistService.deleteContentId();
     const deleteIdMutation = queryWatchlistService.deleteId();
 
-    expect(createMutation.mutationFn).toBeDefined();
-    expect(getQuery.enabled).toBe(true);
-    expect(listQuery.enabled).toBe(true);
-    expect(updateIdMutation.mutationFn).toBeDefined();
-    expect(updateContentMutation.mutationFn).toBeDefined();
-    expect(deleteContentMutation.mutationFn).toBeDefined();
-    expect(deleteIdMutation.mutationFn).toBeDefined();
+    expect(createMutation.mutate).toBeDefined();
+    expect(getQuery.isEnabled).toBe(true);
+    expect(listQuery.isEnabled).toBe(true);
+    expect(updateIdMutation.mutate).toBeDefined();
+    expect(updateContentMutation.mutate).toBeDefined();
+    expect(deleteContentMutation.mutate).toBeDefined();
+    expect(deleteIdMutation.mutate).toBeDefined();
   });
 
   it("executes query mutation functions", async () => {
@@ -104,20 +125,20 @@ describe("watchlistService", () => {
     vi.mocked(sdk.dELETEWatchlistId).mockResolvedValue({} as never);
 
     const createMutation = queryWatchlistService.create();
-    await expect(createMutation.mutationFn({} as never)).resolves.toEqual({
+    await expect(createMutation.mutate({} as never)).resolves.toEqual({
       data: { ok: "created" },
     });
     createMutation.onSuccess?.(undefined, { contentId: "c1" });
 
     const updateIdMutation = queryWatchlistService.updateId("w1", {} as never);
-    await expect(updateIdMutation.mutationFn()).resolves.toEqual({
+    await expect(updateIdMutation.mutate()).resolves.toEqual({
       data: { ok: "updated" },
     });
     updateIdMutation.onSuccess?.();
 
     const updateContentMutation = queryWatchlistService.updateContentId();
     await expect(
-      updateContentMutation.mutationFn({ id: "c1", data: {} as never })
+      updateContentMutation.mutate({ id: "c1", data: {} as never })
     ).resolves.toEqual({ data: { ok: "updated-content" } });
     updateContentMutation.onSuccess?.(undefined, {
       id: "c1",
@@ -126,13 +147,13 @@ describe("watchlistService", () => {
 
     const deleteContentMutation = queryWatchlistService.deleteContentId();
     await expect(
-      deleteContentMutation.mutationFn({ contentId: "c1" })
+      deleteContentMutation.mutate({ contentId: "c1" })
     ).resolves.toBeUndefined();
     deleteContentMutation.onSuccess?.(undefined, { contentId: "c1" });
 
     const deleteIdMutation = queryWatchlistService.deleteId();
     await expect(
-      deleteIdMutation.mutationFn({ id: "w1" })
+      deleteIdMutation.mutate({ id: "w1" })
     ).resolves.toBeUndefined();
     deleteIdMutation.onSuccess?.();
 

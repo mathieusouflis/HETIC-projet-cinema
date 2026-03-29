@@ -1,5 +1,6 @@
-// @ts-nocheck
 import { describe, expect, it } from "vitest";
+import { Category } from "../../../categories/domain/entities/category.entity.js";
+import type { CategoryRow } from "../../../categories/infrastructure/database/schemas/categories.schema.js";
 import { Movie } from "./movie.entity.js";
 
 describe("Movie entity", () => {
@@ -24,6 +25,15 @@ describe("Movie entity", () => {
     updatedAt: "2024-01-02T00:00:00.000Z",
   };
 
+  const categoryRow: CategoryRow = {
+    id: "cat-1",
+    name: "Action",
+    slug: "action",
+    description: null,
+    tmdbId: null,
+    createdAt: "2024-01-01T00:00:00.000Z",
+  };
+
   it("retourne les bons flags de type", () => {
     const movie = new Movie(baseRow);
 
@@ -41,7 +51,8 @@ describe("Movie entity", () => {
 
   it("toJSONWithRelations preserve type=movie", () => {
     const movie = new Movie(baseRow);
-    movie.setRelations("contentCategories", [{ toJSON: () => ({ id: "c1" }) }]);
+    const category = new Category(categoryRow);
+    movie.setRelations("contentCategories", [category]);
 
     const json = movie.toJSONWithRelations();
     expect(json.type).toBe("movie");
