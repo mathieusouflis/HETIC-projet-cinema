@@ -18,7 +18,7 @@ export function ProfileTabs({ stats }: Props) {
     <Tabs defaultValue="dashboard" className="flex flex-col gap-4">
       <div className="-mx-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <TabsList
-          variant="profile"
+          variant="premium"
           className="inline-flex min-w-max sm:min-w-0"
         >
           {["dashboard", "comments", "watchpartys", "lists"].map((tab) => (

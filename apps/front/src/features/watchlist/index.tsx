@@ -45,17 +45,18 @@ export default function WatchlistPage() {
     <div className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6">
       <Tabs defaultValue="all">
         {/* tab pills */}
-        <TabsList
-          variant="premium"
-          className="mb-6 flex h-auto w-full flex-wrap gap-2 justify-start"
-        >
-          {STATUS_TABS.map((tab) => (
-            <TabsTrigger key={tab.value} value={tab.value} className="grow-0">
-              {tab.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-
+        <div className="-mx-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <TabsList
+            variant="premium"
+            className="mb-6 flex h-auto gap-2 justify-start"
+          >
+            {STATUS_TABS.map((tab) => (
+              <TabsTrigger key={tab.value} value={tab.value} className="grow-0">
+                {tab.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </div>
         <TableHeader />
 
         <TabsContent value="all">
