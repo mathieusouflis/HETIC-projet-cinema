@@ -28,7 +28,6 @@ export default function SearchPage() {
   const navigate = useNavigate();
 
   const page = params.page ?? 1;
-  const actorsPage = params.actorsPage ?? 1;
   const title = params.title ?? "";
   const year = params.year;
   const minRating = params.minRating;
@@ -49,7 +48,6 @@ export default function SearchPage() {
   const { data: actorsData, isLoading: isActorsLoading } =
     services.peoples.search({
       query: title || " ",
-      page: actorsPage,
     });
 
   const contents = data?.items ?? [];
@@ -88,13 +86,6 @@ export default function SearchPage() {
     });
   };
 
-  const goToActorsPage = (newPage: number) => {
-    navigate({
-      to: "/search",
-      search: { ...params, actorsPage: newPage },
-    });
-  };
-
   const handleFilters = (values: FilterValues) => {
     navigate({
       to: "/search",
@@ -104,7 +95,6 @@ export default function SearchPage() {
         minRating: values.minRating,
         categories: values.categories,
         page: 1,
-        actorsPage: 1,
       },
     });
   };
@@ -259,9 +249,9 @@ export default function SearchPage() {
                 ))}
                 {actorsTotalPages > 1 && (
                   <SearchPagination
-                    page={actorsPage}
+                    page={page}
                     totalPages={actorsTotalPages}
-                    onPageChange={goToActorsPage}
+                    onPageChange={goToPage}
                   />
                 )}
               </>

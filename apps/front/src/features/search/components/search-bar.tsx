@@ -22,7 +22,6 @@ export function SearchBar({
         ...preservedParams,
         title: value.trim() || undefined,
         page: 1,
-        actorsPage: 1,
       },
     });
   };
@@ -32,7 +31,8 @@ export function SearchBar({
       submit(query);
     }, 500);
     return () => clearTimeout(handler);
-  }, [query, submit]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
 
   return (
     <SearchInput

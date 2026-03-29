@@ -41,7 +41,7 @@ export const SearchProvider = () => {
     setOpen(false);
     navigate({
       to: "/search",
-      search: { title: value.trim() || undefined, page: 1, actorsPage: 1 },
+      search: { title: value.trim() || undefined, page: 1 },
     });
   };
 
