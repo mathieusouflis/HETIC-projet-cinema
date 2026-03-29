@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { describe, expect, it, vi } from "vitest";
 import { ForbiddenError } from "../../../../shared/errors/forbidden-error.js";
 import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
