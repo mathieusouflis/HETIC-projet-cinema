@@ -22,20 +22,31 @@ function findInTree(
   node: unknown,
   predicate: (n: unknown) => boolean
 ): boolean {
-  if (predicate(node)) return true;
-  if (!node || typeof node !== "object") return false;
+  if (predicate(node)) {
+    return true;
+  }
+  if (!node || typeof node !== "object") {
+    return false;
+  }
   const el = node as { props?: { children?: unknown } };
   const children = el.props?.children;
-  if (!children) return false;
-  if (Array.isArray(children))
+  if (!children) {
+    return false;
+  }
+  if (Array.isArray(children)) {
     return children.some((c) => findInTree(c, predicate));
+  }
   return findInTree(children, predicate);
 }
 
 function containsText(node: unknown, text: string): boolean {
   return findInTree(node, (n) => {
-    if (typeof n === "string") return n.includes(text);
-    if (typeof n === "number") return String(n).includes(text);
+    if (typeof n === "string") {
+      return n.includes(text);
+    }
+    if (typeof n === "number") {
+      return String(n).includes(text);
+    }
     return false;
   });
 }
@@ -118,7 +129,9 @@ describe("ConversationItem", () => {
       onClick: vi.fn(),
     });
     const hasBadge = findInTree(el, (n) => {
-      if (!n || typeof n !== "object") return false;
+      if (!n || typeof n !== "object") {
+        return false;
+      }
       const el2 = n as { props?: { className?: string; children?: unknown } };
       return (
         !!el2.props?.className?.includes("rounded-full") &&

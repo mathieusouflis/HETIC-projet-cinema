@@ -391,8 +391,12 @@ export class PaginationService {
    * @returns True if the page is valid
    */
   isValidPage(page: number, limit: number, total: number): boolean {
-    if (page < 1) return false;
-    if (total === 0) return page === 1;
+    if (page < 1) {
+      return false;
+    }
+    if (total === 0) {
+      return page === 1;
+    }
 
     const totalPages = Math.ceil(total / limit);
     return page <= totalPages;

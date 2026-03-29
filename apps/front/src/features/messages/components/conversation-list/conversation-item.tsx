@@ -3,7 +3,9 @@ import { cn } from "@/lib/utils";
 import type { Conversation } from "../../types";
 
 function formatTimestamp(dateStr: string | null): string {
-  if (!dateStr) return "";
+  if (!dateStr) {
+    return "";
+  }
   const date = new Date(dateStr);
   const now = new Date();
   const diff = now.getTime() - date.getTime();

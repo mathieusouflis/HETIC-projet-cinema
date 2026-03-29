@@ -18,7 +18,9 @@ export class RatingRepository implements IRatingRepository {
         .returning();
 
       const row = result[0];
-      if (!row) throw new ServerError("Failed to upsert rating");
+      if (!row) {
+        throw new ServerError("Failed to upsert rating");
+      }
 
       await this.syncContentRating(contentId);
 
@@ -31,7 +33,9 @@ export class RatingRepository implements IRatingRepository {
         updatedAt: row.updatedAt ?? new Date().toISOString(),
       };
     } catch (error) {
-      if (error instanceof ServerError) throw error;
+      if (error instanceof ServerError) {
+        throw error;
+      }
       throw new ServerError(`Unexpected error upserting rating: ${error}`);
     }
   }
@@ -43,7 +47,9 @@ export class RatingRepository implements IRatingRepository {
       .where(and(eq(ratings.userId, userId), eq(ratings.contentId, contentId)));
 
     const row = result[0];
-    if (!row) return null;
+    if (!row) {
+      return null;
+    }
     return { rating: Number(row.rating) };
   }
 
@@ -57,7 +63,9 @@ export class RatingRepository implements IRatingRepository {
       .where(eq(ratings.contentId, contentId));
 
     const row = result[0];
-    if (!row) return { average: null, count: 0 };
+    if (!row) {
+      return { average: null, count: 0 };
+    }
 
     return {
       average: row.average == null ? null : Number(row.average),

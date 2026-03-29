@@ -6,7 +6,9 @@ export function WatchlistSection({
 }: {
   items: GETWatchlist200DataItemsItem[];
 }) {
-  if (items.length === 0) return null;
+  if (items.length === 0) {
+    return null;
+  }
   return (
     <div className="flex flex-col gap-2">
       {items.map((item, i) => (

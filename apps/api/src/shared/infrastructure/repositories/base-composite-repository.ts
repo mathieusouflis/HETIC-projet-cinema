@@ -85,7 +85,9 @@ export abstract class BaseCompositeRepository<
   ): Promise<TEntity | null> {
     try {
       const entity = await this.drizzleRepository.getById(id, options);
-      if (entity) return entity;
+      if (entity) {
+        return entity;
+      }
       return null;
     } catch (error) {
       logger.error(`Error getting ${this.entityType} by ID ${id}: ${error}`);

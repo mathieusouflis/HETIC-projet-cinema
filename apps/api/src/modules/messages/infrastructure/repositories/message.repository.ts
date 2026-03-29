@@ -82,7 +82,9 @@ export class MessageRepository implements IMessageRepository {
         .returning();
 
       const row = rows[0];
-      if (!row) throw new ServerError("Failed to create message");
+      if (!row) {
+        throw new ServerError("Failed to create message");
+      }
       return new Message(row);
     } catch (error) {
       throw new ServerError(`Failed to create message: ${error}`);
@@ -98,10 +100,14 @@ export class MessageRepository implements IMessageRepository {
         .returning();
 
       const row = rows[0];
-      if (!row) throw new NotFoundError("Message not found");
+      if (!row) {
+        throw new NotFoundError("Message not found");
+      }
       return new Message(row);
     } catch (error) {
-      if (error instanceof NotFoundError) throw error;
+      if (error instanceof NotFoundError) {
+        throw error;
+      }
       throw new ServerError(`Failed to update message: ${error}`);
     }
   }
@@ -115,10 +121,14 @@ export class MessageRepository implements IMessageRepository {
         .returning();
 
       const row = rows[0];
-      if (!row) throw new NotFoundError("Message not found");
+      if (!row) {
+        throw new NotFoundError("Message not found");
+      }
       return new Message(row);
     } catch (error) {
-      if (error instanceof NotFoundError) throw error;
+      if (error instanceof NotFoundError) {
+        throw error;
+      }
       throw new ServerError(`Failed to delete message: ${error}`);
     }
   }

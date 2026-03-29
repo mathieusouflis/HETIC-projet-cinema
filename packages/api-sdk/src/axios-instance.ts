@@ -7,7 +7,9 @@ export const axiosInstance = axios.create({
   paramsSerializer: (params) => {
     const parts: string[] = [];
     for (const [key, value] of Object.entries(params)) {
-      if (value === undefined || value === null) continue;
+      if (value === undefined || value === null) {
+        continue;
+      }
       if (Array.isArray(value)) {
         parts.push(`${key}=[${value.join(",")}]`);
       } else {

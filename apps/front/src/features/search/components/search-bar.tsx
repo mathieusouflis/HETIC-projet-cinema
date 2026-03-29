@@ -32,7 +32,7 @@ export function SearchBar({
       submit(query);
     }, 500);
     return () => clearTimeout(handler);
-  }, [query]);
+  }, [query, submit]);
 
   return (
     <SearchInput

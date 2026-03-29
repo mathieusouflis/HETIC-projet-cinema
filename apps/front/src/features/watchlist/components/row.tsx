@@ -23,7 +23,9 @@ export function WatchlistRow({
     return <WatchlistRowSkeleton />;
   }
 
-  if (!content) return null;
+  if (!content) {
+    return null;
+  }
 
   const categories = content.contentCategories
     ?.slice(0, 2)

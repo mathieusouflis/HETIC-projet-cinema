@@ -37,8 +37,12 @@ export function ConversationList({
   const { data: conversations, isLoading } = queryConversationService.list();
 
   const filtered = (conversations ?? []).filter((c: Conversation) => {
-    if (filter === "unread") return c.unreadCount > 0;
-    if (filter === "groups") return false; // disabled in MVP
+    if (filter === "unread") {
+      return c.unreadCount > 0;
+    }
+    if (filter === "groups") {
+      return false; // disabled in MVP
+    }
     return true;
   });
 

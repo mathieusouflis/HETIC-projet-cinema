@@ -35,7 +35,9 @@ const fetchMessages = async (
   limit = 30
 ): Promise<MessagePage> => {
   const params: Record<string, string | number> = { limit };
-  if (cursor) params.cursor = cursor;
+  if (cursor) {
+    params.cursor = cursor;
+  }
   const response = await gETMessagesConversationsConversationId(
     conversationId,
     params
@@ -105,7 +107,9 @@ export const queryMessageService = {
           pages: MessagePage[];
           pageParams: unknown[];
         }>(key, (old) => {
-          if (!old) return old;
+          if (!old) {
+            return old;
+          }
           return {
             ...old,
             pages: old.pages.map((page) => ({
@@ -130,7 +134,9 @@ export const queryMessageService = {
           pages: MessagePage[];
           pageParams: unknown[];
         }>(key, (old) => {
-          if (!old) return old;
+          if (!old) {
+            return old;
+          }
           return {
             ...old,
             pages: old.pages.map((page) => ({

@@ -12,7 +12,9 @@ export const useTypingStore = create<TypingState>((set) => ({
   addTypingUser: (conversationId, userId) =>
     set((state) => {
       const existing = state.typingByConversation[conversationId] ?? [];
-      if (existing.includes(userId)) return state;
+      if (existing.includes(userId)) {
+        return state;
+      }
       return {
         typingByConversation: {
           ...state.typingByConversation,
