@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { describe, expect, it } from "vitest";
 import { Friendship } from "./friendship.entity.js";
 
@@ -7,15 +6,21 @@ describe("Friendship entity", () => {
     id: "f1",
     userId: "u1",
     friendId: "u2",
-    status: "pending",
+    status: "pending" as const,
     createdAt: "2024-01-01T00:00:00.000Z",
     updatedAt: "2024-01-02T00:00:00.000Z",
   };
 
   it("detecte correctement les etats", () => {
     const pending = new Friendship(baseRow);
-    const accepted = new Friendship({ ...baseRow, status: "accepted" });
-    const rejected = new Friendship({ ...baseRow, status: "rejected" });
+    const accepted = new Friendship({
+      ...baseRow,
+      status: "accepted" as const,
+    });
+    const rejected = new Friendship({
+      ...baseRow,
+      status: "rejected" as const,
+    });
 
     expect(pending.isPending()).toBe(true);
     expect(accepted.isAccepted()).toBe(true);

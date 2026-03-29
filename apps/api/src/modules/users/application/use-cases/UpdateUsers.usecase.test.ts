@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { ValidationError } from "../../../../shared/errors/validation-error";
 import { EmailAlreadyExistsError } from "../../domain/errors/EmailAlreadyExistsError";
 import { UsernameAlreadyExistsError } from "../../domain/errors/UsernameAlreadyExistsError";
-import { createMockedUserRepository } from "../../domain/interfaces/user.repository.mock.";
+import { createMockedUserRepository } from "../../domain/interfaces/user.repository.mock";
 import { UpdateUserUseCase } from "./UpdateUser.usecase";
 
 describe("UpdateUserUseCase", () => {

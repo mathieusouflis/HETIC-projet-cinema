@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { ConflictError } from "../../../../shared/errors/conflict-error";
 import { ForbiddenError } from "../../../../shared/errors/forbidden-error";
 import { NotFoundError } from "../../../../shared/errors/not-found-error";
-import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock.";
+import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock";
 import {
   createMockedFriendshipsRepository,
   MOCK_USER_A_ID,

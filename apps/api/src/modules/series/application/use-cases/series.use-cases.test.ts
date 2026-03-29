@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { describe, expect, it, vi } from "vitest";
 import { NotFoundError } from "../../../../shared/errors/not-found-error.js";
 import { GetSerieByIdUseCase } from "./get-serie-by-id.use-case.js";

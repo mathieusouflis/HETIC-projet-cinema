@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { describe, expect, it, vi } from "vitest";
 import { Content } from "./content.entity.js";
 
@@ -105,7 +104,7 @@ describe("Content entity", () => {
 
   it("serialize avec relations", () => {
     const content = new Content(baseRow);
-    const category = { toJSON: vi.fn(() => ({ id: "cat1" })) };
+    const category = { toJSON: vi.fn(() => ({ id: "cat1" })) } as never;
     content.setRelations("contentCategories", [category]);
 
     const json = content.toJSON();

@@ -25,7 +25,7 @@ export function createMockedUserRepository(
     updatedAt: new Date().toISOString(),
   });
   const mockUser2: User = new User({
-    id: "52dfbd95-b2ba-4b76-8aa5-9fe818bda2a2",
+    id: "63ecce06-c3cb-5c87-9bb6-0fe929ceb3b3",
     email: "test2@example.com",
     username: "john_doe",
     passwordHash:
@@ -44,9 +44,9 @@ export function createMockedUserRepository(
     updatedAt: new Date().toISOString(),
   });
   const mockUser3: User = new User({
-    id: "52dfbd95-b2ba-4b76-8aa5-9fe818bda2a2",
+    id: "74fddf17-d4dc-6d98-0cc7-1gf030dfc4c4",
     email: "test3@example.com",
-    username: "john_doe",
+    username: "jane_doe",
     passwordHash: null,
     avatarUrl: "https://example.com/avatar.jpg",
     bio: "I'm a test user",

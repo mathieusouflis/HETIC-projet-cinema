@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { IEmailService } from "../../../../shared/services/email/i-email-service";
-import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock.";
-import { createMockedPasswordResetTokenRepository } from "../../domain/interfaces/password-reset-token.repository.mock.";
+import { createMockedUserRepository } from "../../../users/domain/interfaces/user.repository.mock";
+import { createMockedPasswordResetTokenRepository } from "../../domain/interfaces/password-reset-token.repository.mock";
 import { ForgotPasswordUseCase } from "./forgot-password.usecase";
 
 const mockEmailService: IEmailService = {
