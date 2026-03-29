@@ -12,7 +12,9 @@ function AuthHydrator() {
   const { user, setUser } = useAuth();
 
   useEffect(() => {
-    if (user) return;
+    if (user) {
+      return;
+    }
     gETAuthMe()
       .then(async (meRes) => {
         const userId = meRes.data.data.userId;
@@ -22,7 +24,7 @@ function AuthHydrator() {
       .catch(() => {
         // No valid session — leave user as null, router will redirect to login
       });
-  }, []);
+  }, [setUser, user]);
 
   return null;
 }

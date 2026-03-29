@@ -7,7 +7,9 @@ export class LogoutUseCase {
   ) {}
 
   async execute(refreshToken: string | undefined): Promise<void> {
-    if (!refreshToken) return;
+    if (!refreshToken) {
+      return;
+    }
 
     const tokenHash = hashToken(refreshToken);
     await this.refreshTokenRepository.revoke(tokenHash);

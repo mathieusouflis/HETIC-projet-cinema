@@ -25,7 +25,9 @@ export function MessageInput({
 
   const handleSend = () => {
     const trimmed = value.trim();
-    if (!trimmed) return;
+    if (!trimmed) {
+      return;
+    }
     onSend(trimmed);
     setValue("");
     if (textareaRef.current) {

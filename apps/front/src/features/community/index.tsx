@@ -65,7 +65,9 @@ function FriendRow({
     });
   };
 
-  if (isLoading || !user) return <RowSkeleton />;
+  if (isLoading || !user) {
+    return <RowSkeleton />;
+  }
 
   return (
     <div className="flex items-center gap-3 px-4 py-3 hover:bg-muted/50">
@@ -115,7 +117,9 @@ function RequestRow({
   const respond = queryFriendshipService.respond();
   const remove = queryFriendshipService.remove();
 
-  if (isLoading || !user) return <RowSkeleton />;
+  if (isLoading || !user) {
+    return <RowSkeleton />;
+  }
 
   return (
     <div className="flex items-center gap-3 px-4 py-3 hover:bg-muted/50">

@@ -41,16 +41,18 @@ export function MessageList({
   const prevScrollHeight = useRef(0);
 
   const allMessages: Message[] = pages.flatMap((p) => p.items);
-  const pageCount = pages.length;
-  const lastMessageId = allMessages[allMessages.length - 1]?.id;
 
   useLayoutEffect(() => {
     const el = scrollRef.current;
-    if (!el) return;
+    if (!el) {
+      return;
+    }
 
     switch (scrollMode.current) {
       case "initial": {
-        if (allMessages.length === 0) return;
+        if (allMessages.length === 0) {
+          return;
+        }
         el.scrollTop = el.scrollHeight;
         scrollMode.current = "idle";
         break;
@@ -76,11 +78,13 @@ export function MessageList({
         break;
       }
     }
-  }, [pageCount, lastMessageId, allMessages.length]);
+  }, [allMessages.length]);
 
   useLayoutEffect(() => {
     const sentinel = sentinelRef.current;
-    if (!sentinel || !hasNextPage) return;
+    if (!sentinel || !hasNextPage) {
+      return;
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {

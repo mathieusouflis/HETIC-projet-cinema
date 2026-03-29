@@ -1,7 +1,9 @@
 import { Star } from "lucide-react";
 
 export function StarRating({ rating }: { rating: number | null }) {
-  if (rating == null) return null;
+  if (rating == null) {
+    return null;
+  }
   const filled = Math.round(rating);
   return (
     <div className="flex items-center gap-0.5">

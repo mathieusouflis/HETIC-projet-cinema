@@ -66,7 +66,9 @@ export class ConversationsController extends BaseController {
   @ApiResponse(401, "Not authenticated", unauthorizedErrorResponseSchema)
   getConversations = asyncHandler(async (req, res) => {
     const userId = req.user?.userId;
-    if (!userId) throw new UnauthorizedError("Not authenticated");
+    if (!userId) {
+      throw new UnauthorizedError("Not authenticated");
+    }
 
     const conversations = await this.getConversationsUseCase.execute(userId);
 
@@ -95,7 +97,9 @@ export class ConversationsController extends BaseController {
   @ApiResponse(404, "User not found", notFoundErrorResponseSchema)
   createConversation = asyncHandler(async (req, res) => {
     const callerId = req.user?.userId;
-    if (!callerId) throw new UnauthorizedError("Not authenticated");
+    if (!callerId) {
+      throw new UnauthorizedError("Not authenticated");
+    }
 
     const { friendId } = req.body as CreateConversationBody;
 
@@ -128,7 +132,9 @@ export class ConversationsController extends BaseController {
   @ApiResponse(404, "Conversation not found", notFoundErrorResponseSchema)
   getConversation = asyncHandler(async (req, res) => {
     const userId = req.user?.userId;
-    if (!userId) throw new UnauthorizedError("Not authenticated");
+    if (!userId) {
+      throw new UnauthorizedError("Not authenticated");
+    }
 
     const { id } = req.params as ConversationParams;
 
@@ -154,7 +160,9 @@ export class ConversationsController extends BaseController {
   @ApiResponse(404, "Conversation not found", notFoundErrorResponseSchema)
   markAsRead = asyncHandler(async (req, res) => {
     const userId = req.user?.userId;
-    if (!userId) throw new UnauthorizedError("Not authenticated");
+    if (!userId) {
+      throw new UnauthorizedError("Not authenticated");
+    }
 
     const { id } = req.params as ConversationParams;
 

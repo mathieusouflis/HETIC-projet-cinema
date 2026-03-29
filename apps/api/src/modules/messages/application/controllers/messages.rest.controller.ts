@@ -84,7 +84,9 @@ export class MessagesRestController extends BaseController {
   @ApiResponse(403, "Not a participant", forbiddenErrorResponseSchema)
   getMessages = asyncHandler(async (req, res) => {
     const userId = req.user?.userId;
-    if (!userId) throw new UnauthorizedError("Not authenticated");
+    if (!userId) {
+      throw new UnauthorizedError("Not authenticated");
+    }
 
     const { conversationId } = req.params as ConversationIdParams;
     const { cursor, limit } = req.query as GetMessagesQuery;
@@ -124,7 +126,9 @@ export class MessagesRestController extends BaseController {
   @ApiResponse(403, "Not a participant", forbiddenErrorResponseSchema)
   sendMessage = asyncHandler(async (req, res) => {
     const userId = req.user?.userId;
-    if (!userId) throw new UnauthorizedError("Not authenticated");
+    if (!userId) {
+      throw new UnauthorizedError("Not authenticated");
+    }
 
     const { conversationId } = req.params as ConversationIdParams;
     const { content } = req.body as SendMessageBody;
@@ -164,7 +168,9 @@ export class MessagesRestController extends BaseController {
   @ApiResponse(404, "Message not found", notFoundErrorResponseSchema)
   editMessage = asyncHandler(async (req, res) => {
     const userId = req.user?.userId;
-    if (!userId) throw new UnauthorizedError("Not authenticated");
+    if (!userId) {
+      throw new UnauthorizedError("Not authenticated");
+    }
 
     const { messageId } = req.params as MessageIdParams;
     const { content } = req.body as EditMessageBody;
@@ -199,7 +205,9 @@ export class MessagesRestController extends BaseController {
   @ApiResponse(404, "Message not found", notFoundErrorResponseSchema)
   deleteMessage = asyncHandler(async (req, res) => {
     const userId = req.user?.userId;
-    if (!userId) throw new UnauthorizedError("Not authenticated");
+    if (!userId) {
+      throw new UnauthorizedError("Not authenticated");
+    }
 
     const { messageId } = req.params as MessageIdParams;
 

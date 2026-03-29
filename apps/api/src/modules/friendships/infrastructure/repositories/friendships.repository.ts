@@ -17,7 +17,9 @@ export class FriendshipsRepository implements IFriendshipsRepository {
         .returning();
 
       const row = rows[0];
-      if (!row) throw new ServerError("Failed to create friendship");
+      if (!row) {
+        throw new ServerError("Failed to create friendship");
+      }
 
       return new Friendship(row);
     } catch (error) {
@@ -37,7 +39,9 @@ export class FriendshipsRepository implements IFriendshipsRepository {
         .returning();
 
       const row = rows[0];
-      if (!row) throw new NotFoundError("Friendship not found");
+      if (!row) {
+        throw new NotFoundError("Friendship not found");
+      }
 
       return new Friendship(row);
     } catch (error) {

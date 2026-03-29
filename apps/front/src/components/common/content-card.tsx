@@ -33,9 +33,12 @@ export const ContentCard = ({
 
   const { data, isLoading } = services.watchlist.list();
 
-  if (variant === "thumbnail")
+  if (variant === "thumbnail") {
     return <ThumbnailCard content={content} className={className} />;
-  if (variant === "hero") return <HeroCard content={content} />;
+  }
+  if (variant === "hero") {
+    return <HeroCard content={content} />;
+  }
 
   if (isLoading) {
     return null;
