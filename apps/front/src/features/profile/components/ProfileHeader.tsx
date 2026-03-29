@@ -44,10 +44,6 @@ export function ProfileHeader({ profile }: Props) {
       </div>
 
       <div className="flex justify-end gap-2">
-        <Button variant="outline" size="sm">
-          Share
-        </Button>
-
         <Button size="sm" onClick={() => navigate({ to: routes.settings })}>
           Edit Profile
         </Button>
