@@ -74,6 +74,63 @@ const baseConversation: Conversation = {
   unreadCount: 0,
 };
 
+const baseLastMessage = baseConversation.lastMessage!;
+
+function renderConversationItem({
+  conversation = baseConversation,
+  typingUsers = [],
+  isActive = false,
+  onClick = vi.fn(),
+}: {
+  conversation?: Conversation;
+  typingUsers?: string[];
+  isActive?: boolean;
+  onClick?: () => void;
+} = {}) {
+  return ConversationItem({
+    conversation,
+    typingUsers,
+    isActive,
+    onClick,
+  });
+}
+
+function makeConversation(overrides: Partial<Conversation> = {}): Conversation {
+  return {
+    ...baseConversation,
+    ...overrides,
+  };
+}
+
+function makeLastMessage(
+  overrides: Partial<NonNullable<Conversation["lastMessage"]>> = {}
+): NonNullable<Conversation["lastMessage"]> {
+  return {
+    ...baseLastMessage,
+    ...overrides,
+  };
+}
+
+function expectFormattedLastMessageDate({
+  now,
+  createdAt,
+  expected,
+}: {
+  now: string;
+  createdAt: string;
+  expected: string;
+}) {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date(now));
+
+  const conversation = makeConversation({
+    lastMessage: makeLastMessage({ createdAt }),
+  });
+
+  const el = renderConversationItem({ conversation });
+  expect(containsText(el, expected)).toBe(true);
+}
+
 describe("ConversationItem", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -85,54 +142,29 @@ describe("ConversationItem", () => {
   });
 
   it("renders the last message preview when no one is typing", () => {
-    const el = ConversationItem({
-      conversation: baseConversation,
-      typingUsers: [],
-      isActive: false,
-      onClick: vi.fn(),
-    });
+    const el = renderConversationItem();
     expect(containsText(el, "Hey there!")).toBe(true);
   });
 
   it("replaces last message preview with typing indicator when typingUsers is non-empty", () => {
-    const el = ConversationItem({
-      conversation: baseConversation,
-      typingUsers: ["alice"],
-      isActive: false,
-      onClick: vi.fn(),
-    });
+    const el = renderConversationItem({ typingUsers: ["alice"] });
     expect(containsText(el, "writing")).toBe(true);
     expect(containsText(el, "Hey there!")).toBe(false);
   });
 
   it("renders the participant name", () => {
-    const el = ConversationItem({
-      conversation: baseConversation,
-      typingUsers: [],
-      isActive: false,
-      onClick: vi.fn(),
-    });
+    const el = renderConversationItem();
     expect(containsText(el, "alice")).toBe(true);
   });
 
   it("renders an unread badge when unreadCount > 0", () => {
-    const conversation = { ...baseConversation, unreadCount: 3 };
-    const el = ConversationItem({
-      conversation,
-      typingUsers: [],
-      isActive: false,
-      onClick: vi.fn(),
-    });
+    const conversation = makeConversation({ unreadCount: 3 });
+    const el = renderConversationItem({ conversation });
     expect(containsText(el, "3")).toBe(true);
   });
 
   it("does NOT render an unread badge when unreadCount === 0", () => {
-    const el = ConversationItem({
-      conversation: baseConversation, // unreadCount: 0
-      typingUsers: [],
-      isActive: false,
-      onClick: vi.fn(),
-    });
+    const el = renderConversationItem();
     const hasBadge = findInTree(el, (n) => {
       if (!n || typeof n !== "object") {
         return false;
@@ -147,19 +179,15 @@ describe("ConversationItem", () => {
   });
 
   it("renders AvatarImage when avatarUrl is set", () => {
-    const conversation = {
-      ...baseConversation,
+    const conversation = makeConversation({
       otherParticipant: {
         ...baseConversation.otherParticipant,
         avatarUrl: "https://example.com/a.png",
       },
-    };
-    const el = ConversationItem({
-      conversation,
-      typingUsers: [],
-      isActive: false,
-      onClick: vi.fn(),
     });
+
+    const el = renderConversationItem({ conversation });
+
     expect(
       findInTree(el, (n) => {
         if (!n || typeof n !== "object") {
@@ -175,102 +203,61 @@ describe("ConversationItem", () => {
   });
 
   it("shows deleted message placeholder when isDeleted", () => {
-    const conversation = {
-      ...baseConversation,
-      lastMessage: {
-        ...baseConversation.lastMessage!,
+    const conversation = makeConversation({
+      lastMessage: makeLastMessage({
         isDeleted: true,
         content: "secret",
-      },
-    };
-    const el = ConversationItem({
-      conversation,
-      typingUsers: [],
-      isActive: false,
-      onClick: vi.fn(),
+      }),
     });
+
+    const el = renderConversationItem({ conversation });
     expect(containsText(el, "Message deleted")).toBe(true);
   });
 
   it("caps unread badge at 99+", () => {
-    const conversation = { ...baseConversation, unreadCount: 120 };
-    const el = ConversationItem({
-      conversation,
-      typingUsers: [],
-      isActive: false,
-      onClick: vi.fn(),
-    });
+    const conversation = makeConversation({ unreadCount: 120 });
+    const el = renderConversationItem({ conversation });
     expect(containsText(el, "99+")).toBe(true);
   });
 
   it("formats recent lastMessage as time (same calendar day window)", () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date("2025-06-10T15:00:00.000Z"));
     const createdAt = "2025-06-10T14:30:00.000Z";
     const expected = new Date(createdAt).toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
     });
-    const conversation = {
-      ...baseConversation,
-      lastMessage: {
-        ...baseConversation.lastMessage!,
-        createdAt,
-      },
-    };
-    const el = ConversationItem({
-      conversation,
-      typingUsers: [],
-      isActive: false,
-      onClick: vi.fn(),
+
+    expectFormattedLastMessageDate({
+      now: "2025-06-10T15:00:00.000Z",
+      createdAt,
+      expected,
     });
-    expect(containsText(el, expected)).toBe(true);
   });
 
   it("formats lastMessage within the week as weekday", () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date("2025-06-10T12:00:00.000Z"));
     const createdAt = "2025-06-05T12:00:00.000Z";
     const expected = new Date(createdAt).toLocaleDateString([], {
       weekday: "short",
     });
-    const conversation = {
-      ...baseConversation,
-      lastMessage: {
-        ...baseConversation.lastMessage!,
-        createdAt,
-      },
-    };
-    const el = ConversationItem({
-      conversation,
-      typingUsers: [],
-      isActive: false,
-      onClick: vi.fn(),
+
+    expectFormattedLastMessageDate({
+      now: "2025-06-10T12:00:00.000Z",
+      createdAt,
+      expected,
     });
-    expect(containsText(el, expected)).toBe(true);
   });
 
   it("formats older lastMessage as short date", () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date("2025-06-10T12:00:00.000Z"));
     const createdAt = "2025-01-01T12:00:00.000Z";
     const expected = new Date(createdAt).toLocaleDateString([], {
       month: "short",
       day: "numeric",
     });
-    const conversation = {
-      ...baseConversation,
-      lastMessage: {
-        ...baseConversation.lastMessage!,
-        createdAt,
-      },
-    };
-    const el = ConversationItem({
-      conversation,
-      typingUsers: [],
-      isActive: false,
-      onClick: vi.fn(),
+
+    expectFormattedLastMessageDate({
+      now: "2025-06-10T12:00:00.000Z",
+      createdAt,
+      expected,
     });
-    expect(containsText(el, expected)).toBe(true);
   });
 });
