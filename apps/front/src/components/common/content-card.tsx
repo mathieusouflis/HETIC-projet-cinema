@@ -1,6 +1,6 @@
 import type { GETContents200DataItemsItem } from "@packages/api-sdk";
 import { Link } from "@tanstack/react-router";
-import { Pen, Plus, Star } from "lucide-react";
+import { ArrowDownRight, Pen, Plus, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -295,7 +295,7 @@ function ResultCard({
                   ) : (
                     <span className="size-6 rounded-full bg-muted block shrink-0" />
                   )}
-                  {actor.name} ↘
+                  {actor.name} <ArrowDownRight size={15} />
                 </span>
               ))}
               {extraActors.length > 0 && (

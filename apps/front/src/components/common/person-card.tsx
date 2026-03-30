@@ -1,6 +1,6 @@
 import type { GETContents200DataItemsItem } from "@packages/api-sdk";
 import { Link } from "@tanstack/react-router";
-import { Heart } from "lucide-react";
+import { ArrowDownRight, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { baseRoutes } from "@/lib/routes";
@@ -70,7 +70,7 @@ export const PersonCard = ({
                   ) : (
                     <span className="size-6 rounded bg-muted block shrink-0" />
                   )}
-                  {content.title} ↘
+                  {content.title} <ArrowDownRight size={15} />
                 </Link>
               ))}
             </div>
