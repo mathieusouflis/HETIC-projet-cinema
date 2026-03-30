@@ -1,19 +1,6 @@
 import path from "path";
 import { defineConfig } from "vitest/config";
 
-/** Périmètre de couverture : code métier et UI unitairement testés (hors routes TanStack et shell applicatif). */
-const COVERAGE_INCLUDE = [
-  "src/lib/**/*.{ts,tsx}",
-  "src/features/auth/hooks/**/*.{ts,tsx}",
-  "src/features/auth/stores/**/*.{ts,tsx}",
-  "src/features/auth/schemas/**/*.{ts,tsx}",
-  "src/features/messages/hooks/**/*.ts",
-  "src/features/messages/stores/**/*.ts",
-  "src/features/messages/components/conversation-list/conversation-item.tsx",
-  "src/components/ui/button.tsx",
-  "src/components/ui/filters/glass-filter.tsx",
-] as const;
-
 export default defineConfig({
   test: {
     globals: true,
@@ -23,8 +10,6 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text"],
-      all: true,
-      include: [...COVERAGE_INCLUDE],
       exclude: [
         "**/node_modules/**",
         "**/*.test.ts",

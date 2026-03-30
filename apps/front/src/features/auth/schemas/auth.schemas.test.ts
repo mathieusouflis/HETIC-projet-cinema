@@ -174,9 +174,9 @@ describe("registerSchema", () => {
 
 describe("forgotPasswordSchema", () => {
   it("accepts a valid email", () => {
-    expect(
-      forgotPasswordSchema.safeParse({ email: "a@b.com" }).success
-    ).toBe(true);
+    expect(forgotPasswordSchema.safeParse({ email: "a@b.com" }).success).toBe(
+      true
+    );
   });
 
   it("rejects invalid email", () => {
