@@ -40,7 +40,7 @@ export const BottomNav = () => {
 
   return (
     <>
-      <span className="h-15 p-2" />
+      <span className="h-15 md:h-0 p-2 md:p-0" />
       <nav className="block fixed bottom-0 p-2 lg:hidden w-full bg-white dark:bg-background border-t">
         <ul className="flex flex-row justify-center">
           {Object.values(navConfig).map((v, idx) => {

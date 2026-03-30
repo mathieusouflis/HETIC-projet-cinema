@@ -101,7 +101,7 @@ export function ChatPanel({ conversationId }: ChatPanelProps) {
   const otherParticipant = conversation?.otherParticipant;
 
   return (
-    <div className="flex flex-col h-[calc(100vh-40px)]">
+    <div className="flex flex-col h-full">
       <div className="flex items-center gap-3 border-b px-4 py-3 shrink-0 ">
         <Button
           variant="ghost"

@@ -270,7 +270,7 @@ export function CommunityPage() {
   ];
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-fit w-full">
       {/* Header */}
       <div className="shrink-0 px-4 pt-6 pb-2 space-y-4 border-b">
         <h1 className="text-xl font-bold">Community</h1>

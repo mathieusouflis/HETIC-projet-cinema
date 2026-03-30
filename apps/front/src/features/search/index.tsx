@@ -123,7 +123,7 @@ export default function SearchPage() {
   );
 
   return (
-    <div className="flex flex-col gap-5 max-w-4xl pt-2 pl-2">
+    <div className="flex flex-col gap-5 max-w-4xl pt-2 pl-2 w-full h-fit">
       <SearchBar
         defaultValue={title}
         preservedParams={{ year, minRating, categories }}

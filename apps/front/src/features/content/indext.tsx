@@ -38,7 +38,7 @@ export function ContentPage() {
   }
 
   return (
-    <div className="flex flex-col gap-14">
+    <div className="flex flex-col gap-14 w-full  h-fit">
       <div className="flex flex-col gap-14 items-center md:items-start md:flex-row">
         <div className="flex flex-col gap-3 max-w-full items-center md:items-baseline w-fit md:w-80">
           {isLoading || !data ? (

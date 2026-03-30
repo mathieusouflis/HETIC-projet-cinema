@@ -27,7 +27,7 @@ export function SettingsPage() {
   const { data: profile, isLoading } = api.users.getMe();
 
   return (
-    <div className="flex flex-col gap-8 max-w-lg">
+    <div className="flex flex-col gap-8 max-w-lg h-fit">
       <h1 className="text-3xl font-bold">Settings</h1>
 
       {/* Profile */}

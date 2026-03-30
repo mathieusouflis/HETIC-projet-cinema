@@ -105,7 +105,7 @@ export function MessagesLayout() {
   }, []);
 
   return (
-    <div className="flex h-full overflow-hidden">
+    <div className="flex h-auto w-full overflow-hidden">
       <div
         className={`${
           conversationId ? "hidden lg:flex" : "flex"
