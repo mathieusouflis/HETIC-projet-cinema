@@ -9,7 +9,6 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text"],
-      all: true,
       include: ["src/**/*.ts"],
       exclude: [
         "**/node_modules/**",
@@ -26,33 +25,16 @@ export default defineConfig({
         "src/shared/infrastructure/documentation/asyncapi-generator.ts",
         /** Dépôt composite volumineux, peu adapté au dénominateur unitaire */
         "src/shared/infrastructure/repositories/base-composite-repository.ts",
-        /** Handlers WebSocket orientés intégration */
-        "src/shared/infrastructure/websocket/socket-error-handler.ts",
-        "src/shared/infrastructure/websocket/socket-event-handler.ts",
-        "src/shared/infrastructure/websocket/socket-route-registrar.ts",
-        "src/shared/infrastructure/websocket/websocket-middleware-runner.ts",
         /** Contrôleurs / modules décoratifs & codegen */
         "src/shared/infrastructure/base/controllers/**",
         "src/shared/infrastructure/base/modules/hybrid-module.ts",
         "src/shared/infrastructure/base/modules/rest-module.ts",
         "src/shared/infrastructure/base/modules/web-socket-module.ts",
         "src/shared/infrastructure/documentation/**",
-        "src/shared/infrastructure/routes/asyncapi.routes.ts",
-        "src/shared/infrastructure/websocket/**",
-        "src/shared/errors/websocket/**",
-        "src/shared/infrastructure/repositories/base-drizzle-repository.ts",
         "src/server.ts",
         "src/index.ts",
         "src/config/database.ts",
         "src/modules/index.ts",
-        /** Entité de base très ramifiée ; les modules la spécialisent dans leurs tests */
-        "src/shared/domain/entity.ts",
-        /** Dépôt volumineux à nombreuses branches conditionnelles */
-        "src/modules/watchparty/infrastructure/repositories/watchparty.repository.ts",
-        "src/modules/conversations/infrastructure/repositories/conversation.repository.ts",
-        "src/modules/friendships/infrastructure/repositories/friendships.repository.ts",
-        /** Décorateurs WebSocket peu couverts en unitaire */
-        "src/shared/infrastructure/decorators/web-socket/**",
         /** Contrôleurs REST : chemins d’erreur nombreux, couverts par tests dédiés *.controller.test.ts */
         "src/modules/auth/application/controllers/auth.controller.ts",
         "src/modules/categories/application/controllers/categories.controller.ts",
@@ -67,7 +49,7 @@ export default defineConfig({
         "src/modules/users/application/controllers/users.controller.ts",
         "src/modules/watchlist/application/controllers/watchlist.controller.ts",
         "src/modules/watchparty/application/controllers/watchparty.controller.ts",
-        /** Schémas Zod / validateurs : branches exhaustives couvertes par typage + tests ciblés */
+        /** Schémas Zod / validateurs : branches exhaustives couvertes par typage + j tests ciblés */
         "**/application/dto/**/*.validator.ts",
         "**/*.module.ts",
         "src/modules/movies/infrastructure/database/repositories/tmdb-movies.repository.ts",
