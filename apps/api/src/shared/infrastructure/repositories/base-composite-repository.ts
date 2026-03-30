@@ -310,7 +310,7 @@ export abstract class BaseCompositeRepository<
 
       const { data, total } = {
         data: allEntities,
-        total: await this.drizzleRepository.getCount(),
+        total: tmdbResult.total,
       };
 
       if (!withCategories) {
