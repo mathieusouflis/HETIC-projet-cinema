@@ -54,7 +54,7 @@ export function MessageInput({
   };
 
   return (
-    <div className="border-t bg-background">
+    <div className="border-t bg-background mt-auto">
       {sendError && (
         <button
           type="button"
