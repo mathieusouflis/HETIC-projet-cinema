@@ -1,18 +1,22 @@
 import { NotFoundError } from "../../../../shared/errors/not-found-error";
 import { UnauthorizedError } from "../../../../shared/errors/unauthorized-error";
+import type { IRatingRepository } from "../../../ratings/domain/interfaces/IRatingRepository";
 import type { IWatchlistRepository } from "../../domain/interfaces/IWatchlistRepository";
 
 export class DeleteWatchlistByContentIdUseCase {
-  constructor(private readonly watchlistRepository: IWatchlistRepository) {}
+  constructor(
+    private readonly watchlistRepository: IWatchlistRepository,
+    private readonly ratingRepository: IRatingRepository
+  ) {}
 
-  async execute(userId: string, id: string): Promise<void> {
+  async execute(userId: string, contentId: string): Promise<void> {
     const watchlist = await this.watchlistRepository.findByContentId(
       userId,
-      id
+      contentId
     );
 
     if (!watchlist) {
-      throw new NotFoundError(`Watchlist with id ${id}`);
+      throw new NotFoundError(`Watchlist with id ${contentId}`);
     }
 
     if (watchlist.userId !== userId) {
@@ -22,5 +26,6 @@ export class DeleteWatchlistByContentIdUseCase {
     }
 
     await this.watchlistRepository.delete(watchlist.id);
+    await this.ratingRepository.delete(userId, contentId);
   }
 }

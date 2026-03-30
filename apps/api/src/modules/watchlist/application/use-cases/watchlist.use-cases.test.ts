@@ -52,10 +52,14 @@ describe("watchlist use-cases", () => {
       findByContentId: vi.fn(),
       delete: vi.fn(),
     };
+    const ratingRepo = { delete: vi.fn() };
     const getById = new GetWatchlistByIdUseCase(repo as never);
     const getByContent = new GetWatchlistByContentIdUseCase(repo as never);
     const delById = new DeleteWatchlistByIdUseCase(repo as never);
-    const delByContent = new DeleteWatchlistByContentIdUseCase(repo as never);
+    const delByContent = new DeleteWatchlistByContentIdUseCase(
+      repo as never,
+      ratingRepo as never
+    );
 
     repo.findById.mockResolvedValueOnce(null);
     await expect(getById.execute("u1", "w1")).rejects.toBeInstanceOf(
@@ -87,8 +91,12 @@ describe("watchlist use-cases", () => {
       findByContentId: vi.fn(),
       delete: vi.fn(),
     };
+    const ratingRepo = { delete: vi.fn() };
     const delById = new DeleteWatchlistByIdUseCase(repo as never);
-    const delByContent = new DeleteWatchlistByContentIdUseCase(repo as never);
+    const delByContent = new DeleteWatchlistByContentIdUseCase(
+      repo as never,
+      ratingRepo as never
+    );
 
     repo.findById.mockResolvedValueOnce({ ...item, userId: "u2" });
     await expect(delById.execute("u1", "w1")).rejects.toBeInstanceOf(

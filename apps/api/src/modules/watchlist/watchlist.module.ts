@@ -79,7 +79,10 @@ class WatchlistModule extends RestModule {
       this.repository
     );
     this.deleteWatchlistByContentIdUseCase =
-      new DeleteWatchlistByContentIdUseCase(this.repository);
+      new DeleteWatchlistByContentIdUseCase(
+        this.repository,
+        this.ratingRepository
+      );
 
     this.controller = new WatchlistController(
       this.listWatchlistUseCase,

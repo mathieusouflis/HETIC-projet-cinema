@@ -58,16 +58,20 @@ export const queryWatchlistService = {
       onSuccess: (_, params) => {
         queryClient.invalidateQueries({
           queryKey: watchlistKeys.all(user?.id ?? ""),
+          refetchType: "all",
         });
         queryClient.invalidateQueries({
           queryKey: usersKeys.me(),
+          refetchType: "all",
         });
         queryClient.invalidateQueries({
           queryKey: contentsKeys.discoverAll(),
+          refetchType: "all",
         });
         if (params.contentId) {
           queryClient.invalidateQueries({
             queryKey: contentsKeys.get(params.contentId),
+            refetchType: "all",
           });
         }
       },
@@ -100,9 +104,11 @@ export const queryWatchlistService = {
       onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: watchlistKeys.all(user?.id ?? ""),
+          refetchType: "all",
         });
         queryClient.invalidateQueries({
           queryKey: usersKeys.me(),
+          refetchType: "all",
         });
       },
     });
@@ -122,15 +128,19 @@ export const queryWatchlistService = {
       onSuccess: (_, { id }) => {
         queryClient.invalidateQueries({
           queryKey: watchlistKeys.all(user?.id ?? ""),
+          refetchType: "all",
         });
         queryClient.invalidateQueries({
           queryKey: usersKeys.me(),
+          refetchType: "all",
         });
         queryClient.invalidateQueries({
           queryKey: contentsKeys.get(id),
+          refetchType: "all",
         });
         queryClient.invalidateQueries({
           queryKey: contentsKeys.discoverAll(),
+          refetchType: "all",
         });
       },
     });
@@ -145,15 +155,19 @@ export const queryWatchlistService = {
       onSuccess: (_, { contentId }) => {
         queryClient.invalidateQueries({
           queryKey: watchlistKeys.all(user?.id ?? ""),
+          refetchType: "all",
         });
         queryClient.invalidateQueries({
           queryKey: usersKeys.me(),
+          refetchType: "all",
         });
         queryClient.invalidateQueries({
           queryKey: contentsKeys.get(contentId),
+          refetchType: "all",
         });
         queryClient.invalidateQueries({
           queryKey: contentsKeys.discoverAll(),
+          refetchType: "all",
         });
       },
     });
@@ -163,13 +177,26 @@ export const queryWatchlistService = {
     const { user } = useAuth();
     const queryClient = useQueryClient();
     return useMutation({
-      mutationFn: ({ id }: { id: string }) => deleteWatchlistById(id),
-      onSuccess: () => {
+      mutationFn: ({ id }: { id: string; contentId?: string }) =>
+        deleteWatchlistById(id),
+      onSuccess: (_, { contentId }) => {
         queryClient.invalidateQueries({
           queryKey: watchlistKeys.all(user?.id ?? ""),
+          refetchType: "all",
         });
         queryClient.invalidateQueries({
           queryKey: usersKeys.me(),
+          refetchType: "all",
+        });
+        if (contentId) {
+          queryClient.invalidateQueries({
+            queryKey: contentsKeys.get(contentId),
+            refetchType: "all",
+          });
+        }
+        queryClient.invalidateQueries({
+          queryKey: contentsKeys.discoverAll(),
+          refetchType: "all",
         });
       },
     });

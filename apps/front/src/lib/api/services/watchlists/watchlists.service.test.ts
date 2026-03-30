@@ -165,7 +165,7 @@ describe("watchlistService", () => {
     await expect(
       deleteIdMutation.mutate({ id: "w1" })
     ).resolves.toBeUndefined();
-    deleteIdMutation.onSuccess?.();
+    deleteIdMutation.onSuccess?.(undefined, { id: "w1" });
 
     expect(invalidateQueriesMock).toHaveBeenCalled();
   });
