@@ -149,9 +149,14 @@ export default function FormWatchlist(props: {
     }));
   }, [selectedSeason]);
 
+  // Reset form when watchlist data loads - use primitive dependencies to avoid stale closures
+  const watchlistDataId = watchlistData?.data?.data?.id;
   useEffect(() => {
-    form.reset(initialValues, { keepDefaultValues: false });
-  }, [initialValues, form]);
+    if (watchlistDataId) {
+      form.reset(initialValues, { keepDefaultValues: false });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watchlistDataId]);
 
   useEffect(() => {
     if (!isSeries) {
