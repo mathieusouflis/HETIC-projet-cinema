@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@tanstack/react-router", () => ({
   Link: (props: { children: unknown }) => props.children,
@@ -77,6 +77,12 @@ const baseConversation: Conversation = {
 describe("ConversationItem", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2024-06-15T14:00:00.000Z"));
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it("renders the last message preview when no one is typing", () => {
@@ -139,5 +145,97 @@ describe("ConversationItem", () => {
       );
     });
     expect(hasBadge).toBe(false);
+  });
+
+  it("shows “Message deleted” when lastMessage.isDeleted is true", () => {
+    const conversation: Conversation = {
+      ...baseConversation,
+      lastMessage: {
+        ...baseConversation.lastMessage!,
+        content: "gone",
+        isDeleted: true,
+      },
+    };
+    const el = ConversationItem({
+      conversation,
+      typingUsers: [],
+      isActive: false,
+      onClick: vi.fn(),
+    });
+    expect(containsText(el, "Message deleted")).toBe(true);
+  });
+
+  it("caps unread badge at 99+", () => {
+    const conversation = { ...baseConversation, unreadCount: 150 };
+    const el = ConversationItem({
+      conversation,
+      typingUsers: [],
+      isActive: false,
+      onClick: vi.fn(),
+    });
+    expect(containsText(el, "99+")).toBe(true);
+  });
+
+  it("renders avatar image when avatarUrl is set", () => {
+    const conversation: Conversation = {
+      ...baseConversation,
+      otherParticipant: {
+        ...baseConversation.otherParticipant,
+        avatarUrl: "https://example.com/a.png",
+      },
+    };
+    const el = ConversationItem({
+      conversation,
+      typingUsers: [],
+      isActive: false,
+      onClick: vi.fn(),
+    });
+    const hasImg = findInTree(el, (n) => {
+      if (!n || typeof n !== "object") {
+        return false;
+      }
+      const p = (n as { props?: { src?: string } }).props;
+      return p?.src === "https://example.com/a.png";
+    });
+    expect(hasImg).toBe(true);
+  });
+
+  it("formatTimestamp uses toLocaleDateString for non-same-day messages (weekday and month branches)", () => {
+    const spy = vi
+      .spyOn(Date.prototype, "toLocaleDateString")
+      .mockReturnValue("MOCK-DATE");
+    try {
+      const withinWeek: Conversation = {
+        ...baseConversation,
+        lastMessage: {
+          ...baseConversation.lastMessage!,
+          createdAt: "2024-06-10T10:30:00.000Z",
+        },
+      };
+      ConversationItem({
+        conversation: withinWeek,
+        typingUsers: [],
+        isActive: false,
+        onClick: vi.fn(),
+      });
+
+      const older: Conversation = {
+        ...baseConversation,
+        lastMessage: {
+          ...baseConversation.lastMessage!,
+          createdAt: "2024-01-05T10:30:00.000Z",
+        },
+      };
+      ConversationItem({
+        conversation: older,
+        typingUsers: [],
+        isActive: false,
+        onClick: vi.fn(),
+      });
+
+      expect(spy.mock.calls.length).toBeGreaterThanOrEqual(2);
+    } finally {
+      spy.mockRestore();
+    }
   });
 });

@@ -169,4 +169,13 @@ describe("watchlistService", () => {
 
     expect(invalidateQueriesMock).toHaveBeenCalled();
   });
+
+  it("create onSuccess invalidates content detail when contentId is present", async () => {
+    vi.mocked(sdk.pOSTWatchlist).mockResolvedValue({
+      data: { ok: "created" },
+    } as never);
+    const createMutation = queryWatchlistService.create();
+    await createMutation.mutate({ contentId: "content-99" } as never);
+    expect(invalidateQueriesMock).toHaveBeenCalled();
+  });
 });

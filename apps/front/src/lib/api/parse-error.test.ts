@@ -87,4 +87,17 @@ describe("parseApiError", () => {
     expect(result.fieldErrors).toEqual({});
     expect(result.globalError).toBe("User not authenticated");
   });
+
+  it("returns globalError when details exist but omit field/message pairs", () => {
+    const err = makeAxiosError(400, {
+      success: false,
+      error: "Validation failed",
+      details: [{ field: "email" }, { message: "oops" }],
+    });
+
+    const result = parseApiError(err);
+
+    expect(result.fieldErrors).toEqual({});
+    expect(result.globalError).toBe("Validation failed");
+  });
 });

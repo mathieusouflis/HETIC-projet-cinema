@@ -34,6 +34,18 @@ describe("queryClient default options", () => {
     );
   });
 
+  it("retries queries on 5xx responses up to the failure cap", () => {
+    expect(queryRetry(0, { response: { status: 500 } } as AxiosError)).toBe(
+      true
+    );
+    expect(queryRetry(2, { response: { status: 500 } } as AxiosError)).toBe(
+      true
+    );
+    expect(queryRetry(3, { response: { status: 500 } } as AxiosError)).toBe(
+      false
+    );
+  });
+
   it("apply retry limits for non-4xx errors", () => {
     expect(queryRetry(0, {} as AxiosError)).toBe(true);
     expect(queryRetry(2, {} as AxiosError)).toBe(true);

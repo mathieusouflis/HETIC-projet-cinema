@@ -1,6 +1,21 @@
 // @ts-nocheck
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+const { setQueryDataMock } = vi.hoisted(() => ({
+  setQueryDataMock: vi.fn((_key, updater) =>
+    updater({
+      pages: [
+        {
+          items: [
+            { id: "m2", conversationId: "c1", userId: "u1", type: "text" },
+          ],
+        },
+      ],
+      pageParams: [],
+    })
+  ),
+}));
+
 vi.mock("@packages/api-sdk", () => ({
   gETMessagesConversationsConversationId: vi.fn(),
   pATCHMessagesMessageId: vi.fn(),
@@ -11,18 +26,7 @@ vi.mock("@tanstack/react-query", () => ({
   useInfiniteQuery: vi.fn((config) => config),
   useMutation: vi.fn((config) => config),
   useQueryClient: vi.fn(() => ({
-    setQueryData: vi.fn((_key, updater) =>
-      updater({
-        pages: [
-          {
-            items: [
-              { id: "m2", conversationId: "c1", userId: "u1", type: "text" },
-            ],
-          },
-        ],
-        pageParams: [],
-      })
-    ),
+    setQueryData: setQueryDataMock,
   })),
 }));
 
@@ -149,5 +153,30 @@ describe("messageService", () => {
       isDeleted: true,
     });
     deleteMutation.onSuccess?.(tombstone);
+  });
+
+  it("edit onSuccess is a no-op when the infinite query cache is missing", async () => {
+    vi.mocked(sdk.pATCHMessagesMessageId).mockResolvedValue({
+      data: {
+        data: {
+          id: "m2",
+          conversationId: "c1",
+          userId: "u1",
+          type: "text",
+          isDeleted: false,
+        },
+      },
+    } as never);
+
+    setQueryDataMock.mockImplementationOnce((_key, updater) => {
+      expect(updater(undefined)).toBeUndefined();
+    });
+
+    const editMutation = queryMessageService.edit();
+    const updated = await editMutation.mutationFn({
+      messageId: "m2",
+      content: "updated",
+    });
+    editMutation.onSuccess?.(updated);
   });
 });

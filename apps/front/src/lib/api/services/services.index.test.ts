@@ -50,4 +50,17 @@ describe("services index", () => {
     const q = api.categories.list({ page: 1 } as never);
     expect(q.queryKey).toEqual(["categories", "list", { page: 1 }]);
   });
+
+  it("useApi exposes watchlist, messages and friendship query bundles", () => {
+    const api = useApi();
+    expect(api.watchlist).toBeDefined();
+    expect(api.messages).toBeDefined();
+    expect(api.friendships).toBeDefined();
+  });
+
+  it("useApi exposes peoples and conversation query bundles", () => {
+    const api = useApi();
+    expect(api.peoples).toBeDefined();
+    expect(api.conversations).toBeDefined();
+  });
 });

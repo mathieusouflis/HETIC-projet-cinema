@@ -1,5 +1,39 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+const { emitHookMock, hookTypingState } = vi.hoisted(() => {
+  const emitHookMock = vi.fn();
+  const hookTypingState = {
+    typingByConversation: { "conv-hook": ["u1"] },
+    addTypingUser: vi.fn(),
+    removeTypingUser: vi.fn(),
+  };
+  return { emitHookMock, hookTypingState };
+});
+
+vi.mock("@/lib/socket/socket-client", () => ({
+  getSocket: () => ({ emit: emitHookMock }),
+}));
+
+vi.mock("../stores/typing.store", () => ({
+  useTypingStore: (selector: (s: typeof hookTypingState) => unknown) =>
+    selector(hookTypingState),
+}));
+
+vi.mock("react", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("react")>();
+  return {
+    ...actual,
+    useMemo: <T>(fn: () => T) => fn(),
+    useCallback: <T extends (...args: unknown[]) => unknown>(fn: T) => fn,
+    useRef: <T>(initial: T) => ({ current: initial }),
+  };
+});
+
+import type { TypingPayload } from "@/lib/socket/types";
+import { createTypingController, useTyping } from "./use-typing";
+
+const CONV = "conv-123";
+
 type MockStore = {
   addTypingUser: ReturnType<typeof vi.fn>;
   removeTypingUser: ReturnType<typeof vi.fn>;
@@ -9,11 +43,6 @@ type MockStore = {
 type MockSocket = {
   emit: ReturnType<typeof vi.fn>;
 };
-
-import type { TypingPayload } from "@/lib/socket/types";
-import { createTypingController } from "./use-typing";
-
-const CONV = "conv-123";
 
 function makeController(
   store: MockStore,
@@ -107,5 +136,28 @@ describe("createTypingController", () => {
     expect(store.removeTypingUser).not.toHaveBeenCalled();
     vi.advanceTimersByTime(1001); // 3 s from refresh → clears now
     expect(store.removeTypingUser).toHaveBeenCalledWith(CONV, "u-42");
+  });
+});
+
+describe("useTyping", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("exposes typingUsers from the store and forwards emit/receive to the controller", () => {
+    const { typingUsers, emitTyping, receiveTyping } = useTyping("conv-hook");
+
+    expect(typingUsers).toEqual(["u1"]);
+
+    emitTyping();
+    expect(emitHookMock).toHaveBeenCalledWith("message:typing", {
+      conversationId: "conv-hook",
+    });
+
+    receiveTyping({ conversationId: "conv-hook", userId: "u2" });
+    expect(hookTypingState.addTypingUser).toHaveBeenCalledWith(
+      "conv-hook",
+      "u2"
+    );
   });
 });

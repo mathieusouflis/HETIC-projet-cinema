@@ -124,4 +124,40 @@ describe("conversationService", () => {
     readMutation.onSuccess?.(undefined, "c1");
     expect(setQueryDataMock).toHaveBeenCalled();
   });
+
+  it("markRead ignores overlapping calls for the same id", async () => {
+    vi.mocked(sdk.pOSTConversationsIdRead).mockResolvedValue({} as never);
+    const readMutation = queryConversationService.markRead();
+    const first = readMutation.mutationFn("c-dup");
+    const second = readMutation.mutationFn("c-dup");
+    await Promise.all([first, second]);
+    expect(sdk.pOSTConversationsIdRead).toHaveBeenCalledTimes(1);
+  });
+
+  it("toConversation maps lastMessage when the API returns one", () => {
+    const mapped = toConversation({
+      id: "c1",
+      name: null,
+      avatarUrl: null,
+      createdBy: null,
+      createdAt: "2024-01-01",
+      updatedAt: "2024-01-02",
+      otherParticipant: { id: "u2", username: "bob", avatarUrl: null },
+      lastMessage: {
+        id: "m1",
+        content: "hello",
+        isDeleted: false,
+        createdAt: "2024-01-03",
+        authorId: "u2",
+      },
+      unreadCount: 1,
+    } as never);
+    expect(mapped.lastMessage).toMatchObject({
+      id: "m1",
+      content: "hello",
+      isDeleted: false,
+      authorId: "u2",
+    });
+  });
+
 });

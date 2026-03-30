@@ -15,4 +15,12 @@ describe("cn", () => {
       "rounded block"
     );
   });
+
+  it("should merge conditional class objects", () => {
+    expect(cn("base", { hidden: false, flex: true })).toBe("base flex");
+  });
+
+  it("should return empty string for no arguments", () => {
+    expect(cn()).toBe("");
+  });
 });

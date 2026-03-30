@@ -34,6 +34,16 @@ describe("contentService", () => {
     expect(result).toEqual([{ id: "c1" }]);
   });
 
+  it("discover omits categories in the SDK call when the array is empty", async () => {
+    vi.mocked(sdk.gETContents).mockResolvedValue({
+      data: { data: [] },
+    } as never);
+
+    await contentService.discover({ page: 1, categories: [] } as never);
+
+    expect(sdk.gETContents).toHaveBeenCalledWith({ page: 1 });
+  });
+
   it("get returns data and query wrappers call useQuery", async () => {
     vi.mocked(sdk.gETContentsId).mockResolvedValue({
       data: { data: { id: "c2" } },

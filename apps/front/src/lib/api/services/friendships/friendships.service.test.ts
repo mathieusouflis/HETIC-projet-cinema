@@ -86,4 +86,12 @@ describe("friendshipService", () => {
     const removeMutation = queryFriendshipService.remove();
     await expect(removeMutation.mutationFn("f10")).resolves.toBeUndefined();
   });
+
+  it("list passes status to the SDK when provided", async () => {
+    vi.mocked(sdk.gETFriendships).mockResolvedValue({
+      data: { data: [] },
+    } as never);
+    await friendshipService.list("pending");
+    expect(sdk.gETFriendships).toHaveBeenCalledWith({ status: "pending" });
+  });
 });

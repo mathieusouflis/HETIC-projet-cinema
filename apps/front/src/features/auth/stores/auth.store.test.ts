@@ -40,4 +40,10 @@ describe("useAuth store", () => {
     expect(useAuth.getState().error).toBeNull();
     expect(useAuth.getState().user).toBeNull();
   });
+
+  it("setError can clear the error with null", () => {
+    useAuth.getState().setError("bad");
+    useAuth.getState().setError(null);
+    expect(useAuth.getState().error).toBeNull();
+  });
 });

@@ -54,7 +54,12 @@ describe("queryUserService", () => {
     } as never);
     await mutation.onSuccess?.(response);
 
-    expect(invalidateQueriesMock).toHaveBeenCalled();
+    expect(invalidateQueriesMock).toHaveBeenCalledWith(
+      expect.objectContaining({ queryKey: ["users", "me"] })
+    );
+    expect(invalidateQueriesMock).toHaveBeenCalledWith(
+      expect.objectContaining({ queryKey: ["users", "get", "u1"] })
+    );
     expect(setUserMock).toHaveBeenCalledWith({
       id: "u1",
       username: "new-name",

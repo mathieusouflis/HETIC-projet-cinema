@@ -22,4 +22,14 @@ describe("categorieService", () => {
     expect(sdk.gETCategories).toHaveBeenCalledWith({ page: 1 });
     expect(result).toEqual([{ id: "cat-1" }]);
   });
+
+  it("calls gETCategories without params when list has no argument", async () => {
+    vi.mocked(sdk.gETCategories).mockResolvedValue({
+      data: { data: [] },
+    } as never);
+
+    await categorieService.list();
+
+    expect(sdk.gETCategories).toHaveBeenCalledWith(undefined);
+  });
 });

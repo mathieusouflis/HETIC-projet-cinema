@@ -21,4 +21,10 @@ describe("useTypingStore", () => {
       "u2",
     ]);
   });
+
+  it("clears the last typing user leaving an empty array", () => {
+    useTypingStore.getState().addTypingUser("conv-x", "u1");
+    useTypingStore.getState().removeTypingUser("conv-x", "u1");
+    expect(useTypingStore.getState().typingByConversation["conv-x"]).toEqual([]);
+  });
 });

@@ -34,6 +34,17 @@ describe("services keys", () => {
     ]);
   });
 
+  it("contents get key includes optional params when provided", () => {
+    expect(
+      contentsKeys.get("content-1", { withCategory: "true" } as never)
+    ).toEqual([
+      "contents",
+      "get",
+      "content-1",
+      { withCategory: "true" },
+    ]);
+  });
+
   it("builds remaining service keys", () => {
     expect(friendshipKeys.all()).toEqual(["friendships"]);
     expect(friendshipKeys.byStatus("accepted")).toEqual([

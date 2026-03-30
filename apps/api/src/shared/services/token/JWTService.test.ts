@@ -224,6 +224,18 @@ describe("JWT service test", () => {
         jwtService.verifyAccessToken(wrongTypeToken);
       }).toThrowError("Invalid access token");
     });
+
+    it("should throw Invalid token type when signature is valid but type is not access", () => {
+      const token = jwt.sign(
+        { userId: "1", email: "test@example.com", type: "refresh" },
+        `${config.env.JWT_SECRET}_access`,
+        { expiresIn: "15m" }
+      );
+
+      expect(() => jwtService.verifyAccessToken(token)).toThrow(
+        "Invalid token type"
+      );
+    });
   });
 
   describe("verifyRefreshToken", () => {
