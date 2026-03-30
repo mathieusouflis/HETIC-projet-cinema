@@ -61,6 +61,17 @@ describe("queryUserService", () => {
     });
   });
 
+  it("patchMe onSuccess skips setUser when payload has no data", async () => {
+    setUserMock.mockClear();
+    vi.mocked(sdk.pATCHUsersMe).mockResolvedValue({
+      data: {},
+    } as never);
+    const mutation = queryUserService.patchMe();
+    const response = await mutation.mutationFn({} as never);
+    await mutation.onSuccess?.(response as never);
+    expect(setUserMock).not.toHaveBeenCalled();
+  });
+
   it("executes deleteMe mutation", async () => {
     vi.mocked(sdk.dELETEUsersMe).mockResolvedValue({} as never);
     const mutation = queryUserService.deleteMe();

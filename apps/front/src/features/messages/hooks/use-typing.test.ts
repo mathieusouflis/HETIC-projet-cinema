@@ -1,4 +1,15 @@
+import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+const { emitMock, getSocketMock } = vi.hoisted(() => {
+  const emitMock = vi.fn();
+  const getSocketMock = vi.fn(() => ({ emit: emitMock }));
+  return { emitMock, getSocketMock };
+});
+
+vi.mock("@/lib/socket/socket-client", () => ({
+  getSocket: getSocketMock,
+}));
 
 type MockStore = {
   addTypingUser: ReturnType<typeof vi.fn>;
@@ -11,7 +22,8 @@ type MockSocket = {
 };
 
 import type { TypingPayload } from "@/lib/socket/types";
-import { createTypingController } from "./use-typing";
+import { useTypingStore } from "../stores/typing.store";
+import { createTypingController, useTyping } from "./use-typing";
 
 const CONV = "conv-123";
 
@@ -32,6 +44,9 @@ describe("createTypingController", () => {
   let socket: MockSocket;
 
   beforeEach(() => {
+    emitMock.mockClear();
+    getSocketMock.mockClear();
+    getSocketMock.mockImplementation(() => ({ emit: emitMock }));
     store = {
       addTypingUser: vi.fn(),
       removeTypingUser: vi.fn(),
@@ -107,5 +122,48 @@ describe("createTypingController", () => {
     expect(store.removeTypingUser).not.toHaveBeenCalled();
     vi.advanceTimersByTime(1001); // 3 s from refresh → clears now
     expect(store.removeTypingUser).toHaveBeenCalledWith(CONV, "u-42");
+  });
+});
+
+describe("useTyping", () => {
+  beforeEach(() => {
+    useTypingStore.setState({ typingByConversation: {} });
+    emitMock.mockClear();
+    getSocketMock.mockClear();
+    getSocketMock.mockImplementation(() => ({ emit: emitMock }));
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("returns typingUsers from the store for the conversation", () => {
+    useTypingStore.getState().addTypingUser("c-hook", "u1");
+    const { result } = renderHook(() => useTyping("c-hook"));
+    expect(result.current.typingUsers).toEqual(["u1"]);
+  });
+
+  it("emitTyping delegates to the socket", () => {
+    const { result } = renderHook(() => useTyping("c-hook"));
+    act(() => {
+      result.current.emitTyping();
+    });
+    expect(emitMock).toHaveBeenCalledWith("message:typing", {
+      conversationId: "c-hook",
+    });
+  });
+
+  it("receiveTyping updates the store for matching conversation", () => {
+    const { result } = renderHook(() => useTyping("c-hook"));
+    act(() => {
+      result.current.receiveTyping({
+        conversationId: "c-hook",
+        userId: "u9",
+      });
+    });
+    expect(useTypingStore.getState().typingByConversation["c-hook"]).toContain(
+      "u9"
+    );
   });
 });
