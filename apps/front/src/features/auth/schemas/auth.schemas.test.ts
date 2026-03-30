@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
   emailSchema,
+  forgotPasswordSchema,
   loginSchema,
   passwordSchema,
   registerSchema,
+  resetPasswordSchema,
   usernameSchema,
 } from "./auth.schemas";
 
@@ -167,5 +169,38 @@ describe("registerSchema", () => {
     expect(
       registerSchema.safeParse({ ...base, email: "not-valid" }).success
     ).toBe(false);
+  });
+});
+
+describe("forgotPasswordSchema", () => {
+  it("accepts valid payload", () => {
+    expect(
+      forgotPasswordSchema.safeParse({ email: "user@example.com" }).success
+    ).toBe(true);
+  });
+});
+
+describe("resetPasswordSchema", () => {
+  const base = {
+    newPassword: "Abcdef1!",
+    confirmPassword: "Abcdef1!",
+  };
+
+  it("accepts matching passwords", () => {
+    expect(resetPasswordSchema.safeParse(base).success).toBe(true);
+  });
+
+  it("rejects when passwords do not match", () => {
+    const result = resetPasswordSchema.safeParse({
+      ...base,
+      confirmPassword: "Different1!",
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      const confirmError = result.error.issues.find(
+        (i) => i.path[0] === "confirmPassword"
+      );
+      expect(confirmError?.message).toBe("Passwords do not match");
+    }
   });
 });

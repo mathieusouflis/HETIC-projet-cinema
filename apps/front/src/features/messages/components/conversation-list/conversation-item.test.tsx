@@ -140,4 +140,68 @@ describe("ConversationItem", () => {
     });
     expect(hasBadge).toBe(false);
   });
+
+  it("shows 'Message deleted' when lastMessage.isDeleted is true", () => {
+    const lastMessage = baseConversation.lastMessage ?? {
+      id: "msg-1",
+      content: "Hey there!",
+      isDeleted: false,
+      createdAt: "2024-01-01T12:00:00.000Z",
+      authorId: "user-other",
+    };
+    const conversation = {
+      ...baseConversation,
+      lastMessage: { ...lastMessage, isDeleted: true },
+    };
+    const el = ConversationItem({
+      conversation,
+      typingUsers: [],
+      isActive: false,
+      onClick: vi.fn(),
+    });
+    expect(containsText(el, "Message deleted")).toBe(true);
+  });
+
+  it("renders '99+' when unreadCount > 99", () => {
+    const conversation = { ...baseConversation, unreadCount: 120 };
+    const el = ConversationItem({
+      conversation,
+      typingUsers: [],
+      isActive: false,
+      onClick: vi.fn(),
+    });
+    expect(containsText(el, "99+")).toBe(true);
+  });
+
+  it("renders an AvatarImage when otherParticipant.avatarUrl is set", () => {
+    const conversation = {
+      ...baseConversation,
+      otherParticipant: {
+        ...baseConversation.otherParticipant,
+        avatarUrl: "x",
+      },
+    };
+    const el = ConversationItem({
+      conversation,
+      typingUsers: [],
+      isActive: false,
+      onClick: vi.fn(),
+    });
+    const hasAvatarImage = findInTree(
+      el,
+      (n) => (n as any)?.type === "AvatarImage"
+    );
+    expect(hasAvatarImage).toBe(true);
+  });
+
+  it("renders an empty preview when lastMessage is null and nobody is typing", () => {
+    const conversation = { ...baseConversation, lastMessage: null };
+    const el = ConversationItem({
+      conversation,
+      typingUsers: [],
+      isActive: false,
+      onClick: vi.fn(),
+    });
+    expect(containsText(el, "Hey there!")).toBe(false);
+  });
 });
