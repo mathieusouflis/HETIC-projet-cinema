@@ -139,6 +139,7 @@ describe("watchlistService", () => {
       data: { ok: "created" },
     });
     createMutation.onSuccess?.(undefined, { contentId: "c1" });
+    createMutation.onSuccess?.(undefined, {} as never);
 
     const updateIdMutation = queryWatchlistService.updateId("w1", {} as never);
     await expect(updateIdMutation.mutate()).resolves.toEqual({
@@ -166,6 +167,10 @@ describe("watchlistService", () => {
       deleteIdMutation.mutate({ id: "w1" })
     ).resolves.toBeUndefined();
     deleteIdMutation.onSuccess?.(undefined, { id: "w1" });
+    deleteIdMutation.onSuccess?.(undefined, {
+      id: "w1",
+      contentId: "c-extra",
+    });
 
     expect(invalidateQueriesMock).toHaveBeenCalled();
   });

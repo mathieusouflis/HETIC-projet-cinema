@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@tanstack/react-router", () => ({
   Link: (props: { children: unknown }) => props.children,
@@ -77,6 +77,11 @@ const baseConversation: Conversation = {
 describe("ConversationItem", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.useRealTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it("renders the last message preview when no one is typing", () => {
@@ -139,5 +144,133 @@ describe("ConversationItem", () => {
       );
     });
     expect(hasBadge).toBe(false);
+  });
+
+  it("renders AvatarImage when avatarUrl is set", () => {
+    const conversation = {
+      ...baseConversation,
+      otherParticipant: {
+        ...baseConversation.otherParticipant,
+        avatarUrl: "https://example.com/a.png",
+      },
+    };
+    const el = ConversationItem({
+      conversation,
+      typingUsers: [],
+      isActive: false,
+      onClick: vi.fn(),
+    });
+    expect(
+      findInTree(el, (n) => {
+        if (!n || typeof n !== "object") {
+          return false;
+        }
+        const o = n as { type?: unknown; props?: { src?: string } };
+        return (
+          o.type === "AvatarImage" ||
+          o.props?.src === "https://example.com/a.png"
+        );
+      })
+    ).toBe(true);
+  });
+
+  it("shows deleted message placeholder when isDeleted", () => {
+    const conversation = {
+      ...baseConversation,
+      lastMessage: {
+        ...baseConversation.lastMessage!,
+        isDeleted: true,
+        content: "secret",
+      },
+    };
+    const el = ConversationItem({
+      conversation,
+      typingUsers: [],
+      isActive: false,
+      onClick: vi.fn(),
+    });
+    expect(containsText(el, "Message deleted")).toBe(true);
+  });
+
+  it("caps unread badge at 99+", () => {
+    const conversation = { ...baseConversation, unreadCount: 120 };
+    const el = ConversationItem({
+      conversation,
+      typingUsers: [],
+      isActive: false,
+      onClick: vi.fn(),
+    });
+    expect(containsText(el, "99+")).toBe(true);
+  });
+
+  it("formats recent lastMessage as time (same calendar day window)", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2025-06-10T15:00:00.000Z"));
+    const createdAt = "2025-06-10T14:30:00.000Z";
+    const expected = new Date(createdAt).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const conversation = {
+      ...baseConversation,
+      lastMessage: {
+        ...baseConversation.lastMessage!,
+        createdAt,
+      },
+    };
+    const el = ConversationItem({
+      conversation,
+      typingUsers: [],
+      isActive: false,
+      onClick: vi.fn(),
+    });
+    expect(containsText(el, expected)).toBe(true);
+  });
+
+  it("formats lastMessage within the week as weekday", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2025-06-10T12:00:00.000Z"));
+    const createdAt = "2025-06-05T12:00:00.000Z";
+    const expected = new Date(createdAt).toLocaleDateString([], {
+      weekday: "short",
+    });
+    const conversation = {
+      ...baseConversation,
+      lastMessage: {
+        ...baseConversation.lastMessage!,
+        createdAt,
+      },
+    };
+    const el = ConversationItem({
+      conversation,
+      typingUsers: [],
+      isActive: false,
+      onClick: vi.fn(),
+    });
+    expect(containsText(el, expected)).toBe(true);
+  });
+
+  it("formats older lastMessage as short date", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2025-06-10T12:00:00.000Z"));
+    const createdAt = "2025-01-01T12:00:00.000Z";
+    const expected = new Date(createdAt).toLocaleDateString([], {
+      month: "short",
+      day: "numeric",
+    });
+    const conversation = {
+      ...baseConversation,
+      lastMessage: {
+        ...baseConversation.lastMessage!,
+        createdAt,
+      },
+    };
+    const el = ConversationItem({
+      conversation,
+      typingUsers: [],
+      isActive: false,
+      onClick: vi.fn(),
+    });
+    expect(containsText(el, expected)).toBe(true);
   });
 });
