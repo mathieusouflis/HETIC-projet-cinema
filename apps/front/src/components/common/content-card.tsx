@@ -43,7 +43,6 @@ export const ContentCard = ({
   if (isLoading) {
     return null;
   }
-  console.log(data);
   return (
     <ResultCard
       content={content}

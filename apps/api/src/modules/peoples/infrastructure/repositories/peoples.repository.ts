@@ -96,11 +96,16 @@ export class PeoplesRepository implements IPeoplesRepository {
   }
 
   /**
-   * Search people on TMDB and sync to database
+   * Search people on TMDB and sync to database, then search local DB by name
    */
   async searchPeople(query: string, page = 1): Promise<People[]> {
     const tmdbPeople = await this.tmdbAdapter.searchPeople(query, page);
-    return await this.processTMDBPeople(tmdbPeople);
+    if (tmdbPeople.length > 0) {
+      return await this.processTMDBPeople(tmdbPeople);
+    }
+
+    const { data } = await this.drizzleAdapter.list({ name: query });
+    return data;
   }
 
   /**

@@ -23,10 +23,11 @@ const get = async (contentId: string, params?: GETContentsIdParams) => {
 };
 
 export const queryContentService = {
-  discover: (props: GETContentsParams) =>
+  discover: (props: GETContentsParams, options?: { enabled?: boolean }) =>
     useQuery({
       queryKey: contentsKeys.discover(props),
       queryFn: () => contentService.discover(props),
+      enabled: options?.enabled ?? true,
     }),
 
   get: (contentId: string, params?: GETContentsIdParams) =>

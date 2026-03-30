@@ -97,34 +97,14 @@ export class PeoplesDrizzleRepository {
       );
     }
 
-    const query = db.select().from(peopleSchema);
+    const where = conditions.length > 0 ? and(...conditions) : undefined;
 
-    if (conditions.length > 0) {
-      query.where(and(...conditions));
-    }
-
-    if (params.limit) {
-      query.limit(params.limit);
-    }
-
-    if (params.offset) {
-      query.offset(params.offset);
-    }
-
-    const result = await query;
-
-    const countQuery = db.select().from(peopleSchema);
-
-    if (conditions.length > 0) {
-      countQuery.where(and(...conditions));
-    }
-
-    const countResult = await countQuery;
-    const total = countResult.length;
+    const result = await db.select().from(peopleSchema).where(where);
+    const countResult = await db.select().from(peopleSchema).where(where);
 
     return {
       data: result.map((row) => new People(row)),
-      total,
+      total: countResult.length,
     };
   }
 
@@ -199,13 +179,10 @@ export class PeoplesDrizzleRepository {
       conditions.push(ilike(peopleSchema.name, `%${params.name}%`));
     }
 
-    const query = db.select().from(peopleSchema);
-
-    if (conditions.length > 0) {
-      query.where(and(...conditions));
-    }
-
-    const result = await query;
+    const result = await db
+      .select()
+      .from(peopleSchema)
+      .where(conditions.length > 0 ? and(...conditions) : undefined);
     return result.length;
   }
 

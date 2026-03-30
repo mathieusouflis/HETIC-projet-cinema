@@ -187,7 +187,6 @@ export default function FormWatchlist(props: {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      console.log(values.completedAt);
       await updateWatchlist({
         id: props.content.id,
         data: values as unknown as PUTWatchlistContentIdBody,

@@ -13,10 +13,10 @@ const search = async (params: GETPeoplesSearchParams) => {
 export const peoplesService = { search };
 
 export const queryPeoplesService = {
-  search: (params: GETPeoplesSearchParams) =>
+  search: (params: GETPeoplesSearchParams, options?: { enabled?: boolean }) =>
     useQuery({
       queryKey: peoplesKeys.search(params),
       queryFn: () => peoplesService.search(params),
-      enabled: params.query.trim().length > 0,
+      enabled: params.query.trim().length > 0 && (options?.enabled ?? true),
     }),
 };

@@ -1,5 +1,6 @@
 import type { GETContents200DataItemsItemContentCreditsItem } from "@packages/api-sdk";
 import { useNavigate, useSearch } from "@tanstack/react-router";
+import { useState } from "react";
 import {
   ContentCard,
   ContentCardSkeleton,
@@ -33,22 +34,28 @@ export default function SearchPage() {
   const minRating = params.minRating;
   const categories = params.categories;
 
+  const [activeTab, setActiveTab] = useState("top");
+
   const services = useApi();
 
-  const { data, isLoading } = services.contents.discover({
-    title: params.title,
-    withCategory: "true",
-    withCast: "true",
-    page,
-    year,
-    categories,
-    averageRating: minRating,
-  });
+  const { data, isLoading } = services.contents.discover(
+    {
+      title: params.title,
+      withCategory: "true",
+      withCast: "true",
+      page,
+      year,
+      categories,
+      averageRating: minRating,
+    },
+    { enabled: activeTab !== "actors" }
+  );
 
   const { data: actorsData, isLoading: isActorsLoading } =
-    services.peoples.search({
-      query: title || " ",
-    });
+    services.peoples.search(
+      { query: title || " " },
+      { enabled: activeTab === "actors" }
+    );
 
   const contents = data?.items ?? [];
   const pagination = data?.pagination;
@@ -133,12 +140,12 @@ export default function SearchPage() {
         onApply={handleFilters}
       />
 
-      <Tabs defaultValue="top">
+      <Tabs defaultValue="top" onValueChange={setActiveTab}>
         <TabsList variant="none" className="flex-wrap h-auto gap-y-2">
           <TabsTrigger value="top">Top</TabsTrigger>
           <TabsTrigger value="movies">Movies</TabsTrigger>
           <TabsTrigger value="tvshows">Series</TabsTrigger>
-          <TabsTrigger value="actors">Actors</TabsTrigger>
+          {title && <TabsTrigger value="actors">Actors</TabsTrigger>}
         </TabsList>
         <TabsContent value="top">
           {isLoading ? (
