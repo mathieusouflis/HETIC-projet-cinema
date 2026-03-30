@@ -100,11 +100,11 @@ Full technical documentation lives in [`apps/documentation/`](apps/documentation
 
 | Topic | Link |
 |-------|------|
-| Computer & tool setup | [Setup guide](apps/documentation/developer/tools-and-setup/computer-setup/README.md) |
-| Windows setup | [Windows](apps/documentation/developer/tools-and-setup/computer-setup/windows-setup.md) |
-| WSL + VS Code | [WSL guide](apps/documentation/developer/tools-and-setup/tools-documentation/wsl-for-vscode.md) |
-| Database setup | [Database](apps/documentation/developer-guide/tools-and-setup/database-setup.md) |
+| Computer & tool setup | [Setup guide](apps/documentation/getting-started/computer-setup.md) |
+| Development workflow | [Workflow](apps/documentation/getting-started/development-workflow.md) |
+| Database overview | [Database](apps/documentation/database/README.md) |
 | Technical specification | [spec.md](apps/documentation/spec.md) |
+| Architecture overview | [Architecture](apps/documentation/architecture/README.md) |
 
 ---
 
@@ -112,7 +112,9 @@ Full technical documentation lives in [`apps/documentation/`](apps/documentation
 
 | Topic | Link |
 |-------|------|
-| Commit messages | [Commit conventions](apps/documentation/developer-guide/guidelines/commit-message-guidelines.md) |
-| Testing | [Testing guidelines](apps/documentation/developer-guide/guidelines/testing-guidelines.md) |
-| Bug reports | [Bug reports](apps/documentation/developer-guide/guidelines/bug-reports.md) |
-| Creating a new API module | [New module guide](apps/documentation/developer-guide/strategy/api/creating-a-new-module.md) |
+| Commit messages | [Commit conventions](apps/documentation/developer-guide/guidelines/commit-conventions.md) |
+| Code style | [Code style guide](apps/documentation/developer-guide/guidelines/code-style.md) |
+| Pull requests | [Pull request guide](apps/documentation/developer-guide/guidelines/pull-request.md) |
+| Testing | [Writing tests](apps/documentation/developer-guide/guides/writing-tests.md) |
+| Adding an endpoint | [Endpoint guide](apps/documentation/developer-guide/guides/adding-an-endpoint.md) |
+| Creating a new API module | [New module guide](apps/documentation/developer-guide/guides/creating-a-module.md) |

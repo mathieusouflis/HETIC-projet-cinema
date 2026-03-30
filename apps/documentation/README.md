@@ -19,7 +19,7 @@ Kirona is a social platform centered around cinema and TV series, allowing users
 | [Getting Started](getting-started/README.md) | Set up the project locally (with or without Phase access) |
 | [Development Workflow](getting-started/development-workflow.md) | Daily dev cycle, commands, and conventions |
 | [Developer Guide](developer-guide/README.md) | Architecture deep-dives and step-by-step guides |
-| [CONTRIBUTING.md](../../../CONTRIBUTING.md) | How to contribute, PR process, commit conventions |
+| [CONTRIBUTING.md](../../CONTRIBUTING.md) | How to contribute, PR process, commit conventions |
 
 ### Architecture
 
