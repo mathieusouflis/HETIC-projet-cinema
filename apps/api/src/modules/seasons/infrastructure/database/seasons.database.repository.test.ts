@@ -1,27 +1,26 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { SeasonsDatabaseRepository } from "./seasons.database.repository";
+import { ServerError } from "../../../../shared/errors/server-error.js";
+import { SeasonsDatabaseRepository } from "./seasons.database.repository.js";
 
 const {
   dbMock,
-  deleteWhere,
-  findFirstMock,
-  findManyMock,
+  findFirst,
+  findMany,
   insertReturning,
-  selectWhere,
   updateReturning,
+  selectRows,
 } = vi.hoisted(() => {
-  const findFirstMock = vi.fn();
-  const findManyMock = vi.fn();
+  const findFirst = vi.fn();
+  const findMany = vi.fn();
   const insertReturning = vi.fn();
   const updateReturning = vi.fn();
-  const deleteWhere = vi.fn();
-  const selectWhere = vi.fn();
+  const selectRows = vi.fn();
 
   const dbMock = {
     query: {
       seasons: {
-        findFirst: findFirstMock,
-        findMany: findManyMock,
+        findFirst,
+        findMany,
       },
     },
     insert: vi.fn(() => ({
@@ -32,145 +31,138 @@ const {
         where: vi.fn(() => ({ returning: updateReturning })),
       })),
     })),
-    delete: vi.fn(() => ({ where: deleteWhere })),
+    delete: vi.fn(() => ({
+      where: vi.fn(() => Promise.resolve()),
+    })),
     select: vi.fn(() => ({
       from: vi.fn(() => ({
-        where: selectWhere,
+        where: vi.fn(() => Promise.resolve(selectRows())),
       })),
     })),
   };
 
   return {
     dbMock,
-    deleteWhere,
-    findFirstMock,
-    findManyMock,
+    findFirst,
+    findMany,
     insertReturning,
-    selectWhere,
     updateReturning,
+    selectRows,
   };
 });
 
 vi.mock("../../../../database", () => ({ db: dbMock }));
-vi.mock("drizzle-orm", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("drizzle-orm")>();
-  return { ...actual, and: vi.fn(), eq: vi.fn(), inArray: vi.fn() };
-});
 
 describe("SeasonsDatabaseRepository", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("getSeasonById retourne null puis une saison", async () => {
+  const seasonRow: any = {
+    id: "s1",
+    seriesId: "series1",
+    tmdbId: 11,
+    seasonNumber: 1,
+    createdAt: "2024-01-01T00:00:00.000Z",
+    updatedAt: "2024-01-01T00:00:00.000Z",
+    content: { id: "c1" },
+  };
+  const episodeRow: any = {
+    id: "e1",
+    seasonId: "s1",
+    episodeNumber: 1,
+  };
+
+  it("getSeasonById: null, avec episodes, et error => ServerError", async () => {
     const repo = new SeasonsDatabaseRepository();
-    findFirstMock.mockResolvedValueOnce(null);
+
+    findFirst.mockResolvedValueOnce(null);
     await expect(repo.getSeasonById("s1")).resolves.toBeNull();
 
-    findFirstMock.mockResolvedValueOnce({
-      id: "s1",
-      seriesId: "serie-1",
-      name: "Season 1",
-      seasonNumber: 1,
-      episodeCount: 10,
-      overview: null,
-      posterUrl: null,
-      airDate: null,
-      tmdbId: 1,
-    });
-    const season = await repo.getSeasonById("s1");
-    expect(season?.id).toBe("s1");
+    findFirst.mockResolvedValueOnce({ ...seasonRow, episodes: [episodeRow] });
+    const season = await repo.getSeasonById("s1", { withEpisodes: true });
+    expect(season).not.toBeNull();
+
+    findFirst.mockRejectedValueOnce(new Error("db"));
+    await expect(repo.getSeasonById("s1")).rejects.toBeInstanceOf(ServerError);
   });
 
-  it("getSeasonsBySeriesId et createSeason retournent des saisons", async () => {
+  it("getSeasonsBySeriesId: filtre seasonNumber + withEpisodes, et error", async () => {
     const repo = new SeasonsDatabaseRepository();
-    findManyMock.mockResolvedValueOnce([
-      {
-        id: "s1",
-        seriesId: "serie-1",
-        name: "Season 1",
-        seasonNumber: 1,
-        episodeCount: 10,
-        overview: null,
-        posterUrl: null,
-        airDate: null,
-        tmdbId: 1,
-      },
-    ]);
-    insertReturning.mockResolvedValueOnce([
-      {
-        id: "s2",
-        seriesId: "serie-1",
-        name: "Season 2",
-        seasonNumber: 2,
-        episodeCount: 8,
-        overview: null,
-        posterUrl: null,
-        airDate: null,
-        tmdbId: 2,
-      },
-    ]);
-
-    const list = await repo.getSeasonsBySeriesId("serie-1");
-    const created = await repo.createSeason({ name: "Season 2" } as never);
+    findMany.mockResolvedValueOnce([{ ...seasonRow, episodes: [episodeRow] }]);
+    const list = await repo.getSeasonsBySeriesId("series1", {
+      withEpisodes: true,
+      seasonNumber: 1,
+    });
     expect(list).toHaveLength(1);
-    expect(created.id).toBe("s2");
+
+    findMany.mockRejectedValueOnce(new Error("db"));
+    await expect(repo.getSeasonsBySeriesId("series1")).rejects.toBeInstanceOf(
+      ServerError
+    );
   });
 
-  it("updateSeason, deleteSeason, getByTmdbIds et getByTmdbId fonctionnent", async () => {
+  it("createSeason: ok, empty result, undefined row", async () => {
     const repo = new SeasonsDatabaseRepository();
-    updateReturning.mockResolvedValueOnce([
-      {
-        id: "s1",
-        seriesId: "serie-1",
-        name: "Season 1 Updated",
-        seasonNumber: 1,
-        episodeCount: 10,
-        overview: null,
-        posterUrl: null,
-        airDate: null,
-        tmdbId: 1,
-      },
-    ]);
-    deleteWhere.mockResolvedValueOnce(undefined);
-    selectWhere.mockResolvedValueOnce([
-      {
-        id: "s1",
-        seriesId: "serie-1",
-        name: "Season 1 Updated",
-        seasonNumber: 1,
-        episodeCount: 10,
-        overview: null,
-        posterUrl: null,
-        airDate: null,
-        tmdbId: 1,
-      },
-    ]);
-    findFirstMock.mockResolvedValueOnce({
-      id: "s1",
-      seriesId: "serie-1",
-      name: "Season 1 Updated",
-      seasonNumber: 1,
-      episodeCount: 10,
-      overview: null,
-      posterUrl: null,
-      airDate: null,
-      tmdbId: 1,
-      content: {
-        id: "c1",
-        type: "serie",
-        title: "Dark",
-        slug: "dark",
-      },
-    });
+    insertReturning.mockResolvedValueOnce([seasonRow]);
+    await expect(repo.createSeason(seasonRow)).resolves.toBeDefined();
 
-    const updated = await repo.updateSeason("s1", { name: "Season 1 Updated" });
-    await repo.deleteSeason("s1");
-    const byTmdbIds = await repo.getByTmdbIds([1]);
-    const byTmdbId = await repo.getByTmdbId(1);
+    insertReturning.mockResolvedValueOnce([]);
+    await expect(repo.createSeason(seasonRow)).rejects.toBeInstanceOf(
+      ServerError
+    );
 
-    expect(updated.name).toBe("Season 1 Updated");
-    expect(byTmdbIds).toHaveLength(1);
-    expect(byTmdbId.id).toBe("s1");
+    insertReturning.mockResolvedValueOnce([undefined]);
+    await expect(repo.createSeason(seasonRow)).rejects.toBeInstanceOf(
+      ServerError
+    );
+  });
+
+  it("updateSeason: ok, empty, undefined", async () => {
+    const repo = new SeasonsDatabaseRepository();
+    updateReturning.mockResolvedValueOnce([seasonRow]);
+    await expect(
+      repo.updateSeason("s1", { seasonNumber: 2 })
+    ).resolves.toBeDefined();
+
+    updateReturning.mockResolvedValueOnce([]);
+    await expect(repo.updateSeason("s1", {})).rejects.toBeInstanceOf(
+      ServerError
+    );
+
+    updateReturning.mockResolvedValueOnce([undefined]);
+    await expect(repo.updateSeason("s1", {})).rejects.toBeInstanceOf(
+      ServerError
+    );
+  });
+
+  it("deleteSeason: ok + error", async () => {
+    const repo = new SeasonsDatabaseRepository();
+    await expect(repo.deleteSeason("s1")).resolves.toBeUndefined();
+    dbMock.delete.mockImplementationOnce(() => ({
+      where: vi.fn(() => Promise.reject(new Error("db"))),
+    }));
+    await expect(repo.deleteSeason("s1")).rejects.toBeInstanceOf(ServerError);
+  });
+
+  it("getByTmdbIds: ok + vide => error", async () => {
+    const repo = new SeasonsDatabaseRepository();
+    selectRows.mockResolvedValueOnce([seasonRow]);
+    await expect(repo.getByTmdbIds([11])).resolves.toHaveLength(1);
+
+    selectRows.mockResolvedValueOnce([]);
+    await expect(repo.getByTmdbIds([11])).rejects.toBeInstanceOf(ServerError);
+  });
+
+  it("getByTmdbId: ok + not found + thrown error", async () => {
+    const repo = new SeasonsDatabaseRepository();
+    findFirst.mockResolvedValueOnce(seasonRow);
+    await expect(repo.getByTmdbId(11)).resolves.toBeDefined();
+
+    findFirst.mockResolvedValueOnce(null);
+    await expect(repo.getByTmdbId(11)).rejects.toBeInstanceOf(ServerError);
+
+    findFirst.mockRejectedValueOnce(new Error("db"));
+    await expect(repo.getByTmdbId(11)).rejects.toBeInstanceOf(ServerError);
   });
 });
