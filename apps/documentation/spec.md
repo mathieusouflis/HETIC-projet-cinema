@@ -1,5 +1,4 @@
 ---
-icon: file-code
 layout:
   width: default
   title:
