@@ -36,7 +36,9 @@ export function useResendVerification() {
 
   const resend = useCallback(
     async (email: string) => {
-      if (isLoading || cooldown > 0) return;
+      if (isLoading || cooldown > 0) {
+        return;
+      }
 
       try {
         setIsLoading(true);

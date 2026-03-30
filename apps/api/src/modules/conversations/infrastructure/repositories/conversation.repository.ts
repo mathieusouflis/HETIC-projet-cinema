@@ -148,7 +148,9 @@ export class ConversationRepository implements IConversationRepository {
           ),
       ]);
 
-      if (!participation) return null;
+      if (!participation) {
+        return null;
+      }
 
       const conv = participation.conversation;
       const otherParticipantRow = conv.conversationParticipants.find(
@@ -215,7 +217,9 @@ export class ConversationRepository implements IConversationRepository {
         .groupBy(conversations.id)
         .having(sql`count(distinct ${conversationParticipants.userId}) = 2`);
 
-      if (!result[0]) return null;
+      if (!result[0]) {
+        return null;
+      }
 
       const row = await db.query.conversations.findFirst({
         where: eq(conversations.id, result[0].id),
@@ -237,7 +241,9 @@ export class ConversationRepository implements IConversationRepository {
         .returning();
 
       const conv = rows[0];
-      if (!conv) throw new ServerError("Failed to create conversation");
+      if (!conv) {
+        throw new ServerError("Failed to create conversation");
+      }
 
       await db.insert(conversationParticipants).values(
         participantIds.map((userId) => ({

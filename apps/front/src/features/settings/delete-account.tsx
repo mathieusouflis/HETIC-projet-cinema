@@ -29,7 +29,9 @@ export function DeleteAccount({ username }: { username?: string }) {
   const isConfirmed = confirmValue === username;
 
   const handleDelete = async () => {
-    if (!isConfirmed) return;
+    if (!isConfirmed) {
+      return;
+    }
     setError(null);
 
     try {

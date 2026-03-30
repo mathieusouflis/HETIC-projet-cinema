@@ -43,7 +43,9 @@ export function MessagesLayout() {
 
   const joinedRoomsRef = useRef(new Set<string>());
   useEffect(() => {
-    if (!conversations?.length) return;
+    if (!conversations?.length) {
+      return;
+    }
     const socket = getSocket();
     for (const conv of conversations) {
       if (!joinedRoomsRef.current.has(conv.id)) {
@@ -57,15 +59,21 @@ export function MessagesLayout() {
     const socket = getSocket();
 
     const onNew = (dto: MessageDTO) => {
-      if (dto.conversationId === activeConvIdRef.current) return;
+      if (dto.conversationId === activeConvIdRef.current) {
+        return;
+      }
 
       const userId = userIdRef.current;
-      if (!userId) return;
+      if (!userId) {
+        return;
+      }
 
       queryClientRef.current.setQueryData<Conversation[]>(
         conversationKeys.all(userId),
         (old) => {
-          if (!old) return old;
+          if (!old) {
+            return old;
+          }
           const updated = old.map((c) =>
             c.id === dto.conversationId
               ? {

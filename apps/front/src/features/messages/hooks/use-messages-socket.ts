@@ -52,7 +52,9 @@ export function useMessagesSocket(conversationId: string) {
       const queryKey = messageKeys.conversation(conversationId);
 
       const onNew = (dto: MessageDTO) => {
-        if (dto.conversationId !== conversationId) return;
+        if (dto.conversationId !== conversationId) {
+          return;
+        }
 
         const qc = queryClientRef.current;
         const realMessage = dtoToMessage(dto);
@@ -77,7 +79,9 @@ export function useMessagesSocket(conversationId: string) {
           const alreadyExists = old.pages.some((page) =>
             page.items.some((m) => m.id === dto.id)
           );
-          if (alreadyExists) return old;
+          if (alreadyExists) {
+            return old;
+          }
 
           const pages = [...old.pages];
           const lastPage = pages[pages.length - 1];
@@ -97,7 +101,9 @@ export function useMessagesSocket(conversationId: string) {
           qc.setQueryData<Conversation[]>(
             conversationKeys.all(userId),
             (old) => {
-              if (!old) return old;
+              if (!old) {
+                return old;
+              }
               const updated = old.map((c) =>
                 c.id === conversationId
                   ? {

@@ -56,9 +56,13 @@ export function NewConversationDialog({
 
   const resolvedFriends: ResolvedFriend[] = friendships.flatMap((f, i) => {
     const result = userQueries[i];
-    if (!result?.data) return [];
+    if (!result?.data) {
+      return [];
+    }
     const otherId = otherIds[i];
-    if (!otherId) return [];
+    if (!otherId) {
+      return [];
+    }
     return [
       {
         friendshipId: f.id,

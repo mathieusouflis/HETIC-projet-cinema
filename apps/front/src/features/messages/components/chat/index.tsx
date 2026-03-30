@@ -29,7 +29,9 @@ export function ChatPanel({ conversationId }: ChatPanelProps) {
 
   const otherParticipantId = conversation?.otherParticipant.id;
   const otherIsTyping = useTypingStore((s) => {
-    if (!otherParticipantId) return false;
+    if (!otherParticipantId) {
+      return false;
+    }
     return (s.typingByConversation[conversationId] ?? []).includes(
       otherParticipantId
     );
@@ -39,11 +41,11 @@ export function ChatPanel({ conversationId }: ChatPanelProps) {
 
   const { cleanupRef } = useMessagesSocket(conversationId);
 
-  useEffect(() => () => cleanupRef.current(), []);
+  useEffect(() => () => cleanupRef.current(), [cleanupRef.current]);
 
   useEffect(() => {
     markRead.mutate(conversationId);
-  }, [conversationId]);
+  }, [conversationId, markRead.mutate]);
 
   const { emitTyping } = useTyping(conversationId);
 
@@ -52,9 +54,11 @@ export function ChatPanel({ conversationId }: ChatPanelProps) {
 
   const lastMessageId = data?.pages.at(-1)?.items.at(-1)?.id;
   useEffect(() => {
-    if (!lastMessageId) return;
+    if (!lastMessageId) {
+      return;
+    }
     markRead.mutate(conversationId);
-  }, [conversationId, lastMessageId]);
+  }, [conversationId, lastMessageId, markRead.mutate]);
 
   const sendMutation = queryMessageService.send(conversationId);
   const editMutation = queryMessageService.edit();
@@ -66,7 +70,7 @@ export function ChatPanel({ conversationId }: ChatPanelProps) {
   useEffect(() => {
     setEditingId(null);
     setFailedContent(null);
-  }, [conversationId]);
+  }, []);
 
   const handleSend = (content: string) => {
     if (editingId) {
@@ -84,7 +88,9 @@ export function ChatPanel({ conversationId }: ChatPanelProps) {
 
   const handleRetry = () => {
     const content = failedContent;
-    if (!content) return;
+    if (!content) {
+      return;
+    }
     setFailedContent(null);
     sendMutation.mutate(content, {
       onError: () => setFailedContent(content),

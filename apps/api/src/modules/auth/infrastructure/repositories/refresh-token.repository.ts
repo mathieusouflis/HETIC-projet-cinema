@@ -26,7 +26,9 @@ export class RefreshTokenRepository implements IRefreshTokenRepository {
       .where(eq(refreshTokens.tokenHash, tokenHash))
       .limit(1);
 
-    if (!row) return null;
+    if (!row) {
+      return null;
+    }
 
     return {
       id: row.id,

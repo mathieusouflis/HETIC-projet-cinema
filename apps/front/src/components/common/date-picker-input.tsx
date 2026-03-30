@@ -36,7 +36,9 @@ function isValidDate(date: Date | undefined) {
 
 function parseDDMMYYYY(input: string): Date | undefined {
   const match = input.match(/^(\d{2})-(\d{2})-(\d{4})$/);
-  if (!match) return undefined;
+  if (!match) {
+    return undefined;
+  }
   const [, day, month, year] = match;
   const date = new Date(`${year}-${month}-${day}T12:00:00`);
   return isValidDate(date) ? date : undefined;

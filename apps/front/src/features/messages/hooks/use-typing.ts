@@ -30,12 +30,16 @@ export function createTypingController(
     },
 
     receiveTyping(payload: TypingPayload): void {
-      if (payload.conversationId !== conversationId) return;
+      if (payload.conversationId !== conversationId) {
+        return;
+      }
 
       store.addTypingUser(conversationId, payload.userId);
 
       const existing = clearTimers.get(payload.userId);
-      if (existing !== undefined) clearTimeout(existing);
+      if (existing !== undefined) {
+        clearTimeout(existing);
+      }
 
       const timer = setTimeout(() => {
         store.removeTypingUser(conversationId, payload.userId);

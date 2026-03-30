@@ -77,7 +77,9 @@ export class FriendshipsController extends BaseController {
   @ApiResponse(401, "Not authenticated", unauthorizedErrorResponseSchema)
   getMyFriendships = asyncHandler(async (req, res) => {
     const userId = req.user?.userId;
-    if (!userId) throw new UnauthorizedError("Not authenticated");
+    if (!userId) {
+      throw new UnauthorizedError("Not authenticated");
+    }
 
     const { status } = req.query as GetFriendshipsQuery;
     const friendships = await this.getMyFriendshipsUseCase.execute(
@@ -114,7 +116,9 @@ export class FriendshipsController extends BaseController {
   @ApiResponse(409, "Friendship already exists", conflictErrorResponseSchema)
   sendFriendRequest = asyncHandler(async (req, res) => {
     const callerId = req.user?.userId;
-    if (!callerId) throw new UnauthorizedError("Not authenticated");
+    if (!callerId) {
+      throw new UnauthorizedError("Not authenticated");
+    }
 
     const { userId } = req.params as UserIdParams;
 
@@ -155,7 +159,9 @@ export class FriendshipsController extends BaseController {
   @ApiResponse(404, "Friendship not found", notFoundErrorResponseSchema)
   respondToFriendRequest = asyncHandler(async (req, res) => {
     const callerId = req.user?.userId;
-    if (!callerId) throw new UnauthorizedError("Not authenticated");
+    if (!callerId) {
+      throw new UnauthorizedError("Not authenticated");
+    }
 
     const { id } = req.params as FriendshipIdParams;
     const { status } = req.body as UpdateFriendshipBody;
@@ -185,7 +191,9 @@ export class FriendshipsController extends BaseController {
   @ApiResponse(404, "Friendship not found", notFoundErrorResponseSchema)
   removeFriendship = asyncHandler(async (req, res) => {
     const callerId = req.user?.userId;
-    if (!callerId) throw new UnauthorizedError("Not authenticated");
+    if (!callerId) {
+      throw new UnauthorizedError("Not authenticated");
+    }
 
     const { id } = req.params as FriendshipIdParams;
 

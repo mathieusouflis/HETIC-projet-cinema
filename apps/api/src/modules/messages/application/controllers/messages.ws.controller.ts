@@ -64,7 +64,9 @@ export class MessageWSController extends WebSocketController {
     data: SendMessageEvent
   ): Promise<void> {
     const user = this.getSocketUser(socket);
-    if (!user) return;
+    if (!user) {
+      return;
+    }
 
     const message = await this.sendMessageUseCase.execute(
       user.userId,
@@ -91,7 +93,9 @@ export class MessageWSController extends WebSocketController {
   })
   async handleTyping(socket: Socket, data: TypingEvent): Promise<void> {
     const user = this.getSocketUser(socket);
-    if (!user) return;
+    if (!user) {
+      return;
+    }
 
     socket.to(`conversation:${data.conversationId}`).emit("message:typing", {
       userId: user.userId,
