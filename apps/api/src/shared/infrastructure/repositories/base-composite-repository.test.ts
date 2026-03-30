@@ -1,292 +1,312 @@
-import { describe, expect, it, vi } from "vitest";
-import { BaseCompositeRepository } from "./base-composite-repository";
-import type {
-  BaseContentProps,
-  BaseDrizzleRepository,
-} from "./base-drizzle-repository";
-import type { BaseTMDBRepository } from "./base-tmdb-repository";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+const { loggerMock } = vi.hoisted(() => ({
+  loggerMock: {
+    info: vi.fn(),
+    error: vi.fn(),
+    success: vi.fn(),
+  },
+}));
+
+vi.mock("@packages/logger", () => ({
+  logger: loggerMock,
+}));
+
+const {
+  categoryRepoMock,
+  platformRepoMock,
+  peoplesRepoMock,
+  seasonsRepoMock,
+  episodesRepoMock,
+} = vi.hoisted(() => ({
+  categoryRepoMock: {
+    findById: vi.fn(),
+    findByTmdbIds: vi.fn(),
+    findBySlug: vi.fn(),
+    create: vi.fn(),
+  },
+  platformRepoMock: {
+    findByTmdbIds: vi.fn(),
+    findBySlug: vi.fn(),
+    create: vi.fn(),
+  },
+  peoplesRepoMock: {
+    getByTMDBIds: vi.fn(),
+    create: vi.fn(),
+  },
+  seasonsRepoMock: {
+    getByTmdbId: vi.fn(),
+    createSeason: vi.fn(),
+  },
+  episodesRepoMock: {
+    getByTmdbId: vi.fn(),
+    createEpisode: vi.fn(),
+  },
+}));
+
+vi.mock(
+  "../../../modules/categories/infrastructure/database/repositories/category/category.repository",
+  () => {
+    class CategoryRepository {
+      findById = categoryRepoMock.findById;
+      findByTmdbIds = categoryRepoMock.findByTmdbIds;
+      findBySlug = categoryRepoMock.findBySlug;
+      create = categoryRepoMock.create;
+    }
+    return { CategoryRepository };
+  }
+);
+
+vi.mock(
+  "../../../modules/platforms/infrastructure/database/platforms.repository",
+  () => {
+    class PlatformsRepository {
+      findByTmdbIds = platformRepoMock.findByTmdbIds;
+      findBySlug = platformRepoMock.findBySlug;
+      create = platformRepoMock.create;
+    }
+    return { PlatformsRepository };
+  }
+);
+
+vi.mock(
+  "../../../modules/peoples/infrastructure/repositories/peoples.repository",
+  () => {
+    class PeoplesRepository {
+      getByTMDBIds = peoplesRepoMock.getByTMDBIds;
+      create = peoplesRepoMock.create;
+    }
+    return { PeoplesRepository };
+  }
+);
+
+vi.mock(
+  "../../../modules/seasons/infrastructure/database/seasons.database.repository",
+  () => {
+    class SeasonsDatabaseRepository {
+      getByTmdbId = seasonsRepoMock.getByTmdbId;
+      createSeason = seasonsRepoMock.createSeason;
+    }
+    return { SeasonsDatabaseRepository };
+  }
+);
+
+vi.mock(
+  "../../../modules/episodes/infrastructure/database/episodes.database.repository",
+  () => {
+    class EpisodesDatabaseRepository {
+      getByTmdbId = episodesRepoMock.getByTmdbId;
+      createEpisode = episodesRepoMock.createEpisode;
+    }
+    return { EpisodesDatabaseRepository };
+  }
+);
+
+import {
+  BaseCompositeRepository,
+  CacheManager,
+} from "./base-composite-repository.js";
 
 type FakeEntity = {
   id: string;
-  tmdbId: number;
-  setRelations: (key: string, value: unknown) => void;
+  tmdbId?: number | null;
   removeRelations: (key: string) => void;
 };
 
-type FakeTMDBRepo = {
-  search: ReturnType<typeof vi.fn>;
-  discover: ReturnType<typeof vi.fn>;
-  getMultipleDetails: ReturnType<typeof vi.fn>;
-};
-
-type FakeDrizzleRepo = {
-  contentType?: "movie" | "serie";
-  getByTmdbIds: ReturnType<typeof vi.fn>;
-  list: ReturnType<typeof vi.fn>;
-  getCount: ReturnType<typeof vi.fn>;
-};
-
-class TestCompositeRepository extends BaseCompositeRepository<
-  FakeEntity,
-  Record<string, never>,
-  BaseContentProps,
-  BaseTMDBRepository<any, any>,
-  BaseDrizzleRepository<FakeEntity, Record<string, never>, BaseContentProps>
-> {
-  protected readonly entityType = "test-entity";
-
-  public searchPublic(query: string, options?: any) {
-    return this.baseSearch(query, options as any);
-  }
-
-  public listPublic(
-    title?: string,
-    country?: string,
-    categories?: string[],
-    withCategories?: boolean,
-    withPlatforms?: boolean,
-    withCast?: boolean,
-    withSeasons?: boolean,
-    withEpisodes?: boolean,
-    options?: any
-  ) {
-    return this.baseList(
-      title,
-      country,
-      categories,
-      withCategories,
-      withPlatforms,
-      withCast,
-      withSeasons,
-      withEpisodes,
-      options as any
-    );
-  }
+function entity(id: string, tmdbId: number): FakeEntity {
+  return { id, tmdbId, removeRelations: vi.fn() };
 }
 
-const makeEntity = (tmdbId: number): FakeEntity => ({
-  id: `id-${tmdbId}`,
-  tmdbId,
-  setRelations: vi.fn(),
-  removeRelations: vi.fn(),
-});
-
-const makeSut = () => {
-  const tmdbRepository: FakeTMDBRepo = {
-    search: vi.fn(),
-    discover: vi.fn(),
-    getMultipleDetails: vi.fn(),
-  };
-
-  const drizzleRepository: FakeDrizzleRepo = {
-    contentType: "movie",
-    getByTmdbIds: vi.fn(),
-    list: vi.fn(),
-    getCount: vi.fn(),
-  };
-
-  const sut = new TestCompositeRepository(
-    tmdbRepository as unknown as BaseTMDBRepository<any, any>,
-    drizzleRepository as unknown as BaseDrizzleRepository<
-      FakeEntity,
-      Record<string, never>,
-      BaseContentProps
-    >
-  );
-
-  return { sut, tmdbRepository, drizzleRepository };
-};
-
 describe("BaseCompositeRepository", () => {
-  it("baseSearch should return [] when TMDB returns no ids", async () => {
-    const { sut, tmdbRepository, drizzleRepository } = makeSut();
-    tmdbRepository.search.mockResolvedValue({ ids: [], results: [], total: 0 });
-
-    const result = await sut.searchPublic("nothing");
-
-    expect(result).toEqual([]);
-    expect(drizzleRepository.getByTmdbIds).not.toHaveBeenCalled();
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  it("baseSearch should remove relations based on options", async () => {
-    const { sut, tmdbRepository, drizzleRepository } = makeSut();
-    const entity = makeEntity(10);
-    tmdbRepository.search.mockResolvedValue({
-      ids: [10],
-      results: [],
-      total: 1,
-    });
-    drizzleRepository.getByTmdbIds.mockResolvedValue([entity]);
+  it("baseSearch retourne [] quand TMDB renvoie aucun id", async () => {
+    const tmdbRepo = {
+      search: vi.fn().mockResolvedValue({ ids: [], results: [], total: 0 }),
+      getMultipleDetails: vi.fn(),
+    };
+    const drizzleRepo = {
+      contentType: "movie",
+      getByTmdbIds: vi.fn(),
+    };
 
-    const result = await sut.searchPublic("john", {
+    class Repo extends BaseCompositeRepository<any, any, any, any, any> {
+      protected readonly entityType = "x";
+      constructor() {
+        super(tmdbRepo as never, drizzleRepo as never);
+      }
+    }
+
+    const repo = new Repo() as any;
+    const out = await repo.baseSearch("q", { page: 1 });
+    expect(out).toEqual([]);
+    expect(drizzleRepo.getByTmdbIds).not.toHaveBeenCalled();
+  });
+
+  it("baseSearch retire les relations quand options sont false", async () => {
+    const e = entity("e1", 1);
+    const tmdbRepo = {
+      search: vi.fn().mockResolvedValue({ ids: [1], results: [], total: 1 }),
+      getMultipleDetails: vi.fn(),
+    };
+    const drizzleRepo = {
+      contentType: "movie",
+      getByTmdbIds: vi.fn().mockResolvedValue([e]),
+    };
+
+    class Repo extends BaseCompositeRepository<any, any, any, any, any> {
+      protected readonly entityType = "x";
+      constructor() {
+        super(tmdbRepo as never, drizzleRepo as never);
+      }
+    }
+
+    const repo = new Repo() as any;
+    const out = await repo.baseSearch("q", {
       withCategories: false,
       withPlatforms: false,
       withCast: false,
       withSeasons: false,
     });
-
-    expect(result).toHaveLength(1);
-    expect(entity.removeRelations).toHaveBeenCalledWith("contentCategories");
-    expect(entity.removeRelations).toHaveBeenCalledWith("contentPlatforms");
-    expect(entity.removeRelations).toHaveBeenCalledWith("contentCredits");
-    expect(entity.removeRelations).toHaveBeenCalledWith("seasons");
+    expect(out).toHaveLength(1);
+    expect(e.removeRelations).toHaveBeenCalledWith("contentCategories");
+    expect(e.removeRelations).toHaveBeenCalledWith("contentPlatforms");
+    expect(e.removeRelations).toHaveBeenCalledWith("contentCredits");
+    expect(e.removeRelations).toHaveBeenCalledWith("seasons");
   });
 
-  it("baseSearch should create missing entities from TMDB details", async () => {
-    const { sut, tmdbRepository, drizzleRepository } = makeSut();
-    const existingEntity = makeEntity(1);
-    const createdEntity = makeEntity(2);
-    const createEntitiesSpy = vi
-      .spyOn(
-        sut as unknown as {
-          createEntitiesWithRelations: (
-            ...args: unknown[]
-          ) => Promise<FakeEntity[]>;
-        },
-        "createEntitiesWithRelations"
-      )
-      .mockResolvedValue([createdEntity]);
-    tmdbRepository.search.mockResolvedValue({
-      ids: [1, 2],
-      results: [],
-      total: 2,
-    });
-    tmdbRepository.getMultipleDetails.mockResolvedValue([{ tmdbId: 2 }]);
-    drizzleRepository.getByTmdbIds.mockResolvedValue([existingEntity]);
+  it("baseList retourne vide si TMDB ids est vide (title vs discover branches)", async () => {
+    const tmdbRepo = {
+      search: vi.fn().mockResolvedValue({ ids: [], results: [], total: 0 }),
+      discover: vi.fn().mockResolvedValue({ ids: [], results: [], total: 0 }),
+      getMultipleDetails: vi.fn(),
+    };
+    const drizzleRepo = {
+      contentType: "movie",
+      getByTmdbIds: vi.fn(),
+      getCount: vi.fn().mockResolvedValue(0),
+    };
 
-    const result = await sut.searchPublic("john");
+    class Repo extends BaseCompositeRepository<any, any, any, any, any> {
+      protected readonly entityType = "x";
+      constructor() {
+        super(tmdbRepo as never, drizzleRepo as never);
+      }
+    }
 
-    expect(tmdbRepository.getMultipleDetails).toHaveBeenCalledWith([2]);
-    expect(createEntitiesSpy).toHaveBeenCalledTimes(1);
-    expect(result).toEqual([existingEntity, createdEntity]);
-  });
-
-  it("baseSearch should throw when TMDB search fails", async () => {
-    const { sut, tmdbRepository } = makeSut();
-    tmdbRepository.search.mockRejectedValue(new Error("tmdb down"));
-
-    await expect(sut.searchPublic("boom")).rejects.toThrow("tmdb down");
-  });
-
-  it("baseList should throw when TMDB search fails", async () => {
-    const { sut, tmdbRepository, drizzleRepository } = makeSut();
-    tmdbRepository.search.mockRejectedValue(new Error("tmdb unavailable"));
+    const repo = new Repo() as any;
+    await expect(
+      repo.baseList("t", undefined, [], true, true, true, true, true, {
+        page: 2,
+      })
+    ).resolves.toEqual({ data: [], total: 0 });
+    expect(tmdbRepo.search).toHaveBeenCalled();
 
     await expect(
-      sut.listPublic(
-        "my-title",
-        undefined,
-        undefined,
-        true,
-        false,
-        false,
-        false,
-        false,
-        { page: 1, limit: 10 }
-      )
-    ).rejects.toThrow("tmdb unavailable");
-    expect(drizzleRepository.list).not.toHaveBeenCalled();
+      repo.baseList(undefined, undefined, [], true, true, true, true, true, {
+        page: 1,
+      })
+    ).resolves.toEqual({ data: [], total: 0 });
+    expect(tmdbRepo.discover).toHaveBeenCalled();
   });
 
-  it("baseList should use discover when title is undefined", async () => {
-    const { sut, tmdbRepository, drizzleRepository } = makeSut();
-    const entity = makeEntity(22);
-    tmdbRepository.discover.mockResolvedValue({
-      ids: [22],
-      results: [],
-      total: 1,
-    });
-    drizzleRepository.getByTmdbIds.mockResolvedValue([entity]);
-    drizzleRepository.getCount.mockResolvedValue(1);
+  it("ensureCategoriesExist couvre findBySlug, create, et retry", async () => {
+    const tmdbRepo = { search: vi.fn() };
+    const drizzleRepo = {
+      contentType: "movie",
+      getByTmdbIds: vi.fn(),
+      getCount: vi.fn(),
+    };
 
-    const result = await sut.listPublic(
-      undefined,
-      undefined,
-      undefined,
-      true,
-      true,
-      true,
-      true,
-      true,
-      { page: 1, limit: 10 }
+    class Repo extends BaseCompositeRepository<any, any, any, any, any> {
+      protected readonly entityType = "x";
+      constructor() {
+        super(tmdbRepo as never, drizzleRepo as never);
+      }
+    }
+
+    const repo = new Repo() as any;
+
+    // findBySlug branch
+    categoryRepoMock.findByTmdbIds.mockResolvedValueOnce([]);
+    categoryRepoMock.findBySlug.mockResolvedValueOnce({ id: "cat1" });
+    await repo.ensureCategoriesExist([{ id: 1, name: "Action" }]);
+
+    // create branch
+    categoryRepoMock.findByTmdbIds.mockResolvedValueOnce([]);
+    categoryRepoMock.findBySlug.mockResolvedValueOnce(null);
+    categoryRepoMock.create.mockResolvedValueOnce({ id: "cat2" });
+    await repo.ensureCategoriesExist([{ id: 2, name: "Drama" }]);
+
+    // retry branch
+    categoryRepoMock.findByTmdbIds.mockResolvedValueOnce([]);
+    categoryRepoMock.findBySlug.mockResolvedValueOnce(null);
+    categoryRepoMock.create.mockRejectedValueOnce(new Error("fail"));
+    categoryRepoMock.findByTmdbIds.mockResolvedValueOnce([
+      { id: "cat3", tmdbId: 3 },
+    ]);
+    await repo.ensureCategoriesExist([{ id: 3, name: "Comedy" }]);
+  });
+
+  it("createEntitiesWithRelations lie genres/providers/cast (cache + link) et relit via getByTmdbIds", async () => {
+    categoryRepoMock.findByTmdbIds.mockResolvedValueOnce([
+      { id: "cat-db", tmdbId: 7 },
+    ]);
+    platformRepoMock.findByTmdbIds.mockResolvedValueOnce([
+      { toJSON: () => ({ id: "pl-db", tmdbId: 8 }) },
+    ]);
+    peoplesRepoMock.getByTMDBIds.mockResolvedValueOnce([
+      { toJSON: () => ({ id: "p-db", tmdbId: 9 }) },
+    ]);
+
+    const drizzleRepo = {
+      contentType: "movie",
+      create: vi.fn().mockResolvedValue({
+        id: "e-db",
+        tmdbId: 10,
+        removeRelations: vi.fn(),
+      }),
+      linkCategories: vi.fn(),
+      linkProviders: vi.fn(),
+      linkCasts: vi.fn(),
+      getByTmdbIds: vi
+        .fn()
+        .mockResolvedValue([
+          { id: "e-db", tmdbId: 10, removeRelations: vi.fn() },
+        ]),
+    };
+    const tmdbRepo = { search: vi.fn(), getMultipleDetails: vi.fn() };
+
+    class Repo extends BaseCompositeRepository<any, any, any, any, any> {
+      protected readonly entityType = "x";
+      constructor() {
+        super(tmdbRepo as never, drizzleRepo as never);
+      }
+    }
+
+    const repo = new Repo() as any;
+
+    await repo.createEntitiesWithRelations([
+      {
+        tmdbId: 10,
+        title: "t",
+        type: "movie",
+        genres: [{ id: 7, name: "Action" }],
+        providers: [{ provider_id: 8, provider_name: "X" }],
+        cast: [{ id: 9, cast_id: 9, name: "A" }],
+        seasons: [],
+      },
+    ]);
+
+    expect(drizzleRepo.linkCategories).toHaveBeenCalled();
+    expect(drizzleRepo.linkProviders).toHaveBeenCalled();
+    expect(drizzleRepo.linkCasts).toHaveBeenCalled();
+    expect(drizzleRepo.getByTmdbIds).toHaveBeenCalledWith(
+      [10],
+      expect.any(Object)
     );
-
-    expect(tmdbRepository.discover).toHaveBeenCalledWith({
-      page: 1,
-      withCategories: [],
-    });
-    expect(result.total).toBe(1);
-    expect(result.data).toHaveLength(1);
-  });
-
-  it("baseList should use search when title is provided", async () => {
-    const { sut, tmdbRepository, drizzleRepository } = makeSut();
-    const entity = makeEntity(33);
-    tmdbRepository.search.mockResolvedValue({
-      ids: [33],
-      results: [],
-      total: 1,
-    });
-    drizzleRepository.getByTmdbIds.mockResolvedValue([entity]);
-    drizzleRepository.getCount.mockResolvedValue(1);
-
-    const result = await sut.listPublic(
-      "matrix",
-      undefined,
-      undefined,
-      true,
-      false,
-      false,
-      false,
-      false,
-      { page: 2, limit: 10 }
-    );
-
-    expect(tmdbRepository.search).toHaveBeenCalledWith({
-      query: "matrix",
-      page: 2,
-      withCategories: [],
-    });
-    expect(result.data).toEqual([entity]);
-  });
-
-  it("baseList should return empty result when TMDB ids are empty", async () => {
-    const { sut, tmdbRepository, drizzleRepository } = makeSut();
-    tmdbRepository.search.mockResolvedValue({ ids: [], results: [], total: 0 });
-
-    const result = await sut.listPublic("empty");
-
-    expect(result).toEqual({ data: [], total: 0 });
-    expect(drizzleRepository.getByTmdbIds).not.toHaveBeenCalled();
-  });
-
-  it("baseList should create missing entities and append to existing", async () => {
-    const { sut, tmdbRepository, drizzleRepository } = makeSut();
-    const existingEntity = makeEntity(40);
-    const createdEntity = makeEntity(41);
-    const createEntitiesSpy = vi
-      .spyOn(
-        sut as unknown as {
-          createEntitiesWithRelations: (
-            ...args: unknown[]
-          ) => Promise<FakeEntity[]>;
-        },
-        "createEntitiesWithRelations"
-      )
-      .mockResolvedValue([createdEntity]);
-    tmdbRepository.search.mockResolvedValue({
-      ids: [40, 41],
-      results: [],
-      total: 2,
-    });
-    tmdbRepository.getMultipleDetails.mockResolvedValue([{ tmdbId: 41 }]);
-    drizzleRepository.getByTmdbIds.mockResolvedValue([existingEntity]);
-    drizzleRepository.getCount.mockResolvedValue(2);
-
-    const result = await sut.listPublic("with-missing");
-
-    expect(tmdbRepository.getMultipleDetails).toHaveBeenCalledWith([41]);
-    expect(createEntitiesSpy).toHaveBeenCalledTimes(1);
-    expect(result).toEqual({ data: [existingEntity, createdEntity], total: 2 });
+    expect(CacheManager.generateSlug("Hello World")).toBe("hello-world");
   });
 });

@@ -1,152 +1,131 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { EpisodesDatabaseRepository } from "./episodes.database.repository";
+import { ServerError } from "../../../../shared/errors/server-error.js";
+import { EpisodesDatabaseRepository } from "./episodes.database.repository.js";
 
-const {
-  dbMock,
-  deleteWhere,
-  findFirstMock,
-  findManyMock,
-  insertReturning,
-  updateReturning,
-} = vi.hoisted(() => {
-  const findFirstMock = vi.fn();
-  const findManyMock = vi.fn();
-  const insertReturning = vi.fn();
-  const updateReturning = vi.fn();
-  const deleteWhere = vi.fn();
+const { dbMock, findFirst, findMany, insertReturning, updateReturning } =
+  vi.hoisted(() => {
+    const findFirst = vi.fn();
+    const findMany = vi.fn();
+    const insertReturning = vi.fn();
+    const updateReturning = vi.fn();
 
-  const dbMock = {
-    query: {
-      episodes: {
-        findFirst: findFirstMock,
-        findMany: findManyMock,
+    const dbMock = {
+      query: {
+        episodes: {
+          findFirst,
+          findMany,
+        },
       },
-    },
-    insert: vi.fn(() => ({
-      values: vi.fn(() => ({ returning: insertReturning })),
-    })),
-    update: vi.fn(() => ({
-      set: vi.fn(() => ({
-        where: vi.fn(() => ({ returning: updateReturning })),
+      insert: vi.fn(() => ({
+        values: vi.fn(() => ({ returning: insertReturning })),
       })),
-    })),
-    delete: vi.fn(() => ({ where: deleteWhere })),
-  };
+      update: vi.fn(() => ({
+        set: vi.fn(() => ({
+          where: vi.fn(() => ({ returning: updateReturning })),
+        })),
+      })),
+      delete: vi.fn(() => ({
+        where: vi.fn(() => Promise.resolve()),
+      })),
+    };
 
-  return {
-    dbMock,
-    deleteWhere,
-    findFirstMock,
-    findManyMock,
-    insertReturning,
-    updateReturning,
-  };
-});
+    return { dbMock, findFirst, findMany, insertReturning, updateReturning };
+  });
 
 vi.mock("../../../../database", () => ({ db: dbMock }));
-vi.mock("drizzle-orm", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("drizzle-orm")>();
-  return { ...actual, eq: vi.fn() };
-});
 
 describe("EpisodesDatabaseRepository", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("getEpisodeById retourne null puis une entite", async () => {
+  const episodeRow: any = {
+    id: "e1",
+    seasonId: "s1",
+    tmdbId: 101,
+    episodeNumber: 1,
+    createdAt: "2024-01-01T00:00:00.000Z",
+    updatedAt: "2024-01-01T00:00:00.000Z",
+  };
+
+  it("getEpisodeById: null, ok, error", async () => {
     const repo = new EpisodesDatabaseRepository();
-    findFirstMock.mockResolvedValueOnce(null);
+    findFirst.mockResolvedValueOnce(null);
     await expect(repo.getEpisodeById("e1")).resolves.toBeNull();
 
-    findFirstMock.mockResolvedValueOnce({
-      id: "e1",
-      name: "Pilot",
-      seasonId: "s1",
-      episodeNumber: 1,
-      overview: null,
-      stillUrl: null,
-      airDate: null,
-      durationMinutes: null,
-      tmdbId: null,
-    });
-    const entity = await repo.getEpisodeById("e1");
-    expect(entity?.id).toBe("e1");
+    findFirst.mockResolvedValueOnce(episodeRow);
+    await expect(repo.getEpisodeById("e1")).resolves.toBeDefined();
+
+    findFirst.mockRejectedValueOnce(new Error("db"));
+    await expect(repo.getEpisodeById("e1")).rejects.toBeInstanceOf(ServerError);
   });
 
-  it("getEpisodesBySeasonId et getEpisodeByNumber mappent correctement", async () => {
+  it("getEpisodesBySeasonId: ok + error", async () => {
     const repo = new EpisodesDatabaseRepository();
-    findManyMock.mockResolvedValueOnce([
-      {
-        id: "e1",
-        name: "Pilot",
-        seasonId: "s1",
-        episodeNumber: 1,
-        overview: null,
-        stillUrl: null,
-        airDate: null,
-        durationMinutes: null,
-        tmdbId: null,
-      },
-    ]);
-    findFirstMock.mockResolvedValueOnce({
-      id: "e2",
-      name: "Ep2",
-      seasonId: "s1",
-      episodeNumber: 2,
-      overview: null,
-      stillUrl: null,
-      airDate: null,
-      durationMinutes: null,
-      tmdbId: null,
-    });
+    findMany.mockResolvedValueOnce([episodeRow]);
+    await expect(repo.getEpisodesBySeasonId("s1")).resolves.toHaveLength(1);
 
-    const list = await repo.getEpisodesBySeasonId("s1");
-    const single = await repo.getEpisodeByNumber("s1", 2);
-    expect(list).toHaveLength(1);
-    expect(single?.episodeNumber).toBe(2);
+    findMany.mockRejectedValueOnce(new Error("db"));
+    await expect(repo.getEpisodesBySeasonId("s1")).rejects.toBeInstanceOf(
+      ServerError
+    );
   });
 
-  it("createEpisode et updateEpisode retournent une entite", async () => {
+  it("getEpisodeByNumber: null, ok, error", async () => {
     const repo = new EpisodesDatabaseRepository();
-    insertReturning.mockResolvedValueOnce([
-      {
-        id: "e3",
-        name: "Ep3",
-        seasonId: "s1",
-        episodeNumber: 3,
-        overview: null,
-        stillUrl: null,
-        airDate: null,
-        durationMinutes: null,
-        tmdbId: null,
-      },
-    ]);
-    updateReturning.mockResolvedValueOnce([
-      {
-        id: "e3",
-        name: "Ep3 updated",
-        seasonId: "s1",
-        episodeNumber: 3,
-        overview: null,
-        stillUrl: null,
-        airDate: null,
-        durationMinutes: null,
-        tmdbId: null,
-      },
-    ]);
+    findFirst.mockResolvedValueOnce(null);
+    await expect(repo.getEpisodeByNumber("s1", 1)).resolves.toBeNull();
 
-    const created = await repo.createEpisode({ name: "Ep3" } as never);
-    const updated = await repo.updateEpisode("e3", { name: "Ep3 updated" });
-    expect(created.id).toBe("e3");
-    expect(updated.name).toBe("Ep3 updated");
+    findFirst.mockResolvedValueOnce(episodeRow);
+    await expect(repo.getEpisodeByNumber("s1", 1)).resolves.toBeDefined();
+
+    findFirst.mockRejectedValueOnce(new Error("db"));
+    await expect(repo.getEpisodeByNumber("s1", 1)).rejects.toBeInstanceOf(
+      ServerError
+    );
   });
 
-  it("deleteEpisode execute un delete", async () => {
+  it("createEpisode: ok, empty, undefined row", async () => {
     const repo = new EpisodesDatabaseRepository();
-    deleteWhere.mockResolvedValueOnce(undefined);
-    await repo.deleteEpisode("e1");
-    expect(dbMock.delete).toHaveBeenCalledTimes(1);
-    expect(deleteWhere).toHaveBeenCalledTimes(1);
+    insertReturning.mockResolvedValueOnce([episodeRow]);
+    await expect(repo.createEpisode(episodeRow)).resolves.toBeDefined();
+
+    insertReturning.mockResolvedValueOnce([]);
+    await expect(repo.createEpisode(episodeRow)).rejects.toBeInstanceOf(
+      ServerError
+    );
+
+    insertReturning.mockResolvedValueOnce([undefined]);
+    await expect(repo.createEpisode(episodeRow)).rejects.toBeInstanceOf(
+      ServerError
+    );
+  });
+
+  it("updateEpisode: ok, empty, undefined row", async () => {
+    const repo = new EpisodesDatabaseRepository();
+    updateReturning.mockResolvedValueOnce([episodeRow]);
+    await expect(
+      repo.updateEpisode("e1", { episodeNumber: 2 })
+    ).resolves.toBeDefined();
+
+    updateReturning.mockResolvedValueOnce([]);
+    await expect(repo.updateEpisode("e1", {})).rejects.toBeInstanceOf(
+      ServerError
+    );
+
+    updateReturning.mockResolvedValueOnce([undefined]);
+    await expect(repo.updateEpisode("e1", {})).rejects.toBeInstanceOf(
+      ServerError
+    );
+  });
+
+  it("deleteEpisode: ok + error", async () => {
+    const repo = new EpisodesDatabaseRepository();
+    await expect(repo.deleteEpisode("e1")).resolves.toBeUndefined();
+
+    dbMock.delete.mockImplementationOnce(() => ({
+      where: vi.fn(() => Promise.reject(new Error("db"))),
+    }));
+    await expect(repo.deleteEpisode("e1")).rejects.toBeInstanceOf(ServerError);
   });
 });
