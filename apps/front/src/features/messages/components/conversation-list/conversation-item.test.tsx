@@ -147,7 +147,7 @@ describe("ConversationItem", () => {
     expect(hasBadge).toBe(false);
   });
 
-  it("shows “Message deleted” when lastMessage.isDeleted is true", () => {
+  it("shows Message deleted when lastMessage.isDeleted is true", () => {
     const conversation: Conversation = {
       ...baseConversation,
       lastMessage: {
@@ -237,5 +237,16 @@ describe("ConversationItem", () => {
     } finally {
       spy.mockRestore();
     }
+  });
+
+  it("renders an empty preview when lastMessage is null and nobody is typing", () => {
+    const conversation = { ...baseConversation, lastMessage: null };
+    const el = ConversationItem({
+      conversation,
+      typingUsers: [],
+      isActive: false,
+      onClick: vi.fn(),
+    });
+    expect(containsText(el, "Hey there!")).toBe(false);
   });
 });

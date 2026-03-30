@@ -16,8 +16,12 @@ vi.mock("@tanstack/react-query", () => ({
   })),
 }));
 
+const { authState } = vi.hoisted(() => ({
+  authState: { user: { id: "u1" } as null | { id: string } },
+}));
+
 vi.mock("@/features/auth/stores/auth.store", () => ({
-  useAuth: () => ({ user: { id: "u1" } }),
+  useAuth: () => authState,
 }));
 
 import * as sdk from "@packages/api-sdk";
@@ -62,6 +66,21 @@ describe("friendshipService", () => {
     expect(sendMutation.mutationFn).toBeDefined();
     expect(respondMutation.mutationFn).toBeDefined();
     expect(removeMutation.mutationFn).toBeDefined();
+  });
+
+  it("list(status) passes status param and query is disabled when user is null", async () => {
+    vi.mocked(sdk.gETFriendships).mockResolvedValue({
+      data: { data: [] },
+    } as never);
+    await expect(friendshipService.list("accepted" as never)).resolves.toEqual(
+      []
+    );
+    expect(sdk.gETFriendships).toHaveBeenCalledWith({ status: "accepted" });
+
+    authState.user = null;
+    expect(queryFriendshipService.list("accepted" as never).enabled).toBe(
+      false
+    );
   });
 
   it("executes query mutation functions", async () => {

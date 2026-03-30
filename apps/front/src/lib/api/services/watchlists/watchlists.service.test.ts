@@ -51,8 +51,12 @@ vi.mock("@tanstack/react-query", () => ({
   })),
 }));
 
+const { authState } = vi.hoisted(() => ({
+  authState: { user: { id: "u1" } as null | { id: string } },
+}));
+
 vi.mock("@/features/auth/stores/auth.store", () => ({
-  useAuth: () => ({ user: { id: "u1" } }),
+  useAuth: () => authState,
 }));
 
 import * as sdk from "@packages/api-sdk";
@@ -61,6 +65,7 @@ import { queryWatchlistService, watchlistService } from "./index";
 describe("watchlistService", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    authState.user = { id: "u1" };
   });
 
   it("calls imperative methods", async () => {
@@ -139,6 +144,7 @@ describe("watchlistService", () => {
       data: { ok: "created" },
     });
     createMutation.onSuccess?.(undefined, { contentId: "c1" });
+    createMutation.onSuccess?.(undefined, { contentId: "" as never });
 
     const updateIdMutation = queryWatchlistService.updateId("w1", {} as never);
     await expect(updateIdMutation.mutate()).resolves.toEqual({
@@ -177,5 +183,13 @@ describe("watchlistService", () => {
     const createMutation = queryWatchlistService.create();
     await createMutation.mutate({ contentId: "content-99" } as never);
     expect(invalidateQueriesMock).toHaveBeenCalled();
+  });
+
+  it("query hooks are disabled when user is null", () => {
+    authState.user = null;
+    const getQuery = queryWatchlistService.getId("c1");
+    const listQuery = queryWatchlistService.list();
+    expect(getQuery.isEnabled).toBe(false);
+    expect(listQuery.isEnabled).toBe(false);
   });
 });

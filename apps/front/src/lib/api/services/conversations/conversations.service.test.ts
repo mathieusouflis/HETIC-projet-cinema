@@ -24,9 +24,13 @@ vi.mock("react", async (importOriginal) => {
   return { ...actual, useRef: (val: unknown) => ({ current: val }) };
 });
 
+const { authState } = vi.hoisted(() => ({
+  authState: { user: { id: "u1" } as null | { id: string } },
+}));
+
 vi.mock("@/features/auth/stores/auth.store", () => ({
-  useAuth: Object.assign(() => ({ user: { id: "u1" } }), {
-    getState: () => ({ user: { id: "u1" } }),
+  useAuth: Object.assign(() => authState, {
+    getState: () => authState,
   }),
 }));
 
@@ -106,6 +110,14 @@ describe("conversationService", () => {
     expect(readMutation.mutationFn).toBeDefined();
   });
 
+  it("disables list/get queries when user is null or id is empty", () => {
+    authState.user = null;
+    expect(queryConversationService.list().enabled).toBe(false);
+    expect(queryConversationService.get("c1").enabled).toBe(false);
+    authState.user = { id: "u1" };
+    expect(queryConversationService.get("").enabled).toBe(false);
+  });
+
   it("executes mutation callbacks", async () => {
     vi.mocked(sdk.pOSTConversations).mockResolvedValue({
       data: { data: { id: "created" } },
@@ -120,6 +132,8 @@ describe("conversationService", () => {
     expect(invalidateQueriesMock).toHaveBeenCalled();
 
     const readMutation = queryConversationService.markRead();
+    await expect(readMutation.mutationFn("c1")).resolves.toBeUndefined();
+    // second call while pending is a no-op
     await expect(readMutation.mutationFn("c1")).resolves.toBeUndefined();
     readMutation.onSuccess?.(undefined, "c1");
     expect(setQueryDataMock).toHaveBeenCalled();

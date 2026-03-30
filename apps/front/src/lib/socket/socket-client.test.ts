@@ -43,6 +43,14 @@ describe("socket-client", () => {
     vi.resetModules();
   });
 
+  it("destroySocket and refreshSocketAuth are safe when socket is null", async () => {
+    const { destroySocket, refreshSocketAuth } = await import(
+      "./socket-client"
+    );
+    expect(() => destroySocket()).not.toThrow();
+    expect(() => refreshSocketAuth()).not.toThrow();
+  });
+
   it("creates and reuses a singleton socket", async () => {
     const socket = makeSocket();
     ioMock.mockReturnValue(socket);
