@@ -22,12 +22,19 @@ vi.mock("@tanstack/react-query", () => ({
 const { setUserMock } = vi.hoisted(() => ({
   setUserMock: vi.fn(),
 }));
+const { authState } = vi.hoisted(() => ({
+  authState: {
+    user: { id: "u1", username: "old" } as null | {
+      id: string;
+      username: string;
+    },
+    setUser: setUserMock,
+  },
+}));
+
 vi.mock("@/features/auth/stores/auth.store", () => ({
-  useAuth: Object.assign(() => ({ user: { id: "u1", username: "old" } }), {
-    getState: () => ({
-      user: { id: "u1", username: "old" },
-      setUser: setUserMock,
-    }),
+  useAuth: Object.assign(() => ({ user: authState.user }), {
+    getState: () => authState,
   }),
 }));
 
@@ -44,6 +51,13 @@ describe("queryUserService", () => {
     expect(query.enabled).toBe(true);
   });
 
+  it("builds getMe query disabled when user is null", () => {
+    authState.user = null;
+    const query = queryUserService.getMe();
+    expect(query.enabled).toBe(false);
+    authState.user = { id: "u1", username: "old" };
+  });
+
   it("executes patchMe success path and updates cache/user", async () => {
     vi.mocked(sdk.pATCHUsersMe).mockResolvedValue({
       data: { data: { username: "new-name" } },
@@ -58,6 +72,21 @@ describe("queryUserService", () => {
     expect(setUserMock).toHaveBeenCalledWith({
       id: "u1",
       username: "new-name",
+    });
+  });
+
+  it("patchMe onSuccess does not setUser when response has no data", async () => {
+    const mutation = queryUserService.patchMe();
+    await mutation.onSuccess?.({} as never);
+    expect(setUserMock).not.toHaveBeenCalled();
+  });
+
+  it("patchMe onSuccess falls back to existing username when new one is nullish", async () => {
+    const mutation = queryUserService.patchMe();
+    await mutation.onSuccess?.({ data: { username: undefined } } as never);
+    expect(setUserMock).toHaveBeenCalledWith({
+      id: "u1",
+      username: "old",
     });
   });
 

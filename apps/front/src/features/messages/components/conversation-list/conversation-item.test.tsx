@@ -22,20 +22,31 @@ function findInTree(
   node: unknown,
   predicate: (n: unknown) => boolean
 ): boolean {
-  if (predicate(node)) return true;
-  if (!node || typeof node !== "object") return false;
+  if (predicate(node)) {
+    return true;
+  }
+  if (!node || typeof node !== "object") {
+    return false;
+  }
   const el = node as { props?: { children?: unknown } };
   const children = el.props?.children;
-  if (!children) return false;
-  if (Array.isArray(children))
+  if (!children) {
+    return false;
+  }
+  if (Array.isArray(children)) {
     return children.some((c) => findInTree(c, predicate));
+  }
   return findInTree(children, predicate);
 }
 
 function containsText(node: unknown, text: string): boolean {
   return findInTree(node, (n) => {
-    if (typeof n === "string") return n.includes(text);
-    if (typeof n === "number") return String(n).includes(text);
+    if (typeof n === "string") {
+      return n.includes(text);
+    }
+    if (typeof n === "number") {
+      return String(n).includes(text);
+    }
     return false;
   });
 }
@@ -118,7 +129,9 @@ describe("ConversationItem", () => {
       onClick: vi.fn(),
     });
     const hasBadge = findInTree(el, (n) => {
-      if (!n || typeof n !== "object") return false;
+      if (!n || typeof n !== "object") {
+        return false;
+      }
       const el2 = n as { props?: { className?: string; children?: unknown } };
       return (
         !!el2.props?.className?.includes("rounded-full") &&
@@ -126,5 +139,69 @@ describe("ConversationItem", () => {
       );
     });
     expect(hasBadge).toBe(false);
+  });
+
+  it("shows 'Message deleted' when lastMessage.isDeleted is true", () => {
+    const lastMessage = baseConversation.lastMessage ?? {
+      id: "msg-1",
+      content: "Hey there!",
+      isDeleted: false,
+      createdAt: "2024-01-01T12:00:00.000Z",
+      authorId: "user-other",
+    };
+    const conversation = {
+      ...baseConversation,
+      lastMessage: { ...lastMessage, isDeleted: true },
+    };
+    const el = ConversationItem({
+      conversation,
+      typingUsers: [],
+      isActive: false,
+      onClick: vi.fn(),
+    });
+    expect(containsText(el, "Message deleted")).toBe(true);
+  });
+
+  it("renders '99+' when unreadCount > 99", () => {
+    const conversation = { ...baseConversation, unreadCount: 120 };
+    const el = ConversationItem({
+      conversation,
+      typingUsers: [],
+      isActive: false,
+      onClick: vi.fn(),
+    });
+    expect(containsText(el, "99+")).toBe(true);
+  });
+
+  it("renders an AvatarImage when otherParticipant.avatarUrl is set", () => {
+    const conversation = {
+      ...baseConversation,
+      otherParticipant: {
+        ...baseConversation.otherParticipant,
+        avatarUrl: "x",
+      },
+    };
+    const el = ConversationItem({
+      conversation,
+      typingUsers: [],
+      isActive: false,
+      onClick: vi.fn(),
+    });
+    const hasAvatarImage = findInTree(
+      el,
+      (n) => (n as any)?.type === "AvatarImage"
+    );
+    expect(hasAvatarImage).toBe(true);
+  });
+
+  it("renders an empty preview when lastMessage is null and nobody is typing", () => {
+    const conversation = { ...baseConversation, lastMessage: null };
+    const el = ConversationItem({
+      conversation,
+      typingUsers: [],
+      isActive: false,
+      onClick: vi.fn(),
+    });
+    expect(containsText(el, "Hey there!")).toBe(false);
   });
 });

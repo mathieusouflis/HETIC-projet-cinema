@@ -32,6 +32,9 @@ describe("queryClient default options", () => {
     expect(mutationRetry(0, { response: { status: 401 } } as AxiosError)).toBe(
       false
     );
+    expect(mutationRetry(0, { response: { status: 404 } } as AxiosError)).toBe(
+      false
+    );
   });
 
   it("apply retry limits for non-4xx errors", () => {

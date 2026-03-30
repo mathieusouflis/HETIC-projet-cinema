@@ -82,6 +82,12 @@ describe("messageService", () => {
       hasMore: false,
     });
     await expect(
+      messageService.fetchMessages("c1", "cur", 10)
+    ).resolves.toMatchObject({
+      items: [],
+      hasMore: false,
+    });
+    await expect(
       messageService.editMessage("m1", "upd")
     ).resolves.toMatchObject({
       id: "m1",
@@ -149,5 +155,15 @@ describe("messageService", () => {
       isDeleted: true,
     });
     deleteMutation.onSuccess?.(tombstone);
+  });
+
+  it("send rejects with timeout when emitWithAck never resolves", async () => {
+    vi.useFakeTimers();
+    emitWithAckMock.mockImplementationOnce(() => new Promise(() => undefined));
+    const sendMutation = queryMessageService.send("c1");
+    const p = sendMutation.mutationFn("hello");
+    vi.advanceTimersByTime(5000);
+    await expect(p).rejects.toThrow("timeout");
+    vi.useRealTimers();
   });
 });
