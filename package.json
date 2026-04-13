@@ -26,12 +26,12 @@
     "knip": "knip"
   },
   "devDependencies": {
-    "@types/node": "^25.5.0",
-    "@biomejs/biome": "^2.4.9",
+    "@types/node": "^25.6.0",
+    "@biomejs/biome": "^2.4.11",
     "dotenv-cli": "^8.0.0",
     "husky": "^9.1.7",
-    "knip": "^6.0.6",
-    "turbo": "^2.8.20",
+    "knip": "^6.4.0",
+    "turbo": "^2.9.6",
     "typescript": "^6.0.2"
   },
   "packageManager": "pnpm@10.28.2",
